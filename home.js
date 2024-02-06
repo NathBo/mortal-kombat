@@ -62,7 +62,7 @@ function main(){
 			if(this.gettingup){
 				this.xspeed = signe(this.xspeed)*Math.max(0,Math.abs(this.xspeed) -c.friction);
 				this.gettingup++;
-				if(this.gettingup == this.charac.getupfdur){
+				if(this.gettingup == this.charac.getupfdur || (this.gettingup>=this.charac.getupfdur*5/6 && this.haut)){
 					this.gettingup = 0; this.invincibilite = 0;
 				}
 			}
