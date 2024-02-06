@@ -140,21 +140,22 @@ function main(){
 					if(this.dodge==1&&this.movlag==0)
 					{
 						this.dodge=2;this.movlag = c.airdodgefdur;this.mov = "air_dodge";
+						this.falling = 0;
 						if(this.bas>=1){this.tb = -c.airdodgespeed;}
 						else{this.tb = 0;}
 						if(this.droite>=1){this.xspeed = c.airdodgespeed;}
 						else if(this.gauche){this.xspeed = -c.airdodgespeed}
 						else{this.xspeed = 0;}
 					}
-					else if(this.poing==1&&movpriority.get(this.mov)<40){
+					else if(this.poing==1&&movpriority.get(this.mov)<40&&this.falling==0){
 						this.poing=2;
 						this.begincoup("jpunch");
 					}
-					else if(this.jambe==1&&movpriority.get(this.mov)<40&&this.xspeed == 0){
+					else if(this.jambe==1&&movpriority.get(this.mov)<40&&this.xspeed == 0&&this.falling==0){
 						this.jambe=2;
 						this.begincoup("jskick");
 					}
-					else if(this.jambe==1&&movpriority.get(this.mov)<40&&this.xspeed != 0){
+					else if(this.jambe==1&&movpriority.get(this.mov)<40&&this.xspeed != 0&&this.falling==0){
 						this.jambe=2;
 						this.begincoup("jkick");
 					}
