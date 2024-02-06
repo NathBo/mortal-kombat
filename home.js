@@ -41,7 +41,7 @@ function main(){
 			this.hurted = 0; this.hurtx = 0; this.invincibilite = 0;
 			this.pv = this.charac.pv;
 			this.pushed = 0;this.pushx = 0;
-			this.blocking = 0;
+			this.blocking = 0; this.falling = 0;
 		}
 
 		begincoup(s){
@@ -65,6 +65,7 @@ function main(){
 				this.x += this.xspeed;
 			}
 			else if(this.hurted==0){
+				this.falling = 0;
 
 			
 				if(this.y<=0){
@@ -78,7 +79,7 @@ function main(){
 						else{this.y = 0;this.tb=0;this.xspeed = 0;this.movlag = 0;this.mov = "";}
 						
 					}
-					if (this.bas&&this.movlag == 0){this.crouching = Math.min(this.crouching+1,6);this.xspeed = 0;}
+					if (this.bas&&this.movlag == 0){this.crouching = Math.min(this.crouching+1,6);}
 					else if(this.bas==0&&this.crouching>0&&this.movlag==0){this.crouching--;}
 					if(this.haut==1&&movpriority.get(this.mov)<20){this.mov = "jumpsquat";this.movlag = c.jumpsquat;this.haut = 2;if(this.xspeed==0){if(this.droite >= 1){this.xspeed = c.vitesse;}else if(this.gauche>=1){this.xspeed = - c.vitesse}}}
 					else if(this.poing==1&&this.forward+this.back==0&&movpriority.get(this.mov)<=30&&this.crouching==0&&this.bas==0){
@@ -101,20 +102,20 @@ function main(){
 						this.begincoup("hkick");
 						this.jambe = 2;
 					}
-					else if(this.poing==1&&this.forward+this.back==0&&movpriority.get(this.mov)<=30&&this.bas==1&&this.crouching>0){
+					else if(this.poing==1&&this.forward+this.back==0&&movpriority.get(this.mov)<=30&&this.bas==1&&this.crouching>3){
 						this.begincoup("clpunch");
 						this.poing = 2;
 					}
-					else if(this.poing==1&&this.forward+this.back>0&&movpriority.get(this.mov)<50&&this.bas==1&&this.crouching>0){
+					else if(this.poing==1&&this.forward+this.back>0&&movpriority.get(this.mov)<50&&this.bas==1&&this.crouching>3){
 						this.begincoup("huppercut");
 						this.poing = 2;
 						this.crouching = 0;
 					}
-					else if(this.jambe==1&&this.forward+this.back==0&&movpriority.get(this.mov)<30&&this.bas==1&&this.crouching>0){
+					else if(this.jambe==1&&this.forward+this.back==0&&movpriority.get(this.mov)<30&&this.bas==1&&this.crouching>3){
 						this.begincoup("clkick");
 						this.jambe = 2;
 					}
-					else if(this.jambe==1&&this.forward+this.back>0&&movpriority.get(this.mov)<40&&this.bas==1&&this.crouching>0){
+					else if(this.jambe==1&&this.forward+this.back>0&&movpriority.get(this.mov)<40&&this.bas==1&&this.crouching>3){
 						this.begincoup("cmkick");
 						this.jambe = 2;
 					}
@@ -201,7 +202,7 @@ function main(){
 			if(this.charac.coups.has(this.mov)){
 				var stats = this.charac.coups.get(this.mov);
 				if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){
-					if(entre((other.x-this.x)*this.orientation,stats.hitboxxs-other.charac.width/2,stats.hitboxxe+other.charac.width/2)){
+					if(entre((other.x-this.x)*this.orientation,stats.hitboxxs-other.charac.width/2,stats.hitboxxe+other.charac.width/2+stats.hitboxxeyscaling*(other.y-(this.y+stats.hitboxys)))){
 						if(other.crouching>3 && other.back==0){
 							if(stats.hitboxys<=-1 || this.y>0){other.hurt(this,stats);}
 						}
@@ -218,7 +219,6 @@ function main(){
 
 		hurt(other,stats){
 			if(this.invincibilite){return;}
-			console.log(this.y);
 			if(this.movlag==0&&this.back>=1&&this.y==0){
 				this.blocking = stats.blockstun;
 				this.xspeed = stats.blockx;
@@ -226,19 +226,26 @@ function main(){
 			else{
 				this.hurted = stats.hitstun;
 				this.xspeed = stats.hurtx*other.orientation;
+				if(stats.hiteffect == "fall"){
+					this.falling = 4;
+				}
 			}
 			if(this.y>0 && other.y>0){this.xspeed+=other.xspeed*2/3;this.hurted+=4;}
 			if(Math.abs(this.x+this.xspeed*Math.abs(this.xspeed)/2/this.charac.friction-camerax)>decalagex-this.charac.width/2){other.pushed = 10;other.pushx = -other.orientation * (Math.abs(this.x+this.xspeed*Math.abs(this.xspeed)/2/this.charac.friction-camerax)-decalagex+this.charac.width)/5;other.xspeed = 0;}
-			console.log((Math.abs(this.x+this.xspeed*Math.abs(this.xspeed)/2/this.charac.friction-camerax)-decalagex));
-			console.log(this.xspeed^2/2/this.charac.friction);
-			console.log(other.pushx);
 			this.tb = stats.hurty;
 			this.invincibilite = stats.fdur+1;
 		}
 
 		afficher(){
 			if(this.hurted){
-				if(this.crouching>3){
+				if(this.falling){
+					if(this.falling<=5){this.costume = "hurted2";}
+					else if(this.falling<=14){this.costume = "falling1";}
+					else if(this.falling<=23){this.costume = "falling2";}
+					else {this.costume = "falling3";}
+					this.falling++;
+				}
+				else if(this.crouching>3){
 					if(this.hurted>=15){this.costume = "churted2";}
 					else{this.costume = "churted1";}
 				}
@@ -455,8 +462,14 @@ function main(){
 	kitcoordinates.set("hurted1",{offx:15,width:39,offy:1051,height:92,decx:0,decy:0});
 	kitcoordinates.set("hurted2",{offx:65,width:42,offy:1051,height:92,decx:0,decy:0});
 	kitcoordinates.set("falling1",{offx:460,width:57,offy:1181,height:83,decx:0,decy:0});
-	kitcoordinates.set("falling2",{offx:460,width:57,offy:1181,height:83,decx:0,decy:0});
-	kitcoordinates.set("falling3",{offx:460,width:57,offy:1181,height:83,decx:0,decy:0});
+	kitcoordinates.set("falling2",{offx:527,width:74,offy:1181,height:83,decx:0,decy:0});
+	kitcoordinates.set("falling3",{offx:610,width:68,offy:1181,height:83,decx:0,decy:0});
+	kitcoordinates.set("grounded1",{offx:690,width:69,offy:1222,height:42,decx:0,decy:0});
+	kitcoordinates.set("grounded2",{offx:770,width:78,offy:1241,height:23,decx:0,decy:0});
+	kitcoordinates.set("getup1",{offx:421,width:63,offy:1342,height:35,decx:0,decy:0});
+	kitcoordinates.set("getup2",{offx:494,width:36,offy:1322,height:55,decx:0,decy:0});
+	kitcoordinates.set("getup3",{offx:539,width:26,offy:1301,height:76,decx:0,decy:0});
+	kitcoordinates.set("getup4",{offx:574,width:37,offy:1275,height:102,decx:0,decy:0});
 	kitcoordinates.set("blocking1",{offx:300,width:33,offy:15,height:101,decx:0,decy:0});
 	kitcoordinates.set("blocking2",{offx:334,width:33,offy:15,height:101,decx:0,decy:0});
 	kitcoordinates.set("cblocking1",{offx:584,width:31,offy:46,height:70,decx:0,decy:0});
@@ -485,18 +498,18 @@ function main(){
 	var characteristics = new Map();
 
 	kitana_coups = new Map();
-	kitana_coups.set("lpunch",{slag : 10, fdur : 6, elag : 8, degats : 7, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 47,hitboxys : 0, hitboxye : 75, blockstun : 15, blockx : 0.4});
-	kitana_coups.set("hpunch",{slag : 14, fdur : 10, elag : 16, degats : 10, hitstun : 28, hurtx : 1.3, hurty : 0, hitboxxs : 11, hitboxxe : 49, hitboxys : 0, hitboxye : 82, blockstun : 10, blockx : 0.5});
-	kitana_coups.set("lkick",{slag : 14, fdur : 8, elag : 14, degats : 6, hitstun : 20, hurtx : 1.1, hurty : 0, hitboxxs : 18, hitboxxe : 53, hitboxys : 0, hitboxye : 40, blockstun : 10, blockx : 0.4});
-	kitana_coups.set("mkick",{slag : 16, fdur : 12, elag : 16, degats : 9, hitstun : 26, hurtx : 1.5, hurty : 0, hitboxxs : 18, hitboxxe : 52, hitboxys : 0, hitboxye : 98, blockstun : 20, blockx : 0.6});
-	kitana_coups.set("hkick",{slag : 14, fdur : 8, elag : 24, movx : 3, degats : 14, hitstun : 35, hurtx : 3, hurty : 7, hitboxxs : 20, hitboxxe : 50, hitboxys : 0, hitboxye : 106, blockstun : 10, blockx : 0.4});
-	kitana_coups.set("clpunch",{slag : 8, fdur : 6, elag : 8, degats : 6, hitstun : 20, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 30,hitboxys : -1, hitboxye : 20, blockstun : 10, blockx : 0.4});
-	kitana_coups.set("huppercut",{slag : 12, fdur : 10, elag : 24, degats : 18, hitstun : 40, hurtx : 3, hurty : 9, hitboxxs : 20, hitboxxe : 40, hitboxys : 0, hitboxye : 109, blockstun : 15, blockx : 0.4});
-	kitana_coups.set("clkick",{slag : 8, fdur : 6, elag : 8, degats : 6, hitstun : 20, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 38,hitboxys : -1, hitboxye : 5, blockstun : 10, blockx : 0.4});
-	kitana_coups.set("cmkick",{slag : 13, fdur : 6, elag : 12, degats : 8, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 50,hitboxys : -1, hitboxye : 5, blockstun : 10, blockx : 0.4});
-	kitana_coups.set("jkick",{slag : 6, fdur : 25, elag : 4, degats : 6, hitstun : 25, hurtx : 1.4, hurty : 0, hitboxxs : 0, hitboxxe : 60,hitboxys : -55, hitboxye : 5, landinglag : 8, blockstun : 10, blockx : 0.4});
-	kitana_coups.set("jskick",{slag : 8, fdur : 15, elag : 4, degats : 10, hitstun : 32, hurtx : 0.8, hurty : 0, hitboxxs : 10, hitboxxe : 33,hitboxys : -20, hitboxye : 30, landinglag : 8, blockstun : 10, blockx : 0.4});
-	kitana_coups.set("jpunch",{slag : 5, fdur : 10, elag : 8, degats : 6, hitstun : 20, hurtx : 1.5, hurty : 0, hitboxxs : 5, hitboxxe : 58,hitboxys : -40, hitboxye : 5, landinglag : 8, blockstun : 10, blockx : 0.4});
+	kitana_coups.set("lpunch",{slag : 10, fdur : 6, elag : 8, degats : 7, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 47,hitboxys : 0, hitboxye : 75, blockstun : 15, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0});
+	kitana_coups.set("hpunch",{slag : 14, fdur : 10, elag : 16, degats : 10, hitstun : 28, hurtx : 1.3, hurty : 0, hitboxxs : 11, hitboxxe : 49, hitboxys : 0, hitboxye : 82, blockstun : 10, blockx : 0.5, hiteffect : "none", hitboxxeyscaling : 0});
+	kitana_coups.set("lkick",{slag : 14, fdur : 8, elag : 14, degats : 6, hitstun : 20, hurtx : 1.1, hurty : 0, hitboxxs : 18, hitboxxe : 53, hitboxys : 0, hitboxye : 40, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0});
+	kitana_coups.set("mkick",{slag : 16, fdur : 12, elag : 16, degats : 9, hitstun : 26, hurtx : 1.5, hurty : 0, hitboxxs : 18, hitboxxe : 52, hitboxys : 0, hitboxye : 98, blockstun : 20, blockx : 0.6, hiteffect : "none", hitboxxeyscaling : 0});
+	kitana_coups.set("hkick",{slag : 14, fdur : 8, elag : 24, movx : 3, degats : 14, hitstun : 35, hurtx : 3, hurty : 7, hitboxxs : 20, hitboxxe : 50, hitboxys : 0, hitboxye : 106, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0});
+	kitana_coups.set("clpunch",{slag : 8, fdur : 6, elag : 8, degats : 6, hitstun : 20, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 30,hitboxys : -1, hitboxye : 20, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0});
+	kitana_coups.set("huppercut",{slag : 12, fdur : 10, elag : 24, degats : 18, hitstun : 50, hurtx : 3, hurty : 9.5, hitboxxs : 20, hitboxxe : 40, hitboxys : 0, hitboxye : 109, blockstun : 15, blockx : 0.4, hiteffect : "fall", hitboxxeyscaling : 0});
+	kitana_coups.set("clkick",{slag : 8, fdur : 6, elag : 8, degats : 6, hitstun : 20, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 38,hitboxys : -1, hitboxye : 5, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0});
+	kitana_coups.set("cmkick",{slag : 13, fdur : 6, elag : 12, degats : 8, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 50,hitboxys : -1, hitboxye : 5, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0});
+	kitana_coups.set("jkick",{slag : 6, fdur : 25, elag : 4, degats : 6, hitstun : 35, hurtx : 3.4, hurty : 5, hitboxxs : 0, hitboxxe : 60,hitboxys : -55, hitboxye : 5, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "fall", hitboxxeyscaling : -1});
+	kitana_coups.set("jskick",{slag : 8, fdur : 15, elag : 4, degats : 10, hitstun : 32, hurtx : 0.8, hurty : 0, hitboxxs : 10, hitboxxe : 33,hitboxys : -20, hitboxye : 30, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0});
+	kitana_coups.set("jpunch",{slag : 5, fdur : 10, elag : 8, degats : 6, hitstun : 20, hurtx : 1.5, hurty : 0, hitboxxs : 5, hitboxxe : 58,hitboxys : -40, hitboxye : 5, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0});
 
 
 	characteristics.set("kitana",{width : 34, height : 97,vitesse : 3.5,fdashslag : 3,fdashfdur : 11,fdashelag : 5,fdashspeed : 7, bdashslag : 3, bdashfdur : 13, bdashelag : 10, bdashspeed : 5, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2,
