@@ -41,7 +41,7 @@ function main(){
 			this.hurted = 0; this.hurtx = 0; this.invincibilite = 0;
 			this.pv = this.charac.pv;
 			this.pushed = 0;this.pushx = 0;
-			this.blocking = 0; this.falling = 0; this.gettingup = 0; this.grabbing = 0;
+			this.blocking = 0; this.falling = 0; this.gettingup = 0; this.grabbing = 0; this.grabbed = 0;
 		}
 
 		begincoup(s){
@@ -59,9 +59,40 @@ function main(){
 			this.falling = 0;this.hurted =0; this.gettingup = 1;this.invincibilite = this.charac.getupfdur; this.y = 0;
 		}
 
+		begin_grab(other){
+			this.grabbing = 1;
+			this.movlag = 0;
+			this.mov = "";
+			other.grabbed = 1;
+		}
+
+		end_grab(other){
+			this.grabbing = 0;
+			this.invincibilite = 0;
+			other.grabbed = 0;
+		}
+
 		miseajour(other){
 			var c = this.charac;
 			this.reoriente(other);
+			if(this.grabbing&&this.hurted==0&&this.grabbed==0){
+				this.invincibilite = 1;
+				this.grabbing++;
+				if(this.grabbing==this.charac.grabfdur){this.end_grab(other);}
+				return;
+			}
+			else if(this.grabbing && this.grabbed){
+				this.end_grab(other);other.end_grab(this);
+				this.pushed = 5;this.pushx = -4*this.orientation;
+				other.pushed = 5;other.pushx = -4*other.orientation;
+			}
+			else if(this.grabbing && this.hurted){
+				this.end_grab(other);
+			}
+			if(this.grabbed){
+				this.movlag = 0;this.mov = "";
+				return;
+			}
 			if(this.invincibilite>0){this.invincibilite--;}
 			if(this.gettingup){
 				this.xspeed = signe(this.xspeed)*Math.max(0,Math.abs(this.xspeed) -c.friction);
@@ -191,7 +222,7 @@ function main(){
 				this.movlag--;
 				if(this.movlag == 0){
 					if(this.mov == "jumpsquat"){this.mov = "";if(this.haut>=1 && this.bas == 0){this.tb = c.jumpforce;this.y = c.jumpforce;}else{this.tb = c.shorthop;this.y = c.shorthop;}}
-					else if(this.mov == "air_dodge"){this.movlag = 100;this.mov = "free_fall";this.xspeed /=4;console.log(this.mov);}
+					else if(this.mov == "air_dodge"){this.movlag = 100;this.mov = "free_fall";this.xspeed /=4;}
 					else{this.mov = "";}
 				}
 			}
@@ -239,12 +270,18 @@ function main(){
 				this.xspeed = -stats.blockx*this.orientation;
 			}
 			else{
+				switch (stats.hiteffect){
+					case "fall" :
+						this.falling = 4;
+						this.crouching = 0;
+						break;
+					case "grab" :
+						other.begin_grab(this);
+						console.log(this.grabbed);
+						return;
+				}
 				this.hurted = stats.hitstun;
 				this.xspeed = stats.hurtx*other.orientation;
-				if(stats.hiteffect == "fall"){
-					this.falling = 4;
-					this.crouching = 0;
-				}
 			}
 			if(this.y>0 && other.y>0){this.xspeed+=other.xspeed*2/3;this.hurted+=4;}
 			if(Math.abs(this.x+this.xspeed*Math.abs(this.xspeed)/2/this.charac.friction-camerax)>decalagex-this.charac.width/2){other.pushed = 10;other.pushx = -other.orientation * (Math.abs(this.x+this.xspeed*Math.abs(this.xspeed)/2/this.charac.friction-camerax)-decalagex+this.charac.width)/5;other.xspeed = 0;}
@@ -252,8 +289,20 @@ function main(){
 			this.invincibilite = stats.fdur+1;
 		}
 
-		afficher(){
-			if(this.falling){
+		afficher(other){
+			if(this.grabbed&&other.grabbed==0){
+				return;
+			}
+			if(this.grabbing){
+				if(this.grabbing<=this.charac.grabfdur*1/7){this.costume = "grabbing1";}
+				else if(this.grabbing<=this.charac.grabfdur*2/7){this.costume = "grabbing2";}
+				else if(this.grabbing<=this.charac.grabfdur*3/7){this.costume = "grabbing3";}
+				else if(this.grabbing<=this.charac.grabfdur*4/7){this.costume = "grabbing4";}
+				else if(this.grabbing<=this.charac.grabfdur*5/7){this.costume = "grabbing5";}
+				else if(this.grabbing<=this.charac.grabfdur*6/7){this.costume = "grabbing4";}
+				else {this.costume = "grabbing3";}
+			}
+			else if(this.falling){
 				if(this.falling<=5){this.costume = "hurted2";}
 				else if(this.falling<=14){this.costume = "falling1";}
 				else if(this.falling<=23){this.costume = "falling2";}
@@ -408,6 +457,20 @@ function main(){
 			ctx.drawImage(kitpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.charac.width/2)*this.orientation,ground-this.y-coords.height-coords.decy,coords.width,coords.height);
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
+
+			if(other.grabbed && this.grabbed==0){
+				var othercost = "hurted2";
+				var dist = (this.charac.width+other.charac.width)/2;
+				var angle = this.grabbing*7/5/this.charac.grabfdur*Math.PI;
+				var x = this.orientation*dist*Math.cos(angle)+this.x;
+				var y = dist*Math.sin(angle)+this.y;
+				ctx.scale(2*other.orientation,2);
+				var coords = kitcoordinates.get(othercost);
+				ctx.drawImage(kitpng,coords.offx,coords.offy,coords.width,coords.height,(x+decalagex-camerax+coords.decx*this.orientation-other.orientation*other.charac.width/2)*other.orientation,ground-y-coords.height-coords.decy,coords.width,coords.height);
+				ctx.setTransform(1, 0, 0, 1, 0, 0);
+				ctx.scale(1,1);
+				console.log((x+decalagex-camerax+coords.decx*this.orientation-other.orientation*other.charac.width/2)*other.orientation,ground-y-coords.height-coords.decy);
+			}
 		}
 	}
 
@@ -416,8 +479,8 @@ function main(){
 	function affichtt(){
 		ctx.fillStyle = "gray";
 		ctx.fillRect(0,0,1024,576);
-		j1.afficher();
-		j2.afficher();
+		j1.afficher(j2);
+		j2.afficher(j1);
 	}
 	
 	function loop(){
@@ -525,10 +588,10 @@ function main(){
 	kitcoordinates.set("jkick1",{offx:314,width:51,offy:974,height:64,decx:0,decy:10});
 	kitcoordinates.set("jkick2",{offx:375,width:64,offy:975,height:63,decx:0,decy:10});
 	kitcoordinates.set("grabbing1",{offx:15,width:56,offy:494,height:105,decx:0,decy:0});
-	kitcoordinates.set("grabbing2",{offx:81,width:36,offy:494,height:105,decx:0,decy:0});
-	kitcoordinates.set("grabbing3",{offx:127,width:47,offy:494,height:105,decx:0,decy:0});
-	kitcoordinates.set("grabbing4",{offx:186,width:61,offy:494,height:105,decx:0,decy:0});
-	kitcoordinates.set("grabbing5",{offx:258,width:61,offy:494,height:105,decx:0,decy:0});
+	kitcoordinates.set("grabbing2",{offx:81,width:36,offy:494,height:105,decx:-2,decy:0});
+	kitcoordinates.set("grabbing3",{offx:127,width:47,offy:494,height:105,decx:-17,decy:0});
+	kitcoordinates.set("grabbing4",{offx:186,width:61,offy:494,height:105,decx:-30,decy:0});
+	kitcoordinates.set("grabbing5",{offx:258,width:61,offy:494,height:105,decx:-30,decy:0});
 
 	var characteristics = new Map();
 
@@ -549,7 +612,7 @@ function main(){
 
 
 	characteristics.set("kitana",{width : 34, height : 97,vitesse : 3.5,fdashslag : 3,fdashfdur : 11,fdashelag : 5,fdashspeed : 7, bdashslag : 3, bdashfdur : 13, bdashelag : 10, bdashspeed : 5, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2,
-	airdrift : 0.2, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 30});
+	airdrift : 0.2, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 30, grabfdur : 35});
 
 
 	var movpriority = new Map(); 	//you can cancel a mov by a mov of priority stritcly superior
