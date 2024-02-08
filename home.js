@@ -108,6 +108,7 @@ function main(){
 				this.gettingup++;
 				if(this.gettingup == this.charac.getupfdur || (this.gettingup>=this.charac.getupfdur*5/6 && this.haut)){
 					this.gettingup = 0; this.invincibilite = 0;
+					if(this.haut==0 && this.bas){this.crouching = 6;}
 				}
 			}
 			else if(this.blocking){
@@ -248,6 +249,7 @@ function main(){
 			if(this.y>0 || this.tb>0){this.y+=this.tb;this.tb-=c.gravity;}
 			else if(this.y<0 && this.tb<=0){this.y=0;this.tb=0;}
 			if(Math.abs(this.x-camerax)>decalagex-this.charac.width/2){this.x = signe(this.x-camerax)*(decalagex-this.charac.width/2)}
+			
 			if(this.y<=0 && this.falling){this.getup();}
 		}
 		
@@ -275,7 +277,7 @@ function main(){
 
 		hurt(other,stats){
 			if(this.invincibilite){return;}
-			if(this.movlag==0&&this.back>=1&&this.y==0){
+			if(this.movlag==0&&this.back>=1&&this.y==0&&stats.hiteffect != "grab"){
 				this.blocking = stats.blockstun;
 				this.xspeed = -stats.blockx*this.orientation;
 			}
