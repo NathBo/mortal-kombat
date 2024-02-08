@@ -63,6 +63,9 @@ function main(){
 			this.grabbing = 1;
 			this.movlag = 0;
 			this.mov = "";
+			other.movlag = 0;
+			other.mov = "";
+			other.tb = 0;
 			other.grabbed = 1;
 		}
 
@@ -74,11 +77,17 @@ function main(){
 
 		miseajour(other){
 			var c = this.charac;
-			this.reoriente(other);
 			if(this.grabbing&&this.hurted==0&&this.grabbed==0){
 				this.invincibilite = 1;
 				this.grabbing++;
 				if(this.grabbing==this.charac.grabfdur){this.end_grab(other);}
+				else if(this.grabbing == Math.floor(this.charac.grabfdur*5/7)+1){
+					other.grabbed=0;
+					other.falling=1;
+					other.y = 0;
+					other.hurted = 15;
+					other.x = this.x - this.orientation*(this.charac.width+other.charac.width)/1.4;
+				}
 				return;
 			}
 			else if(this.grabbing && this.grabbed){
@@ -107,6 +116,7 @@ function main(){
 				this.x += this.xspeed;
 			}
 			else if(this.hurted==0){
+				this.reoriente(other);
 
 			
 				if(this.y<=0){
@@ -274,10 +284,10 @@ function main(){
 					case "fall" :
 						this.falling = 4;
 						this.crouching = 0;
+						
 						break;
 					case "grab" :
 						other.begin_grab(this);
-						console.log(this.grabbed);
 						return;
 				}
 				this.hurted = stats.hitstun;
@@ -451,16 +461,12 @@ function main(){
 				}
 			}
 
-
-			ctx.scale(2*this.orientation,2);
-			var coords = kitcoordinates.get(this.costume);
-			ctx.drawImage(kitpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.charac.width/2)*this.orientation,ground-this.y-coords.height-coords.decy,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-
 			if(other.grabbed && this.grabbed==0){
-				var othercost = "hurted2";
-				var dist = (this.charac.width+other.charac.width)/2;
+				if(this.grabbing<=this.charac.grabfdur*1/7){var othercost = "grabbed1";}
+				else if(this.grabbing<=this.charac.grabfdur*2/7){var othercost = "grabbed2";}
+				else if(this.grabbing<=this.charac.grabfdur*3/7){var othercost = "grabbed3";}
+				else {var othercost = "grabbed4";}
+				var dist = (this.charac.width+other.charac.width)/1.5;
 				var angle = this.grabbing*7/5/this.charac.grabfdur*Math.PI;
 				var x = this.orientation*dist*Math.cos(angle)+this.x;
 				var y = dist*Math.sin(angle)+this.y;
@@ -469,8 +475,16 @@ function main(){
 				ctx.drawImage(kitpng,coords.offx,coords.offy,coords.width,coords.height,(x+decalagex-camerax+coords.decx*this.orientation-other.orientation*other.charac.width/2)*other.orientation,ground-y-coords.height-coords.decy,coords.width,coords.height);
 				ctx.setTransform(1, 0, 0, 1, 0, 0);
 				ctx.scale(1,1);
-				console.log((x+decalagex-camerax+coords.decx*this.orientation-other.orientation*other.charac.width/2)*other.orientation,ground-y-coords.height-coords.decy);
 			}
+
+
+			ctx.scale(2*this.orientation,2);
+			var coords = kitcoordinates.get(this.costume);
+			ctx.drawImage(kitpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.charac.width/2)*this.orientation,ground-this.y-coords.height-coords.decy,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+
+		
 		}
 	}
 
@@ -592,6 +606,10 @@ function main(){
 	kitcoordinates.set("grabbing3",{offx:127,width:47,offy:494,height:105,decx:-17,decy:0});
 	kitcoordinates.set("grabbing4",{offx:186,width:61,offy:494,height:105,decx:-30,decy:0});
 	kitcoordinates.set("grabbing5",{offx:258,width:61,offy:494,height:105,decx:-30,decy:0});
+	kitcoordinates.set("grabbed1",{offx:15,width:35,offy:1282,height:95,decx:0,decy:0});
+	kitcoordinates.set("grabbed2",{offx:59,width:56,offy:1282,height:95,decx:0,decy:0});
+	kitcoordinates.set("grabbed3",{offx:124,width:72,offy:1282,height:95,decx:0,decy:0});
+	kitcoordinates.set("grabbed4",{offx:205,width:41,offy:1282,height:95,decx:0,decy:0});
 
 	var characteristics = new Map();
 
