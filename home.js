@@ -115,6 +115,7 @@ function main(){
 				this.blocking--;
 				this.movlag = 0;this.mov = "";
 				this.x += this.xspeed;
+				if(Math.abs(this.x-camerax)>decalagex-this.charac.width/2){this.x = signe(this.x-camerax)*(decalagex-this.charac.width/2)}
 			}
 			else if(this.hurted==0){
 				this.reoriente(other);
@@ -177,6 +178,8 @@ function main(){
 					}
 					else if(this.forward>=1&&movpriority.get(this.mov)<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
 						this.x+=this.charac.vitesse*this.orientation;this.xspeed = 0;
+						let d = (this.charac.width+other.charac.width)/3;
+						if(Math.abs(this.x-other.x)<d && this.y==0 && other.y==0){this.x-=this.charac.vitesse*this.orientation;}
 					}
 					else if(this.back>=1&&movpriority.get(this.mov)<=0&&this.crouching==0&&-this.xspeed*this.orientation<c.vitesse){
 						this.x-=this.charac.vitesse*this.orientation*0.8;this.xspeed = 0;
@@ -239,6 +242,11 @@ function main(){
 			}
 			this.x += this.xspeed;
 			if(this.pushed>0){this.pushed--;this.x+=this.pushx;}
+			let d = (this.charac.width+other.charac.width)/4;
+			if(Math.abs(this.x-other.x)<d && this.y==0 && other.y==0){
+				this.x=(this.x+other.x)/2+signe(this.x-other.x)*d;
+				other.x=(this.x+other.x)/2-signe(this.x-other.x)*d;
+			}
 			if(Math.abs(this.x-camerax)>decalagex-this.charac.width/2){this.x = signe(this.x-camerax)*(decalagex-this.charac.width/2)}
 		}
 		else
@@ -249,7 +257,6 @@ function main(){
 			if(this.y>0 || this.tb>0){this.y+=this.tb;this.tb-=c.gravity;}
 			else if(this.y<0 && this.tb<=0){this.y=0;this.tb=0;}
 			if(Math.abs(this.x-camerax)>decalagex-this.charac.width/2){this.x = signe(this.x-camerax)*(decalagex-this.charac.width/2)}
-			
 			if(this.y<=0 && this.falling){this.getup();}
 		}
 		
