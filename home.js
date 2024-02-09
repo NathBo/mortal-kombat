@@ -284,7 +284,7 @@ function main(){
 
 		hurt(other,stats){
 			if(this.invincibilite){return;}
-			if(this.movlag==0&&this.back>=1&&this.y==0&&stats.hiteffect != "grab"){
+			if(this.movlag==0&&this.back>=1&&this.y==0&&stats.hiteffect != "grab" && ((this.crouching<=3 && (other.y>0 || stats.hitboxys>=0) || (this.crouching>3 && other.y==0)))){
 				this.blocking = stats.blockstun;
 				this.xspeed = -stats.blockx*this.orientation;
 			}
