@@ -22,6 +22,11 @@ function main(){
 		  canvas.style.height  = Height+'px';
 	}
 
+	function lag_game(n){
+		gamefreeze = n;
+		still_draw = true;
+	}
+
 	class Joueur
 	{
 		constructor(x,y,perso,n)
@@ -87,7 +92,7 @@ function main(){
 					other.y = 0;
 					other.hurted = 15;
 					other.x = this.x - this.orientation*(this.charac.width+other.charac.width)/1.4;
-					gamefreeze = 8;
+					lag_game(8);
 				}
 				return;
 			}
@@ -288,7 +293,7 @@ function main(){
 			if(this.movlag==0&&this.back>=1&&this.y==0&&stats.hiteffect != "grab" && ((this.crouching<=3 && (other.y>0 || stats.hitboxys>=0) || (this.crouching>3 && other.y==0)))){
 				this.blocking = stats.blockstun;
 				this.xspeed = -stats.blockx*this.orientation;
-				gamefreeze = Math.ceil(stats.hitlag/0.8);
+				lag_game(stats.hitlag/0.8);
 			}
 			else{
 				switch (stats.hiteffect){
@@ -298,13 +303,13 @@ function main(){
 						break;
 					case "grab" :
 						other.begin_grab(this);
-						gamefreeze = stats.hitlag;
 						return;
 				}
 				this.hurted = stats.hitstun;
 				this.xspeed = stats.hurtx*other.orientation;
-				gamefreeze = stats.hitlag;
+				lag_game(stats.hitlag);
 				play_sound_eff(stats.hitsound);
+				shake_screen(stats.hitlag+2,stats.degats/4);
 			}
 			if(this.y>0 && other.y>0){this.xspeed+=other.xspeed*2/3;this.hurted+=4;}
 			if(Math.abs(this.x+this.xspeed*Math.abs(this.xspeed)/2/this.charac.friction-camerax)>decalagex-this.charac.width/2){other.pushed = 10;other.pushx = -other.orientation * (Math.abs(this.x+this.xspeed*Math.abs(this.xspeed)/2/this.charac.friction-camerax)-decalagex+this.charac.width)/5;other.xspeed = 0;}
@@ -316,7 +321,8 @@ function main(){
 			if(this.grabbed&&other.grabbed==0){
 				return;
 			}
-			if(this.grabbing){
+			if(gamefreeze && !still_draw){}
+			else if(this.grabbing){
 				if(this.grabbing<=this.charac.grabfdur*1/7){this.costume = "grabbing1";}
 				else if(this.grabbing<=this.charac.grabfdur*2/7){this.costume = "grabbing2";}
 				else if(this.grabbing<=this.charac.grabfdur*3/7){this.costume = "grabbing3";}
@@ -485,7 +491,7 @@ function main(){
 				var y = dist*Math.sin(angle)+this.y;
 				ctx.scale(2*other.orientation,2);
 				var coords = kitcoordinates.get(othercost);
-				ctx.drawImage(kitpng,coords.offx,coords.offy,coords.width,coords.height,(x+decalagex-camerax+coords.decx*this.orientation-other.orientation*other.charac.width/2)*other.orientation,ground-y-coords.height-coords.decy,coords.width,coords.height);
+				ctx.drawImage(kitpng,coords.offx,coords.offy,coords.width,coords.height,(x+decalagex-camerax+coords.decx*this.orientation-other.orientation*other.charac.width/2+shakex)*other.orientation,ground-y-coords.height-coords.decy+shakey,coords.width,coords.height);
 				ctx.setTransform(1, 0, 0, 1, 0, 0);
 				ctx.scale(1,1);
 			}
@@ -493,7 +499,7 @@ function main(){
 
 			ctx.scale(2*this.orientation,2);
 			var coords = kitcoordinates.get(this.costume);
-			ctx.drawImage(kitpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.charac.width/2)*this.orientation,ground-this.y-coords.height-coords.decy,coords.width,coords.height);
+			ctx.drawImage(kitpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.charac.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
 
@@ -502,21 +508,37 @@ function main(){
 	}
 
 
+	function shake_loop(){
+		if(shakeframe > 0){
+			shakeframe --;
+			if(shakeframe<=3){shakeforce*=0.8;}
+			shakex = -shakeforce + 2*Math.random()*shakeforce;
+			shakey = -shakeforce + 2*Math.random()*shakeforce;
+		}
+		else{
+			shakex = 0; shakey = 0;
+		}
+	}
+
 
 	function affichtt(){
+		shake_loop();
 		ctx.fillStyle = "gray";
 		ctx.fillRect(0,0,1024,576);
 		j1.afficher(j2);
 		j2.afficher(j1);
+		still_draw = false;
 	}
 	
 	function loop(){
 		resizecanvas();
-		if(gamefreeze){gamefreeze--;return;}
-		j1.miseajour(j2);
-		j2.miseajour(j1);
-		j1.loop(j2);
-		j2.loop(j1);
+		if(gamefreeze){gamefreeze--;}
+		else{
+			j1.miseajour(j2);
+			j2.miseajour(j1);
+			j1.loop(j2);
+			j2.loop(j1);
+		}
 		affichtt();
 	}
 
@@ -640,7 +662,7 @@ function main(){
 	kitana_coups.set("jkick",{slag : 6, fdur : 25, elag : 4, degats : 6, hitstun : 35, hurtx : 3.4, hurty : 5, hitboxxs : 0, hitboxxe : 60,hitboxys : -55, hitboxye : 5, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "fall", hitboxxeyscaling : -1, hitlag : 8, hitsound : "lhit"});
 	kitana_coups.set("jskick",{slag : 8, fdur : 15, elag : 4, degats : 10, hitstun : 32, hurtx : 0.8, hurty : 0, hitboxxs : 10, hitboxxe : 33,hitboxys : -20, hitboxye : 30, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 8, hitsound : "hhit"});
 	kitana_coups.set("jpunch",{slag : 5, fdur : 10, elag : 6, degats : 6, hitstun : 20, hurtx : 1.5, hurty : 0, hitboxxs : -5, hitboxxe : 58,hitboxys : -40, hitboxye : 5, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "lhit"});
-	kitana_coups.set("grab",{slag : 5, fdur : 3, elag : 12, degats : 15, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 15,hitboxys : 0, hitboxye : 75, blockstun : 12, blockx : 0.6, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit"});
+	kitana_coups.set("grab",{slag : 5, fdur : 3, elag : 12, degats : 15, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 24,hitboxys : 0, hitboxye : 50, blockstun : 12, blockx : 0.6, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit"});
 
 	var sounds_eff = new Map();
 	sounds_eff.set("lhit",[document.querySelector('#lhitwav1'),document.querySelector('#lhitwav2'),document.querySelector('#lhitwav3')]);
@@ -687,9 +709,13 @@ function main(){
 	var camerax = 0;
 	var decalagex = 256;
 	var ground = 262;
-	var gamefreeze = 0;
-	var shakex = 0;
-	var shakey = 0;
+	var gamefreeze = 0; var still_draw = false;
+	var shakex = 0; var shakey = 0; var shakeforce = 0; var shakeframe = 0;
+
+
+	function shake_screen(frames,force){
+		shakeforce = force; shakeframe = frames;
+	}
 
 	
 	var controls=["ArrowRight","ArrowLeft","KeyJ","ArrowDown","KeyB","KeyN","KeyM","KeyH","KeyF","KeyS","KeyE","KeyD","KeyQ","KeyA","KeyZ","KeyW"];
