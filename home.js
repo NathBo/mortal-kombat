@@ -134,7 +134,7 @@ function main(){
 					}
 					if (this.bas&&this.movlag == 0){this.crouching = Math.min(this.crouching+1,6);}
 					else if(this.bas==0&&this.crouching>0&&this.movlag==0){this.crouching--;}
-					if(this.haut==1&&movpriority.get(this.mov)<20){this.mov = "jumpsquat";this.movlag = c.jumpsquat;this.haut = 2;if(this.xspeed==0){if(this.droite >= 1){this.xspeed = c.vitesse;}else if(this.gauche>=1){this.xspeed = - c.vitesse}}}
+					if(this.haut==1&&movpriority.get(this.mov)<20){this.mov = "jumpsquat";this.movlag = c.jumpsquat;this.haut = 2;if(this.xspeed==0){if(this.droite >= 1){this.xspeed = c.jumpxspeed;}else if(this.gauche>=1){this.xspeed = - c.jumpxspeed*c.backmovnerf}}}
 					else if(this.poing==1&&this.forward+this.back==0&&movpriority.get(this.mov)<=30&&this.crouching==0&&this.bas==0){
 						this.begincoup("lpunch");
 						this.poing = 2;
@@ -182,7 +182,7 @@ function main(){
 						if(Math.abs(this.x-other.x)<d && this.y==0 && other.y==0){this.x-=this.charac.vitesse*this.orientation;}
 					}
 					else if(this.back>=1&&movpriority.get(this.mov)<=0&&this.crouching==0&&-this.xspeed*this.orientation<c.vitesse){
-						this.x-=this.charac.vitesse*this.orientation*0.8;this.xspeed = 0;
+						this.x-=this.charac.vitesse*this.orientation*c.backmovnerf;this.xspeed = 0;
 					}
 					if(this.mov != "forwardash" && this.mov != "backdash"){this.xspeed = signe(this.xspeed)*Math.max(0,Math.abs(this.xspeed) -c.friction);}
 					
@@ -635,11 +635,11 @@ function main(){
 	kitana_coups.set("jkick",{slag : 6, fdur : 25, elag : 4, degats : 6, hitstun : 35, hurtx : 3.4, hurty : 5, hitboxxs : 0, hitboxxe : 60,hitboxys : -55, hitboxye : 5, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "fall", hitboxxeyscaling : -1});
 	kitana_coups.set("jskick",{slag : 8, fdur : 15, elag : 4, degats : 10, hitstun : 32, hurtx : 0.8, hurty : 0, hitboxxs : 10, hitboxxe : 33,hitboxys : -20, hitboxye : 30, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0});
 	kitana_coups.set("jpunch",{slag : 5, fdur : 10, elag : 6, degats : 6, hitstun : 20, hurtx : 1.5, hurty : 0, hitboxxs : -5, hitboxxe : 58,hitboxys : -40, hitboxye : 5, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0});
-	kitana_coups.set("grab",{slag : 5, fdur : 3, elag : 12, degats : 15, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 30,hitboxys : 0, hitboxye : 75, blockstun : 12, blockx : 0.6, hiteffect : "grab", hitboxxeyscaling : 0});
+	kitana_coups.set("grab",{slag : 5, fdur : 3, elag : 12, degats : 15, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 15,hitboxys : 0, hitboxye : 75, blockstun : 12, blockx : 0.6, hiteffect : "grab", hitboxxeyscaling : 0});
 
 
-	characteristics.set("kitana",{width : 34, height : 97,vitesse : 3.5,fdashslag : 3,fdashfdur : 11,fdashelag : 5,fdashspeed : 7, bdashslag : 3, bdashfdur : 13, bdashelag : 10, bdashspeed : 5, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2,
-	airdrift : 0.2, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 30, grabfdur : 35});
+	characteristics.set("kitana",{width : 34, height : 97,vitesse : 3.5,jumpxspeed : 3.6,backmovnerf : 0.85,fdashslag : 3,fdashfdur : 11,fdashelag : 5,fdashspeed : 7, bdashslag : 3, bdashfdur : 13, bdashelag : 10, bdashspeed : 5, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2,
+	airdrift : 0.18, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 30, grabfdur : 35});
 
 
 	var movpriority = new Map(); 	//you can cancel a mov by a mov of priority stritcly superior
