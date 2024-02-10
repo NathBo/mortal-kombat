@@ -44,7 +44,7 @@ function main(){
 			this.mov = "";
 			this.tb = 0; this.xspeed = 0; this.crouching = 0;
 			this.hurted = 0; this.hurtx = 0; this.invincibilite = 0;
-			this.pv = this.charac.pv;
+			this.pv = this.charac.pv; this.pvmax = this.charac.pv; this.pvaff = this.charac.pv;
 			this.pushed = 0;this.pushx = 0;
 			this.blocking = 0; this.falling = 0; this.gettingup = 0; this.grabbing = 0; this.grabbed = 0;
 		}
@@ -92,7 +92,12 @@ function main(){
 					other.y = 0;
 					other.hurted = 15;
 					other.x = this.x - this.orientation*(this.charac.width+other.charac.width)/1.4;
+					other.xspeed = -0.2*this.orientation;
 					lag_game(8);
+					shake_screen(10,3);
+					play_sound_eff("mhit");
+					other.pv -= this.charac.grabdeg;
+					if(other.pv<=0){other.killanim();}
 				}
 				return;
 			}
@@ -293,12 +298,12 @@ function main(){
 			if(this.movlag==0&&this.back>=1&&this.y==0&&stats.hiteffect != "grab" && ((this.crouching<=3 && (other.y>0 || stats.hitboxys>=0) || (this.crouching>3 && other.y==0)))){
 				this.blocking = stats.blockstun;
 				this.xspeed = -stats.blockx*this.orientation;
-				lag_game(stats.hitlag/0.8);
+				lag_game(Math.floor(stats.hitlag/0.8));
 			}
 			else{
 				switch (stats.hiteffect){
 					case "fall" :
-						this.falling = 4;
+						this.falling = 1;
 						this.crouching = 0;
 						break;
 					case "grab" :
@@ -307,6 +312,7 @@ function main(){
 				}
 				this.hurted = stats.hitstun;
 				this.xspeed = stats.hurtx*other.orientation;
+				this.pv -= stats.degats;
 				lag_game(stats.hitlag);
 				play_sound_eff(stats.hitsound);
 				shake_screen(stats.hitlag+2,stats.degats/4);
@@ -315,6 +321,19 @@ function main(){
 			if(Math.abs(this.x+this.xspeed*Math.abs(this.xspeed)/2/this.charac.friction-camerax)>decalagex-this.charac.width/2){other.pushed = 10;other.pushx = -other.orientation * (Math.abs(this.x+this.xspeed*Math.abs(this.xspeed)/2/this.charac.friction-camerax)-decalagex+this.charac.width)/5;other.xspeed = 0;}
 			this.tb = stats.hurty;
 			this.invincibilite = stats.fdur+1;
+			if(this.pv<=0){
+				this.killanim();
+			}
+		}
+
+		killanim(){
+			this.pv = 0;
+			this.falling = 4;
+			this.tb = Math.max(7,this.tb);
+			this.xspeed = signe(this.xspeed)*Math.max(Math.abs(this.xspeed),3);
+			this.invincibilite = 150;
+			shake_screen(35,6);
+			lag_game(30);
 		}
 
 		afficher(other){
@@ -350,7 +369,7 @@ function main(){
 			}
 			else if(this.gettingup){
 				if(this.gettingup<=this.charac.getupfdur/6){this.costume = "grounded1"}
-				else if(this.gettingup<=this.charac.getupfdur*2/6){this.costume = "grounded2"}
+				else if(this.gettingup<=this.charac.getupfdur*2/6){this.costume = "grounded2";if(this.pv<=0){this.gettingup--;}}
 				else if(this.gettingup<=this.charac.getupfdur*3/6){this.costume = "getup1"}
 				else if(this.gettingup<=this.charac.getupfdur*4/6){this.costume = "getup2"}
 				else if(this.gettingup<=this.charac.getupfdur*5/6){this.costume = "getup3"}
@@ -494,7 +513,9 @@ function main(){
 				ctx.drawImage(kitpng,coords.offx,coords.offy,coords.width,coords.height,(x+decalagex-camerax+coords.decx*this.orientation-other.orientation*other.charac.width/2+shakex)*other.orientation,ground-y-coords.height-coords.decy+shakey,coords.width,coords.height);
 				ctx.setTransform(1, 0, 0, 1, 0, 0);
 				ctx.scale(1,1);
+				other.drawLife();
 			}
+
 
 
 			ctx.scale(2*this.orientation,2);
@@ -503,7 +524,19 @@ function main(){
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
 
+			this.drawLife();
+
+
 		
+		}
+
+		drawLife() {
+			if(this.pvaff>this.pv){this.pvaff -= 1;}
+			ctx.fillStyle='rgb(148,16,16)';ctx.fillRect(55+this.n*500,30,400,30);
+			ctx.fillStyle='rgb(107,189,33)';
+			if(this.n==0){ctx.fillRect(55,30,this.pvaff/this.pvmax*400,30);}
+			else{ctx.fillRect(955-this.pvaff/this.pvmax*400,30,this.pvaff/this.pvmax*400,30);}
+			ctx.drawImage(lifebarpng,50+this.n*500,25);
 		}
 	}
 
@@ -529,6 +562,11 @@ function main(){
 		j2.afficher(j1);
 		still_draw = false;
 	}
+
+	function checkforend(){
+		if(j1.pv<=0){j1.pv=0;end_of_round_countdown = 180;}
+		else if(j2.pv<=0){j2.pv=0;end_of_round_countdown = 180;}
+	}
 	
 	function loop(){
 		resizecanvas();
@@ -540,6 +578,9 @@ function main(){
 			j2.loop(j1);
 		}
 		affichtt();
+		if(end_of_round_countdown==0){checkforend();}
+		else if(end_of_round_countdown==1){j1.reinit(-150,0,"kitana",0);j2.reinit(150,0,"kitana",1);end_of_round_countdown=0;}
+		else{end_of_round_countdown--;}
 	}
 
 	var canvas = document.getElementById("canvas");
@@ -551,6 +592,8 @@ function main(){
 	ctx.webkitImageSmoothingEnabled = false;
 	ctx.mozImageSmoothingEnabled = false;
 	ctx.imageSmoothingEnabled = false;
+
+	var lifebarpng=new Image();lifebarpng.src = 'ressource/ui/barlife.png';
 
 	var kitpng=new Image();kitpng.src = 'ressource/characters/kitana.png';
 
@@ -650,19 +693,19 @@ function main(){
 	var characteristics = new Map();
 
 	kitana_coups = new Map();
-	kitana_coups.set("lpunch",{slag : 10, fdur : 6, elag : 8, degats : 7, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 47,hitboxys : 0, hitboxye : 75, blockstun : 12, blockx : 0.6, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit"});
+	kitana_coups.set("lpunch",{slag : 10, fdur : 6, elag : 10, degats : 5, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 47,hitboxys : 0, hitboxye : 75, blockstun : 12, blockx : 0.6, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit"});
 	kitana_coups.set("hpunch",{slag : 14, fdur : 10, elag : 16, degats : 10, hitstun : 28, hurtx : 1.3, hurty : 0, hitboxxs : 11, hitboxxe : 49, hitboxys : 0, hitboxye : 82, blockstun : 14, blockx : 1, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit"});
 	kitana_coups.set("lkick",{slag : 14, fdur : 8, elag : 14, degats : 6, hitstun : 20, hurtx : 1.1, hurty : 0, hitboxxs : 18, hitboxxe : 53, hitboxys : 0, hitboxye : 40, blockstun : 12, blockx : 0.6, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit"});
 	kitana_coups.set("mkick",{slag : 16, fdur : 12, elag : 16, degats : 9, hitstun : 26, hurtx : 1.5, hurty : 0, hitboxxs : 18, hitboxxe : 52, hitboxys : 0, hitboxye : 98, blockstun : 14, blockx : 1, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit"});
-	kitana_coups.set("hkick",{slag : 14, fdur : 8, elag : 24, movx : 3, degats : 14, hitstun : 35, hurtx : 3.2, hurty : 7, hitboxxs : 20, hitboxxe : 50, hitboxys : 0, hitboxye : 106, blockstun : 16, blockx : 1.4, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 10, hitsound : "hhit"});
-	kitana_coups.set("clpunch",{slag : 8, fdur : 6, elag : 8, degats : 6, hitstun : 20, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 30,hitboxys : -1, hitboxye : 20, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit"});
-	kitana_coups.set("huppercut",{slag : 12, fdur : 10, elag : 24, degats : 18, hitstun : 50, hurtx : 3, hurty : 9.5, hitboxxs : 20, hitboxxe : 40, hitboxys : 0, hitboxye : 109, blockstun : 16, blockx : 1, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 12, hitsound : "hhit"});
+	kitana_coups.set("hkick",{slag : 14, fdur : 8, elag : 24, movx : 3, degats : 16, hitstun : 38, hurtx : 3.2, hurty : 7, hitboxxs : 20, hitboxxe : 50, hitboxys : 0, hitboxye : 106, blockstun : 16, blockx : 1.4, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 10, hitsound : "hhit"});
+	kitana_coups.set("clpunch",{slag : 8, fdur : 6, elag : 8, degats : 4, hitstun : 20, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 30,hitboxys : -1, hitboxye : 20, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit"});
+	kitana_coups.set("huppercut",{slag : 12, fdur : 10, elag : 24, degats : 20, hitstun : 60, hurtx : 3, hurty : 10, hitboxxs : 20, hitboxxe : 40, hitboxys : 0, hitboxye : 109, blockstun : 16, blockx : 1, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 12, hitsound : "hhit"});
 	kitana_coups.set("clkick",{slag : 8, fdur : 6, elag : 8, degats : 6, hitstun : 20, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 38,hitboxys : -1, hitboxye : 5, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit"});
 	kitana_coups.set("cmkick",{slag : 13, fdur : 6, elag : 12, degats : 8, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 50,hitboxys : -1, hitboxye : 5, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit"});
-	kitana_coups.set("jkick",{slag : 6, fdur : 25, elag : 4, degats : 6, hitstun : 35, hurtx : 3.4, hurty : 5, hitboxxs : 0, hitboxxe : 60,hitboxys : -55, hitboxye : 5, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "fall", hitboxxeyscaling : -1, hitlag : 8, hitsound : "lhit"});
-	kitana_coups.set("jskick",{slag : 8, fdur : 15, elag : 4, degats : 10, hitstun : 32, hurtx : 0.8, hurty : 0, hitboxxs : 10, hitboxxe : 33,hitboxys : -20, hitboxye : 30, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 8, hitsound : "hhit"});
-	kitana_coups.set("jpunch",{slag : 5, fdur : 10, elag : 6, degats : 6, hitstun : 20, hurtx : 1.5, hurty : 0, hitboxxs : -5, hitboxxe : 58,hitboxys : -40, hitboxye : 5, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "lhit"});
-	kitana_coups.set("grab",{slag : 5, fdur : 3, elag : 12, degats : 15, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 24,hitboxys : 0, hitboxye : 50, blockstun : 12, blockx : 0.6, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit"});
+	kitana_coups.set("jkick",{slag : 6, fdur : 25, elag : 4, degats : 10, hitstun : 35, hurtx : 3.4, hurty : 5, hitboxxs : 0, hitboxxe : 60,hitboxys : -55, hitboxye : 5, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "fall", hitboxxeyscaling : -1, hitlag : 8, hitsound : "lhit"});
+	kitana_coups.set("jskick",{slag : 8, fdur : 15, elag : 4, degats : 13, hitstun : 32, hurtx : 0.8, hurty : 0, hitboxxs : 10, hitboxxe : 33,hitboxys : -20, hitboxye : 30, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 8, hitsound : "hhit"});
+	kitana_coups.set("jpunch",{slag : 5, fdur : 10, elag : 6, degats : 9, hitstun : 20, hurtx : 1.5, hurty : 0, hitboxxs : -5, hitboxxe : 58,hitboxys : -40, hitboxye : 5, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "lhit"});
+	kitana_coups.set("grab",{slag : 5, fdur : 3, elag : 12, degats : 15, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 28,hitboxys : 0, hitboxye : 50, blockstun : 12, blockx : 0.6, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit"});
 
 	var sounds_eff = new Map();
 	sounds_eff.set("lhit",[document.querySelector('#lhitwav1'),document.querySelector('#lhitwav2'),document.querySelector('#lhitwav3')]);
@@ -677,7 +720,7 @@ function main(){
 
 
 	characteristics.set("kitana",{width : 34, height : 97,vitesse : 3.5,jumpxspeed : 3.6,backmovnerf : 0.85,fdashslag : 3,fdashfdur : 11,fdashelag : 5,fdashspeed : 7, bdashslag : 3, bdashfdur : 13, bdashelag : 10, bdashspeed : 5, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2,
-	airdrift : 0.18, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 30, grabfdur : 35});
+	airdrift : 0.18, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 30, grabfdur : 35, grabdeg : 12});
 
 
 	var movpriority = new Map(); 	//you can cancel a mov by a mov of priority stritcly superior
@@ -711,6 +754,7 @@ function main(){
 	var ground = 262;
 	var gamefreeze = 0; var still_draw = false;
 	var shakex = 0; var shakey = 0; var shakeforce = 0; var shakeframe = 0;
+	var end_of_round_countdown = 0;
 
 
 	function shake_screen(frames,force){
