@@ -332,8 +332,9 @@ function main(){
 			this.tb = Math.max(7,this.tb);
 			this.xspeed = signe(this.xspeed)*Math.max(Math.abs(this.xspeed),3);
 			this.invincibilite = 150;
-			shake_screen(35,6);
-			lag_game(30);
+			frame_delay = base_frame_delay*2;
+			shake_screen(25,6);
+			lag_game(20);
 		}
 
 		afficher(other){
@@ -572,6 +573,10 @@ function main(){
 		if(j1.pv<=0){j1.pv=0;end_of_round_countdown = 180;}
 		else if(j2.pv<=0){j2.pv=0;end_of_round_countdown = 180;}
 	}
+
+	function reset_game(){
+		j1.reinit(-150,0,"kitana",0);j2.reinit(150,0,"kitana",1);frame_delay = base_frame_delay;
+	}
 	
 	function loop(){
 		resizecanvas();
@@ -584,8 +589,12 @@ function main(){
 		}
 		affichtt();
 		if(end_of_round_countdown==0){checkforend();}
-		else if(end_of_round_countdown==1){j1.reinit(-150,0,"kitana",0);j2.reinit(150,0,"kitana",1);end_of_round_countdown=0;}
-		else{end_of_round_countdown--;}
+		else if(end_of_round_countdown==1){reset_game();end_of_round_countdown=0;}
+		else{
+			end_of_round_countdown--;
+			if(end_of_round_countdown==100){frame_delay = base_frame_delay;}
+		}
+		setTimeout(loop,frame_delay);
 	}
 
 	var canvas = document.getElementById("canvas");
@@ -760,6 +769,7 @@ function main(){
 	var gamefreeze = 0; var still_draw = false;
 	var shakex = 0; var shakey = 0; var shakeforce = 0; var shakeframe = 0;
 	var end_of_round_countdown = 0;
+	var frame_delay = 17; var base_frame_delay = 17;
 
 
 	function shake_screen(frames,force){
@@ -817,5 +827,5 @@ function main(){
 	document.addEventListener("mousedown", clickEvent);
 	document.addEventListener("mouseup", unclickEvent);
 
-	_  = setInterval(loop,17)
+	loop();
 }
