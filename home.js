@@ -332,7 +332,7 @@ function main(){
 			this.tb = Math.max(7,this.tb);
 			this.xspeed = signe(this.xspeed)*Math.max(Math.abs(this.xspeed),3);
 			this.invincibilite = 150;
-			frame_delay = base_frame_delay*2;
+			slow_game(60,2);
 			shake_screen(25,6);
 			lag_game(20);
 		}
@@ -592,8 +592,9 @@ function main(){
 		else if(end_of_round_countdown==1){reset_game();end_of_round_countdown=0;}
 		else{
 			end_of_round_countdown--;
-			if(end_of_round_countdown==100){frame_delay = base_frame_delay;}
 		}
+		if(slowmodur){slowmodur--;}
+		else{frame_delay = base_frame_delay;}
 		setTimeout(loop,frame_delay);
 	}
 
@@ -769,11 +770,15 @@ function main(){
 	var gamefreeze = 0; var still_draw = false;
 	var shakex = 0; var shakey = 0; var shakeforce = 0; var shakeframe = 0;
 	var end_of_round_countdown = 0;
-	var frame_delay = 17; var base_frame_delay = 17;
+	var frame_delay = 17; var base_frame_delay = 17; var slowmodur = 0;
 
 
 	function shake_screen(frames,force){
 		shakeforce = force; shakeframe = frames;
+	}
+
+	function slow_game(frames,slow_force){
+		slowmodur = frames;frame_delay = base_frame_delay*slow_force;
 	}
 
 	
