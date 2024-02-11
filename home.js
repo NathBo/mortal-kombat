@@ -583,8 +583,14 @@ function main(){
 		shake_loop();
 		ctx.fillStyle = "gray";
 		ctx.fillRect(0,0,1024,576);
-		j1.afficher(j2);
-		j2.afficher(j1);
+		if(j2.hurted){
+			j2.afficher(j1);
+			j1.afficher(j2);
+		}
+		else{
+			j1.afficher(j2);
+			j2.afficher(j1);
+		}
 		still_draw = false;
 	}
 
@@ -730,12 +736,13 @@ function main(){
 	kitcoordinates.set("victory3",{offx:101,width:46,offy:249,height:126,decx:-9,decy:0});
 	kitcoordinates.set("victory4",{offx:157,width:51,offy:249,height:126,decx:-12,decy:0});
 	kitcoordinates.set("victory5",{offx:219,width:81,offy:249,height:126,decx:-28,decy:0});
-	kitcoordinates.set("victory6",{offx:310,width:90,offy:249,height:126,decx:-34,decy:0});
-	kitcoordinates.set("victory7",{offx:409,width:86,offy:249,height:126,decx:-30,decy:0});
-	kitcoordinates.set("victory8",{offx:504,width:69,offy:249,height:126,decx:-14,decy:0});
-	kitcoordinates.set("victory9",{offx:584,width:37,offy:249,height:126,decx:2,decy:0});
-	kitcoordinates.set("victory10",{offx:631,width:33,offy:249,height:126,decx:2,decy:0});
-	kitcoordinates.set("victory11",{offx:677,width:30,offy:249,height:126,decx:2,decy:0});
+	kitcoordinates.set("victory6",{offx:219,width:81,offy:249,height:126,decx:-28,decy:0});
+	kitcoordinates.set("victory7",{offx:310,width:90,offy:249,height:126,decx:-34,decy:0});
+	kitcoordinates.set("victory8",{offx:409,width:86,offy:249,height:126,decx:-30,decy:0});
+	kitcoordinates.set("victory9",{offx:504,width:69,offy:249,height:126,decx:-14,decy:0});
+	kitcoordinates.set("victory10",{offx:584,width:37,offy:249,height:126,decx:2,decy:0});
+	kitcoordinates.set("victory11",{offx:631,width:33,offy:249,height:126,decx:2,decy:0});
+	kitcoordinates.set("victory12",{offx:677,width:30,offy:249,height:126,decx:2,decy:0});
 
 	var characteristics = new Map();
 
@@ -767,7 +774,7 @@ function main(){
 
 
 	characteristics.set("kitana",{width : 34, height : 97,vitesse : 3.5,jumpxspeed : 3.6,backmovnerf : 0.85,fdashslag : 3,fdashfdur : 11,fdashelag : 5,fdashspeed : 7, bdashslag : 3, bdashfdur : 13, bdashelag : 10, bdashspeed : 5, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2,
-	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 11, vicposfdur : 70});
+	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 12, vicposfdur : 50});
 
 
 	var movpriority = new Map(); 	//you can cancel a mov by a mov of priority stritcly superior
