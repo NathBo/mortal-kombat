@@ -638,6 +638,7 @@ function main(){
 	var lifebarpng=new Image();lifebarpng.src = 'ressource/ui/barlife.png';
 
 	var kitpng=new Image();kitpng.src = 'ressource/characters/kitana.png';
+	var bloodpng = new Image();bloodpng.src = 'ressource/visual_effects/blood.png';
 
 	var kitcoordinates = new Map();
 	kitcoordinates.set("stand1",{offx:71,width:34,offy:19,height:97,decx:0,decy:0});
@@ -743,6 +744,14 @@ function main(){
 	kitcoordinates.set("victory10",{offx:584,width:37,offy:249,height:126,decx:2,decy:0});
 	kitcoordinates.set("victory11",{offx:631,width:33,offy:249,height:126,decx:2,decy:0});
 	kitcoordinates.set("victory12",{offx:677,width:30,offy:249,height:126,decx:2,decy:0});
+
+	bloodcoordinates = new Map();
+	bloodcoordinates.set("lblood1",{offx:4,width:15,offy:62,height:18,decx:0,decy:0});
+	bloodcoordinates.set("lblood2",{offx:24,width:14,offy:58,height:20,decx:0,decy:0});
+	bloodcoordinates.set("lblood3",{offx:44,width:13,offy:58,height:20,decx:0,decy:0});
+	bloodcoordinates.set("lblood4",{offx:63,width:15,offy:53,height:25,decx:0,decy:0});
+	bloodcoordinates.set("lblood5",{offx:83,width:13,offy:58,height:20,decx:0,decy:0});
+	bloodcoordinates.set("lblood6",{offx:102,width:15,offy:60,height:18,decx:0,decy:0});
 
 	var characteristics = new Map();
 
