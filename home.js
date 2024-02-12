@@ -27,6 +27,40 @@ function main(){
 		still_draw = true;
 	}
 
+	class Blood
+	{
+		constructor(x,y,orientation){
+			this.x = x; this.y = y; this.orientation = orientation;
+			this.totdur = 18;this.nframes = 6;
+			this.dur = this.totdur;
+			this.num = cpt;
+		}
+
+		afficher(){
+			if(this.dur==0){this.delete();return;}
+			let n = Math.floor((this.totdur - this.dur)/this.totdur*this.nframes)+1;
+			let cost = "lblood"+n;
+			console.log(cost);
+			let coords = bloodcoordinates.get(cost);
+			ctx.scale(2*this.orientation,2);
+			ctx.drawImage(bloodpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*coords.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			this.dur--;
+			this.x-=0.8*this.orientation;
+		}
+
+		delete(){
+			objects_to_loop.delete(this.num);
+		}
+	}
+
+	function add_to_objects_set(obj){
+		objects_to_loop.set(cpt,obj);
+		cpt++;
+	}
+
+
 	class Joueur
 	{
 		constructor(x,y,perso,n)
@@ -325,6 +359,7 @@ function main(){
 				lag_game(stats.hitlag);
 				play_sound_eff(stats.hitsound);
 				shake_screen(stats.hitlag+2,stats.degats/4);
+				if(this.y==0 && other.y==0 && stats.hitboxys >=0){add_to_objects_set(new Blood(this.x,this.charac.height-20,-this.orientation));}
 			}
 			if(this.y>0 && other.y>0){this.xspeed+=other.xspeed*2/3;this.hurted+=4;}
 			if(Math.abs(this.x+this.xspeed*Math.abs(this.xspeed)/2/this.charac.friction-camerax)>decalagex-this.charac.width/2){other.pushed = 10;other.pushx = -other.orientation * (Math.abs(this.x+this.xspeed*Math.abs(this.xspeed)/2/this.charac.friction-camerax)-decalagex+this.charac.width)/5;other.xspeed = 0;}
@@ -591,6 +626,10 @@ function main(){
 			j1.afficher(j2);
 			j2.afficher(j1);
 		}
+		for(let value of objects_to_loop.values()){
+			value.afficher();
+		}
+
 		still_draw = false;
 	}
 
@@ -601,6 +640,7 @@ function main(){
 
 	function reset_game(){
 		j1.reinit(-150,0,"kitana",0);j2.reinit(150,0,"kitana",1);frame_delay = base_frame_delay;
+		cpt = 0; objects_to_loop.clear();
 	}
 	
 	function loop(){
@@ -820,6 +860,7 @@ function main(){
 	var end_of_round_countdown = 0;
 	var frame_delay = 17; var base_frame_delay = 17; var slowmodur = 0;
 	var pause_after_vicpose = 20;
+	var cpt = 0; var objects_to_loop = new Map();
 
 
 	function shake_screen(frames,force){
