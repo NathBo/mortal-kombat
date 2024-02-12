@@ -302,7 +302,7 @@ function main(){
 				this.x=(this.x+other.x)/2+signe(this.x-other.x)*d;
 				other.x=(this.x+other.x)/2-signe(this.x-other.x)*d;
 			}
-			if(Math.abs(this.x-camerax)>decalagex-this.charac.width/2){this.x = signe(this.x-camerax)*(decalagex-this.charac.width/2)}
+			if(Math.abs(this.x-camerax)>decalagex-this.charac.width/2){this.x = signe(this.x-camerax)*(decalagex+signe(this.x-camerax)*camerax-this.charac.width/2)}
 		}
 		else
 		{
@@ -541,14 +541,14 @@ function main(){
 			}
 			else{this.standing=0;
 				if(this.forward>=1 || this.back>=1){
-					if(this.forward>=1){this.walking=(this.walking+1)%32;}else{this.walking=(this.walking+31)%32;}
-					if(this.walking<4){this.costume="walk1"}
-					else if(this.walking<8){this.costume="walk2"}
-					else if(this.walking<12){this.costume="walk3"}
-					else if(this.walking<16){this.costume="walk4"}
-					else if(this.walking<20){this.costume="walk5"}
-					else if(this.walking<24){this.costume="walk6"}
-					else if(this.walking<28){this.costume="walk7"}
+					if(this.forward>=1){this.walking=(this.walking+1)%40;}else{this.walking=(this.walking+31)%32;}
+					if(this.walking<5){this.costume="walk1"}
+					else if(this.walking<10){this.costume="walk2"}
+					else if(this.walking<15){this.costume="walk3"}
+					else if(this.walking<20){this.costume="walk4"}
+					else if(this.walking<25){this.costume="walk5"}
+					else if(this.walking<30){this.costume="walk6"}
+					else if(this.walking<35){this.costume="walk7"}
 					else {this.costume="walk8"}
 				}
 			}
@@ -619,9 +619,9 @@ function main(){
 
 	function drawStage(){
 		ctx.scale(2,2);
-		ctx.drawImage(towerbackgroundpng,0,0);
-		ctx.drawImage(towerstructurepng,-camerax+238-stage_size/2,0);
-		ctx.drawImage(towergroundpng,-camerax+256-stage_size/2,178);
+		ctx.drawImage(towerbackgroundpng,-20-camerax/5,0);
+		ctx.drawImage(towerstructurepng,-camerax+238-stage_size/2+shakex,shakey);
+		ctx.drawImage(towergroundpng,-camerax+256-stage_size/2+shakex,178+shakey);
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.scale(1,1);
 	}
@@ -631,6 +631,10 @@ function main(){
 		shake_loop();
 		ctx.fillStyle = "black";
 		ctx.fillRect(0,0,1024,576);
+		camerax = (j1.x+j2.x)/2
+		let m = stage_size/2-256;
+		if(camerax<-m){camerax=-m}
+		if(camerax>m){camerax=m}
 		drawStage();
 		if(j2.hurted){
 			j2.afficher(j1);
