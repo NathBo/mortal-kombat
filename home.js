@@ -17,7 +17,7 @@ function main(){
 	function resizecanvas(){
 		Width= window.innerWidth;
 		Height=window.innerHeight;
-		  if(Height>=Width*6/9){Heigth=Width*6/9;canvas.style.left = "0px";}else if(Width*6/9>Height){Width=Height/6*9;canvas.style.left = (window.innerWidth-Width)/2+"px";decalage=(window.innerWidth-Width)/2}
+		  if(Height>=Width*500/1024){Heigth=Width*500/1024;canvas.style.left = "0px";}else if(Width*500/1024>Height){Width=Height/500*1024;canvas.style.left = (window.innerWidth-Width)/2+"px";decalage=(window.innerWidth-Width)/2}
 		  canvas.style.width  = Width+'px';
 		  canvas.style.height  = Height+'px';
 	}
@@ -29,9 +29,11 @@ function main(){
 
 	class Blood
 	{
-		constructor(x,y,orientation){
+		constructor(x,y,orientation,bloodtype){
 			this.x = x; this.y = y; this.orientation = orientation;
-			this.totdur = 18;this.nframes = 6;
+			this.bloodtype = bloodtype;
+			if(this.bloodtype=="lblood"){this.totdur = 18;this.nframes = 6;this.vitesse=0.8;}
+			else if(this.bloodtype=="mblood"){this.totdur = 28;this.nframes = 7;this.vitesse=0.1;}
 			this.dur = this.totdur;
 			this.num = cpt;
 		}
@@ -39,14 +41,14 @@ function main(){
 		afficher(){
 			if(this.dur==0){this.delete();return;}
 			let n = Math.floor((this.totdur - this.dur)/this.totdur*this.nframes)+1;
-			let cost = "lblood"+n;
+			let cost = this.bloodtype+n;
 			let coords = bloodcoordinates.get(cost);
 			ctx.scale(2*this.orientation,2);
 			ctx.drawImage(bloodpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*coords.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
 			this.dur--;
-			this.x-=0.8*this.orientation;
+			this.x-=this.vitesse*this.orientation;
 		}
 
 		delete(){
@@ -358,10 +360,10 @@ function main(){
 				lag_game(stats.hitlag);
 				play_sound_eff(stats.hitsound);
 				shake_screen(stats.hitlag+2,stats.degats/4);
-				if(this.y==0 && this.crouching<=3 && (other.y>0 || stats.hitboxys >=0)){add_to_objects_set(new Blood(this.x,this.charac.height-20,-this.orientation));}
-				else if((this.y==0 && stats.hitboxys<0) || this.crouching){add_to_objects_set(new Blood(this.x+10*this.orientation,this.charac.height/2+stats.hitboxys,-this.orientation));}
-				else if(this.y>0 && other.y>0){add_to_objects_set(new Blood(this.x+10*this.orientation,this.y+this.charac.height/2+(other.y-this.y)/4,-this.orientation));}
-				else if(this.y>0 && other.y==0){add_to_objects_set(new Blood(this.x+5*this.orientation,stats.hitboxye,-this.orientation));}
+				if(this.y==0 && this.crouching<=3 && (other.y>0 || stats.hitboxys >=0)){add_to_objects_set(new Blood(this.x,this.charac.height-20,-this.orientation,stats.blood));}
+				else if((this.y==0 && stats.hitboxys<0) || this.crouching){add_to_objects_set(new Blood(this.x+10*this.orientation,this.charac.height/2+stats.hitboxys,-this.orientation,stats.blood));}
+				else if(this.y>0 && other.y>0){add_to_objects_set(new Blood(this.x+10*this.orientation,this.y+this.charac.height/2+(other.y-this.y)/4,-this.orientation,stats.blood));}
+				else if(this.y>0 && other.y==0){add_to_objects_set(new Blood(this.x+5*this.orientation,stats.hitboxye,-this.orientation,stats.blood));}
 			}
 			if(this.y>0 && other.y>0){this.xspeed+=other.xspeed*2/3;this.hurted+=4;}
 			if(Math.abs(this.x+this.xspeed*Math.abs(this.xspeed)/2/this.charac.friction-camerax)>decalagex-this.charac.width/2){other.pushed = 10;other.pushx = -other.orientation * (Math.abs(this.x+this.xspeed*Math.abs(this.xspeed)/2/this.charac.friction-camerax)-decalagex+this.charac.width)/5;other.xspeed = 0;}
@@ -615,11 +617,20 @@ function main(){
 		}
 	}
 
+	function drawStage(){
+		ctx.scale(2,2);
+		ctx.drawImage(towerbackgroundpng,0,0);
+		ctx.drawImage(towergroundpng,-camerax+256-stage_size/2,178);
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		ctx.scale(1,1);
+	}
+
 
 	function affichtt(){
 		shake_loop();
-		ctx.fillStyle = "gray";
+		ctx.fillStyle = "black";
 		ctx.fillRect(0,0,1024,576);
+		drawStage();
 		if(j2.hurted){
 			j2.afficher(j1);
 			j1.afficher(j2);
@@ -681,6 +692,8 @@ function main(){
 
 	var kitpng=new Image();kitpng.src = 'ressource/characters/kitana.png';
 	var bloodpng = new Image();bloodpng.src = 'ressource/visual_effects/blood.png';
+	var towergroundpng = new Image();towergroundpng.src = 'ressource/stages/towerground.png';
+	var towerbackgroundpng = new Image();towerbackgroundpng.src = 'ressource/stages/towerbackground.png';
 
 	var kitcoordinates = new Map();
 	kitcoordinates.set("stand1",{offx:71,width:34,offy:19,height:97,decx:0,decy:0});
@@ -794,23 +807,30 @@ function main(){
 	bloodcoordinates.set("lblood4",{offx:63,width:15,offy:53,height:25,decx:0,decy:0});
 	bloodcoordinates.set("lblood5",{offx:83,width:13,offy:58,height:20,decx:0,decy:0});
 	bloodcoordinates.set("lblood6",{offx:102,width:15,offy:60,height:18,decx:0,decy:0});
+	bloodcoordinates.set("mblood1",{offx:2,width:13,offy:30,height:16,decx:0,decy:0});
+	bloodcoordinates.set("mblood2",{offx:17,width:18,offy:30,height:16,decx:0,decy:0});
+	bloodcoordinates.set("mblood3",{offx:40,width:22,offy:21,height:24,decx:0,decy:0});
+	bloodcoordinates.set("mblood4",{offx:69,width:24,offy:10,height:35,decx:0,decy:0});
+	bloodcoordinates.set("mblood5",{offx:101,width:33,offy:4,height:41,decx:0,decy:0});
+	bloodcoordinates.set("mblood6",{offx:141,width:27,offy:8,height:36,decx:0,decy:0});
+	bloodcoordinates.set("mblood7",{offx:174,width:27,offy:6,height:39,decx:0,decy:0});
 
 	var characteristics = new Map();
 
 	kitana_coups = new Map();
-	kitana_coups.set("lpunch",{slag : 10, fdur : 6, elag : 10, degats : 5, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 47,hitboxys : 0, hitboxye : 75, blockstun : 12, blockx : 0.6, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit"});
-	kitana_coups.set("hpunch",{slag : 14, fdur : 10, elag : 16, degats : 10, hitstun : 28, hurtx : 1.3, hurty : 0, hitboxxs : 11, hitboxxe : 49, hitboxys : 0, hitboxye : 82, blockstun : 14, blockx : 1, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit"});
-	kitana_coups.set("lkick",{slag : 12, fdur : 8, elag : 14, degats : 6, hitstun : 20, hurtx : 1.1, hurty : 0, hitboxxs : 18, hitboxxe : 53, hitboxys : 0, hitboxye : 40, blockstun : 12, blockx : 0.6, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit"});
-	kitana_coups.set("mkick",{slag : 16, fdur : 12, elag : 16, degats : 10, hitstun : 26, hurtx : 1.5, hurty : 0, hitboxxs : 18, hitboxxe : 52, hitboxys : 0, hitboxye : 98, blockstun : 14, blockx : 1, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit"});
-	kitana_coups.set("hkick",{slag : 14, fdur : 8, elag : 24, movx : 3, degats : 16, hitstun : 38, hurtx : 3.2, hurty : 7, hitboxxs : 20, hitboxxe : 50, hitboxys : 0, hitboxye : 106, blockstun : 16, blockx : 1.4, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 10, hitsound : "hhit"});
-	kitana_coups.set("clpunch",{slag : 8, fdur : 6, elag : 8, degats : 4, hitstun : 20, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 30,hitboxys : -1, hitboxye : 20, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit"});
-	kitana_coups.set("huppercut",{slag : 12, fdur : 10, elag : 24, degats : 20, hitstun : 60, hurtx : 3, hurty : 10, hitboxxs : 20, hitboxxe : 40, hitboxys : 0, hitboxye : 109, blockstun : 16, blockx : 1, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 12, hitsound : "hhit"});
-	kitana_coups.set("clkick",{slag : 8, fdur : 6, elag : 8, degats : 6, hitstun : 20, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 38,hitboxys : -45, hitboxye : 5, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit"});
-	kitana_coups.set("cmkick",{slag : 13, fdur : 6, elag : 12, degats : 9, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 50,hitboxys : -1, hitboxye : 5, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit"});
-	kitana_coups.set("jkick",{slag : 6, fdur : 25, elag : 4, degats : 10, hitstun : 35, hurtx : 3.4, hurty : 5, hitboxxs : 0, hitboxxe : 60,hitboxys : -55, hitboxye : 5, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "fall", hitboxxeyscaling : -1, hitlag : 8, hitsound : "lhit"});
-	kitana_coups.set("jskick",{slag : 8, fdur : 15, elag : 4, degats : 13, hitstun : 32, hurtx : 0.8, hurty : 0, hitboxxs : 10, hitboxxe : 33,hitboxys : -20, hitboxye : 30, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 8, hitsound : "hhit"});
-	kitana_coups.set("jpunch",{slag : 5, fdur : 10, elag : 6, degats : 9, hitstun : 20, hurtx : 1.5, hurty : 0, hitboxxs : -5, hitboxxe : 58,hitboxys : -40, hitboxye : 5, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "lhit"});
-	kitana_coups.set("grab",{slag : 5, fdur : 3, elag : 12, degats : 15, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 28,hitboxys : 0, hitboxye : 50, blockstun : 12, blockx : 0.6, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit"});
+	kitana_coups.set("lpunch",{slag : 10, fdur : 6, elag : 10, degats : 5, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 47,hitboxys : 0, hitboxye : 75, blockstun : 12, blockx : 0.6, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood"});
+	kitana_coups.set("hpunch",{slag : 14, fdur : 10, elag : 16, degats : 10, hitstun : 28, hurtx : 1.3, hurty : 0, hitboxxs : 11, hitboxxe : 49, hitboxys : 0, hitboxye : 82, blockstun : 14, blockx : 1, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit", blood : "lblood"});
+	kitana_coups.set("lkick",{slag : 12, fdur : 8, elag : 14, degats : 6, hitstun : 20, hurtx : 1.1, hurty : 0, hitboxxs : 18, hitboxxe : 53, hitboxys : 0, hitboxye : 40, blockstun : 12, blockx : 0.6, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood"});
+	kitana_coups.set("mkick",{slag : 16, fdur : 12, elag : 16, degats : 10, hitstun : 26, hurtx : 1.5, hurty : 0, hitboxxs : 18, hitboxxe : 52, hitboxys : 0, hitboxye : 98, blockstun : 14, blockx : 1, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit", blood : "lblood"});
+	kitana_coups.set("hkick",{slag : 14, fdur : 8, elag : 24, movx : 3, degats : 16, hitstun : 38, hurtx : 3.2, hurty : 7, hitboxxs : 20, hitboxxe : 50, hitboxys : 0, hitboxye : 106, blockstun : 16, blockx : 1.4, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 10, hitsound : "hhit", blood : "mblood"});
+	kitana_coups.set("clpunch",{slag : 8, fdur : 6, elag : 8, degats : 4, hitstun : 20, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 30,hitboxys : -1, hitboxye : 20, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood"});
+	kitana_coups.set("huppercut",{slag : 12, fdur : 10, elag : 24, degats : 20, hitstun : 60, hurtx : 3, hurty : 10, hitboxxs : 20, hitboxxe : 40, hitboxys : 0, hitboxye : 109, blockstun : 16, blockx : 1, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 12, hitsound : "hhit", blood : "mblood"});
+	kitana_coups.set("clkick",{slag : 8, fdur : 6, elag : 8, degats : 6, hitstun : 20, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 38,hitboxys : -45, hitboxye : 5, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood"});
+	kitana_coups.set("cmkick",{slag : 13, fdur : 6, elag : 12, degats : 9, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 50,hitboxys : -1, hitboxye : 5, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit", blood : "lblood"});
+	kitana_coups.set("jkick",{slag : 6, fdur : 25, elag : 4, degats : 10, hitstun : 35, hurtx : 3.4, hurty : 5, hitboxxs : 0, hitboxxe : 60,hitboxys : -55, hitboxye : 5, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "fall", hitboxxeyscaling : -1, hitlag : 8, hitsound : "lhit", blood : "lblood"});
+	kitana_coups.set("jskick",{slag : 8, fdur : 15, elag : 4, degats : 13, hitstun : 32, hurtx : 0.8, hurty : 0, hitboxxs : 10, hitboxxe : 33,hitboxys : -20, hitboxye : 30, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 8, hitsound : "hhit", blood : "lblood"});
+	kitana_coups.set("jpunch",{slag : 5, fdur : 10, elag : 6, degats : 9, hitstun : 20, hurtx : 1.5, hurty : 0, hitboxxs : -5, hitboxxe : 58,hitboxys : -40, hitboxye : 5, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "lhit", blood : "lblood"});
+	kitana_coups.set("grab",{slag : 5, fdur : 3, elag : 12, degats : 15, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 28,hitboxys : 0, hitboxye : 50, blockstun : 12, blockx : 0.6, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood"});
 
 	var sounds_eff = new Map();
 	sounds_eff.set("lhit",[document.querySelector('#lhitwav1'),document.querySelector('#lhitwav2'),document.querySelector('#lhitwav3')]);
@@ -854,9 +874,10 @@ function main(){
 	j1 = new Joueur(-150,0,"kitana",0);
 	j2 = new Joueur(150,0,"kitana",1);
 
-	var camerax = 0;
 	var decalagex = 256;
-	var ground = 262;
+	var ground = 240;
+	var stage_size = 720;
+	var camerax = 0;
 	var gamefreeze = 0; var still_draw = false;
 	var shakex = 0; var shakey = 0; var shakeforce = 0; var shakeframe = 0;
 	var end_of_round_countdown = 0;
