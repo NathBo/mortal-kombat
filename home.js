@@ -163,7 +163,7 @@ function main(){
 				this.blocking--;
 				this.movlag = 0;this.mov = "";
 				this.x += this.xspeed;
-				if(Math.abs(this.x-camerax)>decalagex-this.charac.width/2){this.x = signe(this.x-camerax)*(decalagex-this.charac.width/2)}
+				if(Math.abs(this.x-camerax)>decalagex-this.charac.width/2){this.x = signe(this.x-camerax)*(decalagex+signe(this.x-camerax)*camerax-this.charac.width/2);}
 			}
 			else if(this.hurted==0){
 				this.reoriente(other);
@@ -311,7 +311,7 @@ function main(){
 			this.x += this.xspeed;
 			if(this.y>0 || this.tb>0){this.y+=this.tb;this.tb-=c.gravity;}
 			else if(this.y<0 && this.tb<=0){this.y=0;this.tb=0;}
-			if(Math.abs(this.x-camerax)>decalagex-this.charac.width/2){this.x = signe(this.x-camerax)*(decalagex-this.charac.width/2)}
+			if(Math.abs(this.x-camerax)>decalagex-this.charac.width/2){this.x = signe(this.x-camerax)*(decalagex+signe(this.x-camerax)*camerax-this.charac.width/2);}
 			if(this.y<=0 && this.falling){this.getup();}
 		}
 		
@@ -619,7 +619,7 @@ function main(){
 
 	function drawStage(){
 		ctx.scale(2,2);
-		ctx.drawImage(towerbackgroundpng,-20-camerax/5,0);
+		ctx.drawImage(towerbackgroundpng,-18-camerax/5,0);
 		ctx.drawImage(towerstructurepng,-camerax+238-stage_size/2+shakex,shakey);
 		ctx.drawImage(towergroundpng,-camerax+256-stage_size/2+shakex,178+shakey);
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
