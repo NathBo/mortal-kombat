@@ -620,6 +620,7 @@ function main(){
 	function drawStage(){
 		ctx.scale(2,2);
 		ctx.drawImage(towerbackgroundpng,0,0);
+		ctx.drawImage(towerstructurepng,-camerax+238-stage_size/2,0);
 		ctx.drawImage(towergroundpng,-camerax+256-stage_size/2,178);
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.scale(1,1);
@@ -694,6 +695,7 @@ function main(){
 	var bloodpng = new Image();bloodpng.src = 'ressource/visual_effects/blood.png';
 	var towergroundpng = new Image();towergroundpng.src = 'ressource/stages/towerground.png';
 	var towerbackgroundpng = new Image();towerbackgroundpng.src = 'ressource/stages/towerbackground.png';
+	var towerstructurepng = new Image();towerstructurepng.src = 'ressource/stages/towerstructure.png';
 
 	var kitcoordinates = new Map();
 	kitcoordinates.set("stand1",{offx:71,width:34,offy:19,height:97,decx:0,decy:0});
