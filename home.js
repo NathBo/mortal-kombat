@@ -75,12 +75,12 @@ function main(){
 		loop(){
 			this.x += this.orientation*this.vitesse;
 			var stats = this.stats; var other = this.other;
-			if(entre((other.x-this.x)*this.orientation,stats.hitboxxs-other.charac.width/2,stats.hitboxxe+other.charac.width/2+stats.hitboxxeyscaling*(other.y-(this.y+stats.hitboxys)))){
+			if(other.invincibilite==0 &&entre((other.x-this.x)*this.orientation,stats.hitboxxs-other.charac.width/2,stats.hitboxxe+other.charac.width/2+stats.hitboxxeyscaling*(other.y-(this.y+stats.hitboxys)))){
 				if(other.y==0){
-					if(entre((other.y+other.charac.height/2-this.y),stats.hitboxys,stats.hitboxxe+other.charac.height/3)){other.hurt(this,stats);this.dur=6;}
+					if(entre((other.y+other.charac.height/2-this.y),stats.hitboxys,stats.hitboxxe+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
 				}
 				else{
-					if(entre((other.y-this.y),stats.hitboxys-other.charac.height/6,stats.hitboxxe+other.charac.height/6)){other.hurt(this,stats);this.dur=3;}
+					if(entre((other.y-this.y),stats.hitboxys-other.charac.height/6,stats.hitboxxe+other.charac.height/6)){other.hurt(this,stats);this.dur=1;}
 				}
 			}
 		}
@@ -414,11 +414,14 @@ function main(){
 					case "grab" :
 						other.begin_grab(this);
 						return;
+					case "projectile" :
+						slow_game(stats.hitlag*2,1.5);
+						break;
 				}
 				this.hurted = stats.hitstun;
 				this.xspeed = stats.hurtx*other.orientation;
 				this.pv -= stats.degats;
-				lag_game(stats.hitlag);
+				if(stats.hiteffect != "projectile"){lag_game(stats.hitlag);}
 				play_sound_eff(stats.hitsound);
 				shake_screen(stats.hitlag+2,stats.degats/4);
 				if(this.y==0 && this.crouching<=3 && (other.y>0 || stats.hitboxys >=0)){add_to_objects_set(new Blood(this.x,this.charac.height-20,-this.orientation,stats.blood));}
