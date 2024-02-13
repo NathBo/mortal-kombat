@@ -68,6 +68,8 @@ function main(){
 			this.stats = stats;
 			this.dur = this.totdur;
 			this.num = cpt;
+			this.rotation = 0; this.rotationspeed = 30;
+			
 		}
 
 		loop(){
@@ -85,11 +87,18 @@ function main(){
 
 		afficher(){
 			this.costume = "fan";
+			this.rotation = (this.rotation+this.rotationspeed)%360;
+			ctx.save();
+			var x = (this.x+decalagex-camerax-this.orientation*this.width/2+shakex)*this.orientation;
+			var y = ground-this.y+shakey-45;
+			console.log(this.rotation);
 			ctx.scale(2*this.orientation,2);
-			var coords = kitcoordinates.get(this.costume);
-			ctx.drawImage(kitpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.translate(x+10,y+22);
+			ctx.rotate(Math.PI*this.rotation/180);
+			ctx.drawImage(fanpng,-10,-22);
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
+			ctx.restore();
 			this.dur--;
 			if(this.dur==0){this.delete();return;}
 		}
@@ -198,7 +207,7 @@ function main(){
 				this.xspeed = signe(this.xspeed)*Math.max(0,Math.abs(this.xspeed) -c.friction);
 				this.gettingup++;
 				if(this.gettingup == this.charac.getupfdur || (this.gettingup>=this.charac.getupfdur*5/6 && this.haut)){
-					this.gettingup = 0; this.invincibilite = 0;
+					this.gettingup = 0; this.invincibilite = 1;
 					if(this.haut==0 && this.bas){this.crouching = 6;}
 				}
 			}
@@ -759,6 +768,7 @@ function main(){
 	var lifebarpng=new Image();lifebarpng.src = 'ressource/ui/barlife.png';
 
 	var kitpng=new Image();kitpng.src = 'ressource/characters/kitana.png';
+	var fanpng=new Image();fanpng.src = 'ressource/characters/fan.png';
 	var bloodpng = new Image();bloodpng.src = 'ressource/visual_effects/blood.png';
 	var towergroundpng = new Image();towergroundpng.src = 'ressource/stages/towerground.png';
 	var towerbackgroundpng = new Image();towerbackgroundpng.src = 'ressource/stages/towerbackground.png';
@@ -905,7 +915,7 @@ function main(){
 	kitana_coups.set("jskick",{slag : 8, fdur : 15, elag : 4, degats : 13, hitstun : 32, hurtx : 0.8, hurty : 0, hitboxxs : 10, hitboxxe : 33,hitboxys : -20, hitboxye : 30, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 8, hitsound : "hhit", blood : "lblood"});
 	kitana_coups.set("jpunch",{slag : 5, fdur : 10, elag : 6, degats : 9, hitstun : 20, hurtx : 1.5, hurty : 0, hitboxxs : -5, hitboxxe : 58,hitboxys : -40, hitboxye : 5, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "lhit", blood : "lblood"});
 	kitana_coups.set("grab",{slag : 5, fdur : 3, elag : 12, degats : 15, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 28,hitboxys : 0, hitboxye : 50, blockstun : 12, blockx : 0.6, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood"});
-	kitana_coups.set("fanthrow",{slag : 25, fdur : 0, elag : 12, degats : 8, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : -15, hitboxxe : 15,hitboxys : -25, hitboxye : 25, blockstun : 12, blockx : 0.6, hiteffect : "projectile", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood"});
+	kitana_coups.set("fanthrow",{slag : 25, fdur : 0, elag : 12, degats : 8, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : -15, hitboxxe : 15,hitboxys : -20, hitboxye : 15, blockstun : 12, blockx : 0.6, hiteffect : "projectile", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood"});
 
 	var sounds_eff = new Map();
 	sounds_eff.set("lhit",[document.querySelector('#lhitwav1'),document.querySelector('#lhitwav2'),document.querySelector('#lhitwav3')]);
