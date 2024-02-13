@@ -17,7 +17,7 @@ function main(){
 	function resizecanvas(){
 		Width= window.innerWidth;
 		Height=window.innerHeight;
-		  if(Height>=Width*500/1024){Heigth=Width*500/1024;canvas.style.left = "0px";}else if(Width*500/1024>Height){Width=Height/500*1024;canvas.style.left = (window.innerWidth-Width)/2+"px";decalage=(window.innerWidth-Width)/2}
+		  if(Height>=Width*500/1024){Heigth=Width*500/1024;canvas.style.left = "0px";decalage=0;}else if(Width*500/1024>Height){Width=Height/500*1024;canvas.style.left = (window.innerWidth-Width)/2+"px";decalage=(window.innerWidth-Width)/2}
 		  canvas.style.width  = Width+'px';
 		  canvas.style.height  = Height+'px';
 	}
@@ -38,6 +38,8 @@ function main(){
 			this.num = cpt;
 		}
 
+		loop(){}
+
 		afficher(){
 			if(this.dur==0){this.delete();return;}
 			let n = Math.floor((this.totdur - this.dur)/this.totdur*this.nframes)+1;
@@ -49,6 +51,47 @@ function main(){
 			ctx.scale(1,1);
 			this.dur--;
 			this.x-=this.vitesse*this.orientation;
+		}
+
+		delete(){
+			objects_to_loop.delete(this.num);
+		}
+	}
+
+	class Fan{
+		constructor(x,y,orientation,other,stats){
+			this.x = x; this.y = y; this.orientation = orientation;
+			this.other = other;
+			this.width=22;
+			this.height=44;
+			this.totdur = 60;this.vitesse=5;
+			this.stats = stats;
+			this.dur = this.totdur;
+			this.num = cpt;
+		}
+
+		loop(){
+			this.x += this.orientation*this.vitesse;
+			var stats = this.stats; var other = this.other;
+			if(entre((other.x-this.x)*this.orientation,stats.hitboxxs-other.charac.width/2,stats.hitboxxe+other.charac.width/2+stats.hitboxxeyscaling*(other.y-(this.y+stats.hitboxys)))){
+				if(other.y==0){
+					if(entre((other.y+other.charac.height/2-this.y),stats.hitboxys,stats.hitboxxe+other.charac.height/3)){other.hurt(this,stats);this.dur=6;}
+				}
+				else{
+					if(entre((other.y-this.y),stats.hitboxys-other.charac.height/6,stats.hitboxxe+other.charac.height/6)){other.hurt(this,stats);this.dur=3;}
+				}
+			}
+		}
+
+		afficher(){
+			this.costume = "fan";
+			ctx.scale(2*this.orientation,2);
+			var coords = kitcoordinates.get(this.costume);
+			ctx.drawImage(kitpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			this.dur--;
+			if(this.dur==0){this.delete();return;}
 		}
 
 		delete(){
@@ -231,6 +274,10 @@ function main(){
 						this.begincoup("grab");
 						this.dodge = 2;
 					}
+					else if(this.forward+this.back==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+						this.begincoup("fanthrow");
+						this.special = 2;
+					}
 					else if(this.forward>=1&&movpriority.get(this.mov)<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
 						this.x+=this.charac.vitesse*this.orientation;this.xspeed = 0;
 						let d = (this.charac.width+other.charac.width)/3;
@@ -253,15 +300,15 @@ function main(){
 						else if(this.gauche){this.xspeed = -c.airdodgespeed}
 						else{this.xspeed = 0;}
 					}
-					else if(this.poing==1&&movpriority.get(this.mov)<40&&this.falling==0){
+					else if(this.poing==1&&movpriority.get(this.mov)<40&&this.falling==0&&end_of_round_countdown==0){
 						this.poing=2;
 						this.begincoup("jpunch");
 					}
-					else if(this.jambe==1&&movpriority.get(this.mov)<40&&this.xspeed == 0&&this.falling==0){
+					else if(this.jambe==1&&movpriority.get(this.mov)<40&&this.xspeed == 0&&this.falling==0&&end_of_round_countdown==0){
 						this.jambe=2;
 						this.begincoup("jskick");
 					}
-					else if(this.jambe==1&&movpriority.get(this.mov)<40&&this.xspeed != 0&&this.falling==0){
+					else if(this.jambe==1&&movpriority.get(this.mov)<40&&this.xspeed != 0&&this.falling==0&&end_of_round_countdown==0){
 						this.jambe=2;
 						this.begincoup("jkick");
 					}
@@ -286,6 +333,11 @@ function main(){
 					case "hkick":
 						var stats = this.charac.coups.get(this.mov);
 						if(this.movlag == stats.elag+stats.fdur+stats.slag-1){this.xspeed += stats.movx*this.orientation;}
+						break;
+
+					case "fanthrow":
+						var stats = this.charac.coups.get(this.mov);
+						if(this.movlag==stats.elag){add_to_objects_set(new Fan(this.x+20*this.orientation,this.y+35,this.orientation,other,stats))}
 						break;
 				}
 				this.movlag--;
@@ -339,7 +391,7 @@ function main(){
 
 		hurt(other,stats){
 			if(this.invincibilite){return;}
-			if(this.movlag==0&&this.back>=1&&this.y==0&&stats.hiteffect != "grab" && ((this.crouching<=3 && (other.y>0 || stats.hitboxys>=0) || (this.crouching>3 && other.y==0)))){
+			if(this.movlag==0&&this.back>=1&&this.y==0&&stats.hiteffect != "grab" && ((this.crouching<=3 && (other.y>0 || stats.hitboxys>=0) || (this.crouching>3 && other.y==0)) || stats.hiteffect=="projectile")){
 				this.blocking = stats.blockstun;
 				this.xspeed = -stats.blockx*this.orientation;
 				lag_game(Math.floor(stats.hitlag/0.8));
@@ -365,7 +417,7 @@ function main(){
 				else if(this.y>0 && other.y>0){add_to_objects_set(new Blood(this.x+10*this.orientation,this.y+this.charac.height/2+(other.y-this.y)/4,-this.orientation,stats.blood));}
 				else if(this.y>0 && other.y==0){add_to_objects_set(new Blood(this.x+5*this.orientation,stats.hitboxye,-this.orientation,stats.blood));}
 			}
-			if(this.y>0 && other.y>0){this.xspeed+=other.xspeed*2/3;this.hurted+=4;}
+			if(this.y>0 && other.y>0 && stats.hiteffect != "projectile"){this.xspeed+=other.xspeed*2/3;this.hurted+=4;}
 			if(Math.abs(this.x+this.xspeed*Math.abs(this.xspeed)/2/this.charac.friction-camerax)>decalagex-this.charac.width/2){other.pushed = 10;other.pushx = -other.orientation * (Math.abs(this.x+this.xspeed*Math.abs(this.xspeed)/2/this.charac.friction-camerax)-decalagex+this.charac.width)/5;other.xspeed = 0;}
 			this.tb = stats.hurty;
 			this.invincibilite = stats.fdur+1;
@@ -508,6 +560,13 @@ function main(){
 						else{this.costume ="lpunch1";}
 						break;
 
+					case "fanthrow" :
+						var stats = this.charac.coups.get(this.mov);
+						if(this.movlag<=stats.elag){this.costume = "fanthrow4";}
+						else if(this.movlag<=stats.elag+stats.slag/4){this.costume = "fanthrow3";}
+						else if(this.movlag<=stats.elag+stats.slag*2/4){this.costume = "fanthrow2";}
+						else{this.costume = "fanthrow1";}
+
 				}
 			}
 			else if (this.y>0){
@@ -562,6 +621,7 @@ function main(){
 				var angle = this.grabbing*7/5/this.charac.grabfdur*Math.PI;
 				var x = this.orientation*dist*Math.cos(angle)+this.x;
 				var y = dist*Math.sin(angle)+this.y;
+				other.x = x;		//pour la camera
 				ctx.scale(2*other.orientation,2);
 				var coords = kitcoordinates.get(othercost);
 				ctx.drawImage(kitpng,coords.offx,coords.offy,coords.width,coords.height,(x+decalagex-camerax+coords.decx*this.orientation-other.orientation*other.charac.width/2+shakex)*other.orientation,ground-y-coords.height-coords.decy+shakey,coords.width,coords.height);
@@ -669,6 +729,9 @@ function main(){
 			j2.miseajour(j1);
 			j1.loop(j2);
 			j2.loop(j1);
+			for(let value of objects_to_loop.values()){
+				value.loop();
+			}
 		}
 		affichtt();
 		if(end_of_round_countdown==0){checkforend();}
@@ -805,6 +868,11 @@ function main(){
 	kitcoordinates.set("victory10",{offx:584,width:37,offy:249,height:126,decx:2,decy:0});
 	kitcoordinates.set("victory11",{offx:631,width:33,offy:249,height:126,decx:2,decy:0});
 	kitcoordinates.set("victory12",{offx:677,width:30,offy:249,height:126,decx:2,decy:0});
+	kitcoordinates.set("fanthrow1",{offx:15,width:62,offy:1497,height:105,decx:0,decy:0});
+	kitcoordinates.set("fanthrow2",{offx:87,width:52,offy:1503,height:99,decx:0,decy:0});
+	kitcoordinates.set("fanthrow3",{offx:149,width:42,offy:1505,height:97,decx:0,decy:0});
+	kitcoordinates.set("fanthrow4",{offx:200,width:29,offy:1488,height:114,decx:0,decy:0});
+	kitcoordinates.set("fan",{offx:130,width:22,offy:1433,height:44,decx:0,decy:0});
 
 	bloodcoordinates = new Map();
 	bloodcoordinates.set("lblood1",{offx:4,width:15,offy:62,height:18,decx:0,decy:0});
@@ -837,6 +905,7 @@ function main(){
 	kitana_coups.set("jskick",{slag : 8, fdur : 15, elag : 4, degats : 13, hitstun : 32, hurtx : 0.8, hurty : 0, hitboxxs : 10, hitboxxe : 33,hitboxys : -20, hitboxye : 30, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 8, hitsound : "hhit", blood : "lblood"});
 	kitana_coups.set("jpunch",{slag : 5, fdur : 10, elag : 6, degats : 9, hitstun : 20, hurtx : 1.5, hurty : 0, hitboxxs : -5, hitboxxe : 58,hitboxys : -40, hitboxye : 5, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "lhit", blood : "lblood"});
 	kitana_coups.set("grab",{slag : 5, fdur : 3, elag : 12, degats : 15, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 28,hitboxys : 0, hitboxye : 50, blockstun : 12, blockx : 0.6, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood"});
+	kitana_coups.set("fanthrow",{slag : 25, fdur : 0, elag : 12, degats : 8, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : -15, hitboxxe : 15,hitboxys : -25, hitboxye : 25, blockstun : 12, blockx : 0.6, hiteffect : "projectile", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood"});
 
 	var sounds_eff = new Map();
 	sounds_eff.set("lhit",[document.querySelector('#lhitwav1'),document.querySelector('#lhitwav2'),document.querySelector('#lhitwav3')]);
@@ -870,6 +939,7 @@ function main(){
 	movpriority.set("cmkick",40);
 	movpriority.set("hkick",50);
 	movpriority.set("huppercut",50);
+	movpriority.set("fanthrow",70);
 	movpriority.set("air_dodge",100);
 	movpriority.set("landing_lag",100);
 	movpriority.set("jumpsquat",100);
@@ -943,7 +1013,7 @@ function main(){
 	function clickEvent(e){
 		clickx=(e.pageX-decalage)/Width;clicky=e.pageY/Height;click=1;
 	}
-	function unclickEvent(e){
+	function unclickEvent(_){
 		click=0;
 	}
 	document.addEventListener('keydown', logKey);
