@@ -488,7 +488,7 @@ function main(){
 			}
 			else if(this.gettingup){
 				if(this.gettingup<=this.charac.getupfdur/6){this.costume = "grounded1"}
-				else if(this.gettingup<=this.charac.getupfdur*2/6){this.costume = "grounded2";if(this.pv<=0){this.gettingup--;}}
+				else if(this.gettingup<=this.charac.getupfdur*2/6){this.costume = "grounded2";if(this.pv<=0){this.gettingup--;this.invincibilite++;}}
 				else if(this.gettingup<=this.charac.getupfdur*3/6){this.costume = "getup1"}
 				else if(this.gettingup<=this.charac.getupfdur*4/6){this.costume = "getup2"}
 				else if(this.gettingup<=this.charac.getupfdur*5/6){this.costume = "getup3"}
