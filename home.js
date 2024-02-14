@@ -289,7 +289,7 @@ function main(){
 					}
 					else if(this.forward+this.back==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[0]==0 && this.crouching==0){
 						this.begincoup("fanthrow",other);
-						this.cooldowns[1] = this.charac.cds[1];
+						this.cooldowns[0] = this.charac.cds[0];
 						this.special = 2;
 					}
 					else if(this.forward>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[1]==0 && this.crouching==0){
