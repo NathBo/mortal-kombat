@@ -706,7 +706,10 @@ function main(){
 			if(this.n==0){ctx.fillRect(55+shake_x,30+shake_y,this.pvaff/this.pvmax*400,30);}
 			else{ctx.fillRect(955-this.pvaff/this.pvmax*400+shake_x,30+shake_y,this.pvaff/this.pvmax*400,30);}
 			ctx.drawImage(lifebarpng,50+this.n*500+shake_x,25+shake_y);
-			if(this.cooldowns[0]>0){ctx.drawImage(this.charac.icons[0],0,0,50,50*this.cooldowns[0]/this.charac.cds[0],60+this.n*835,80,50,50*this.cooldowns[0]/this.charac.cds[0]);}
+			for(var i=0;i<2;i++){
+				if(this.cooldowns[i]>0){ctx.drawImage(this.charac.icons[i],0,0,50,50*this.cooldowns[i]/this.charac.cds[i],60+this.n*835+(60-120*this.n)*i,80,50,50*this.cooldowns[i]/this.charac.cds[i]);}
+			}
+			
 		}
 
 		declencher_vicpose(){
@@ -813,6 +816,7 @@ function main(){
 	var kitpng=new Image();kitpng.src = 'ressource/characters/kitana.png';
 	var fanpng=new Image();fanpng.src = 'ressource/characters/fan.png';
 	var fanthrowiconpng=new Image();fanthrowiconpng.src = 'ressource/icons/fanthrow_icon.png';
+	var fanswipeiconpng=new Image();fanswipeiconpng.src = 'ressource/icons/fanswipe_icon.png';
 	var bloodpng = new Image();bloodpng.src = 'ressource/visual_effects/blood.png';
 	var towergroundpng = new Image();towergroundpng.src = 'ressource/stages/towerground.png';
 	var towerbackgroundpng = new Image();towerbackgroundpng.src = 'ressource/stages/towerbackground.png';
@@ -985,7 +989,7 @@ function main(){
 
 
 	characteristics.set("kitana",{width : 34, height : 97,vitesse : 3.5,jumpxspeed : 3.6,backmovnerf : 0.85,fdashslag : 3,fdashfdur : 11,fdashelag : 5,fdashspeed : 7, bdashslag : 3, bdashfdur : 13, bdashelag : 10, bdashspeed : 5, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2,
-	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 12, vicposfdur : 50, cds : [70,120,60,60], icons : [fanthrowiconpng]});
+	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 12, vicposfdur : 50, cds : [70,120,60,60], icons : [fanthrowiconpng,fanswipeiconpng]});
 
 
 	var movpriority = new Map(); 	//you can cancel a mov by a mov of priority stritcly superior
