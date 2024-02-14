@@ -329,9 +329,9 @@ function main(){
 					else if(this.forward+this.back==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[0]==0){
 						this.begincoup("fanthrow",other);
 						this.cooldowns[0] = this.charac.cds[0];
-						this.movlag=Math.ceil(this.movlag/2);
+						this.movlag=Math.ceil(this.movlag/1.8);
 						this.special = 2;
-						this.xspeed/=4;
+						this.xspeed/=2;
 					}
 					this.y+=this.tb;
 					if(this.droite&&this.xspeed<c.airmaxspeed){this.xspeed+=c.airdrift}else if(this.gauche && this.xspeed>-c.airmaxspeed){this.xspeed-=c.airdrift}
@@ -358,7 +358,13 @@ function main(){
 
 					case "fanthrow":
 						var stats = this.charac.coups.get(this.mov);
-						if(this.movlag==stats.elag){add_to_objects_set(new Fan(this.x+20*this.orientation,this.y+35,this.orientation,other,stats))}
+						if(this.movlag==stats.elag){
+							add_to_objects_set(new Fan(this.x+20*this.orientation,this.y+35,this.orientation,other,stats));
+							if(this.y>0){this.xspeed -= 2*this.orientation;}
+						}
+						else if(this.movlag==stats.elag+Math.floor(stats.slag/2)){
+							this.xspeed -= 2*this.orientation;
+						}
 						break;
 				}
 				this.movlag--;
