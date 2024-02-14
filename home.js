@@ -902,9 +902,9 @@ function main(){
 	kitcoordinates.set("victory10",{offx:584,width:37,offy:249,height:126,decx:2,decy:0});
 	kitcoordinates.set("victory11",{offx:631,width:33,offy:249,height:126,decx:2,decy:0});
 	kitcoordinates.set("victory12",{offx:677,width:30,offy:249,height:126,decx:2,decy:0});
-	kitcoordinates.set("fanthrow1",{offx:15,width:62,offy:1497,height:105,decx:0,decy:0});
-	kitcoordinates.set("fanthrow2",{offx:87,width:52,offy:1503,height:99,decx:0,decy:0});
-	kitcoordinates.set("fanthrow3",{offx:149,width:42,offy:1505,height:97,decx:0,decy:0});
+	kitcoordinates.set("fanthrow1",{offx:15,width:62,offy:1497,height:105,decx:-24,decy:0});
+	kitcoordinates.set("fanthrow2",{offx:87,width:52,offy:1503,height:99,decx:-14,decy:0});
+	kitcoordinates.set("fanthrow3",{offx:149,width:42,offy:1505,height:97,decx:4,decy:0});
 	kitcoordinates.set("fanthrow4",{offx:200,width:29,offy:1488,height:114,decx:0,decy:0});
 	kitcoordinates.set("fan",{offx:130,width:22,offy:1433,height:44,decx:0,decy:0});
 
