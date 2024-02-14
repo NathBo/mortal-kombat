@@ -287,9 +287,14 @@ function main(){
 						this.begincoup("grab",other);
 						this.dodge = 2;
 					}
-					else if(this.forward+this.back==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[0]==0){
+					else if(this.forward+this.back==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[0]==0 && this.crouching==0){
 						this.begincoup("fanthrow",other);
-						this.cooldowns[0] = this.charac.cds[0];
+						this.cooldowns[1] = this.charac.cds[1];
+						this.special = 2;
+					}
+					else if(this.forward>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[1]==0 && this.crouching==0){
+						this.begincoup("fanswipe",other);
+						this.cooldowns[1] = this.charac.cds[1];
 						this.special = 2;
 					}
 					else if(this.forward>=1&&movpriority.get(this.mov)<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
@@ -468,6 +473,7 @@ function main(){
 			slow_game(60,2);
 			shake_screen(25,6);
 			lag_game(20);
+			musiques[0].pause();
 		}
 
 		afficher(other){
@@ -604,6 +610,13 @@ function main(){
 						else if(this.movlag<=stats.elag+stats.slag*2/4){this.costume = "fanthrow2";}
 						else{this.costume = "fanthrow1";}
 
+					case "fanswipe" :
+						var stats = this.charac.coups.get(this.mov);
+						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.costume = this.mov+"3"}
+						else if(entre(this.movlag,stats.elag+stats.fdur+stats.slag/2,stats.elag+stats.fdur+stats.slag)){this.costume = this.mov+"1"}
+						else if(this.movlag>=stats.elag){this.costume = this.mov+"2"}
+						else {this.costume = this.mov+"4"}
+						break;
 				}
 			}
 			else if (this.y>0){
@@ -757,6 +770,7 @@ function main(){
 	function reset_game(){
 		j1.reinit(-150,0,"kitana",0);j2.reinit(150,0,"kitana",1);frame_delay = base_frame_delay;
 		cpt = 0; objects_to_loop.clear();
+		musiques[0].currentTime=0;musiques[0].play();
 	}
 	
 	function loop(){
@@ -912,7 +926,11 @@ function main(){
 	kitcoordinates.set("fanthrow2",{offx:87,width:52,offy:1503,height:99,decx:-14,decy:0});
 	kitcoordinates.set("fanthrow3",{offx:149,width:42,offy:1505,height:97,decx:4,decy:0});
 	kitcoordinates.set("fanthrow4",{offx:200,width:29,offy:1488,height:114,decx:0,decy:0});
-	kitcoordinates.set("fan",{offx:130,width:22,offy:1433,height:44,decx:0,decy:0});
+	kitcoordinates.set("fanswipe1",{offx:255,width:49,offy:1504,height:98,decx:-10,decy:0});
+	kitcoordinates.set("fanswipe2",{offx:316,width:38,offy:1504,height:98,decx:0,decy:0});
+	kitcoordinates.set("fanswipe3",{offx:365,width:77,offy:1504,height:98,decx:0,decy:0});
+	kitcoordinates.set("fanswipe4",{offx:453,width:45,offy:1504,height:98,decx:0,decy:0});
+	
 
 	bloodcoordinates = new Map();
 	bloodcoordinates.set("lblood1",{offx:4,width:15,offy:62,height:18,decx:0,decy:0});
@@ -946,12 +964,18 @@ function main(){
 	kitana_coups.set("jpunch",{slag : 5, fdur : 10, elag : 6, degats : 9, hitstun : 20, hurtx : 1.5, hurty : 0, hitboxxs : -5, hitboxxe : 58,hitboxys : -40, hitboxye : 5, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "lhit", blood : "lblood", damageonblock : 1});
 	kitana_coups.set("grab",{slag : 5, fdur : 3, elag : 12, degats : 15, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 28,hitboxys : 0, hitboxye : 50, blockstun : 12, blockx : 0.6, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1});
 	kitana_coups.set("fanthrow",{slag : 25, fdur : 0, elag : 16, degats : 8, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : -12, hitboxxe : 12,hitboxys : -8, hitboxye : 8, blockstun : 12, blockx : 0.6, hiteffect : "projectile", hitboxxeyscaling : 0, hitlag : 3, hitsound : "fan", blood : "lblood", damageonblock : 2,landinglag : 12});
+	kitana_coups.set("fanswipe",{slag : 12, fdur : 8, elag : 8, degats : 12, hitstun : 30, hurtx : 3, hurty : 0, hitboxxs : 18, hitboxxe : 58, hitboxys : 0, hitboxye : 70, blockstun : 14, blockx : 1, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "fan", blood : "mblood", damageonblock : 3});
 
 	var sounds_eff = new Map();
 	sounds_eff.set("lhit",[document.querySelector('#lhitwav1'),document.querySelector('#lhitwav2'),document.querySelector('#lhitwav3')]);
 	sounds_eff.set("mhit",[document.querySelector('#mhitwav1'),document.querySelector('#mhitwav2'),document.querySelector('#mhitwav3')]);
 	sounds_eff.set("hhit",[document.querySelector('#hhitwav1'),document.querySelector('#hhitwav2'),document.querySelector('#hhitwav3')]);
 	sounds_eff.set("fan",[document.querySelector('#fanwav')]);
+
+	var musiques = [document.querySelector('#mkthemeremixwav')];
+	musiques[0].loop = true;
+	
+	musiques[0].play();
 
 	function play_sound_eff(s){
 		let l = sounds_eff.get(s);
@@ -961,7 +985,7 @@ function main(){
 
 
 	characteristics.set("kitana",{width : 34, height : 97,vitesse : 3.5,jumpxspeed : 3.6,backmovnerf : 0.85,fdashslag : 3,fdashfdur : 11,fdashelag : 5,fdashspeed : 7, bdashslag : 3, bdashfdur : 13, bdashelag : 10, bdashspeed : 5, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2,
-	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 12, vicposfdur : 50, cds : [60,60,60,60], icons : [fanthrowiconpng]});
+	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 12, vicposfdur : 50, cds : [70,120,60,60], icons : [fanthrowiconpng]});
 
 
 	var movpriority = new Map(); 	//you can cancel a mov by a mov of priority stritcly superior
@@ -981,6 +1005,7 @@ function main(){
 	movpriority.set("hkick",50);
 	movpriority.set("huppercut",50);
 	movpriority.set("fanthrow",70);
+	movpriority.set("fanswipe",70);
 	movpriority.set("air_dodge",100);
 	movpriority.set("landing_lag",100);
 	movpriority.set("jumpsquat",100);
