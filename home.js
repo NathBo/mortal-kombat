@@ -185,6 +185,7 @@ function main(){
 		movesinrange(d){
 			var coups = this.me.charac.coups;
 			var me = this.me;
+			var other = this.other;
 			var rep = new Set();
 			var width = this.other.charac.width;
 			console.log(d);
@@ -194,6 +195,7 @@ function main(){
 				if((key == "jkick" || key == "jskick" || key == "jpunch") && me.y==0){}
 				else if(cd_dependance.get(key) != -1 && me.cooldowns[cd_dependance.get(key)]){}
 				else if(movpriority.get(key)<=prio){}
+				else if(other.crouching && val.hitboxys>=0){}
 				else if(val.hitboxxe+width/2>=d && d>=val.hitboxxs-width/2 && val.hiteffect != "projectile"){rep.add(key);}
 			}
 			coups.forEach(aux);
