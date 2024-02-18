@@ -188,9 +188,12 @@ function main(){
 			var rep = new Set();
 			var width = this.other.charac.width;
 			console.log(d);
+			var prio = movpriority.get(me.mov);
+			if(me.mov == "lpunch" || me.mov == "clpunch"){prio--;}
 			function aux(val,key,_){
 				if((key == "jkick" || key == "jskick" || key == "jpunch") && me.y==0){}
 				else if(cd_dependance.get(key) != -1 && me.cooldowns[cd_dependance.get(key)]){}
+				else if(movpriority.get(key)<=prio){}
 				else if(val.hitboxxe+width/2>=d && d>=val.hitboxxs-width/2 && val.hiteffect != "projectile"){rep.add(key);}
 			}
 			coups.forEach(aux);
@@ -205,13 +208,15 @@ function main(){
 		attack(moves){
 			var me = this.me;
 			var coups = me.charac.coups;
+			
 			var movtodo = "";
 			var limiteup = 100;
 			function aux(m){
 				if(coups.get(m).slag<=limiteup){movtodo = m;limiteup = coups.get(m).slag;}
 			}
 			moves.forEach(aux);
-			if(me.movlag==0 && movtodo != ""){
+			if(this.mov != ""){var stats = coups.get(me.mov)}
+			if((me.mov == "" || me.movlag <= stats.elag+stats.fdur-1) && movtodo != ""){
 				this.begincoup(movtodo);
 			}
 		}
