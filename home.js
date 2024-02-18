@@ -171,15 +171,49 @@ function main(){
 		pressforward(){
 			var me = this.me;
 			var other = this.other;
-			if(me.x<other.x){me.droite=1;}
-			else{me.gauche=1;}
+			if(me.x<other.x){me.droite=1;me.gauche=0;}
+			else{me.gauche=1;me.droite=0;}
 		}
 
 		pressbackward(){
 			var me = this.me;
 			var other = this.other;
-			if(me.x<other.x){me.gauche=1;}
-			else{me.droite=1;}
+			if(me.x<other.x){me.gauche=1;me.droite=0}
+			else{me.droite=1;me.gauche=0}
+		}
+
+		movesinrange(d){
+			var coups = this.me.charac.coups;
+			var me = this.me;
+			var rep = new Set();
+			var width = this.other.charac.width;
+			console.log(d);
+			function aux(val,key,_){
+				if((key == "jkick" || key == "jskick" || key == "jpunch") && me.y==0){}
+				else if(cd_dependance.get(key) != -1 && me.cooldowns[cd_dependance.get(key)]){}
+				else if(val.hitboxxe+width/2>=d && d>=val.hitboxxs-width/2 && val.hiteffect != "projectile"){rep.add(key);}
+			}
+			coups.forEach(aux);
+			return rep;
+		}
+
+		begincoup(m){
+			this.me.begincoup(m,this.other);
+			this.me.movlag+=1;
+		}
+
+		attack(moves){
+			var me = this.me;
+			var coups = me.charac.coups;
+			var movtodo = "";
+			var limiteup = 100;
+			function aux(m){
+				if(coups.get(m).slag<=limiteup){movtodo = m;limiteup = coups.get(m).slag;}
+			}
+			moves.forEach(aux);
+			if(me.movlag==0 && movtodo != ""){
+				this.begincoup(movtodo);
+			}
 		}
 
 		decide(){
@@ -187,10 +221,11 @@ function main(){
 			var other = this.other;
 			me.droite = 0;me.gauche = 0; me.bas = 0; me.haut = 0; me.poing = 0; me.jambe = 0; me.dodge = 0; me.special = 0;
 			this.attacking = minvalabs(this.attacking-1+Math.random()*2+this.agressivite,10);
-			console.log(this.attacking);
 			if(Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-this.idealrange)<=me.charac.vitesse*2){}
 			else if(this.attacking*this.rangescaling+Math.abs(me.x-other.x)>=this.idealrange){this.pressforward();}
 			else{this.pressbackward();}
+			var moves = this.movesinrange(me.orientation*(other.x-me.x));
+			this.attack(moves);
 		}
 	}
 
@@ -222,6 +257,9 @@ function main(){
 
 		begincoup(s,other){
 			var stats = this.charac.coups.get(s);
+			var cd = cd_dependance.get(s);
+			if(this.cooldowns[cd]){return;}
+			this.cooldowns[cd] = this.charac.cds[cd];
 			this.mov = s;
 			this.movlag = stats.slag+stats.fdur+stats.elag;
 			if(other.hurted){other.invincibilite=0;}
@@ -373,17 +411,14 @@ function main(){
 					}
 					else if(this.forward+this.back==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[0]==0 && this.crouching==0){
 						this.begincoup("fanthrow",other);
-						this.cooldowns[0] = this.charac.cds[0];
 						this.special = 2;
 					}
 					else if(this.forward>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[1]==0 && this.crouching==0){
 						this.begincoup("fanswipe",other);
-						this.cooldowns[1] = this.charac.cds[1];
 						this.special = 2;
 					}
 					else if(this.back>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[2]==0 && this.crouching==0){
 						this.begincoup("fanlift",other);
-						this.cooldowns[2] = this.charac.cds[2];
 						this.special = 2;
 					}
 					else if(this.forward>=1&&movpriority.get(this.mov)<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
@@ -1122,6 +1157,31 @@ function main(){
 	movpriority.set("jumpsquat",100);
 	movpriority.set("free_fall",100);
 	movpriority.set("grab",100);
+
+	var cd_dependance = new Map();
+	cd_dependance.set("",0);
+	cd_dependance.set("forward_dash",-1);
+	cd_dependance.set("back_dash",-1);
+	cd_dependance.set("lpunch",-1);
+	cd_dependance.set("clpunch",-1);
+	cd_dependance.set("hpunch",-1);
+	cd_dependance.set("jpunch",-1);
+	cd_dependance.set("jkick",-1);
+	cd_dependance.set("jskick",-1);
+	cd_dependance.set("lkick",-1);
+	cd_dependance.set("mkick",-1);
+	cd_dependance.set("clkick",-1);
+	cd_dependance.set("cmkick",-1);
+	cd_dependance.set("hkick",-1);
+	cd_dependance.set("huppercut",-1);
+	cd_dependance.set("fanthrow",0);
+	cd_dependance.set("fanswipe",1);
+	cd_dependance.set("fanlift",2);
+	cd_dependance.set("air_dodge",-1);
+	cd_dependance.set("landing_lag",-1);
+	cd_dependance.set("jumpsquat",-1);
+	cd_dependance.set("free_fall",-1);
+	cd_dependance.set("grab",-1);
 
 
 	j1 = new Joueur();
