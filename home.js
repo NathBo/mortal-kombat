@@ -13,6 +13,11 @@ function mod(a,n){
 	else{return a%n}
 }
 
+function minvalabs(a,b){
+	if(Math.abs(a)<Math.abs(b)){return a}
+	else{return Math.abs(b)*signe(a)}
+}
+
 function main(){
 	function resizecanvas(){
 		Width= window.innerWidth;
@@ -156,13 +161,47 @@ function main(){
 	}
 
 
+	class AI
+	{
+		constructor(me,other){
+			this.me = me; this.other = other;
+			this.attacking = 0; this.idealrange = 120; this.rangescaling = 9; this.agressivite = 0.02;
+		}
+
+		pressforward(){
+			var me = this.me;
+			var other = this.other;
+			if(me.x<other.x){me.droite=1;}
+			else{me.gauche=1;}
+		}
+
+		pressbackward(){
+			var me = this.me;
+			var other = this.other;
+			if(me.x<other.x){me.gauche=1;}
+			else{me.droite=1;}
+		}
+
+		decide(){
+			var me = this.me;
+			var other = this.other;
+			me.droite = 0;me.gauche = 0; me.bas = 0; me.haut = 0; me.poing = 0; me.jambe = 0; me.dodge = 0; me.special = 0;
+			this.attacking = minvalabs(this.attacking-1+Math.random()*2+this.agressivite,10);
+			console.log(this.attacking);
+			if(Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-this.idealrange)<=me.charac.vitesse*2){}
+			else if(this.attacking*this.rangescaling+Math.abs(me.x-other.x)>=this.idealrange){this.pressforward();}
+			else{this.pressbackward();}
+		}
+	}
+
+
 	class Joueur
 	{
-		constructor(x,y,perso,n,skin)
+		constructor()
 		{
-			this.reinit(x,y,perso,n,skin);
+			
 		}
-		reinit(x,y,perso,n,skin){
+		reinit(x,y,perso,n,skin,other){
 			this.x = x; this.y = y; this.perso = perso; this.n = n; this.skin = skin;
 			this.droite=0;this.gauche=0;this.haut=0;this.bas=0;this.poing=0;this.jambe=0;this.special=0;this.dodge=0;
 			if (this.n == 0){this.orientation = 1}else{this.orientation = -1}
@@ -178,6 +217,7 @@ function main(){
 			this.blocking = 0; this.falling = 0; this.gettingup = 0; this.grabbing = 0; this.grabbed = 0;
 			this.vicpose = 0;
 			this.cooldowns = [0,0,0,0];
+			if(!secondplayerishuman && this.n==1){this.ai = new AI(this,other)}
 		}
 
 		begincoup(s,other){
@@ -213,6 +253,7 @@ function main(){
 		}
 
 		miseajour(other){
+			if(!secondplayerishuman && this.n==1){this.ai.decide();}
 			var c = this.charac;
 			for(var i=0;i<this.cooldowns.length;i++){
 				if(this.cooldowns[i]>0){this.cooldowns[i]--;}
@@ -827,7 +868,7 @@ function main(){
 	}
 
 	function reset_game(){
-		j1.reinit(-150,0,"kitana",0,0);j2.reinit(150,0,"kitana",1,1);frame_delay = base_frame_delay;
+		j1.reinit(-150,0,"kitana",0,0,j2);j2.reinit(150,0,"kitana",1,1,j1);frame_delay = base_frame_delay;
 		cpt = 0; objects_to_loop.clear();
 		musiques[0].currentTime=0;musiques[0].play();
 	}
@@ -1041,6 +1082,7 @@ function main(){
 	sounds_eff.set("fan",[document.querySelector('#fanwav')]);
 
 	var musiques = [document.querySelector('#mkthemeremixwav')];
+	var secondplayerishuman = false;
 	musiques[0].loop = true;
 	
 	musiques[0].play();
@@ -1082,8 +1124,10 @@ function main(){
 	movpriority.set("grab",100);
 
 
-	j1 = new Joueur(-150,0,"kitana",0,0);
-	j2 = new Joueur(150,0,"kitana",1,1);
+	j1 = new Joueur();
+	j2 = new Joueur();
+	j1.reinit(-150,0,"kitana",0,0,j2);
+	j2.reinit(150,0,"kitana",1,1,j1);
 
 	var decalagex = 256;
 	var ground = 240;
@@ -1117,14 +1161,16 @@ function main(){
 		if(e.code==controls[5]&&j1.jambe==0){j1.jambe=1}
 		if(e.code==controls[6]&&j1.special==0){j1.special=1}
 		if(e.code==controls[7]&&j1.dodge==0){j1.dodge=1;}
-		if(e.code==controls[8]){j2.droite=1}
-		if(e.code==controls[9]){j2.gauche=1}
-		if(e.code==controls[10]&&j2.haut==0){j2.haut=1}
-		if(e.code==controls[11]){j2.bas=1}
-		if(e.code==controls[12]&&j2.poing==0){j2.poing=1}
-		if(e.code==controls[13]&&j2.jambe==0){j2.jambe=1}
-		if(e.code==controls[14]&&j2.special==0){j2.special=1}
-		if(e.code==controls[15]&&j2.dodge==0){j2.dodge=1}
+		if(secondplayerishuman){
+			if(e.code==controls[8]){j2.droite=1}
+			if(e.code==controls[9]){j2.gauche=1}
+			if(e.code==controls[10]&&j2.haut==0){j2.haut=1}
+			if(e.code==controls[11]){j2.bas=1}
+			if(e.code==controls[12]&&j2.poing==0){j2.poing=1}
+			if(e.code==controls[13]&&j2.jambe==0){j2.jambe=1}
+			if(e.code==controls[14]&&j2.special==0){j2.special=1}
+			if(e.code==controls[15]&&j2.dodge==0){j2.dodge=1}
+		}
 		key=e.code;
 	}
 	function unlogKey(e){
