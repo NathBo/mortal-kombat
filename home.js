@@ -207,12 +207,16 @@ function main(){
 
 		attack(moves){
 			var me = this.me;
+			var other = this.other;
 			var coups = me.charac.coups;
 			
 			var movtodo = "";
 			var limiteup = 100;
 			function aux(m){
-				if(coups.get(m).slag<=limiteup){movtodo = m;limiteup = coups.get(m).slag;}
+				var conviction = coups.get(m).slag;
+				if(conviction<=other.hurted){conviction = -100+movpriority.get(m); conviction -= coups.get(m).degats;}
+
+				if(conviction<=limiteup){movtodo = m;limiteup = conviction;}
 			}
 			moves.forEach(aux);
 			if(this.mov != ""){var stats = coups.get(me.mov)}
