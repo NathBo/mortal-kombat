@@ -158,12 +158,12 @@ function main(){
 
 	class Joueur
 	{
-		constructor(x,y,perso,n)
+		constructor(x,y,perso,n,skin)
 		{
-			this.reinit(x,y,perso,n);
+			this.reinit(x,y,perso,n,skin);
 		}
-		reinit(x,y,perso,n){
-			this.x = x; this.y = y; this.perso = perso; this.n = n;
+		reinit(x,y,perso,n,skin){
+			this.x = x; this.y = y; this.perso = perso; this.n = n; this.skin = skin;
 			this.droite=0;this.gauche=0;this.haut=0;this.bas=0;this.poing=0;this.jambe=0;this.special=0;this.dodge=0;
 			if (this.n == 0){this.orientation = 1}else{this.orientation = -1}
 			this.costume = "stand1";
@@ -730,7 +730,7 @@ function main(){
 				other.x = x;		//pour la camera
 				ctx.scale(2*other.orientation,2);
 				var coords = kitcoordinates.get(othercost);
-				ctx.drawImage(kitpng,coords.offx,coords.offy,coords.width,coords.height,(x+decalagex-camerax+coords.decx*this.orientation-other.orientation*other.charac.width/2+shakex)*other.orientation,ground-y-coords.height-coords.decy+shakey,coords.width,coords.height);
+				ctx.drawImage(kitskins[other.skin],coords.offx,coords.offy,coords.width,coords.height,(x+decalagex-camerax+coords.decx*this.orientation-other.orientation*other.charac.width/2+shakex)*other.orientation,ground-y-coords.height-coords.decy+shakey,coords.width,coords.height);
 				ctx.setTransform(1, 0, 0, 1, 0, 0);
 				ctx.scale(1,1);
 				other.drawLife();
@@ -740,7 +740,7 @@ function main(){
 
 			ctx.scale(2*this.orientation,2);
 			var coords = kitcoordinates.get(this.costume);
-			ctx.drawImage(kitpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.charac.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.drawImage(kitskins[this.skin],coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.charac.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
 
@@ -827,7 +827,7 @@ function main(){
 	}
 
 	function reset_game(){
-		j1.reinit(-150,0,"kitana",0);j2.reinit(150,0,"kitana",1);frame_delay = base_frame_delay;
+		j1.reinit(-150,0,"kitana",0,0);j2.reinit(150,0,"kitana",1,1);frame_delay = base_frame_delay;
 		cpt = 0; objects_to_loop.clear();
 		musiques[0].currentTime=0;musiques[0].play();
 	}
@@ -870,6 +870,8 @@ function main(){
 	var lifebarpng=new Image();lifebarpng.src = 'ressource/ui/barlife.png';
 
 	var kitpng=new Image();kitpng.src = 'ressource/characters/kitana.png';
+	var kit2png=new Image();kit2png.src = 'ressource/characters/kitana2.png';
+	var kitskins = [kitpng,kit2png];
 	var fanpng=new Image();fanpng.src = 'ressource/characters/fan.png';
 	var fanthrowiconpng=new Image();fanthrowiconpng.src = 'ressource/icons/fanthrow_icon.png';
 	var fanswipeiconpng=new Image();fanswipeiconpng.src = 'ressource/icons/fanswipe_icon.png';
@@ -1080,8 +1082,8 @@ function main(){
 	movpriority.set("grab",100);
 
 
-	j1 = new Joueur(-150,0,"kitana",0);
-	j2 = new Joueur(150,0,"kitana",1);
+	j1 = new Joueur(-150,0,"kitana",0,0);
+	j2 = new Joueur(150,0,"kitana",1,1);
 
 	var decalagex = 256;
 	var ground = 240;
