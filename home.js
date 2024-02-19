@@ -165,7 +165,7 @@ function main(){
 	{
 		constructor(me,other){
 			this.me = me; this.other = other;
-			this.attacking = 0; this.idealrange = 120; this.rangescaling = 9; this.agressivite = 0.02;
+			this.attacking = 0; this.idealrange = 120; this.rangescaling = 9; this.agressivite = Math.random()*0.05;
 			this.enviedetaperenbas = 4+Math.floor(Math.random()*5);this.baserisk = 70+Math.floor(Math.random()*15);this.currisking = 0;
 			this.enviedegrab = Math.floor(Math.random()*5);
 		}
