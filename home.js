@@ -188,11 +188,11 @@ function main(){
 			var other = this.other;
 			var rep = new Set();
 			var width = this.other.charac.width;
-			console.log(d);
 			var prio = movpriority.get(me.mov);
 			if(me.mov == "lpunch" || me.mov == "clpunch"){prio--;}
 			function aux(val,key,_){
 				var newd = d-other.orientation*(other.xspeed+Math.max(other.xspeed-other.charac.friction*val.slag,0))/2*val.slag;
+				if(key == "hkick"){newd -= val.movx**2/other.charac.friction/2}
 				if((key == "jkick" || key == "jskick" || key == "jpunch") && me.y==0){}
 				else if(cd_dependance.get(key) != -1 && me.cooldowns[cd_dependance.get(key)]){}
 				else if(movpriority.get(key)<=prio){}
@@ -201,6 +201,7 @@ function main(){
 				else if(me.crouching>=3 && (["lpunch","lkick","hpunch","mkick","hkick"].includes(key))){}
 				else if(val.hitboxxe+width/2>=newd && d>=val.hitboxxs-width/2 && val.hiteffect != "projectile"){rep.add(key);}
 			}
+			console.log(rep);
 			coups.forEach(aux);
 			return rep;
 		}
@@ -214,11 +215,13 @@ function main(){
 			var me = this.me;
 			var other = this.other;
 			var coups = me.charac.coups;
+			var mywidth = this.other.charac.width;
 			
 			var movtodo = "";
 			var limiteup = 100;
-			if(other.charac.coups.has(other.mov) && Math.abs(me.x-other.x)<=other.charac.coups.get(other.mov).hitboxxe && other.movlag>=other.charac.coups.get(other.mov).elag-1){
-				limiteup = other.movlag-1-other.charac.coups.get(other.mov).fdur + other.charac.coups.get(other.mov).elag;
+			if(other.charac.coups.has(other.mov) && Math.abs(me.x-other.x)<=other.charac.coups.get(other.mov).hitboxxe+mywidth/2 && other.movlag>=other.charac.coups.get(other.mov).elag-1){
+				limiteup = other.movlag-1-other.charac.coups.get(other.mov).fdur - other.charac.coups.get(other.mov).elag;
+				console.log(limiteup);
 			}
 			function aux(m){
 				var conviction = coups.get(m).slag;
@@ -228,7 +231,7 @@ function main(){
 			}
 			moves.forEach(aux);
 			if(me.mov != ""){var stats = coups.get(me.mov)}
-			if((me.mov == "" || me.movlag <= stats.elag+stats.fdur-1) && movtodo != ""){
+			if((!coups.has(me.mov) || me.movlag <= stats.elag+stats.fdur-1) && movtodo != ""){
 				this.begincoup(movtodo);
 			}
 		}
@@ -237,12 +240,15 @@ function main(){
 			var me = this.me;
 			var other = this.other;
 			me.droite = 0;me.gauche = 0; me.bas = 0; me.haut = 0; me.poing = 0; me.jambe = 0; me.dodge = 0; me.special = 0;
-			this.attacking = minvalabs(this.attacking-1+Math.random()*2+this.agressivite,10);
+			this.attacking = minvalabs(this.attacking-1+Math.random()*2+this.agressivite+(other.falling>0),10);
 			if(Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-this.idealrange)<=me.charac.vitesse*2){}
 			else if(this.attacking*this.rangescaling+Math.abs(me.x-other.x)>=this.idealrange){this.pressforward();}
 			else{this.pressbackward();}
 			var moves = this.movesinrange(me.orientation*(other.x-me.x));
 			this.attack(moves);
+			if(!me.charac.coups.has(me.mov)){
+				if(other.charac.coups.has(other.mov) && Math.abs(me.x-other.x)<=other.charac.coups.get(other.mov).hitboxxe+me.charac.width/2 && other.movlag>=other.charac.coups.get(other.mov).elag-1){this.pressbackward();console.log("ok");}
+			}
 		}
 	}
 
@@ -274,6 +280,7 @@ function main(){
 
 		begincoup(s,other){
 			var stats = this.charac.coups.get(s);
+			if(this.hurted || this.falling || this.gettingup || this.blocking){return;}
 			if(["clpunch","clkick","cmkick"].includes(s)){this.crouching = Math.max(this.crouching,4);}
 			var cd = cd_dependance.get(s);
 			if(this.cooldowns[cd]){return;}
@@ -285,7 +292,7 @@ function main(){
 
 		reoriente(other){
 			if(this.movlag == 0&&this.y==0){if(this.x<other.x){this.orientation = 1;}else{this.orientation = -1;}}
-			if(this.orientation==1){this.forward=this.droite;this.back=this.gauche;}else{this.orientation = -1;this.forward=this.gauche;this.back=this.droite;}
+			
 		}
 
 		getup(){
@@ -309,7 +316,10 @@ function main(){
 		}
 
 		miseajour(other){
+			if(this.mov == ""){this.movlag = 0;}
+			if(this.n){console.log(this.mov);}
 			if(!secondplayerishuman && this.n==1){this.ai.decide();}
+			if(this.orientation==1){this.forward=this.droite;this.back=this.gauche;}else{this.orientation = -1;this.forward=this.gauche;this.back=this.droite;}
 			var c = this.charac;
 			for(var i=0;i<this.cooldowns.length;i++){
 				if(this.cooldowns[i]>0){this.cooldowns[i]--;}
@@ -573,6 +583,11 @@ function main(){
 
 		hurt(other,stats){
 			if(this.invincibilite){return;}
+			console.log(this.back);
+			console.log(this.gauche);
+			console.log(this.droite);
+			console.log(this.mov);
+			console.log(this.movlag);
 			if(this.movlag==0&&this.back>=1&&this.y==0&&stats.hiteffect != "grab" && ((this.crouching<=3 && (other.y>0 || stats.hitboxys>=0) || (this.crouching>3 && other.y==0)) || stats.hiteffect=="projectile")){
 				this.blocking = stats.blockstun;
 				this.pv-=stats.damageonblock;
@@ -1118,8 +1133,8 @@ function main(){
 	kitana_coups.set("hkick",{slag : 14, fdur : 8, elag : 24, movx : 3, degats : 16, hitstun : 38, hurtx : 3.2, hurty : 7, hitboxxs : 20, hitboxxe : 50, hitboxys : 0, hitboxye : 106, blockstun : 16, blockx : 1.4, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 10, hitsound : "hhit", blood : "mblood", damageonblock : 1});
 	kitana_coups.set("clpunch",{slag : 8, fdur : 6, elag : 8, degats : 4, hitstun : 20, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 30,hitboxys : -1, hitboxye : 20, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1});
 	kitana_coups.set("huppercut",{slag : 12, fdur : 10, elag : 24, degats : 20, hitstun : 60, hurtx : 3, hurty : 10, hitboxxs : 20, hitboxxe : 40, hitboxys : 0, hitboxye : 109, blockstun : 16, blockx : 1, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 12, hitsound : "hhit", blood : "mblood", damageonblock : 1});
-	kitana_coups.set("clkick",{slag : 8, fdur : 6, elag : 8, degats : 6, hitstun : 20, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 38,hitboxys : -45, hitboxye : 5, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1});
-	kitana_coups.set("cmkick",{slag : 13, fdur : 6, elag : 12, degats : 9, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 50,hitboxys : -1, hitboxye : 5, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit", blood : "lblood", damageonblock : 1});
+	kitana_coups.set("clkick",{slag : 8, fdur : 6, elag : 8, degats : 6, hitstun : 20, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 38,hitboxys : -45, hitboxye : -30, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1});
+	kitana_coups.set("cmkick",{slag : 13, fdur : 6, elag : 12, degats : 9, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 50,hitboxys : -1, hitboxye : -20, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit", blood : "lblood", damageonblock : 1});
 	kitana_coups.set("jkick",{slag : 6, fdur : 25, elag : 4, degats : 10, hitstun : 35, hurtx : 3.4, hurty : 5, hitboxxs : 0, hitboxxe : 60,hitboxys : -55, hitboxye : 5, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "fall", hitboxxeyscaling : -1, hitlag : 8, hitsound : "lhit", blood : "lblood", damageonblock : 1});
 	kitana_coups.set("jskick",{slag : 8, fdur : 15, elag : 4, degats : 13, hitstun : 32, hurtx : 0.8, hurty : 0, hitboxxs : 10, hitboxxe : 33,hitboxys : -20, hitboxye : 30, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 8, hitsound : "hhit", blood : "lblood", damageonblock : 1});
 	kitana_coups.set("jpunch",{slag : 5, fdur : 10, elag : 6, degats : 9, hitstun : 20, hurtx : 1.5, hurty : 0, hitboxxs : -5, hitboxxe : 58,hitboxys : -40, hitboxye : 5, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "lhit", blood : "lblood", damageonblock : 1});
