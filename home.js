@@ -192,16 +192,17 @@ function main(){
 			var rep = new Set();
 			var width = this.other.charac.width;
 			var prio = movpriority.get(me.mov);
-			if(me.mov == "lpunch" || me.mov == "clpunch"){prio--;}
 			function aux(val,key,_){
 				var newd = d-other.orientation*(other.xspeed+Math.max(other.xspeed-other.charac.friction*val.slag,0))/2*val.slag;
 				if(key == "hkick"){newd -= val.movx**2/other.charac.friction/2}
 				if(other.y>0 && me.y==0){
 					if(other.tb>0 || other.y+(other.tb+other.tb-other.charac.gravity*val.slag)/2*val.slag>val.hitboxye){return;}
 				}
+				var newprio = movpriority.get(key);
+				if (key=="lpunch" || key == "clpunch"){newprio++;}
 				if(me.y==0 && val.disponibility == "air"){}
 				else if(cd_dependance.get(key) != -1 && me.cooldowns[cd_dependance.get(key)]){}
-				else if(movpriority.get(key)<=prio || (movpriority.get(key)==100) && me.mov != ""){}
+				else if(newprio<=prio || (movpriority.get(key)==100) && me.mov != ""){}
 				else if(other.crouching && val.hitboxys>=0 && (val.hiteffect != "grab" || thiis.enviedegrab<10)){}
 				else if(me.movlag && me.crouching<=3 && val.disponibility=="crouch"){}
 				else if(!(me.crouching<=3 && me.y==0) && val.disponibility=="stand"){}
