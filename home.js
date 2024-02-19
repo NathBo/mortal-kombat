@@ -197,6 +197,8 @@ function main(){
 				else if(cd_dependance.get(key) != -1 && me.cooldowns[cd_dependance.get(key)]){}
 				else if(movpriority.get(key)<=prio){}
 				else if(other.crouching && val.hitboxys>=0){}
+				else if(me.movlag && me.crouching==0 && (["clpunch","clkick","huppercut","cmkick"].includes(key))){}
+				else if(me.crouching>=3 && (["lpunch","lkick","hpunch","mkick","hkick"].includes(key))){}
 				else if(val.hitboxxe+width/2>=newd && d>=val.hitboxxs-width/2 && val.hiteffect != "projectile"){rep.add(key);}
 			}
 			coups.forEach(aux);
@@ -272,6 +274,7 @@ function main(){
 
 		begincoup(s,other){
 			var stats = this.charac.coups.get(s);
+			if(["clpunch","clkick","cmkick"].includes(s)){this.crouching = Math.max(this.crouching,4);}
 			var cd = cd_dependance.get(s);
 			if(this.cooldowns[cd]){return;}
 			this.cooldowns[cd] = this.charac.cds[cd];
