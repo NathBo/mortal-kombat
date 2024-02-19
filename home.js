@@ -192,11 +192,12 @@ function main(){
 			var prio = movpriority.get(me.mov);
 			if(me.mov == "lpunch" || me.mov == "clpunch"){prio--;}
 			function aux(val,key,_){
+				var newd = d-other.orientation*(other.xspeed+Math.max(other.xspeed-other.charac.friction*val.slag,0))/2*val.slag;
 				if((key == "jkick" || key == "jskick" || key == "jpunch") && me.y==0){}
 				else if(cd_dependance.get(key) != -1 && me.cooldowns[cd_dependance.get(key)]){}
 				else if(movpriority.get(key)<=prio){}
 				else if(other.crouching && val.hitboxys>=0){}
-				else if(val.hitboxxe+width/2>=d && d>=val.hitboxxs-width/2 && val.hiteffect != "projectile"){rep.add(key);}
+				else if(val.hitboxxe+width/2>=newd && d>=val.hitboxxs-width/2 && val.hiteffect != "projectile"){rep.add(key);}
 			}
 			coups.forEach(aux);
 			return rep;
@@ -214,14 +215,17 @@ function main(){
 			
 			var movtodo = "";
 			var limiteup = 100;
+			if(other.charac.coups.has(other.mov) && Math.abs(me.x-other.x)<=other.charac.coups.get(other.mov).hitboxxe && other.movlag>=other.charac.coups.get(other.mov).elag-1){
+				limiteup = other.movlag-1-other.charac.coups.get(other.mov).fdur + other.charac.coups.get(other.mov).elag;
+			}
 			function aux(m){
 				var conviction = coups.get(m).slag;
-				if(conviction<=other.hurted){conviction = -100+movpriority.get(m); conviction -= coups.get(m).degats;}
+				if(conviction<=other.hurted){conviction = -100+movpriority.get(m); conviction -= coups.get(m).degats/2;}
 
 				if(conviction<=limiteup){movtodo = m;limiteup = conviction;}
 			}
 			moves.forEach(aux);
-			if(this.mov != ""){var stats = coups.get(me.mov)}
+			if(me.mov != ""){var stats = coups.get(me.mov)}
 			if((me.mov == "" || me.movlag <= stats.elag+stats.fdur-1) && movtodo != ""){
 				this.begincoup(movtodo);
 			}
