@@ -166,6 +166,7 @@ function main(){
 		constructor(me,other){
 			this.me = me; this.other = other;
 			this.attacking = 0; this.idealrange = 120; this.rangescaling = 9; this.agressivite = 0.02;
+			this.enviedetaperenbas = 5;this.baserisk = 50;this.currisking = 0;
 		}
 
 		pressforward(){
@@ -216,16 +217,20 @@ function main(){
 			var other = this.other;
 			var coups = me.charac.coups;
 			var mywidth = this.other.charac.width;
+			var thiis = this;
 			
 			var movtodo = "";
-			var limiteup = 100;
+			var limiteup = this.baserisk+this.currisking;
 			if(other.charac.coups.has(other.mov) && Math.abs(me.x-other.x)<=other.charac.coups.get(other.mov).hitboxxe+mywidth/2 && other.movlag>=other.charac.coups.get(other.mov).elag-1){
 				limiteup = other.movlag-1-other.charac.coups.get(other.mov).fdur - other.charac.coups.get(other.mov).elag;
 				console.log(limiteup);
 			}
 			function aux(m){
 				var conviction = coups.get(m).slag;
+				conviction += (coups.get(m).hitboxys>=0)*thiis.enviedetaperenbas;
+				conviction += coups.get(m).slag+coups.get(m).elag+coups.get(m).fdur/2;
 				if(conviction<=other.hurted){conviction = -100+movpriority.get(m); conviction -= coups.get(m).degats/2;}
+				conviction += -5+10*Math.random();
 
 				if(conviction<=limiteup){movtodo = m;limiteup = conviction;}
 			}
@@ -241,13 +246,17 @@ function main(){
 			var other = this.other;
 			me.droite = 0;me.gauche = 0; me.bas = 0; me.haut = 0; me.poing = 0; me.jambe = 0; me.dodge = 0; me.special = 0;
 			this.attacking = minvalabs(this.attacking-1+Math.random()*2+this.agressivite+(other.falling>0),10);
+			this.currisking = minvalabs(this.currisking-1+Math.random()*2,10);
 			if(Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-this.idealrange)<=me.charac.vitesse*2){}
 			else if(this.attacking*this.rangescaling+Math.abs(me.x-other.x)>=this.idealrange){this.pressforward();}
 			else{this.pressbackward();}
 			var moves = this.movesinrange(me.orientation*(other.x-me.x));
 			this.attack(moves);
 			if(!me.charac.coups.has(me.mov)){
-				if(other.charac.coups.has(other.mov) && Math.abs(me.x-other.x)<=other.charac.coups.get(other.mov).hitboxxe+me.charac.width/2 && other.movlag>=other.charac.coups.get(other.mov).elag-1){this.pressbackward();console.log("ok");}
+				if(other.charac.coups.has(other.mov) && Math.abs(me.x-other.x)<=other.charac.coups.get(other.mov).hitboxxe+me.charac.width/2 && other.movlag>=other.charac.coups.get(other.mov).elag-1){
+					this.pressbackward();console.log("ok");
+					if(other.charac.coups.has(other.mov).hitboxys<0){this.bas = 1;}
+				}
 			}
 		}
 	}
@@ -390,6 +399,7 @@ function main(){
 					else if(this.bas==0&&this.crouching>0&&this.movlag==0){this.crouching--;}
 					if(this.haut==1&&movpriority.get(this.mov)<20&&end_of_round_countdown==0){
 						this.mov = "jumpsquat";this.movlag = c.jumpsquat;
+						this.crouching = 0;
 						this.haut = 2;
 						if(this.xspeed==0){
 							if(this.droite >= 1){this.xspeed = c.jumpxspeed;}
@@ -588,7 +598,7 @@ function main(){
 			console.log(this.droite);
 			console.log(this.mov);
 			console.log(this.movlag);
-			if(this.movlag==0&&this.back>=1&&this.y==0&&stats.hiteffect != "grab" && ((this.crouching<=3 && (other.y>0 || stats.hitboxys>=0) || (this.crouching>3 && other.y==0)) || stats.hiteffect=="projectile")){
+			if(this.movlag==0&&this.hurted==0&&this.back>=1&&this.y==0&&stats.hiteffect != "grab" && ((this.crouching<=3 && (other.y>0 || stats.hitboxys>=0) || (this.crouching>3 && other.y==0)) || stats.hiteffect=="projectile")){
 				this.blocking = stats.blockstun;
 				this.pv-=stats.damageonblock;
 				if(this.pv<=0){this.pv = 1;}
