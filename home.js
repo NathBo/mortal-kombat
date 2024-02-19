@@ -165,9 +165,10 @@ function main(){
 	{
 		constructor(me,other){
 			this.me = me; this.other = other;
-			this.attacking = 0; this.idealrange = 120; this.rangescaling = 9; this.agressivite = Math.random()*0.05;
+			this.attacking = 0; this.idealrange = 120; this.rangescaling = 9; this.agressivite = Math.random()*0.5;
 			this.enviedetaperenbas = 4+Math.floor(Math.random()*5);this.baserisk = 70+Math.floor(Math.random()*15);this.currisking = 0;
 			this.enviedegrab = Math.floor(Math.random()*5);
+			this.commitmentonwalk = 5;
 		}
 
 		pressforward(){
@@ -224,6 +225,7 @@ function main(){
 
 		ugotblocked(){
 			this.enviedegrab +=2;
+			this.attacking+=10;
 		}
 
 		attack(moves){
@@ -268,9 +270,9 @@ function main(){
 			var moves = this.movesinrange(me.orientation*(other.x-me.x));
 			this.attack(moves);
 			if(!me.charac.coups.has(me.mov)){
-				if(other.charac.coups.has(other.mov) && Math.abs(me.x-other.x)<=other.charac.coups.get(other.mov).hitboxxe+me.charac.width/2 && other.movlag>=other.charac.coups.get(other.mov).elag-1){
+				if(other.charac.coups.has(other.mov) && Math.abs(me.x-other.x)<=other.charac.coups.get(other.mov).hitboxxe+me.charac.width/2+me.charac.vitesse*this.commitmentonwalk && other.movlag>=other.charac.coups.get(other.mov).elag-1){
 					this.pressbackward();
-					if(other.charac.coups.has(other.mov).hitboxys<0){this.bas = 1;}
+					if(other.charac.coups.has(other.mov).hitboxys<0){this.crouching = 6;}
 				}
 			}
 		}
