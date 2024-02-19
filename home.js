@@ -166,7 +166,7 @@ function main(){
 		constructor(me,other){
 			this.me = me; this.other = other;
 			this.attacking = 0; this.idealrange = 120; this.rangescaling = 9; this.agressivite = 0.02;
-			this.enviedetaperenbas = 5;this.baserisk = 50;this.currisking = 0;
+			this.enviedetaperenbas = 5;this.baserisk = 80;this.currisking = 0;
 		}
 
 		pressforward(){
@@ -210,6 +210,10 @@ function main(){
 		begincoup(m){
 			this.me.begincoup(m,this.other);
 			this.me.movlag+=1;
+		}
+
+		ugotdunkedunder(){
+			this.enviedetaperenbas += 8;
 		}
 
 		attack(moves){
@@ -618,7 +622,10 @@ function main(){
 						slow_game(stats.hitlag*2,1.5);
 						break;
 				}
-				this.hurted = stats.hitstun;
+				if(this.n==1 && !secondplayerishuman){
+					if(other.crouching&&this.charac.coups.has(this.mov) && this.charac.coups.get(this.mov).hitboxys>=0){this.ai.ugotdunkedunder();}
+				}
+					this.hurted = stats.hitstun;
 				this.xspeed = stats.hurtx*other.orientation;
 				this.pv -= stats.degats;
 				if(stats.hiteffect != "projectile"){lag_game(stats.hitlag);}
