@@ -169,7 +169,7 @@ function main(){
 			this.enviedetaperenbas = 4+Math.floor(Math.random()*5);this.baserisk = 50+Math.floor(Math.random()*15);this.currisking = 0;
 			this.enviedegrab = Math.floor(Math.random()*5);
 			this.commitmentonwalk = 5; this.hascommited = 0;
-			this.wanttojump = 2;
+			this.wanttojump = 2; this.enviedantiair = 0;
 		}
 
 		pressforward(){
@@ -227,11 +227,14 @@ function main(){
 			var me = this.me;
 			var other = this.other;
 			if(other.crouching&&me.charac.coups.has(me.mov) && me.charac.coups.get(me.mov).hitboxys>=0){this.enviedetaperenbas += 8;}
+			if(me.y>0){this.wanttojump-=1;}
+			if(other.y>0 && me.y==0){this.enviedantiair-=3;}
 		}
 
 		ugotblocked(){
 			this.enviedegrab +=2;
 			this.attacking-=1;
+			if(this.other.crouching>3){this.wanttojump += 1;}
 		}
 
 		attack(moves){
@@ -249,11 +252,12 @@ function main(){
 			function aux(m){
 				var conviction = coups.get(m).slag;
 				conviction += (coups.get(m).hitboxys>=0)*thiis.enviedetaperenbas;
-				conviction += coups.get(m).slag/2+coups.get(m).elag/3+coups.get(m).fdur/4;
+				conviction += coups.get(m).slag+coups.get(m).elag/2+coups.get(m).fdur/4;
 				conviction += (coups.get(m).hiteffect != "grab")*thiis.enviedegrab;
-				if(conviction<=other.hurted){conviction = -100+movpriority.get(m); conviction -= coups.get(m).degats/2;}
+				if(other.y>0 && me.y==0){conviction-=thiis.enviedantiair;}
+				if(coups.get(m).slag<=other.hurted){conviction = -100+movpriority.get(m); conviction -= coups.get(m).degats/2;}
 				if(m=="huppercut" && other.y>0){conviction -= -5;}
-				conviction += -5+10*Math.random();
+				conviction += 10*Math.random();
 
 				if(conviction<=limiteup){movtodo = m;limiteup = conviction;}
 			}
@@ -283,6 +287,7 @@ function main(){
 				else if(other.charac.coups.has(other.mov) && other.charac.coups.get(other.mov).hitboxye<=0 && Math.random()*10<=this.wanttojump){
 					me.haut = 1;this.pressforward;console.log("ok");
 				}
+				if(Math.random()*100<this.wanttojump){this.haut = 1;}
 			}
 			if(Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-this.idealrange)<=me.charac.vitesse*2){}
 			else if(this.attacking*this.rangescaling+Math.abs(me.x-other.x)>=this.idealrange){this.pressforward();}
