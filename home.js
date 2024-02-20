@@ -278,7 +278,7 @@ function main(){
 					this.pressbackward();
 					if(other.charac.coups.has(other.mov).hitboxys<0){this.bas = 1;}
 				}
-				else if(other.charac.coups.has(other.mov) && other.charac.coups.get(other.mov).hitboxye<=0){
+				else if(other.charac.coups.has(other.mov) && other.charac.coups.get(other.mov).hitboxye<=0 && Math.random()*10<=this.wanttojump){
 					me.haut = 1;this.pressforward;console.log("ok");
 				}
 			}
@@ -613,7 +613,7 @@ function main(){
 						if(entre(other.movlag,stats2.elag,stats2.elag+stats2.fdur)){hitboxxe+=stats2.hitboxxouv;}
 					}
 					if(entre((other.x-this.x)*this.orientation,stats.hitboxxs-other.charac.width/2,hitboxxe+other.charac.width/2+stats.hitboxxeyscaling*(other.y-(this.y+stats.hitboxys)))){
-						if(other.crouching>3 && other.back==0){
+						if(other.crouching>3 && other.back==0 && entre((other.y-this.y),stats.hitboxys,stats.hitboxxe+other.charac.height/3)){
 							if(stats.hitboxys<=-1 || this.y>0){other.hurt(this,stats);}
 						}
 						else if(other.y==0){
