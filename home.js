@@ -166,7 +166,7 @@ function main(){
 		constructor(me,other){
 			this.me = me; this.other = other;
 			this.attacking = 0; this.idealrange = 120; this.rangescaling = 9; this.agressivite = Math.random()*0.5;
-			this.enviedetaperenbas = 4+Math.floor(Math.random()*5);this.baserisk = 60+Math.floor(Math.random()*15);this.currisking = 0;
+			this.enviedetaperenbas = 4+Math.floor(Math.random()*5);this.baserisk = 50+Math.floor(Math.random()*15);this.currisking = 0;
 			this.enviedegrab = Math.floor(Math.random()*5);
 			this.commitmentonwalk = 5; this.hascommited = 0;
 			this.wanttojump = 2;
@@ -223,8 +223,10 @@ function main(){
 			this.me.movlag+=1;
 		}
 
-		ugotdunkedunder(){
-			this.enviedetaperenbas += 8;
+		ugothit(){
+			var me = this.me;
+			var other = this.other;
+			if(other.crouching&&me.charac.coups.has(me.mov) && me.charac.coups.get(me.mov).hitboxys>=0){this.enviedetaperenbas += 8;}
 		}
 
 		ugotblocked(){
@@ -653,7 +655,7 @@ function main(){
 						break;
 				}
 				if(this.n==1 && !secondplayerishuman){
-					if(other.crouching&&this.charac.coups.has(this.mov) && this.charac.coups.get(this.mov).hitboxys>=0){this.ai.ugotdunkedunder();}
+					this.ai.ugothit();
 				}
 					this.hurted = stats.hitstun;
 				this.xspeed = stats.hurtx*other.orientation;
