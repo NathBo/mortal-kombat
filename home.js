@@ -183,16 +183,80 @@ function main(){
 
 	class AI
 	{
-		constructor(me,other){
-			this.me = me; this.other = other;
-			this.attacking = 0; this.idealrange = 120; this.rangescaling = 9; this.agressivite = Math.random()*0.005;
-			this.enviedetaperenbas = 4+Math.floor(Math.random()*5);this.baserisk = 50+Math.floor(Math.random()*15);this.currisking = 0;
+		constructor(me,other,difficulty){
+			this.me = me; this.other = other; this.difficulty = difficulty;
+			this.attacking = 0; this.idealrange = 120; this.rangescaling = 9;
+			this.enviedetaperenbas = 4+Math.floor(Math.random()*5);
+			this.currisking = 0;
 			this.enviedegrab = Math.floor(Math.random()*5);
-			this.commitmentonwalk = 5; this.hascommited = 0;
+			this.hascommited = 0;
 			this.wanttojump = 0; this.enviedantiair = 0;
 			this.optionssonoki = [1.25,0.2,0.35,0.5]; //crouch, stand block, crouch block, jump
 			this.chosenoptiononoki = 0;
-			this.fduroptiononoki = 7; this.foptiononoki = 0;
+			this.foptiononoki = 0;
+			switch(this.difficulty){
+				case 0:
+					this.donothingchance = 0.85;
+					this.dontattackchance = 0.6;
+					this.agressivite = -Math.random()*0.05;
+					this.baserisk = 80+Math.floor(Math.random()*15);
+					this.inconsistency = 10;
+					this.cancelcombodelay = 7;
+					this.cancelnormaldelay = 15;
+					this.commitmentonwalk = 5;
+					this.optionssonoki[Math.floor(Math.random()*4)]+=1;
+					this.fduroptiononoki = 17;
+					break;
+				
+				case 1:
+					this.donothingchance = 0.5;
+					this.dontattackchance = 0.6;
+					this.agressivite = 0.01+Math.random()*0.02;
+					this.baserisk = 70+Math.floor(Math.random()*10);
+					this.inconsistency = 8;
+					this.cancelcombodelay = 3;
+					this.cancelnormaldelay = 10;
+					this.commitmentonwalk = 5;
+					this.optionssonoki[Math.floor(Math.random()*4)]+=1;
+					this.fduroptiononoki = 14;
+					break;
+
+				case 2:
+					this.donothingchance = 0;
+					this.dontattackchance = 0.4;
+					this.agressivite = 0.02+Math.random()*0.02;
+					this.baserisk = 60+Math.floor(Math.random()*10);
+					this.inconsistency = 8;
+					this.cancelcombodelay = 2;
+					this.cancelnormaldelay = 6;
+					this.commitmentonwalk = 5;
+					this.optionssonoki[Math.floor(Math.random()*4)]+=0.8;
+					this.fduroptiononoki = 10;
+					break;
+
+				case 3:
+					this.donothingchance = 0;
+					this.dontattackchance = 0;
+					this.agressivite = Math.random()*0.05;
+					this.baserisk = 40+Math.floor(Math.random()*10);
+					this.inconsistency = 5;
+					this.cancelcombodelay = 1;
+					this.cancelnormaldelay = 3;
+					this.commitmentonwalk = 3;
+					this.fduroptiononoki = 7;
+					break;
+				default:
+					this.donothingchance = 0;
+					this.dontattackchance = 0;
+					this.agressivite = 0.1;
+					this.baserisk = 40;
+					this.inconsistency = 2;
+					this.cancelcombodelay = 1;
+					this.cancelnormaldelay = 1;
+					this.commitmentonwalk = 1;
+					this.fduroptiononoki = 5;
+					break;
+			}
 		}
 
 		pressforward(force=false){
@@ -273,7 +337,7 @@ function main(){
 		}
 
 		ugothitorblockedaprojectile(){
-			this.agressivite+=0.05;
+			this.agressivite+=0.005;
 		}
 
 		attack(moves){
@@ -286,7 +350,7 @@ function main(){
 			var movtodo = "";
 			var limiteup = this.baserisk+this.currisking+me.pv/10;
 			if(other.charac.coups.has(other.mov) && Math.abs(me.x-other.x)<=other.charac.coups.get(other.mov).hitboxxe+mywidth/2 && other.movlag>=other.charac.coups.get(other.mov).elag-1){
-				limiteup = other.movlag-1-other.charac.coups.get(other.mov).fdur - other.charac.coups.get(other.mov).elag;
+				limiteup = other.movlag-2-other.charac.coups.get(other.mov).fdur - other.charac.coups.get(other.mov).elag;
 			}
 			function aux(m){
 				var conviction = coups.get(m).slag;
@@ -296,13 +360,16 @@ function main(){
 				if(other.y>0 && me.y==0){conviction-=thiis.enviedantiair;}
 				if(coups.get(m).slag<=other.hurted){conviction = -100+movpriority.get(m); conviction -= coups.get(m).degats/2;}
 				if(m=="huppercut" && other.y>0){conviction -= -5;}
-				conviction += 10*Math.random();
+				conviction += thiis.inconsistency*Math.random();
 
 				if(conviction<=limiteup){movtodo = m;limiteup = conviction;}
 			}
 			moves.forEach(aux);
 			if(me.mov != ""){var stats = coups.get(me.mov)}
-			if((!coups.has(me.mov) || me.movlag <= stats.elag+stats.fdur-1) && movtodo != ""){
+			var canceldelay = 1;
+			if(other.hurted){canceldelay = this.cancelcombodelay;}
+			else{canceldelay = this.cancelnormaldelay;}
+			if((!coups.has(me.mov) || me.movlag <= stats.elag+stats.fdur-canceldelay) && movtodo != ""){
 				this.begincoup(movtodo);
 			}
 		}
@@ -338,12 +405,15 @@ function main(){
 				if(me.gettingup==0){this.foptiononoki--;}
 				return;
 			}
+			if(Math.random()<this.donothingchance){return;}
 			var other = this.other;
 			me.bas = 0; me.haut = 0; me.poing = 0; me.jambe = 0; me.dodge = 0; me.special = 0;
 			this.attacking = minvalabs(this.attacking-1+Math.random()*2+this.agressivite+(other.falling>0),10);
 			this.currisking = minvalabs(this.currisking-1+Math.random()*2,10);
-			var moves = this.movesinrange(me.orientation*(other.x-me.x));
-			this.attack(moves);
+			if(Math.random()>this.donothingchance){
+				var moves = this.movesinrange(me.orientation*(other.x-me.x));
+				this.attack(moves);
+			}
 			if(!me.charac.coups.has(me.mov)){
 				if(other.charac.coups.has(other.mov) && Math.abs(me.x-other.x)<=other.charac.coups.get(other.mov).hitboxxe+me.charac.width/2+me.charac.vitesse*this.commitmentonwalk+5 && other.movlag>=other.charac.coups.get(other.mov).elag-1){
 					this.pressbackward();
@@ -385,7 +455,7 @@ function main(){
 			this.blocking = 0; this.falling = 0; this.gettingup = 0; this.grabbing = 0; this.grabbed = 0;
 			this.vicpose = 0;
 			this.cooldowns = [0,0,0,0];
-			if(!secondplayerishuman && this.n==1){this.ai = new AI(this,other)}
+			if(!secondplayerishuman && this.n==1){this.ai = new AI(this,other,1)}
 		}
 
 		begincoup(s,other){
@@ -744,7 +814,7 @@ function main(){
 				else if(this.y>0 && other.y==0){add_to_objects_set(new Blood(this.x+5*this.orientation,stats.hitboxye,-this.orientation,stats.blood));}
 			}
 			if(this.y>0 && other.y>0 && stats.hiteffect != "projectile"){this.xspeed+=other.xspeed*2/3;this.hurted+=4;}
-			if(Math.abs(this.x+this.xspeed*Math.abs(this.xspeed)/2/this.charac.friction-camerax)>decalagex-this.charac.width/2){other.pushed = 10;other.pushx = -other.orientation * this.xspeed; other.xspeed=0;}
+			if(Math.abs(this.x+this.xspeed*Math.abs(this.xspeed)/2/this.charac.friction-camerax)>decalagex-this.charac.width/2){other.pushed = 10;other.pushx = -other.orientation * this.xspeed * 1.3; other.xspeed=0;}
 			this.tb = stats.hurty;
 			this.invincibilite = stats.fdur+1;
 			if(this.pv<=0){
@@ -1250,7 +1320,7 @@ function main(){
 	var characteristics = new Map();
 
 	kitana_coups = new Map();
-	kitana_coups.set("lpunch",{slag : 10, fdur : 6, elag : 10, degats : 5, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 15, hitboxxe : 47,hitboxys : 0, hitboxye : 75, hitboxxouv : 20, blockstun : 12, blockx : 0.6, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand"});
+	kitana_coups.set("lpunch",{slag : 10, fdur : 6, elag : 12, degats : 5, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 15, hitboxxe : 47,hitboxys : 0, hitboxye : 75, hitboxxouv : 20, blockstun : 12, blockx : 0.6, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand"});
 	kitana_coups.set("hpunch",{slag : 14, fdur : 10, elag : 16, degats : 10, hitstun : 28, hurtx : 1.3, hurty : 0, hitboxxs : 11, hitboxxe : 49, hitboxys : 0, hitboxye : 82, hitboxxouv : 21, blockstun : 14, blockx : 1, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit", blood : "lblood", damageonblock : 1, disponibility : "stand"});
 	kitana_coups.set("lkick",{slag : 12, fdur : 8, elag : 14, degats : 6, hitstun : 20, hurtx : 1.1, hurty : 0, hitboxxs : 18, hitboxxe : 53, hitboxys : 0, hitboxye : 40, hitboxxouv : 24, blockstun : 12, blockx : 0.6, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand"});
 	kitana_coups.set("mkick",{slag : 16, fdur : 12, elag : 16, degats : 10, hitstun : 26, hurtx : 1.5, hurty : 0, hitboxxs : 18, hitboxxe : 52, hitboxys : 0, hitboxye : 98, hitboxxouv : 24, blockstun : 14, blockx : 1, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit", blood : "lblood", damageonblock : 1, disponibility : "stand"});
