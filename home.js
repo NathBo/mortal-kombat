@@ -229,7 +229,7 @@ function main(){
 
 		ugotblocked(){
 			this.enviedegrab +=2;
-			this.attacking+=10;
+			this.attacking-=1;
 		}
 
 		attack(moves){
@@ -275,7 +275,7 @@ function main(){
 			if(!me.charac.coups.has(me.mov)){
 				if(other.charac.coups.has(other.mov) && Math.abs(me.x-other.x)<=other.charac.coups.get(other.mov).hitboxxe+me.charac.width/2+me.charac.vitesse*this.commitmentonwalk+5 && other.movlag>=other.charac.coups.get(other.mov).elag-1){
 					this.pressbackward();
-					if(other.charac.coups.has(other.mov).hitboxys<0){this.crouching = 6;}
+					if(other.charac.coups.has(other.mov).hitboxys<0){this.bas = 1;}
 				}
 			}
 			if(Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-this.idealrange)<=me.charac.vitesse*2){}
@@ -626,8 +626,8 @@ function main(){
 				if(this.pv<=0){this.pv = 1;}
 				this.xspeed = -stats.blockx*this.orientation;
 				lag_game(Math.floor(stats.hitlag/0.8));
-				if(this.n==1 && !secondplayerishuman){
-					this.ai.ugotblocked();
+				if(this.n==0 && !secondplayerishuman){
+					other.ai.ugotblocked();
 				}
 			}
 			else{
