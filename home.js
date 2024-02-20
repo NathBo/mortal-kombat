@@ -217,7 +217,7 @@ function main(){
 			for(let value of objects_to_loop.values()){
 				if(value.dangerous){
 					console.log(Math.abs(this.me.x-value.x))
-					if(Math.abs(this.me.x-value.x)<=value.stats.hitboxxe+50+this.me.charac.width/2 && this.me.y==0){this.pressbackward();return true;}
+					if(Math.abs(this.me.x-value.x)<=value.stats.hitboxxe+50+this.me.charac.width/2 && this.me.y==0){this.pressbackward();this.me.bas=1;return true;}
 					if(this.me.y==0 && Math.abs(this.me.x-value.x)>=value.stats.hitboxxe+50+this.me.charac.width/2-this.wanttojump && value.y+value.stats.hitboxye<=70){this.me.haut=1;this.pressforward(true);return true;}
 				}
 			}
@@ -354,7 +354,9 @@ function main(){
 				}
 				if(Math.random()*100<this.wanttojump){me.haut = 1;}
 			}
-			if(Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-this.idealrange)<=me.charac.vitesse*2){}
+			if(Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-this.idealrange)<=me.charac.vitesse*2){
+				if(me.perso=="kitana"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("fanthrow");}}
+			}
 			else if(this.attacking*this.rangescaling+Math.abs(me.x-other.x)>=this.idealrange){this.pressforward();}
 			else{this.pressbackward();}
 		}
@@ -388,6 +390,7 @@ function main(){
 
 		begincoup(s,other){
 			var stats = this.charac.coups.get(s);
+			this.reoriente(other);
 			if(this.hurted || this.falling || this.gettingup || this.blocking){return;}
 			if(["clpunch","clkick","cmkick"].includes(s)){this.crouching = Math.max(this.crouching,4);}
 			if(s == "jkick"){if(this.x<other.x){this.orientation = 1;}else{this.orientation = -1;}}
@@ -709,7 +712,7 @@ function main(){
 				if(this.pv<=0){this.pv = 1;}
 				this.xspeed = -stats.blockx*this.orientation;
 				lag_game(Math.floor(stats.hitlag/0.8));
-				if(this.n==0 && !secondplayerishuman){
+				if(this.n==0 && !secondplayerishuman && stats.hiteffect!="projectile"){
 					other.ai.ugotblocked();
 				}
 			}
@@ -1254,11 +1257,11 @@ function main(){
 	kitana_coups.set("hkick",{slag : 14, fdur : 8, elag : 24, movx : 3, degats : 16, hitstun : 38, hurtx : 3.2, hurty : 7, hitboxxs : 20, hitboxxe : 50, hitboxys : 0, hitboxye : 106, hitboxxouv : 30, blockstun : 16, blockx : 1.4, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 10, hitsound : "hhit", blood : "mblood", damageonblock : 1, disponibility : "stand"});
 	kitana_coups.set("clpunch",{slag : 8, fdur : 6, elag : 8, degats : 4, hitstun : 20, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 30,hitboxys : -1, hitboxye : 20, hitboxxouv : 14, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "crouch"});
 	kitana_coups.set("huppercut",{slag : 12, fdur : 10, elag : 24, degats : 20, hitstun : 60, hurtx : 3, hurty : 10, hitboxxs : 20, hitboxxe : 40, hitboxys : 0, hitboxye : 115, hitboxxouv : 15, blockstun : 16, blockx : 1, hiteffect : "fall", hitboxxeyscaling : 0.25, hitlag : 12, hitsound : "hhit", blood : "mblood", damageonblock : 1, disponibility : "crouch"});
-	kitana_coups.set("clkick",{slag : 8, fdur : 6, elag : 8, degats : 6, hitstun : 20, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 38,hitboxys : -45, hitboxye : -30, hitboxxouv : 14, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "crouch"});
+	kitana_coups.set("clkick",{slag : 8, fdur : 6, elag : 8, degats : 6, hitstun : 20, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 38,hitboxys : -45, hitboxye : -50, hitboxxouv : 14, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "crouch"});
 	kitana_coups.set("cmkick",{slag : 13, fdur : 6, elag : 12, degats : 9, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 50,hitboxys : -1, hitboxye : -20, hitboxxouv : 22, blockstun : 12, blockx : 0.7, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit", blood : "lblood", damageonblock : 1, disponibility : "crouch"});
 	kitana_coups.set("jkick",{slag : 6, fdur : 25, elag : 4, degats : 10, hitstun : 35, hurtx : 3.4, hurty : 5, hitboxxs : 0, hitboxxe : 56,hitboxys : -65, hitboxye : 5, hitboxxouv : 22, landinglag : 8, blockstun : 10, blockx : 0.7, hiteffect : "fall", hitboxxeyscaling : -1, hitlag : 8, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "air"});
 	kitana_coups.set("jskick",{slag : 8, fdur : 15, elag : 4, degats : 13, hitstun : 32, hurtx : 0.8, hurty : 0, hitboxxs : 10, hitboxxe : 33,hitboxys : -20, hitboxye : 30, hitboxxouv : 12, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 8, hitsound : "hhit", blood : "lblood", damageonblock : 1, disponibility : "air"});
-	kitana_coups.set("jpunch",{slag : 5, fdur : 10, elag : 6, degats : 9, hitstun : 22, hurtx : 1.5, hurty : 0, hitboxxs : -5, hitboxxe : 58,hitboxys : -40, hitboxye : -10, hitboxxouv : 32, landinglag : 8, blockstun : 12, blockx : 0.7, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "air"});
+	kitana_coups.set("jpunch",{slag : 5, fdur : 10, elag : 6, degats : 9, hitstun : 22, hurtx : 1.5, hurty : 0, hitboxxs : -5, hitboxxe : 58,hitboxys : -40, hitboxye : -30, hitboxxouv : 32, landinglag : 8, blockstun : 12, blockx : 0.7, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "air"});
 	kitana_coups.set("grab",{slag : 5, fdur : 3, elag : 12, degats : 15, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 28,hitboxys : 0, hitboxye : -400, hitboxxouv : 15, blockstun : 12, blockx : 0.6, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand"});
 	kitana_coups.set("fanthrow",{slag : 25, fdur : 0, elag : 16, degats : 8, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : -12, hitboxxe : 12,hitboxys : -8, hitboxye : 8, hitboxxouv : 5, blockstun : 12, blockx : 0.6, hiteffect : "projectile", hitboxxeyscaling : 0, hitlag : 3, hitsound : "fan", blood : "lblood", damageonblock : 2,landinglag : 12, disponibility : "stand"});
 	kitana_coups.set("fanswipe",{slag : 12, fdur : 8, elag : 8, degats : 12, hitstun : 30, hurtx : 3, hurty : 0, hitboxxs : 18, hitboxxe : 60, hitboxys : 0, hitboxye : 70, hitboxxouv : 20, blockstun : 16, blockx : 1.2, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 9, hitsound : "fan", blood : "mblood", damageonblock : 3, disponibility : "stand"});
