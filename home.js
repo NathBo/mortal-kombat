@@ -189,7 +189,7 @@ function main(){
 			this.enviedetaperenbas = 4+Math.floor(Math.random()*5);this.baserisk = 50+Math.floor(Math.random()*15);this.currisking = 0;
 			this.enviedegrab = Math.floor(Math.random()*5);
 			this.commitmentonwalk = 5; this.hascommited = 0;
-			this.wanttojump = 2; this.enviedantiair = 0;
+			this.wanttojump = 20; this.enviedantiair = 0;
 			this.optionssonoki = [1.25,0.2,0.35,0.5]; //crouch, stand block, crouch block, jump
 			this.chosenoptiononoki = 0;
 			this.fduroptiononoki = 7; this.foptiononoki = 0;
@@ -217,7 +217,7 @@ function main(){
 			for(let value of objects_to_loop.values()){
 				if(value.dangerous){
 					console.log(value.stats.hitboxxe)
-					if(Math.abs(this.me.x-value.x)<=value.stats.hitboxxe+50+this.me.charac.width/2){this.pressbackward();return true;}
+					if(Math.abs(this.me.x-value.x)<=value.stats.hitboxxe+50+this.me.charac.width/2 && this.me.y==0){this.pressbackward();return true;}
 				}
 			}
 			return false;
@@ -243,7 +243,7 @@ function main(){
 				else if(cd_dependance.get(key) != -1 && me.cooldowns[cd_dependance.get(key)]){}
 				else if(newprio<=prio || (movpriority.get(key)==100) && me.mov != ""){}
 				else if(other.crouching && val.hitboxys>=0 && (val.hiteffect != "grab" || thiis.enviedegrab<10)){}
-				else if(me.movlag && me.crouching<=3 && val.disponibility=="crouch"){}
+				else if((me.crouching<=3 || me.y>0) && val.disponibility=="crouch"){}
 				else if(!(me.crouching<=3 && me.y==0) && val.disponibility=="stand"){}
 				else if(val.hitboxxe+width/2>=newd && d>=val.hitboxxs-width/2 && val.hiteffect != "projectile"){rep.add(key);}
 			}
