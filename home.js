@@ -18,6 +18,23 @@ function minvalabs(a,b){
 	else{return Math.abs(b)*signe(a)}
 }
 
+function sum(a){
+	var rep = 0;
+	for(var i=0;i<a.length;i++){
+		rep+=a[i];
+	}
+	return rep;
+}
+
+function getrandomwithcoeff(a){
+	var cb = Math.random()*sum(a);
+	for(var i=0;i<a.length;i++){
+		if(cb<=a[i]){return i;}
+		cb-=a[i];
+	}
+}
+
+
 function main(){
 	function resizecanvas(){
 		Width= window.innerWidth;
@@ -166,13 +183,13 @@ function main(){
 		constructor(me,other){
 			this.me = me; this.other = other;
 			this.attacking = 0; this.idealrange = 120; this.rangescaling = 9; this.agressivite = Math.random()*0.5;
-			this.enviedetaperenbas = 4+Math.floor(Math.random()*5);this.baserisk = 0+Math.floor(Math.random()*15);this.currisking = 0;
+			this.enviedetaperenbas = 4+Math.floor(Math.random()*5);this.baserisk = 50+Math.floor(Math.random()*15);this.currisking = 0;
 			this.enviedegrab = Math.floor(Math.random()*5);
 			this.commitmentonwalk = 5; this.hascommited = 0;
 			this.wanttojump = 2; this.enviedantiair = 0;
-			this.optionssonoki = [0.25,0.25,0.25,0.25]; //crouch, stand block, crouch block, jump
+			this.optionssonoki = [1.25,0.2,0.35,0.5]; //crouch, stand block, crouch block, jump
 			this.chosenoptiononoki = 0;
-			this.fduroptiononoki = 15; this.foptiononoki = 0;
+			this.fduroptiononoki = 10; this.foptiononoki = 0;
 		}
 
 		pressforward(){
@@ -232,6 +249,7 @@ function main(){
 			if(other.crouching&&me.charac.coups.has(me.mov) && me.charac.coups.get(me.mov).hitboxys>=0){this.enviedetaperenbas += 8;}
 			if(me.y>0){this.wanttojump-=1;}
 			if(other.y>0 && me.y==0){this.enviedantiair-=3;}
+			if(this.foptiononoki){this.optionssonoki[this.chosenoptiononoki]-=0.1}
 		}
 
 		ugotblocked(){
@@ -277,7 +295,7 @@ function main(){
 			if(this.hascommited){this.hascommited--;}
 			else{me.droite = 0;me.gauche = 0;}
 			if(me.gettingup){
-				if(me.gettingup==1){this.chosenoptiononoki = Math.floor(Math.random()*4);this.foptiononoki = this.fduroptiononoki;console.log(this.chosenoptiononoki);}
+				if(me.gettingup==1){this.chosenoptiononoki = getrandomwithcoeff(this.optionssonoki);this.foptiononoki = this.fduroptiononoki;console.log(this.chosenoptiononoki);}
 			}
 			if(this.foptiononoki){
 				me.bas = 0; me.haut = 0; me.poing = 0; me.jambe = 0; me.dodge = 0; me.special = 0;
@@ -294,6 +312,8 @@ function main(){
 						break;
 					case 3:
 						me.haut=1;
+						if(this.attacking>=0){this.pressforward();}
+						else{this.pressbackward();}
 				}
 				if(me.gettingup==0){this.foptiononoki--;}
 				return;
@@ -1218,7 +1238,7 @@ function main(){
 	kitana_coups.set("jkick",{slag : 6, fdur : 25, elag : 4, degats : 10, hitstun : 35, hurtx : 3.4, hurty : 5, hitboxxs : 0, hitboxxe : 56,hitboxys : -65, hitboxye : 5, hitboxxouv : 22, landinglag : 8, blockstun : 10, blockx : 0.7, hiteffect : "fall", hitboxxeyscaling : -1, hitlag : 8, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "air"});
 	kitana_coups.set("jskick",{slag : 8, fdur : 15, elag : 4, degats : 13, hitstun : 32, hurtx : 0.8, hurty : 0, hitboxxs : 10, hitboxxe : 33,hitboxys : -20, hitboxye : 30, hitboxxouv : 12, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 8, hitsound : "hhit", blood : "lblood", damageonblock : 1, disponibility : "air"});
 	kitana_coups.set("jpunch",{slag : 5, fdur : 10, elag : 6, degats : 9, hitstun : 22, hurtx : 1.5, hurty : 0, hitboxxs : -5, hitboxxe : 58,hitboxys : -40, hitboxye : 5, hitboxxouv : 32, landinglag : 8, blockstun : 12, blockx : 0.7, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "air"});
-	kitana_coups.set("grab",{slag : 5, fdur : 3, elag : 12, degats : 15, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 28,hitboxys : 0, hitboxye : 50, hitboxxouv : 15, blockstun : 12, blockx : 0.6, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand"});
+	kitana_coups.set("grab",{slag : 5, fdur : 3, elag : 12, degats : 15, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 28,hitboxys : 0, hitboxye : -400, hitboxxouv : 15, blockstun : 12, blockx : 0.6, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand"});
 	kitana_coups.set("fanthrow",{slag : 25, fdur : 0, elag : 16, degats : 8, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : -12, hitboxxe : 12,hitboxys : -8, hitboxye : 8, hitboxxouv : 5, blockstun : 12, blockx : 0.6, hiteffect : "projectile", hitboxxeyscaling : 0, hitlag : 3, hitsound : "fan", blood : "lblood", damageonblock : 2,landinglag : 12, disponibility : "stand"});
 	kitana_coups.set("fanswipe",{slag : 12, fdur : 8, elag : 8, degats : 12, hitstun : 30, hurtx : 3, hurty : 0, hitboxxs : 18, hitboxxe : 60, hitboxys : 0, hitboxye : 70, hitboxxouv : 20, blockstun : 16, blockx : 1.2, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 9, hitsound : "fan", blood : "mblood", damageonblock : 3, disponibility : "stand"});
 	kitana_coups.set("fanlift",{slag : 5, fdur : 10, elag : 5, degats : 8, hitstun : 38, hurtx : 0.6, hurty : 5, hitboxxs : -10, hitboxxe : 10, hitboxys : -10, hitboxye : 10, hitboxxouv : 0, blockstun : 14, blockx : 1, hiteffect : "projectile", hitboxxeyscaling : 0, hitlag : 5, hitsound : "hhit", blood : "lblood", damageonblock : 3, disponibility : "stand"});
