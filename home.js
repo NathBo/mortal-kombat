@@ -197,7 +197,7 @@ function main(){
 			switch(this.difficulty){
 				case 0:
 					this.donothingchance = 0.85;
-					this.dontattackchance = 0.6;
+					this.dontattackchance = 0.7;
 					this.agressivite = -Math.random()*0.05;
 					this.baserisk = 80+Math.floor(Math.random()*15);
 					this.inconsistency = 10;
@@ -205,20 +205,20 @@ function main(){
 					this.cancelnormaldelay = 15;
 					this.commitmentonwalk = 5;
 					this.optionssonoki[Math.floor(Math.random()*4)]+=1;
-					this.fduroptiononoki = 17;
+					this.fduroptiononoki = 30;
 					break;
 				
 				case 1:
-					this.donothingchance = 0.5;
-					this.dontattackchance = 0.6;
-					this.agressivite = 0.01+Math.random()*0.02;
+					this.donothingchance = 0.6;
+					this.dontattackchance = 0.7;
+					this.agressivite = 0.01;
 					this.baserisk = 70+Math.floor(Math.random()*10);
 					this.inconsistency = 8;
 					this.cancelcombodelay = 3;
 					this.cancelnormaldelay = 10;
 					this.commitmentonwalk = 5;
 					this.optionssonoki[Math.floor(Math.random()*4)]+=1;
-					this.fduroptiononoki = 14;
+					this.fduroptiononoki = 20;
 					break;
 
 				case 2:
@@ -237,8 +237,8 @@ function main(){
 				case 3:
 					this.donothingchance = 0;
 					this.dontattackchance = 0;
-					this.agressivite = Math.random()*0.05;
-					this.baserisk = 40+Math.floor(Math.random()*10);
+					this.agressivite = 0.04;
+					this.baserisk = 60;
 					this.inconsistency = 5;
 					this.cancelcombodelay = 1;
 					this.cancelnormaldelay = 3;
@@ -249,7 +249,7 @@ function main(){
 					this.donothingchance = 0;
 					this.dontattackchance = 0;
 					this.agressivite = 0.1;
-					this.baserisk = 40;
+					this.baserisk = 50;
 					this.inconsistency = 2;
 					this.cancelcombodelay = 1;
 					this.cancelnormaldelay = 1;
@@ -299,16 +299,17 @@ function main(){
 			function aux(val,key,_){
 				var newd = d-other.orientation*(other.xspeed+Math.max(other.xspeed-other.charac.friction*val.slag,0))/2*val.slag;
 				if(key == "hkick"){newd -= val.movx**2/other.charac.friction/2}
-				if(other.y>0 && me.y==0){
-					if(other.tb>0 || other.y+(other.tb+other.tb-other.charac.gravity*val.slag)/2*val.slag>val.hitboxye-20){return;}
+				if((other.y>0 || other.mov == "jumpsquat") && me.y==0){
+					newd = d-other.orientation*other.xspeed*val.slag;
+					if(other.tb>=0 || other.y+(other.tb+other.tb-other.charac.gravity*val.slag)/2*val.slag>val.hitboxye-20 || newd<0){return;}
 				}
 				var newprio = movpriority.get(key);
-				if (key=="lpunch" || key == "clpunch"){newprio++;}
+				//if (key=="lpunch" || key == "clpunch"){newprio++;}
 				if(me.y==0 && val.disponibility == "air"){}
 				else if(cd_dependance.get(key) != -1 && me.cooldowns[cd_dependance.get(key)]){}
 				else if(newprio<=prio || (movpriority.get(key)==100) && me.mov != ""){}
 				else if(other.crouching && val.hitboxys>=0 && (val.hiteffect != "grab" || thiis.enviedegrab<10)){}
-				else if((me.crouching<=3 || me.y>0) && val.disponibility=="crouch"){}
+				else if((me.movlag || me.y>0) && val.disponibility=="crouch"){}
 				else if(!(me.crouching<=3 && me.y==0) && val.disponibility=="stand"){}
 				else if(val.hitboxxe+width/2>=newd && d>=val.hitboxxs-width/2 && val.hiteffect != "projectile"){rep.add(key);}
 			}
@@ -814,7 +815,7 @@ function main(){
 				else if(this.y>0 && other.y==0){add_to_objects_set(new Blood(this.x+5*this.orientation,stats.hitboxye,-this.orientation,stats.blood));}
 			}
 			if(this.y>0 && other.y>0 && stats.hiteffect != "projectile"){this.xspeed+=other.xspeed*2/3;this.hurted+=4;}
-			if(Math.abs(this.x+this.xspeed*Math.abs(this.xspeed)/2/this.charac.friction-camerax)>decalagex-this.charac.width/2){other.pushed = 10;other.pushx = -other.orientation * this.xspeed * 1.3; other.xspeed=0;}
+			if(Math.abs(this.x+this.xspeed*Math.abs(this.xspeed)/2/this.charac.friction-camerax)>decalagex-this.charac.width/2){other.pushed = 10;other.pushx = - this.xspeed * 1; other.xspeed=0;}
 			this.tb = stats.hurty;
 			this.invincibilite = stats.fdur+1;
 			if(this.pv<=0){
@@ -1331,7 +1332,7 @@ function main(){
 	kitana_coups.set("cmkick",{slag : 13, fdur : 6, elag : 12, degats : 9, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 50,hitboxys : -1, hitboxye : -20, hitboxxouv : 22, blockstun : 12, blockx : 0.7, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit", blood : "lblood", damageonblock : 1, disponibility : "crouch"});
 	kitana_coups.set("jkick",{slag : 6, fdur : 25, elag : 4, degats : 10, hitstun : 35, hurtx : 3.4, hurty : 5, hitboxxs : 0, hitboxxe : 56,hitboxys : -65, hitboxye : 5, hitboxxouv : 22, landinglag : 8, blockstun : 10, blockx : 0.7, hiteffect : "fall", hitboxxeyscaling : -1, hitlag : 8, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "air"});
 	kitana_coups.set("jskick",{slag : 8, fdur : 15, elag : 4, degats : 13, hitstun : 32, hurtx : 0.8, hurty : 0, hitboxxs : 10, hitboxxe : 33,hitboxys : -20, hitboxye : 30, hitboxxouv : 12, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 8, hitsound : "hhit", blood : "lblood", damageonblock : 1, disponibility : "air"});
-	kitana_coups.set("jpunch",{slag : 5, fdur : 10, elag : 6, degats : 9, hitstun : 22, hurtx : 1.5, hurty : 0, hitboxxs : -5, hitboxxe : 58,hitboxys : -40, hitboxye : -30, hitboxxouv : 32, landinglag : 8, blockstun : 12, blockx : 0.7, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "air"});
+	kitana_coups.set("jpunch",{slag : 5, fdur : 10, elag : 6, degats : 9, hitstun : 22, hurtx : 1.5, hurty : 0, hitboxxs : 15, hitboxxe : 58,hitboxys : -40, hitboxye : -40, hitboxxouv : 32, landinglag : 8, blockstun : 12, blockx : 0.7, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "air"});
 	kitana_coups.set("grab",{slag : 5, fdur : 3, elag : 12, degats : 15, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 28,hitboxys : 0, hitboxye : -400, hitboxxouv : 15, blockstun : 12, blockx : 0.6, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand"});
 	kitana_coups.set("fanthrow",{slag : 25, fdur : 0, elag : 16, degats : 8, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : -12, hitboxxe : 12,hitboxys : -8, hitboxye : 8, hitboxxouv : 5, blockstun : 12, blockx : 0.6, hiteffect : "projectile", hitboxxeyscaling : 0, hitlag : 3, hitsound : "fan", blood : "lblood", damageonblock : 2,landinglag : 12, disponibility : "stand"});
 	kitana_coups.set("fanswipe",{slag : 12, fdur : 8, elag : 8, degats : 12, hitstun : 30, hurtx : 3, hurty : 0, hitboxxs : 18, hitboxxe : 60, hitboxys : 0, hitboxye : 70, hitboxxouv : 20, blockstun : 16, blockx : 1.2, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 9, hitsound : "fan", blood : "mblood", damageonblock : 3, disponibility : "stand"});
