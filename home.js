@@ -169,6 +169,7 @@ function main(){
 			this.enviedetaperenbas = 4+Math.floor(Math.random()*5);this.baserisk = 70+Math.floor(Math.random()*15);this.currisking = 0;
 			this.enviedegrab = Math.floor(Math.random()*5);
 			this.commitmentonwalk = 5; this.hascommited = 0;
+			this.wanttojump = 2;
 		}
 
 		pressforward(){
@@ -276,6 +277,9 @@ function main(){
 				if(other.charac.coups.has(other.mov) && Math.abs(me.x-other.x)<=other.charac.coups.get(other.mov).hitboxxe+me.charac.width/2+me.charac.vitesse*this.commitmentonwalk+5 && other.movlag>=other.charac.coups.get(other.mov).elag-1){
 					this.pressbackward();
 					if(other.charac.coups.has(other.mov).hitboxys<0){this.bas = 1;}
+				}
+				else if(other.charac.coups.has(other.mov) && other.charac.coups.get(other.mov).hitboxye<=0){
+					me.haut = 1;this.pressforward;console.log("ok");
 				}
 			}
 			if(Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-this.idealrange)<=me.charac.vitesse*2){}
@@ -606,7 +610,7 @@ function main(){
 					var hitboxxe = stats.hitboxxe;
 					if(other.charac.coups.has(other.mov)){
 						var stats2 = other.charac.coups.get(other.mov)
-						if(entre(other.movlag,stats2.elag,stats2.elag+stats2.fdur)){hitboxxe+=stats2.hitboxxouv;console.log(stats2.hitboxxouv);}
+						if(entre(other.movlag,stats2.elag,stats2.elag+stats2.fdur)){hitboxxe+=stats2.hitboxxouv;}
 					}
 					if(entre((other.x-this.x)*this.orientation,stats.hitboxxs-other.charac.width/2,hitboxxe+other.charac.width/2+stats.hitboxxeyscaling*(other.y-(this.y+stats.hitboxys)))){
 						if(other.crouching>3 && other.back==0){
