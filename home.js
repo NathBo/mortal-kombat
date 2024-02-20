@@ -189,14 +189,14 @@ function main(){
 			this.enviedetaperenbas = 4+Math.floor(Math.random()*5);this.baserisk = 50+Math.floor(Math.random()*15);this.currisking = 0;
 			this.enviedegrab = Math.floor(Math.random()*5);
 			this.commitmentonwalk = 5; this.hascommited = 0;
-			this.wanttojump = 2; this.enviedantiair = 0;
+			this.wanttojump = 0; this.enviedantiair = 0;
 			this.optionssonoki = [1.25,0.2,0.35,0.5]; //crouch, stand block, crouch block, jump
 			this.chosenoptiononoki = 0;
 			this.fduroptiononoki = 7; this.foptiononoki = 0;
 		}
 
-		pressforward(){
-			if(this.hascommited){return;}
+		pressforward(force=false){
+			if(this.hascommited && !force){return;}
 			this.hascommited = this.commitmentonwalk;
 			var me = this.me;
 			var other = this.other;
@@ -216,8 +216,9 @@ function main(){
 		eviterprojectiles(){
 			for(let value of objects_to_loop.values()){
 				if(value.dangerous){
-					console.log(value.stats.hitboxxe)
+					console.log(Math.abs(this.me.x-value.x))
 					if(Math.abs(this.me.x-value.x)<=value.stats.hitboxxe+50+this.me.charac.width/2 && this.me.y==0){this.pressbackward();return true;}
+					if(this.me.y==0 && Math.abs(this.me.x-value.x)>=value.stats.hitboxxe+50+this.me.charac.width/2-this.wanttojump && value.y+value.stats.hitboxye<=70){this.me.haut=1;this.pressforward(true);return true;}
 				}
 			}
 			return false;
@@ -313,7 +314,7 @@ function main(){
 			else{me.droite = 0;me.gauche = 0;}
 			if(this.eviterprojectiles()){return;}
 			if(me.gettingup){
-				if(me.gettingup==1){this.chosenoptiononoki = getrandomwithcoeff(this.optionssonoki);this.foptiononoki = this.fduroptiononoki;console.log(this.chosenoptiononoki);}
+				if(me.gettingup==1){this.chosenoptiononoki = getrandomwithcoeff(this.optionssonoki);this.foptiononoki = this.fduroptiononoki;}
 			}
 			if(this.foptiononoki){
 				me.bas = 0; me.haut = 0; me.poing = 0; me.jambe = 0; me.dodge = 0; me.special = 0;
