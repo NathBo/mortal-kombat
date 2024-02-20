@@ -166,10 +166,13 @@ function main(){
 		constructor(me,other){
 			this.me = me; this.other = other;
 			this.attacking = 0; this.idealrange = 120; this.rangescaling = 9; this.agressivite = Math.random()*0.5;
-			this.enviedetaperenbas = 4+Math.floor(Math.random()*5);this.baserisk = 50+Math.floor(Math.random()*15);this.currisking = 0;
+			this.enviedetaperenbas = 4+Math.floor(Math.random()*5);this.baserisk = 0+Math.floor(Math.random()*15);this.currisking = 0;
 			this.enviedegrab = Math.floor(Math.random()*5);
 			this.commitmentonwalk = 5; this.hascommited = 0;
 			this.wanttojump = 2; this.enviedantiair = 0;
+			this.optionssonoki = [0.25,0.25,0.25,0.25]; //crouch, stand block, crouch block, jump
+			this.chosenoptiononoki = 0;
+			this.fduroptiononoki = 15; this.foptiononoki = 0;
 		}
 
 		pressforward(){
@@ -273,6 +276,28 @@ function main(){
 			if(end_of_round_countdown){me.droite = 0;me.gauche = 0;me.bas = 0;return;}
 			if(this.hascommited){this.hascommited--;}
 			else{me.droite = 0;me.gauche = 0;}
+			if(me.gettingup){
+				if(me.gettingup==1){this.chosenoptiononoki = Math.floor(Math.random()*4);this.foptiononoki = this.fduroptiononoki;console.log(this.chosenoptiononoki);}
+			}
+			if(this.foptiononoki){
+				me.bas = 0; me.haut = 0; me.poing = 0; me.jambe = 0; me.dodge = 0; me.special = 0;
+				switch (this.chosenoptiononoki){
+					case 0:
+						me.bas=1;
+						break;
+					case 1:
+						this.pressbackward();
+						break;
+					case 2:
+						me.bas=1;
+						this.pressbackward();
+						break;
+					case 3:
+						me.haut=1;
+				}
+				if(me.gettingup==0){this.foptiononoki--;}
+				return;
+			}
 			var other = this.other;
 			me.bas = 0; me.haut = 0; me.poing = 0; me.jambe = 0; me.dodge = 0; me.special = 0;
 			this.attacking = minvalabs(this.attacking-1+Math.random()*2+this.agressivite+(other.falling>0),10);
@@ -285,7 +310,7 @@ function main(){
 					if(other.charac.coups.has(other.mov).hitboxys<0){this.bas = 1;}
 				}
 				else if(other.charac.coups.has(other.mov) && other.charac.coups.get(other.mov).hitboxye<=0 && Math.random()*10<=this.wanttojump){
-					me.haut = 1;this.pressforward;console.log("ok");
+					me.haut = 1;this.pressforward;
 				}
 				if(Math.random()*100<this.wanttojump){this.haut = 1;}
 			}
@@ -325,6 +350,7 @@ function main(){
 			var stats = this.charac.coups.get(s);
 			if(this.hurted || this.falling || this.gettingup || this.blocking){return;}
 			if(["clpunch","clkick","cmkick"].includes(s)){this.crouching = Math.max(this.crouching,4);}
+			if(s == "jkick"){if(this.x<other.x){this.orientation = 1;}else{this.orientation = -1;}}
 			var cd = cd_dependance.get(s);
 			if(this.cooldowns[cd]){return;}
 			this.cooldowns[cd] = this.charac.cds[cd];
