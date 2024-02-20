@@ -168,10 +168,12 @@ function main(){
 			this.attacking = 0; this.idealrange = 120; this.rangescaling = 9; this.agressivite = Math.random()*0.5;
 			this.enviedetaperenbas = 4+Math.floor(Math.random()*5);this.baserisk = 70+Math.floor(Math.random()*15);this.currisking = 0;
 			this.enviedegrab = Math.floor(Math.random()*5);
-			this.commitmentonwalk = 5;
+			this.commitmentonwalk = 5; this.hascommited = 0;
 		}
 
 		pressforward(){
+			if(this.hascommited){return;}
+			this.hascommited = this.commitmentonwalk;
 			var me = this.me;
 			var other = this.other;
 			if(me.x<other.x){me.droite=1;me.gauche=0;}
@@ -179,6 +181,8 @@ function main(){
 		}
 
 		pressbackward(){
+			if(this.hascommited){return;}
+			this.hascommited = this.commitmentonwalk;
 			var me = this.me;
 			var other = this.other;
 			if(me.x<other.x){me.gauche=1;me.droite=0}
@@ -260,21 +264,23 @@ function main(){
 
 		decide(){
 			var me = this.me;
+			if(this.hascommited){this.hascommited--;}
+			else{me.droite = 0;me.gauche = 0;}
 			var other = this.other;
-			me.droite = 0;me.gauche = 0; me.bas = 0; me.haut = 0; me.poing = 0; me.jambe = 0; me.dodge = 0; me.special = 0;
+			me.bas = 0; me.haut = 0; me.poing = 0; me.jambe = 0; me.dodge = 0; me.special = 0;
 			this.attacking = minvalabs(this.attacking-1+Math.random()*2+this.agressivite+(other.falling>0),10);
 			this.currisking = minvalabs(this.currisking-1+Math.random()*2,10);
-			if(Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-this.idealrange)<=me.charac.vitesse*2){}
-			else if(this.attacking*this.rangescaling+Math.abs(me.x-other.x)>=this.idealrange){this.pressforward();}
-			else{this.pressbackward();}
 			var moves = this.movesinrange(me.orientation*(other.x-me.x));
 			this.attack(moves);
 			if(!me.charac.coups.has(me.mov)){
-				if(other.charac.coups.has(other.mov) && Math.abs(me.x-other.x)<=other.charac.coups.get(other.mov).hitboxxe+me.charac.width/2+me.charac.vitesse*this.commitmentonwalk && other.movlag>=other.charac.coups.get(other.mov).elag-1){
+				if(other.charac.coups.has(other.mov) && Math.abs(me.x-other.x)<=other.charac.coups.get(other.mov).hitboxxe+me.charac.width/2+me.charac.vitesse*this.commitmentonwalk+5 && other.movlag>=other.charac.coups.get(other.mov).elag-1){
 					this.pressbackward();
 					if(other.charac.coups.has(other.mov).hitboxys<0){this.crouching = 6;}
 				}
 			}
+			if(Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-this.idealrange)<=me.charac.vitesse*2){}
+			else if(this.attacking*this.rangescaling+Math.abs(me.x-other.x)>=this.idealrange){this.pressforward();}
+			else{this.pressbackward();}
 		}
 	}
 
