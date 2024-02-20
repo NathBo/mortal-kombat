@@ -201,7 +201,7 @@ function main(){
 				var newd = d-other.orientation*(other.xspeed+Math.max(other.xspeed-other.charac.friction*val.slag,0))/2*val.slag;
 				if(key == "hkick"){newd -= val.movx**2/other.charac.friction/2}
 				if(other.y>0 && me.y==0){
-					if(other.tb>0 || other.y+(other.tb+other.tb-other.charac.gravity*val.slag)/2*val.slag>val.hitboxye){return;}
+					if(other.tb>0 || other.y+(other.tb+other.tb-other.charac.gravity*val.slag)/2*val.slag>val.hitboxye-20){return;}
 				}
 				var newprio = movpriority.get(key);
 				if (key=="lpunch" || key == "clpunch"){newprio++;}
@@ -247,10 +247,10 @@ function main(){
 			function aux(m){
 				var conviction = coups.get(m).slag;
 				conviction += (coups.get(m).hitboxys>=0)*thiis.enviedetaperenbas;
-				conviction += coups.get(m).slag+coups.get(m).elag+coups.get(m).fdur/2;
+				conviction += coups.get(m).slag/2+coups.get(m).elag/3+coups.get(m).fdur/4;
 				conviction += (coups.get(m).hiteffect != "grab")*thiis.enviedegrab;
-				if(m=="grab"){console.log(conviction);}
 				if(conviction<=other.hurted){conviction = -100+movpriority.get(m); conviction -= coups.get(m).degats/2;}
+				if(m=="huppercut" && other.y>0){conviction -= -5;}
 				conviction += -5+10*Math.random();
 
 				if(conviction<=limiteup){movtodo = m;limiteup = conviction;}
@@ -264,6 +264,7 @@ function main(){
 
 		decide(){
 			var me = this.me;
+			if(end_of_round_countdown){me.droite = 0;me.gauche = 0;me.bas = 0;return;}
 			if(this.hascommited){this.hascommited--;}
 			else{me.droite = 0;me.gauche = 0;}
 			var other = this.other;
@@ -1170,7 +1171,7 @@ function main(){
 	kitana_coups.set("mkick",{slag : 16, fdur : 12, elag : 16, degats : 10, hitstun : 26, hurtx : 1.5, hurty : 0, hitboxxs : 18, hitboxxe : 52, hitboxys : 0, hitboxye : 98, blockstun : 14, blockx : 1, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit", blood : "lblood", damageonblock : 1, disponibility : "stand"});
 	kitana_coups.set("hkick",{slag : 14, fdur : 8, elag : 24, movx : 3, degats : 16, hitstun : 38, hurtx : 3.2, hurty : 7, hitboxxs : 20, hitboxxe : 50, hitboxys : 0, hitboxye : 106, blockstun : 16, blockx : 1.4, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 10, hitsound : "hhit", blood : "mblood", damageonblock : 1, disponibility : "stand"});
 	kitana_coups.set("clpunch",{slag : 8, fdur : 6, elag : 8, degats : 4, hitstun : 20, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 30,hitboxys : -1, hitboxye : 20, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "crouch"});
-	kitana_coups.set("huppercut",{slag : 12, fdur : 10, elag : 24, degats : 20, hitstun : 60, hurtx : 3, hurty : 10, hitboxxs : 20, hitboxxe : 40, hitboxys : 0, hitboxye : 115, blockstun : 16, blockx : 1, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 12, hitsound : "hhit", blood : "mblood", damageonblock : 1, disponibility : "crouch"});
+	kitana_coups.set("huppercut",{slag : 12, fdur : 10, elag : 24, degats : 20, hitstun : 60, hurtx : 3, hurty : 10, hitboxxs : 20, hitboxxe : 40, hitboxys : 0, hitboxye : 115, blockstun : 16, blockx : 1, hiteffect : "fall", hitboxxeyscaling : 0.25, hitlag : 12, hitsound : "hhit", blood : "mblood", damageonblock : 1, disponibility : "crouch"});
 	kitana_coups.set("clkick",{slag : 8, fdur : 6, elag : 8, degats : 6, hitstun : 20, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 38,hitboxys : -45, hitboxye : -30, blockstun : 10, blockx : 0.4, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "crouch"});
 	kitana_coups.set("cmkick",{slag : 13, fdur : 6, elag : 12, degats : 9, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 10, hitboxxe : 50,hitboxys : -1, hitboxye : -20, blockstun : 12, blockx : 0.7, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit", blood : "lblood", damageonblock : 1, disponibility : "crouch"});
 	kitana_coups.set("jkick",{slag : 6, fdur : 25, elag : 4, degats : 10, hitstun : 35, hurtx : 3.4, hurty : 5, hitboxxs : 0, hitboxxe : 56,hitboxys : -65, hitboxye : 5, landinglag : 8, blockstun : 10, blockx : 0.4, hiteffect : "fall", hitboxxeyscaling : -1, hitlag : 8, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "air"});
