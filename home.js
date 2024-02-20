@@ -58,6 +58,7 @@ function main(){
 			else if(this.bloodtype=="mblood"){this.totdur = 28;this.nframes = 7;this.vitesse=0.1;}
 			this.dur = this.totdur;
 			this.num = cpt;
+			this.dangerous = false;
 		}
 
 		loop(){}
@@ -91,6 +92,7 @@ function main(){
 			this.dur = this.totdur;
 			this.num = cpt;
 			this.rotation = 0; this.rotationspeed = 16;
+			this.dangerous = true;
 			
 		}
 
@@ -141,6 +143,7 @@ function main(){
 			this.dur = this.totdur;
 			this.num = cpt;
 			this.rotation = 0; this.rotationspeed = 16;
+			this.dangerous = false;
 			
 		}
 
@@ -182,7 +185,7 @@ function main(){
 	{
 		constructor(me,other){
 			this.me = me; this.other = other;
-			this.attacking = 0; this.idealrange = 120; this.rangescaling = 9; this.agressivite = Math.random()*0.5;
+			this.attacking = 0; this.idealrange = 120; this.rangescaling = 9; this.agressivite = Math.random()*0.005;
 			this.enviedetaperenbas = 4+Math.floor(Math.random()*5);this.baserisk = 50+Math.floor(Math.random()*15);this.currisking = 0;
 			this.enviedegrab = Math.floor(Math.random()*5);
 			this.commitmentonwalk = 5; this.hascommited = 0;
@@ -208,6 +211,16 @@ function main(){
 			var other = this.other;
 			if(me.x<other.x){me.gauche=1;me.droite=0}
 			else{me.droite=1;me.gauche=0}
+		}
+
+		eviterprojectiles(){
+			for(let value of objects_to_loop.values()){
+				if(value.dangerous){
+					console.log(value.stats.hitboxxe)
+					if(Math.abs(this.me.x-value.x)<=value.stats.hitboxxe+50+this.me.charac.width/2){this.pressbackward();return true;}
+				}
+			}
+			return false;
 		}
 
 		movesinrange(d){
@@ -294,6 +307,7 @@ function main(){
 			if(end_of_round_countdown){me.droite = 0;me.gauche = 0;me.bas = 0;return;}
 			if(this.hascommited){this.hascommited--;}
 			else{me.droite = 0;me.gauche = 0;}
+			if(this.eviterprojectiles()){return;}
 			if(me.gettingup){
 				if(me.gettingup==1){this.chosenoptiononoki = getrandomwithcoeff(this.optionssonoki);this.foptiononoki = this.fduroptiononoki;console.log(this.chosenoptiononoki);}
 			}
@@ -706,7 +720,7 @@ function main(){
 						slow_game(stats.hitlag*2,1.5);
 						break;
 				}
-				if(this.n==1 && !secondplayerishuman){
+				if(this.n==1 && !secondplayerishuman && stats.hiteffect != "projectile"){
 					this.ai.ugothit();
 				}
 					this.hurted = stats.hitstun;
