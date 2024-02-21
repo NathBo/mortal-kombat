@@ -301,7 +301,7 @@ function main(){
 				if(key == "hkick"){newd -= val.movx**2/other.charac.friction/2}
 				if((other.y>0 || other.mov == "jumpsquat") && me.y==0){
 					newd = d-other.orientation*other.xspeed*val.slag;
-					if(other.tb>=0 || other.y+(other.tb+other.tb-other.charac.gravity*val.slag)/2*val.slag>val.hitboxye-20 || newd<0){return;}
+					if(other.tb>=0 || other.y+(other.tb+other.tb-other.charac.gravity*val.slag/2)/2*val.slag>val.hitboxye || newd<0){return;}
 				}
 				var newprio = movpriority.get(key);
 				//if (key=="lpunch" || key == "clpunch"){newprio++;}
@@ -360,7 +360,7 @@ function main(){
 				conviction += (coups.get(m).hiteffect != "grab")*thiis.enviedegrab;
 				if(other.y>0 && me.y==0){conviction-=thiis.enviedantiair;}
 				if(coups.get(m).slag<=other.hurted){conviction = -100+movpriority.get(m); conviction -= coups.get(m).degats/2;}
-				if(m=="huppercut" && other.y>0){conviction -= -5;}
+				if(m=="huppercut" && other.y>0){conviction -= 0;}
 				conviction += thiis.inconsistency*Math.random();
 
 				if(conviction<=limiteup){movtodo = m;limiteup = conviction;}
@@ -418,7 +418,7 @@ function main(){
 			if(!me.charac.coups.has(me.mov)){
 				if(other.charac.coups.has(other.mov) && Math.abs(me.x-other.x)<=other.charac.coups.get(other.mov).hitboxxe+me.charac.width/2+me.charac.vitesse*this.commitmentonwalk+5 && other.movlag>=other.charac.coups.get(other.mov).elag-1){
 					this.pressbackward();
-					if(other.charac.coups.has(other.mov).hitboxys<0){this.bas = 1;}
+					if(other.charac.coups.has(other.mov).hitboxys<0 && other.y==0){this.bas = 1;}
 				}
 				else if(other.charac.coups.has(other.mov) && other.charac.coups.get(other.mov).hitboxye<=0 && Math.random()*10<=this.wanttojump){
 					me.haut = 1;this.pressforward;
@@ -1161,6 +1161,33 @@ function main(){
 		setTimeout(loop,frame_delay);
 	}
 
+	function menu(){
+		resizecanvas();
+		ctx.fillStyle = "black";
+		ctx.fillRect(0,0,1024,576);
+		ctx.font = "100px serif"
+		ctx.fillStyle = "white";
+		ctx.fillText("Versus Battle",256,100);
+		ctx.fillText("AI Battle",350,476);
+		if(click==1){
+			click=2;
+			if(clicky<0.3){
+				console.log("ok");
+				secondplayerishuman = true;
+				reset_game();
+				setTimeout(loop,frame_delay);
+				return;
+			}
+			else if(clicky>0.7){
+				secondplayerishuman = false;
+				reset_game();
+				setTimeout(loop,frame_delay);
+				return;
+			}
+		}
+		setTimeout(menu,frame_delay);
+	}
+
 	var canvas = document.getElementById("canvas");
 	var ctx = canvas.getContext("2d");
 	canvas.style.left = "0px";
@@ -1427,6 +1454,7 @@ function main(){
 	var frame_delay = 17; var base_frame_delay = 17; var slowmodur = 0;
 	var pause_after_vicpose = 20;
 	var cpt = 0; var objects_to_loop = new Map();
+	var click = 0;var clickx=0; var clicky = 0;
 
 
 	function shake_screen(frames,force){
@@ -1490,5 +1518,5 @@ function main(){
 	document.addEventListener("mousedown", clickEvent);
 	document.addEventListener("mouseup", unclickEvent);
 
-	loop();
+	menu();
 }
