@@ -307,7 +307,7 @@ function main(){
 				//if (key=="lpunch" || key == "clpunch"){newprio++;}
 				if(me.y==0 && val.disponibility == "air"){}
 				else if(cd_dependance.get(key) != -1 && me.cooldowns[cd_dependance.get(key)]){}
-				else if(newprio<=prio || (movpriority.get(key)==100) && me.mov != ""){}
+				else if((newprio<=prio || (movpriority.get(key)==100) && me.mov != "")&&thiis.difficulty<4){}
 				else if(other.crouching && val.hitboxys>=0 && (val.hiteffect != "grab" || thiis.enviedegrab<10)){}
 				else if((me.movlag || me.y>0) && val.disponibility=="crouch"){}
 				else if(!(me.crouching<=3 && me.y==0) && val.disponibility=="stand"){}
@@ -456,7 +456,7 @@ function main(){
 			this.blocking = 0; this.falling = 0; this.gettingup = 0; this.grabbing = 0; this.grabbed = 0;
 			this.vicpose = 0;
 			this.cooldowns = [0,0,0,0];
-			if(!secondplayerishuman && this.n==1){this.ai = new AI(this,other,1)}
+			if(!secondplayerishuman && this.n==1){this.ai = new AI(this,other,difficulte);}
 		}
 
 		begincoup(s,other){
@@ -1161,11 +1161,32 @@ function main(){
 		setTimeout(loop,frame_delay);
 	}
 
+	function menudifficulte(){
+		ctx.fillStyle = "black";
+		ctx.fillRect(0,0,1024,576);
+		ctx.font = "70px serif";
+		ctx.fillStyle = "white";
+		ctx.fillText("Easy",416,55);
+		ctx.fillText("Normal",390,160);
+		ctx.fillText("Hard",416,265);
+		ctx.fillText("Insane",390,370);
+		ctx.fillText("Terminator",350,475);
+		if(click==1){
+			click=2;
+			difficulte = Math.floor(clicky*5);
+			reset_game();
+			setTimeout(loop,frame_delay);
+			return;
+		}
+		setTimeout(menudifficulte,frame_delay);
+	}
+
+
 	function menu(){
 		resizecanvas();
 		ctx.fillStyle = "black";
 		ctx.fillRect(0,0,1024,576);
-		ctx.font = "100px serif"
+		ctx.font = "100px serif";
 		ctx.fillStyle = "white";
 		ctx.fillText("Versus Battle",256,100);
 		ctx.fillText("AI Battle",350,476);
@@ -1180,8 +1201,7 @@ function main(){
 			}
 			else if(clicky>0.7){
 				secondplayerishuman = false;
-				reset_game();
-				setTimeout(loop,frame_delay);
+				setTimeout(menudifficulte,frame_delay);
 				return;
 			}
 		}
@@ -1455,6 +1475,7 @@ function main(){
 	var pause_after_vicpose = 20;
 	var cpt = 0; var objects_to_loop = new Map();
 	var click = 0;var clickx=0; var clicky = 0;
+	var difficulte = 0;
 
 
 	function shake_screen(frames,force){
