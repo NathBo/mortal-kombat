@@ -443,6 +443,7 @@ function main(){
 		reinit(x,y,perso,n,skin,other){
 			this.x = x; this.y = y; this.perso = perso; this.n = n; this.skin = skin;
 			this.droite=0;this.gauche=0;this.haut=0;this.bas=0;this.poing=0;this.jambe=0;this.special=0;this.dodge=0;
+			this.forward = 0;this.back = 0;
 			if (this.n == 0){this.orientation = 1}else{this.orientation = -1}
 			this.costume = "stand1";
 			this.charac = characteristics.get(this.perso);
@@ -499,6 +500,7 @@ function main(){
 		}
 
 		miseajour(other){
+			if(fightstartcountdown){return;}
 			if(this.mov == ""){this.movlag = 0;}
 			if(!secondplayerishuman && this.n==1){this.ai.decide();}
 			if(this.orientation==1){
@@ -1121,6 +1123,20 @@ function main(){
 		if(camerax<-m){camerax=-m}
 		if(camerax>m){camerax=m}
 		drawStage();
+		if(fightstartcountdown>=60){
+			if(fightstartcountdown==129){roundswav[roundwonsj1+roundwonsj2].play();}
+			ctx.fillStyle = "yellow";
+			ctx.font = "50px Luminari";
+			ctx.fillText("Round "+((roundwonsj1+roundwonsj2+1).toString()),425,220);
+		}
+		else if(fightstartcountdown){
+			if(fightstartcountdown==50){fightwav.play();}
+			ctx.scale(3,3);
+			if(fightstartcountdown%6>=3){ctx.drawImage(fightrediconpng,122,50);}
+			else{ctx.drawImage(fightyellowiconpng,122,50);}
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+		}
 		if(j2.hurted){
 			j2.afficher(j1);
 			j1.afficher(j2);
@@ -1151,7 +1167,7 @@ function main(){
 		j1.reinit(-150,0,"kitana",0,0,j2);j2.reinit(150,0,"kitana",1,1,j1);frame_delay = base_frame_delay;
 		cpt = 0; objects_to_loop.clear();
 		//musiques[0].currentTime=0;musiques[0].play();
-		end_of_round_countdown=0;
+		end_of_round_countdown=0;fightstartcountdown = 130;
 	}
 
 	
@@ -1182,6 +1198,7 @@ function main(){
 			j1.declencher_vicpose();
 			j2.declencher_vicpose();
 		}
+		if(fightstartcountdown){fightstartcountdown--;}
 		if(slowmodur){slowmodur--;}
 		else{frame_delay = base_frame_delay;}
 		setTimeout(loop,frame_delay);
@@ -1251,6 +1268,8 @@ function main(){
 	var kitskins = [kitpng,kit2png];
 	var fanpng=new Image();fanpng.src = 'ressource/characters/fan.png';
 	var roundwoniconpng=new Image();roundwoniconpng.src = 'ressource/icons/round_won_icon.png';
+	var fightrediconpng=new Image();fightrediconpng.src = 'ressource/icons/fightred.png';
+	var fightyellowiconpng=new Image();fightyellowiconpng.src = 'ressource/icons/fightyellow.png';
 	var fanthrowiconpng=new Image();fanthrowiconpng.src = 'ressource/icons/fanthrow_icon.png';
 	var fanswipeiconpng=new Image();fanswipeiconpng.src = 'ressource/icons/fanswipe_icon.png';
 	var fanlifticonpng=new Image();fanlifticonpng.src = 'ressource/icons/fanlift_icon.png';
@@ -1417,6 +1436,10 @@ function main(){
 	sounds_eff.set("mhit",[document.querySelector('#mhitwav1'),document.querySelector('#mhitwav2'),document.querySelector('#mhitwav3')]);
 	sounds_eff.set("hhit",[document.querySelector('#hhitwav1'),document.querySelector('#hhitwav2'),document.querySelector('#hhitwav3')]);
 	sounds_eff.set("fan",[document.querySelector('#fanwav')]);
+	
+	var roundswav = [document.querySelector('#round1wav'),document.querySelector('#round2wav'),document.querySelector('#round3wav')];
+
+	var fightwav = document.querySelector('#fightwav');
 
 	var musiques = [document.querySelector('#mkthemeremixwav')];
 	var secondplayerishuman = false;
@@ -1497,7 +1520,7 @@ function main(){
 	var camerax = 0;
 	var gamefreeze = 0; var still_draw = false;
 	var shakex = 0; var shakey = 0; var shakeforce = 0; var shakeframe = 0;
-	var end_of_round_countdown = 0;
+	var end_of_round_countdown = 0; var fightstartcountdown = 80;
 	var frame_delay = 17; var base_frame_delay = 17; var slowmodur = 0;
 	var pause_after_vicpose = 20;
 	var cpt = 0; var objects_to_loop = new Map();
