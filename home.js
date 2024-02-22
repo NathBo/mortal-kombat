@@ -775,7 +775,7 @@ function main(){
 		}
 
 		hurt(other,stats){
-			if(this.invincibilite){return;}
+			if(this.invincibilite || end_of_round_countdown){return;}
 			if(this.n==1 && !secondplayerishuman && stats.hiteffect=="projectile"){this.ai.ugothitorblockedaprojectile();}
 			if(this.movlag==0&&this.hurted==0&&this.back>=1&&this.y==0&&stats.hiteffect != "grab" && ((this.crouching<=3 && (other.y>0 || stats.hitboxys>=0) || (this.crouching>3 && other.y==0)) || stats.hiteffect=="projectile")){
 				this.blocking = stats.blockstun;
@@ -1061,14 +1061,25 @@ function main(){
 				let sh_f = (this.pvaff-this.pv)*0.8;
 				shake_x = Math.random()*2*sh_f-sh_f;shake_y = Math.random()*2*sh_f-sh_f;
 			}
-			ctx.fillStyle='rgb(148,16,16)';ctx.fillRect(55+this.n*500+shake_x,30+shake_y,400,30);
+			ctx.fillStyle='rgb(148,16,16)';ctx.fillRect(55+this.n*510+shake_x,30+shake_y,400,30);
 			ctx.fillStyle='rgb(107,189,33)';
 			if(this.n==0){ctx.fillRect(55+shake_x,30+shake_y,this.pvaff/this.pvmax*400,30);}
-			else{ctx.fillRect(955-this.pvaff/this.pvmax*400+shake_x,30+shake_y,this.pvaff/this.pvmax*400,30);}
-			ctx.drawImage(lifebarpng,50+this.n*500+shake_x,25+shake_y);
+			else{ctx.fillRect(965-this.pvaff/this.pvmax*400+shake_x,30+shake_y,this.pvaff/this.pvmax*400,30);}
+			ctx.drawImage(lifebarpng,50+this.n*510+shake_x,25+shake_y);
 			for(var i=0;i<3;i++){
 				if(this.cooldowns[i]>0){ctx.drawImage(this.charac.icons[i],0,0,50,50*this.cooldowns[i]/this.charac.cds[i],60+this.n*835+(60-120*this.n)*i,80,50,50*this.cooldowns[i]/this.charac.cds[i]);}
 			}
+			ctx.scale(2,2);
+			if(this.n==0){
+				if(roundwonsj1>=1){ctx.drawImage(roundwoniconpng,7,13);}
+				if(roundwonsj1>=2){ctx.drawImage(roundwoniconpng,7,30);}
+			}
+			else{
+				if(roundwonsj2>=1){ctx.drawImage(roundwoniconpng,490,13);}
+				if(roundwonsj2>=2){ctx.drawImage(roundwoniconpng,490,30);}
+			}
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
 			
 		}
 
@@ -1126,15 +1137,23 @@ function main(){
 	}
 
 	function checkforend(){
-		if(j1.pv<=0){j1.pv=0;end_of_round_countdown = 180;}
-		else if(j2.pv<=0){j2.pv=0;end_of_round_countdown = 180;}
+		if(j1.pv<=0){
+			j1.pv=0;end_of_round_countdown = 180;
+			if(j2.pv>0){roundwonsj2 ++;}
+		}
+		if(j2.pv<=0){
+			j2.pv=0;end_of_round_countdown = 180;
+			if(j1.pv>0){roundwonsj1 ++;}
+		}
 	}
 
 	function reset_game(){
 		j1.reinit(-150,0,"kitana",0,0,j2);j2.reinit(150,0,"kitana",1,1,j1);frame_delay = base_frame_delay;
 		cpt = 0; objects_to_loop.clear();
-		musiques[0].currentTime=0;musiques[0].play();
+		//musiques[0].currentTime=0;musiques[0].play();
+		end_of_round_countdown=0;
 	}
+
 	
 	function loop(){
 		resizecanvas();
@@ -1150,7 +1169,14 @@ function main(){
 		}
 		affichtt();
 		if(end_of_round_countdown==0){checkforend();}
-		else if(end_of_round_countdown==1){reset_game();end_of_round_countdown=0;}
+		else if(end_of_round_countdown==1){
+			if(roundwonsj1>=2 || roundwonsj2>=2){
+				roundwonsj1 = 0; roundwonsj2 = 0;
+				setTimeout(menu,frame_delay);
+				return;
+			}
+			else{reset_game();}
+		}
 		else{
 			end_of_round_countdown--;
 			j1.declencher_vicpose();
@@ -1224,6 +1250,7 @@ function main(){
 	var kit2png=new Image();kit2png.src = 'ressource/characters/kitana2.png';
 	var kitskins = [kitpng,kit2png];
 	var fanpng=new Image();fanpng.src = 'ressource/characters/fan.png';
+	var roundwoniconpng=new Image();roundwoniconpng.src = 'ressource/icons/round_won_icon.png';
 	var fanthrowiconpng=new Image();fanthrowiconpng.src = 'ressource/icons/fanthrow_icon.png';
 	var fanswipeiconpng=new Image();fanswipeiconpng.src = 'ressource/icons/fanswipe_icon.png';
 	var fanlifticonpng=new Image();fanlifticonpng.src = 'ressource/icons/fanlift_icon.png';
@@ -1476,6 +1503,7 @@ function main(){
 	var cpt = 0; var objects_to_loop = new Map();
 	var click = 0;var clickx=0; var clicky = 0;
 	var difficulte = 0;
+	var roundwonsj1 = 0; var roundwonsj2 = 0;
 
 
 	function shake_screen(frames,force){
