@@ -555,6 +555,7 @@ function main(){
 					if(this.haut==0 && this.bas){this.crouching = 6;}
 				}
 			}
+			else if(finishhim && this.pv<=0 && this.falling==0){}
 			else if(this.blocking){
 				this.blocking--;
 				this.movlag = 0;this.mov = "";
@@ -838,6 +839,7 @@ function main(){
 			shake_screen(25,6);
 			lag_game(20);
 			musiques[0].pause();
+			if(finishhim){end_of_round_countdown=180;finishhim=0;}
 		}
 
 		afficher(other){
@@ -878,11 +880,15 @@ function main(){
 			}
 			else if(this.gettingup){
 				if(this.gettingup<=this.charac.getupfdur/6){this.costume = "grounded1"}
-				else if(this.gettingup<=this.charac.getupfdur*2/6){this.costume = "grounded2";if(this.pv<=0){this.gettingup--;this.invincibilite++;}}
+				else if(this.gettingup<=this.charac.getupfdur*2/6){this.costume = "grounded2";if(this.pv<=0 && finishhim==0){this.gettingup--;this.invincibilite++;}}
 				else if(this.gettingup<=this.charac.getupfdur*3/6){this.costume = "getup1"}
 				else if(this.gettingup<=this.charac.getupfdur*4/6){this.costume = "getup2"}
 				else if(this.gettingup<=this.charac.getupfdur*5/6){this.costume = "getup3"}
 				else {this.costume = "getup4"}
+			}
+			else if(finishhim && this.pv<=0){
+				var a = Math.floor(finishhim/7)%5+1;
+				this.costume = "stunned"+a;
 			}
 			else if(this.blocking){
 				if(this.crouching>3){
@@ -1134,10 +1140,17 @@ function main(){
 		}
 		else if(fightstartcountdown){
 			if(fightstartcountdown==50){fightwav.play();}
-			//else if(fightstartcountdown==1){musiques[0].currentTime=0;musiques[0].play();}
+			else if(fightstartcountdown==1){musiques[0].currentTime=0;musiques[0].play();}
 			ctx.scale(3,3);
 			if(fightstartcountdown%6>=3){ctx.drawImage(fightrediconpng,122,50);}
 			else{ctx.drawImage(fightyellowiconpng,122,50);}
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+		}
+		if(finishhim){
+			ctx.scale(3,3);
+			if(finishhim%6>=3){ctx.drawImage(finishherredpng,85,50);}
+			else{ctx.drawImage(finishheryellowpng,85,50);}
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
 		}
@@ -1158,12 +1171,28 @@ function main(){
 
 	function checkforend(){
 		if(j1.pv<=0){
-			j1.pv=0;end_of_round_countdown = 180;
+			musiques[0].pause();
+			j1.pv=0;
 			if(j2.pv>0){roundwonsj2 ++;}
+			if(roundwonsj2>=2 && finishhim==0){
+				finishhim = 300;
+			}
+			else{
+				end_of_round_countdown = 180;
+				finishhim=0;
+			}
 		}
 		if(j2.pv<=0){
-			j2.pv=0;end_of_round_countdown = 180;
+			musiques[0].pause();
+			j2.pv=0;
 			if(j1.pv>0){roundwonsj1 ++;}
+			if(roundwonsj1>=2 && finishhim==0){
+				finishhim = 300;
+			}
+			else{
+				end_of_round_countdown = 180;
+				finishhim=0;
+			}
 		}
 	}
 
@@ -1187,7 +1216,7 @@ function main(){
 			}
 		}
 		affichtt();
-		if(end_of_round_countdown==0){checkforend();}
+		if(end_of_round_countdown==0 && finishhim==0){checkforend();}
 		else if(end_of_round_countdown==1){
 			if(roundwonsj1>=2 || roundwonsj2>=2){
 				roundwonsj1 = 0; roundwonsj2 = 0;
@@ -1196,10 +1225,24 @@ function main(){
 			}
 			else{reset_game();}
 		}
-		else{
+		else if(end_of_round_countdown){
 			end_of_round_countdown--;
 			j1.declencher_vicpose();
 			j2.declencher_vicpose();
+		}
+		else if(finishhim){
+			finishhim--;
+			if(finishhim==0){
+				if(j1.pv<=0){
+					j1.falling=1;
+					j1.y=1;
+				}
+				if(j2.pv<=0){
+					j2.falling=1;
+					j2.y=1;
+				}
+				end_of_round_countdown=180;
+			}
 		}
 		if(fightstartcountdown){fightstartcountdown--;}
 		if(slowmodur){slowmodur--;}
@@ -1239,7 +1282,6 @@ function main(){
 		if(click==1){
 			click=2;
 			if(clicky<0.3){
-				console.log("ok");
 				secondplayerishuman = true;
 				reset_game();
 				setTimeout(loop,frame_delay);
@@ -1273,6 +1315,8 @@ function main(){
 	var roundwoniconpng=new Image();roundwoniconpng.src = 'ressource/icons/round_won_icon.png';
 	var fightrediconpng=new Image();fightrediconpng.src = 'ressource/icons/fightred.png';
 	var fightyellowiconpng=new Image();fightyellowiconpng.src = 'ressource/icons/fightyellow.png';
+	var finishherredpng=new Image();finishherredpng.src = 'ressource/icons/finishherred.png';
+	var finishheryellowpng=new Image();finishheryellowpng.src = 'ressource/icons/finishheryellow.png';
 	var fanthrowiconpng=new Image();fanthrowiconpng.src = 'ressource/icons/fanthrow_icon.png';
 	var fanswipeiconpng=new Image();fanswipeiconpng.src = 'ressource/icons/fanswipe_icon.png';
 	var fanlifticonpng=new Image();fanlifticonpng.src = 'ressource/icons/fanlift_icon.png';
@@ -1405,6 +1449,7 @@ function main(){
 	var click = 0;var clickx=0; var clicky = 0;
 	var difficulte = 0;
 	var roundwonsj1 = 0; var roundwonsj2 = 0;
+	var finishhim = 0;
 
 
 	function shake_screen(frames,force){

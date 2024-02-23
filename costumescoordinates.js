@@ -113,6 +113,17 @@ function getkitcoordinates(){
 	kitcoordinates.set("fanswipe4",{offx:453,width:45,offy:1504,height:98,decx:0,decy:0});
 	kitcoordinates.set("fanlift1",{offx:15,width:55,offy:1380,height:98,decx:-6,decy:0});
 	kitcoordinates.set("fanlift2",{offx:71,width:55,offy:1380,height:98,decx:-6,decy:0});
+    kitcoordinates.set("decapitated1",{offx:530,width:20,offy:1732,height:90,decx:0,decy:0});
+    kitcoordinates.set("decapitated2",{offx:558,width:26,offy:1732,height:90,decx:0,decy:0});
+    kitcoordinates.set("decapitated3",{offx:589,width:31,offy:1732,height:90,decx:0,decy:0});
+    kitcoordinates.set("decapitated4",{offx:626,width:47,offy:1732,height:90,decx:0,decy:0});
+    kitcoordinates.set("decapitated5",{offx:678,width:56,offy:1732,height:90,decx:0,decy:0});
+    kitcoordinates.set("decapitated6",{offx:741,width:75,offy:1732,height:90,decx:0,decy:0});
+    kitcoordinates.set("stunned1",{offx:670,width:38,offy:1276,height:101,decx:0,decy:0});
+    kitcoordinates.set("stunned2",{offx:714,width:36,offy:1276,height:101,decx:-2,decy:0});
+    kitcoordinates.set("stunned3",{offx:760,width:40,offy:1276,height:101,decx:-4,decy:0});
+    kitcoordinates.set("stunned4",{offx:805,width:36,offy:1276,height:101,decx:0,decy:0});
+    kitcoordinates.set("stunned5",{offx:846,width:35,offy:1276,height:101,decx:2,decy:0});
 
 	kitcoordinates.set("wave",{offx:553,width:32,offy:1442,height:38,decx:0,decy:0});
 	
