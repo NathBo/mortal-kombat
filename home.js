@@ -795,6 +795,7 @@ function main(){
 					case "fall" :
 						this.falling = 1;
 						this.crouching = 0;
+						play_sound_eff(this.charac.voiceactor+"hurted");
 						break;
 					case "grab" :
 						other.begin_grab(this);
@@ -832,6 +833,7 @@ function main(){
 			this.tb = Math.max(7,this.tb);
 			this.xspeed = signe(this.xspeed)*Math.max(Math.abs(this.xspeed),3);
 			this.invincibilite = 150;
+			play_sound_eff(this.charac.voiceactor+"bighurted")
 			slow_game(60,2);
 			shake_screen(25,6);
 			lag_game(20);
@@ -1132,6 +1134,7 @@ function main(){
 		}
 		else if(fightstartcountdown){
 			if(fightstartcountdown==50){fightwav.play();}
+			else if(fightstartcountdown==1){musiques[0].currentTime=0;musiques[0].play();}
 			ctx.scale(3,3);
 			if(fightstartcountdown%6>=3){ctx.drawImage(fightrediconpng,122,50);}
 			else{ctx.drawImage(fightyellowiconpng,122,50);}
@@ -1167,7 +1170,6 @@ function main(){
 	function reset_game(){
 		j1.reinit(-150,0,"kitana",0,0,j2);j2.reinit(150,0,"kitana",1,1,j1);frame_delay = base_frame_delay;
 		cpt = 0; objects_to_loop.clear();
-		//musiques[0].currentTime=0;musiques[0].play();
 		end_of_round_countdown=0;fightstartcountdown = 130;
 	}
 
@@ -1440,6 +1442,8 @@ function main(){
 	sounds_eff.set("clementlmov",[document.querySelector('#clementlmov1wav'),document.querySelector('#clementlmov2wav')]);
 	sounds_eff.set("clementmmov",[document.querySelector('#clementmmov1wav'),document.querySelector('#clementmmov2wav')]);
 	sounds_eff.set("clementhmov",[document.querySelector('#clementhmov1wav'),document.querySelector('#clementhmov2wav')]);
+	sounds_eff.set("clementhurted",[document.querySelector('#clementhurted1wav'),document.querySelector('#clementhurted2wav')]);
+	sounds_eff.set("clementbighurted",[document.querySelector('#clementbighurtedwav')]);
 	var roundswav = [document.querySelector('#round1wav'),document.querySelector('#round2wav'),document.querySelector('#round3wav')];
 
 	var fightwav = document.querySelector('#fightwav');
