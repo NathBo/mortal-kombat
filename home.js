@@ -457,6 +457,7 @@ function main(){
 			this.blocking = 0; this.falling = 0; this.gettingup = 0; this.grabbing = 0; this.grabbed = 0;
 			this.vicpose = 0;
 			this.cooldowns = [0,0,0,0];
+			this.fatality = 0; this.decapitated = 0;
 			if(!secondplayerishuman && this.n==1){this.ai = new AI(this,other,difficulte);}
 		}
 
@@ -501,6 +502,15 @@ function main(){
 		}
 
 		miseajour(other){
+			if(this.fatality){
+				this.fatality--;
+				console.log(finishhim);
+				if(this.fatality==0){
+					end_of_round_countdown=180;
+				}
+				return;
+			}
+			if(other.fatality){return;}
 			if(fightstartcountdown){return;}
 			if(this.mov == ""){this.movlag = 0;}
 			if(!secondplayerishuman && this.n==1){this.ai.decide();}
@@ -632,6 +642,13 @@ function main(){
 					else if(this.forward+this.back==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[0]==0 && this.crouching==0){
 						this.begincoup("fanthrow",other);
 						this.special = 2;
+					}
+					else if(this.forward>=1 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=100){
+						this.fatality = 90;
+						this.special=2;
+						finishhim = 0;
+						other.invincibilite=1000;
+						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
 					}
 					else if(this.forward>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[1]==0 && this.crouching==0){
 						this.begincoup("fanswipe",other);
@@ -846,7 +863,25 @@ function main(){
 			if(this.grabbed&&other.grabbed==0){
 				return;
 			}
-			if(this.vicpose){
+			if(this.fatality){
+				if(this.perso=="kitana"){
+					if(this.fatality>=70){this.costume = "fanswipe1"}
+					else if(this.fatality>=65){this.costume = "fanswipe2"}
+					else if(this.fatality>=60){this.costume = "fanswipe3"}
+					else {this.costume = "fanswipe4"}
+					if(this.fatality==64){other.decapitate();play_sound_eff("fan");}
+				}
+			}
+			else if(this.decapitated){
+				if(this.decapitated>=2){this.decapitated--;}
+				if(this.decapitated>=80){this.costume = "decapitated1";}
+				else if(this.decapitated>=75){this.costume = "decapitated2";}
+				else if(this.decapitated>=70){this.costume = "decapitated3";}
+				else if(this.decapitated>=65){this.costume = "decapitated4";}
+				else if(this.decapitated>=60){this.costume = "decapitated5";}
+				else {this.costume = "decapitated6";}
+			}
+			else if(this.vicpose){
 				let n = Math.min(Math.ceil(this.vicpose/(this.charac.vicposfdur/this.charac.vicposframes)),this.charac.vicposframes);
 				this.costume = "victory" + n;
 				this.vicpose++;
@@ -886,7 +921,7 @@ function main(){
 				else if(this.gettingup<=this.charac.getupfdur*5/6){this.costume = "getup3"}
 				else {this.costume = "getup4"}
 			}
-			else if(finishhim && this.pv<=0){
+			else if((finishhim || other.fatality) && this.pv<=0){
 				var a = Math.floor(finishhim/7)%5+1;
 				this.costume = "stunned"+a;
 			}
@@ -1098,6 +1133,10 @@ function main(){
 			if(this.pv>0&&end_of_round_countdown==pause_after_vicpose+this.charac.vicposfdur){this.vicpose = 1;}
 		}
 
+		decapitate(){
+			this.decapitated = 100;
+		}
+
 	}
 
 
@@ -1131,7 +1170,7 @@ function main(){
 		let m = stage_size/2-256;
 		if(camerax<-m){camerax=-m}
 		if(camerax>m){camerax=m}
-		drawStage();
+		if(j1.fatality == 0 && j2.fatality == 0){drawStage();}
 		if(fightstartcountdown>=60){
 			if(fightstartcountdown==129){roundswav[roundwonsj1+roundwonsj2].play();}
 			ctx.fillStyle = "yellow";
@@ -1147,20 +1186,20 @@ function main(){
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
 		}
-		if(finishhim){
-			ctx.scale(3,3);
-			if(finishhim%6>=3){ctx.drawImage(finishherredpng,85,50);}
-			else{ctx.drawImage(finishheryellowpng,85,50);}
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-		}
-		if(j2.hurted){
+		if(j2.hurted || j2.pv<=0){
 			j2.afficher(j1);
 			j1.afficher(j2);
 		}
 		else{
 			j1.afficher(j2);
 			j2.afficher(j1);
+		}
+		if(finishhim){
+			ctx.scale(3,3);
+			if(finishhim%6>=3){ctx.drawImage(finishherredpng,85,50);}
+			else{ctx.drawImage(finishheryellowpng,85,50);}
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
 		}
 		for(let value of objects_to_loop.values()){
 			value.afficher();
@@ -1216,7 +1255,7 @@ function main(){
 			}
 		}
 		affichtt();
-		if(end_of_round_countdown==0 && finishhim==0){checkforend();}
+		if(end_of_round_countdown==0 && finishhim==0 && j1.fatality==0 && j2.fatality==0){checkforend();}
 		else if(end_of_round_countdown==1){
 			if(roundwonsj1>=2 || roundwonsj2>=2){
 				roundwonsj1 = 0; roundwonsj2 = 0;
