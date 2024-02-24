@@ -56,6 +56,7 @@ function main(){
 			this.bloodtype = bloodtype;
 			if(this.bloodtype=="lblood"){this.totdur = 18;this.nframes = 6;this.vitesse=0.8;}
 			else if(this.bloodtype=="mblood"){this.totdur = 28;this.nframes = 7;this.vitesse=0.1;}
+			else if(this.bloodtype=="hblood"){this.totdur = 20;this.nframes = 6;this.vitesse=0;}
 			this.dur = this.totdur;
 			this.num = cpt;
 			this.dangerous = false;
@@ -682,9 +683,11 @@ function main(){
 					}
 					else if(this.forward>=1 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=100){
 						this.fatality = 90;
+						play_sound_eff("fatal1");
 						this.special=2;
 						finishhim = 0;
 						other.invincibilite=1000;
+						fatalitywasdone = true;
 						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
 					}
 					else if(this.forward>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[1]==0 && this.crouching==0){
@@ -1173,6 +1176,7 @@ function main(){
 		decapitate(){
 			this.decapitated = 100;
 			add_to_objects_set(new Head(this.x,this.y+this.charac.height,this.orientation));
+			add_to_objects_set(new Blood(this.x,this.y+this.charac.height-5,this.orientation,"hblood"));
 		}
 
 	}
@@ -1232,12 +1236,22 @@ function main(){
 			j1.afficher(j2);
 			j2.afficher(j1);
 		}
-		if(finishhim){
+		if(finishhim && finishhim<=270){
 			ctx.scale(3,3);
 			if(finishhim%6>=3){ctx.drawImage(finishherredpng,85,50);}
 			else{ctx.drawImage(finishheryellowpng,85,50);}
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
+		}
+		if(finishhim==270){
+			play_sound_eff("finishher");
+		}
+		if(fatalitysreen){
+			ctx.scale(4,4);
+			ctx.drawImage(fatalitypng,75,40);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			if(fatalitysreen==40){play_sound_eff("fatal2");}
 		}
 		for(let value of objects_to_loop.values()){
 			value.afficher();
@@ -1276,7 +1290,7 @@ function main(){
 	function reset_game(){
 		j1.reinit(-150,0,"kitana",0,0,j2);j2.reinit(150,0,"kitana",1,1,j1);frame_delay = base_frame_delay;
 		cpt = 0; objects_to_loop.clear();
-		end_of_round_countdown=0;fightstartcountdown = 130;
+		end_of_round_countdown=0;fightstartcountdown = 130; fatalitywasdone = false; fatalitysreen = 0;
 	}
 
 	
@@ -1295,12 +1309,23 @@ function main(){
 		affichtt();
 		if(end_of_round_countdown==0 && finishhim==0 && j1.fatality==0 && j2.fatality==0){checkforend();}
 		else if(end_of_round_countdown==1){
-			if(roundwonsj1>=2 || roundwonsj2>=2){
+			if(fatalitywasdone){
+				fatalitywasdone = 0;
+				fatalitysreen = 100;
+				play_sound_eff("fatality");
+			}
+			else if(fatalitysreen){
+				fatalitysreen--;
+			}
+			else {
+				if(roundwonsj1>=2 || roundwonsj2>=2){
 				roundwonsj1 = 0; roundwonsj2 = 0;
 				setTimeout(menu,frame_delay);
 				return;
+				}
+			
+				else{reset_game();}
 			}
-			else{reset_game();}
 		}
 		else if(end_of_round_countdown){
 			end_of_round_countdown--;
@@ -1389,6 +1414,7 @@ function main(){
 	var kit2png=new Image();kit2png.src = 'ressource/characters/kitana2.png';
 	var kitskins = [kitpng,kit2png];
 	var fanpng=new Image();fanpng.src = 'ressource/characters/fan.png';
+	var fatalitypng=new Image();fatalitypng.src = 'ressource/icons/fatality.png';
 	var roundwoniconpng=new Image();roundwoniconpng.src = 'ressource/icons/round_won_icon.png';
 	var fightrediconpng=new Image();fightrediconpng.src = 'ressource/icons/fightred.png';
 	var fightyellowiconpng=new Image();fightyellowiconpng.src = 'ressource/icons/fightyellow.png';
@@ -1436,6 +1462,10 @@ function main(){
 	sounds_eff.set("clementhmov",[document.querySelector('#clementhmov1wav'),document.querySelector('#clementhmov2wav')]);
 	sounds_eff.set("clementhurted",[document.querySelector('#clementhurted1wav'),document.querySelector('#clementhurted2wav')]);
 	sounds_eff.set("clementbighurted",[document.querySelector('#clementbighurtedwav')]);
+	sounds_eff.set("fatal1",[document.querySelector('#fatal1wav')]);
+	sounds_eff.set("fatal2",[document.querySelector('#fatal2wav')]);
+	sounds_eff.set("fatality",[document.querySelector('#fatalitywav')]);
+	sounds_eff.set("finishher",[document.querySelector('#finishherwav')]);
 	var roundswav = [document.querySelector('#round1wav'),document.querySelector('#round2wav'),document.querySelector('#round3wav')];
 
 	var fightwav = document.querySelector('#fightwav');
@@ -1526,7 +1556,7 @@ function main(){
 	var click = 0;var clickx=0; var clicky = 0;
 	var difficulte = 0;
 	var roundwonsj1 = 0; var roundwonsj2 = 0;
-	var finishhim = 0;
+	var finishhim = 0; var fatalitywasdone = false; var fatalitysreen = 0;
 
 
 	function shake_screen(frames,force){

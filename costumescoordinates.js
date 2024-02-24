@@ -148,6 +148,12 @@ function getbloodcoordinates(){
 	bloodcoordinates.set("mblood5",{offx:101,width:33,offy:4,height:41,decx:0,decy:0});
 	bloodcoordinates.set("mblood6",{offx:141,width:27,offy:8,height:36,decx:0,decy:0});
 	bloodcoordinates.set("mblood7",{offx:174,width:27,offy:6,height:39,decx:0,decy:0});
+	bloodcoordinates.set("hblood1",{offx:2,width:23,offy:178,height:19,decx:0,decy:-15});
+	bloodcoordinates.set("hblood2",{offx:35,width:39,offy:171,height:25,decx:0,decy:-15});
+	bloodcoordinates.set("hblood3",{offx:85,width:60,offy:157,height:39,decx:0,decy:-15});
+	bloodcoordinates.set("hblood4",{offx:162,width:82,offy:143,height:54,decx:0,decy:-15});
+	bloodcoordinates.set("hblood5",{offx:260,width:94,offy:133,height:64,decx:0,decy:-15});
+	bloodcoordinates.set("hblood6",{offx:374,width:117,offy:120,height:77,decx:0,decy:-15});
 
     return bloodcoordinates;
 }
