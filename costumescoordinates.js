@@ -125,6 +125,7 @@ function getkitcoordinates(){
     kitcoordinates.set("stunned4",{offx:805,width:36,offy:1276,height:101,decx:0,decy:0});
     kitcoordinates.set("stunned5",{offx:846,width:35,offy:1276,height:101,decx:2,decy:0});
 
+	kitcoordinates.set("head",{offx:852,width:18,offy:1799,height:25,decx:0,decy:0});
 	kitcoordinates.set("wave",{offx:553,width:32,offy:1442,height:38,decx:0,decy:0});
 	
 

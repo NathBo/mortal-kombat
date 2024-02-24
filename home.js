@@ -173,7 +173,44 @@ function main(){
 		}
 	}
 
-	
+	class Head{
+		constructor(x,y,orientation){
+			this.x = x; this.y = y; this.orientation = orientation;
+			this.width=22;
+			this.height=44;
+			this.width=18;this.height = 25;
+			this.num = cpt;
+			this.rotation = 0; this.rotationspeed = 16;
+			this.gravity = 0.15;
+			this.tb=Math.random()*2+2;
+			this.vitesse = -1-Math.random();
+			this.dangerous = false;
+			
+		}
+
+		loop(){
+			this.y+=this.tb;
+			this.tb-=this.gravity;
+			if(this.y<0){this.y=0;this.tb=0;this.rotationspeed = Math.max(this.rotationspeed-1,0);this.vitesse = Math.max(this.vitesse-0.1,0);}
+			this.rotation = (this.rotation+this.rotationspeed)%360;
+			this.x+=this.orientation*this.vitesse;
+		}
+
+		afficher(){
+			this.costume = "head";
+			var coords = kitcoordinates.get(this.costume);
+			var x = (this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation;
+			var y = ground-this.y-coords.height-coords.decy+shakey;
+			ctx.scale(2*this.orientation,2);
+			ctx.translate(x+coords.width/2,y+coords.height/2);
+			ctx.rotate(Math.PI*this.rotation/180);
+			ctx.drawImage(kitpng,coords.offx,coords.offy,coords.width,coords.height,-coords.width/2,-coords.height/2,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			ctx.restore();
+		}
+
+	}
 
 	function add_to_objects_set(obj){
 		objects_to_loop.set(cpt,obj);
@@ -1135,6 +1172,7 @@ function main(){
 
 		decapitate(){
 			this.decapitated = 100;
+			add_to_objects_set(new Head(this.x,this.y+this.charac.height,this.orientation));
 		}
 
 	}
