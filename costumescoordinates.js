@@ -135,11 +135,14 @@ function getkitcoordinates(){
 
 function getraicoordinates(){
     var raicoordinates = new Map();
-	raicoordinates.set("stand1",{offx:71,width:34,offy:19,height:97,decx:0,decy:0});
-	raicoordinates.set("stand2",{offx:116,width:34,offy:19,height:97,decx:0,decy:0});
-	raicoordinates.set("stand3",{offx:161,width:33,offy:19,height:97,decx:0,decy:0});
-	raicoordinates.set("stand4",{offx:204,width:33,offy:19,height:97,decx:0,decy:0});
-	raicoordinates.set("stand5",{offx:247,width:33,offy:19,height:97,decx:0,decy:0});
+	raicoordinates.set("stand1",{offx:72,width:37,offy:17,height:104,decx:0,decy:0});
+	raicoordinates.set("stand2",{offx:118,width:40,offy:17,height:104,decx:-2,decy:0});
+	raicoordinates.set("stand3",{offx:163,width:44,offy:16,height:105,decx:-4,decy:0});
+	raicoordinates.set("stand4",{offx:213,width:42,offy:16,height:105,decx:-2,decy:0});
+	raicoordinates.set("stand5",{offx:260,width:45,offy:16,height:105,decx:-3,decy:0});
+	raicoordinates.set("stand6",{offx:308,width:42,offy:16,height:105,decx:-2,decy:0});
+	raicoordinates.set("stand7",{offx:357,width:42,offy:16,height:105,decx:-2,decy:0});
+	raicoordinates.set("stand8",{offx:404,width:41,offy:16,height:105,decx:-3,decy:0});
 	raicoordinates.set("crouching1",{offx:483,width:37,offy:19,height:97,decx:0,decy:-1});
 	raicoordinates.set("crouching2",{offx:532,width:36,offy:19,height:97,decx:0,decy:-1});
 	raicoordinates.set("walk1",{offx:15,width:36,offy:137,height:102,decx:-8,decy:-5});

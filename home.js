@@ -1086,12 +1086,9 @@ function main(){
 			}
 			else if(this.forward==0 && this.back==0)
 			{
-				this.standing = (this.standing+1)%25;
-				if(this.standing<5){this.costume="stand1"}
-				else if(this.standing<10){this.costume="stand2"}
-				else if(this.standing<15){this.costume="stand3"}
-				else if(this.standing<20){this.costume="stand4"}
-				else {this.costume="stand5"}
+				this.standing = (this.standing+1)%(5*this.charac.standnframes);
+				let a = Math.floor(this.standing/5)+1
+				this.costume = "stand"+a;
 				this.walking=0;
 			}
 			else{this.standing=0;
@@ -1506,10 +1503,12 @@ function main(){
 	}
 
 
-	characteristics.set("kitana",{png : kitskins,coordinates : kitcoordinates,width : 34, height : 97,vitesse : 3.5,jumpxspeed : 3.6,backmovnerf : 0.85,fdashslag : 3,fdashfdur : 11,fdashelag : 5,fdashspeed : 7, bdashslag : 3, bdashfdur : 13, bdashelag : 10, bdashspeed : 5, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2,
+	characteristics.set("kitana",{png : kitskins,coordinates : kitcoordinates, standnframes : 5,
+		width : 34, height : 97,vitesse : 3.5,jumpxspeed : 3.6,backmovnerf : 0.85,fdashslag : 3,fdashfdur : 11,fdashelag : 5,fdashspeed : 7, bdashslag : 3, bdashfdur : 13, bdashelag : 10, bdashspeed : 5, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2,
 	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 12, vicposfdur : 50, cds : [70,120,240,60], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng], voiceactor : "clement"});
 
-	characteristics.set("raiden",{png : raiskins,coordinates : raicoordinates,width : 34, height : 97,vitesse : 3.5,jumpxspeed : 3.6,backmovnerf : 0.85,fdashslag : 3,fdashfdur : 11,fdashelag : 5,fdashspeed : 7, bdashslag : 3, bdashfdur : 13, bdashelag : 10, bdashspeed : 5, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2,
+	characteristics.set("raiden",{png : raiskins,coordinates : raicoordinates, standnframes : 8,
+		width : 36, height : 100,vitesse : 3.5,jumpxspeed : 3.6,backmovnerf : 0.85,fdashslag : 3,fdashfdur : 11,fdashelag : 5,fdashspeed : 7, bdashslag : 3, bdashfdur : 13, bdashelag : 10, bdashspeed : 5, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2,
 		airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 12, vicposfdur : 50, cds : [70,120,240,60], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng], voiceactor : "clement"});
 
 
