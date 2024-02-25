@@ -479,12 +479,12 @@ function main(){
 			
 		}
 		reinit(x,y,perso,n,skin,other){
-			this.x = x; this.y = y; this.perso = perso; this.n = n; this.skin = skin;
+			this.charac = characteristics.get(perso);
+			this.x = x; this.y = y; this.perso = perso; this.n = n; this.skin = this.charac.png[skin]; this.coordinates = this.charac.coordinates;
 			this.droite=0;this.gauche=0;this.haut=0;this.bas=0;this.poing=0;this.jambe=0;this.special=0;this.dodge=0;
 			this.forward = 0;this.back = 0;
 			if (this.n == 0){this.orientation = 1}else{this.orientation = -1}
 			this.costume = "stand1";
-			this.charac = characteristics.get(this.perso);
 			this.standing = 0;this.walking = 0;this.jumping=0;
 			this.movlag = 0;
 			this.mov = "";
@@ -681,7 +681,7 @@ function main(){
 						this.begincoup("fanthrow",other);
 						this.special = 2;
 					}
-					else if(this.forward>=1 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=100){
+					else if(this.perso == "kitana" && this.forward>=1 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=100 && other.falling==0 && other.gettingup==0){
 						this.fatality = 90;
 						play_sound_eff("fatal1");
 						this.special=2;
@@ -1119,8 +1119,8 @@ function main(){
 				var y = dist*Math.sin(angle)+this.y;
 				other.x = x;		//pour la camera
 				ctx.scale(2*other.orientation,2);
-				var coords = kitcoordinates.get(othercost);
-				ctx.drawImage(kitskins[other.skin],coords.offx,coords.offy,coords.width,coords.height,(x+decalagex-camerax+coords.decx*this.orientation-other.orientation*other.charac.width/2+shakex)*other.orientation,ground-y-coords.height-coords.decy+shakey,coords.width,coords.height);
+				var coords = other.coordinates.get(othercost);
+				ctx.drawImage(other.skin,coords.offx,coords.offy,coords.width,coords.height,(x+decalagex-camerax+coords.decx*this.orientation-other.orientation*other.charac.width/2+shakex)*other.orientation,ground-y-coords.height-coords.decy+shakey,coords.width,coords.height);
 				ctx.setTransform(1, 0, 0, 1, 0, 0);
 				ctx.scale(1,1);
 				other.drawLife();
@@ -1129,8 +1129,9 @@ function main(){
 
 
 			ctx.scale(2*this.orientation,2);
-			var coords = kitcoordinates.get(this.costume);
-			ctx.drawImage(kitskins[this.skin],coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.charac.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			var coords = this.coordinates.get(this.costume);
+			console.log(this.perso);
+			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.charac.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
 
@@ -1288,7 +1289,7 @@ function main(){
 	}
 
 	function reset_game(){
-		j1.reinit(-150,0,"kitana",0,0,j2);j2.reinit(150,0,"kitana",1,1,j1);frame_delay = base_frame_delay;
+		j1.reinit(-150,0,persoschoisis[0],0,0,j2);j2.reinit(150,0,persoschoisis[1],1,1,j1);frame_delay = base_frame_delay;
 		cpt = 0; objects_to_loop.clear();
 		end_of_round_countdown=0;fightstartcountdown = 130; fatalitywasdone = false; fatalitysreen = 0;
 	}
@@ -1352,6 +1353,24 @@ function main(){
 		setTimeout(loop,frame_delay);
 	}
 
+	function menupersos(){
+		ctx.fillStyle = "black";
+		ctx.fillRect(0,0,1024,576);
+		ctx.font = "70px serif";
+		ctx.fillStyle = "white";
+		ctx.fillText("Kitana",380,100);
+		ctx.fillText("Raiden",380,476);
+		if(click==1){
+			click=2;
+			if(clicky<=0.5){persoschoisis[0] = "kitana";}
+			else{persoschoisis[0] = "raiden";}
+			reset_game();
+			setTimeout(loop,frame_delay);
+			return;
+		}
+		setTimeout(menupersos,frame_delay);
+	}
+
 	function menudifficulte(){
 		ctx.fillStyle = "black";
 		ctx.fillRect(0,0,1024,576);
@@ -1365,8 +1384,7 @@ function main(){
 		if(click==1){
 			click=2;
 			difficulte = Math.floor(clicky*5);
-			reset_game();
-			setTimeout(loop,frame_delay);
+			setTimeout(menupersos,frame_delay);
 			return;
 		}
 		setTimeout(menudifficulte,frame_delay);
@@ -1386,7 +1404,7 @@ function main(){
 			if(clicky<0.3){
 				secondplayerishuman = true;
 				reset_game();
-				setTimeout(loop,frame_delay);
+				setTimeout(menupersos,frame_delay);
 				return;
 			}
 			else if(clicky>0.7){
@@ -1413,6 +1431,10 @@ function main(){
 	var kitpng=new Image();kitpng.src = 'ressource/characters/kitana.png';
 	var kit2png=new Image();kit2png.src = 'ressource/characters/kitana2.png';
 	var kitskins = [kitpng,kit2png];
+	var raipng = new Image();raipng.src = 'ressource/characters/raiden.png';
+	var rai2png = new Image();rai2png.src = 'ressource/characters/raiden2.png';
+	var raiskins = [raipng,rai2png];
+
 	var fanpng=new Image();fanpng.src = 'ressource/characters/fan.png';
 	var fatalitypng=new Image();fatalitypng.src = 'ressource/icons/fatality.png';
 	var roundwoniconpng=new Image();roundwoniconpng.src = 'ressource/icons/round_won_icon.png';
@@ -1429,6 +1451,7 @@ function main(){
 	var towerstructurepng = new Image();towerstructurepng.src = 'ressource/stages/towerstructure.png';
 
 	var kitcoordinates = getkitcoordinates();
+	var raicoordinates = getraicoordinates();
 
 	var bloodcoordinates = getbloodcoordinates();
 
@@ -1483,8 +1506,11 @@ function main(){
 	}
 
 
-	characteristics.set("kitana",{width : 34, height : 97,vitesse : 3.5,jumpxspeed : 3.6,backmovnerf : 0.85,fdashslag : 3,fdashfdur : 11,fdashelag : 5,fdashspeed : 7, bdashslag : 3, bdashfdur : 13, bdashelag : 10, bdashspeed : 5, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2,
+	characteristics.set("kitana",{png : kitskins,coordinates : kitcoordinates,width : 34, height : 97,vitesse : 3.5,jumpxspeed : 3.6,backmovnerf : 0.85,fdashslag : 3,fdashfdur : 11,fdashelag : 5,fdashspeed : 7, bdashslag : 3, bdashfdur : 13, bdashelag : 10, bdashspeed : 5, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2,
 	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 12, vicposfdur : 50, cds : [70,120,240,60], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng], voiceactor : "clement"});
+
+	characteristics.set("raiden",{png : raiskins,coordinates : raicoordinates,width : 34, height : 97,vitesse : 3.5,jumpxspeed : 3.6,backmovnerf : 0.85,fdashslag : 3,fdashfdur : 11,fdashelag : 5,fdashspeed : 7, bdashslag : 3, bdashfdur : 13, bdashelag : 10, bdashspeed : 5, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2,
+		airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 12, vicposfdur : 50, cds : [70,120,240,60], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng], voiceactor : "clement"});
 
 
 	var movpriority = new Map(); 	//you can cancel a mov by a mov of priority stritcly superior
@@ -1557,6 +1583,7 @@ function main(){
 	var difficulte = 0;
 	var roundwonsj1 = 0; var roundwonsj2 = 0;
 	var finishhim = 0; var fatalitywasdone = false; var fatalitysreen = 0;
+	var persoschoisis = ["kitana","kitana"];
 
 
 	function shake_screen(frames,force){
