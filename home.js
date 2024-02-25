@@ -1219,7 +1219,7 @@ function main(){
 		}
 		else if(fightstartcountdown){
 			if(fightstartcountdown==50){fightwav.play();}
-			else if(fightstartcountdown==1){musiques[0].currentTime=0;musiques[0].play();}
+			else if(fightstartcountdown==1 && musiqueon){musiques[0].currentTime=0;musiques[0].play();}
 			ctx.scale(3,3);
 			if(fightstartcountdown%6>=3){ctx.drawImage(fightrediconpng,122,50);}
 			else{ctx.drawImage(fightyellowiconpng,122,50);}
@@ -1288,7 +1288,9 @@ function main(){
 	function reset_game(){
 		j1.reinit(-150,0,persoschoisis[0],0,0,j2);j2.reinit(150,0,persoschoisis[1],1,1,j1);frame_delay = base_frame_delay;
 		cpt = 0; objects_to_loop.clear();
-		end_of_round_countdown=0;fightstartcountdown = 130; fatalitywasdone = false; fatalitysreen = 0;
+		end_of_round_countdown=0;
+		if(introon){fightstartcountdown = 130;}else{fightstartcountdown=0;}
+		fatalitywasdone = false; fatalitysreen = 0;
 	}
 
 	
@@ -1497,6 +1499,7 @@ function main(){
 	musiques[0].play();
 
 	function play_sound_eff(s){
+		if(!soundeffon){return;}
 		let l = sounds_eff.get(s);
 		let n = Math.floor(Math.random()*l.length);
 		l[n].currentTime = 0; l[n].play();
@@ -1504,11 +1507,11 @@ function main(){
 
 
 	characteristics.set("kitana",{png : kitskins,coordinates : kitcoordinates, standnframes : 5,
-		width : 34, height : 97,vitesse : 3.5,jumpxspeed : 3.6,backmovnerf : 0.85,fdashslag : 3,fdashfdur : 11,fdashelag : 5,fdashspeed : 7, bdashslag : 3, bdashfdur : 13, bdashelag : 10, bdashspeed : 5, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2,
+		width : 34, height : 97,vitesse : 3.2,jumpxspeed : 3.6,backmovnerf : 0.85,fdashslag : 3,fdashfdur : 11,fdashelag : 5,fdashspeed : 7, bdashslag : 3, bdashfdur : 13, bdashelag : 10, bdashspeed : 5, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2,
 	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 12, vicposfdur : 50, cds : [70,120,240,60], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng], voiceactor : "clement"});
 
 	characteristics.set("raiden",{png : raiskins,coordinates : raicoordinates, standnframes : 8,
-		width : 36, height : 100,vitesse : 3.5,jumpxspeed : 3.6,backmovnerf : 0.85,fdashslag : 3,fdashfdur : 11,fdashelag : 5,fdashspeed : 7, bdashslag : 3, bdashfdur : 13, bdashelag : 10, bdashspeed : 5, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2,
+		width : 36, height : 100,vitesse : 3,jumpxspeed : 3.6,backmovnerf : 0.95,fdashslag : 3,fdashfdur : 11,fdashelag : 5,fdashspeed : 7, bdashslag : 3, bdashfdur : 13, bdashelag : 10, bdashspeed : 5, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2,
 		airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 12, vicposfdur : 50, cds : [70,120,240,60], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng], voiceactor : "clement"});
 
 
@@ -1583,6 +1586,7 @@ function main(){
 	var roundwonsj1 = 0; var roundwonsj2 = 0;
 	var finishhim = 0; var fatalitywasdone = false; var fatalitysreen = 0;
 	var persoschoisis = ["kitana","kitana"];
+	var musiqueon = true; var soundeffon = true; var introon = true;
 
 
 	function shake_screen(frames,force){
