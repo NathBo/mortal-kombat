@@ -1366,13 +1366,19 @@ function main(){
 		ctx.fillStyle = "white";
 		ctx.fillText("Kitana",380,100);
 		ctx.fillText("Raiden",380,476);
+		ctx.fillText("Player "+(playerentraindechoisir+1)+ " pick !",300,290);
 		if(click==1){
 			click=2;
-			if(clicky<=0.5){persoschoisis[0] = "kitana";}
-			else{persoschoisis[0] = "raiden";}
-			reset_game();
-			setTimeout(loop,frame_delay);
-			return;
+			if(clicky<=0.5){persoschoisis[playerentraindechoisir] = "kitana";}
+			else{persoschoisis[playerentraindechoisir] = "raiden";}
+			if(playerentraindechoisir==1){
+				reset_game();
+				setTimeout(loop,frame_delay);
+				return;
+			}
+			else{
+				playerentraindechoisir=1;
+			}
 		}
 		setTimeout(menupersos,frame_delay);
 	}
@@ -1410,11 +1416,13 @@ function main(){
 			if(clicky<0.3){
 				secondplayerishuman = true;
 				reset_game();
+				playerentraindechoisir = 0;
 				setTimeout(menupersos,frame_delay);
 				return;
 			}
 			else if(clicky>0.7){
 				secondplayerishuman = false;
+				playerentraindechoisir = 0;
 				setTimeout(menudifficulte,frame_delay);
 				return;
 			}
@@ -1611,7 +1619,7 @@ function main(){
 	var difficulte = 0;
 	var roundwonsj1 = 0; var roundwonsj2 = 0;
 	var finishhim = 0; var fatalitywasdone = false; var fatalitysreen = 0;
-	var persoschoisis = ["kitana","raiden"];
+	var persoschoisis = ["kitana","raiden"]; var playerentraindechoisir = 0;
 	var musiqueon = true; var soundeffon = true; var introon = true;
 
 
