@@ -214,7 +214,8 @@ function getraicoordinates(){
 	raicoordinates.set("clkick2",{offx:674,width:64,offy:983,height:52,decx:0,decy:0});
 	raicoordinates.set("cmkick1",{offx:623,width:46,offy:983,height:52,decx:0,decy:0});
 	raicoordinates.set("cmkick2",{offx:623,width:46,offy:983,height:52,decx:0,decy:0});
-	raicoordinates.set("cmkick3",{offx:539,width:62,offy:965,height:71,decx:6,decy:-2});
+	raicoordinates.set("cmkick3",{offx:674,width:64,offy:983,height:52,decx:0,decy:0});
+	//raicoordinates.set("cmkick3",{offx:539,width:62,offy:965,height:71,decx:6,decy:-2});
 	raicoordinates.set("jpunch1",{offx:13,width:69,offy:1044,height:70,decx:-6,decy:10});
 	raicoordinates.set("jpunch2",{offx:88,width:93,offy:1043,height:72,decx:-9,decy:10});
 	raicoordinates.set("jskick1",{offx:201,width:67,offy:1043,height:72,decx:0,decy:8});
