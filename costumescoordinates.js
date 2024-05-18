@@ -249,6 +249,12 @@ function getraicoordinates(){
     raicoordinates.set("stunned4",{offx:915,width:38,offy:1342,height:107,decx:0,decy:0});
     raicoordinates.set("stunned5",{offx:959,width:43,offy:1342,height:107,decx:0,decy:0});
 	raicoordinates.set("stunned6",{offx:1008,width:46,offy:1342,height:107,decx:0,decy:0});
+	raicoordinates.set("boltthrow1",{offx:447,width:43,offy:1457,height:104,decx:0,decy:0});
+    raicoordinates.set("boltthrow2",{offx:497,width:50,offy:1457,height:104,decx:0,decy:0});
+	raicoordinates.set("bolt1",{offx:263,width:45,offy:1645,height:17,decx:0,decy:0});
+	raicoordinates.set("bolt2",{offx:314,width:45,offy:1645,height:17,decx:0,decy:0});
+	raicoordinates.set("bolt3",{offx:365,width:45,offy:1645,height:17,decx:0,decy:0});
+	raicoordinates.set("bolt4",{offx:415,width:45,offy:1645,height:17,decx:0,decy:0});
 
 	raicoordinates.set("head",{offx:908,width:22,offy:1885,height:21,decx:0,decy:0});
 	
