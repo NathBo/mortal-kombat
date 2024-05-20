@@ -289,6 +289,12 @@ function getbloodcoordinates(){
 	bloodcoordinates.set("hblood4",{offx:162,width:82,offy:143,height:54,decx:0,decy:-15});
 	bloodcoordinates.set("hblood5",{offx:260,width:94,offy:133,height:64,decx:0,decy:-15});
 	bloodcoordinates.set("hblood6",{offx:374,width:117,offy:120,height:77,decx:0,decy:-15});
+	bloodcoordinates.set("organ1",{offx:55,width:19,offy:366,height:18,decx:0,decy:0});
+	bloodcoordinates.set("organ2",{offx:89,width:17,offy:366,height:18,decx:0,decy:0});
+	bloodcoordinates.set("organ3",{offx:293,width:11,offy:359,height:25,decx:0,decy:0});
+	bloodcoordinates.set("organ4",{offx:5,width:15,offy:402,height:19,decx:0,decy:0});
+	bloodcoordinates.set("organ5",{offx:201,width:11,offy:411,height:10,decx:0,decy:0});
+	bloodcoordinates.set("organ6",{offx:351,width:16,offy:403,height:18,decx:0,decy:0});
 
     return bloodcoordinates;
 }

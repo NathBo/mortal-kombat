@@ -262,6 +262,46 @@ function main(){
 
 	}
 
+	class Organ{
+		constructor(x,y,orientation){
+			this.x = x; this.y = y; this.orientation = orientation;
+			this.coords = bloodcoordinates.get("organ"+(Math.floor(Math.random()*6)+1));
+			this.width=this.coords.width;
+			this.height=this.coords.height;
+			this.num = cpt;
+			this.rotation = 0; this.rotationspeed = 16;
+			this.gravity = 0.2;
+			this.tb=Math.random()*4+3;
+			this.vitesse = -2+Math.random()*4;
+			this.dangerous = false;
+			
+		}
+
+		loop(){
+			this.y+=this.tb;
+			this.tb-=this.gravity;
+			if(this.y<0){this.y=0;this.tb=0;this.rotationspeed = Math.max(this.rotationspeed-1,0);this.vitesse = Math.max(this.vitesse-0.1,0);}
+			this.rotation = (this.rotation+this.rotationspeed)%360;
+			this.x+=this.orientation*this.vitesse;
+		}
+
+		afficher(){
+			var coords = this.coords;
+			var x = (this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation;
+			var y = ground-this.y-coords.height-coords.decy+shakey;
+			ctx.scale(2*this.orientation,2);
+			ctx.translate(x+coords.width/2,y+coords.height/2);
+			ctx.rotate(Math.PI*this.rotation/180);
+			ctx.drawImage(bloodpng,coords.offx,coords.offy,coords.width,coords.height,-coords.width/2,-coords.height/2,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			ctx.restore();
+		}
+
+	}
+
+
+
 	function add_to_objects_set(obj){
 		objects_to_loop.set(cpt,obj);
 		cpt++;
@@ -554,7 +594,7 @@ function main(){
 			this.blocking = 0; this.falling = 0; this.gettingup = 0; this.grabbing = 0; this.grabbed = 0;
 			this.vicpose = 0;
 			this.cooldowns = [0,0,0,0];
-			this.fatality = 0; this.decapitated = 0; this.electrocuted = 0;
+			this.fatality = 0; this.decapitated = 0; this.electrocuted = 0; this.hide = 0;
 			if(!secondplayerishuman && this.n==1){this.ai = new AI(this,other,difficulte);}
 		}
 
@@ -743,6 +783,15 @@ function main(){
 					}
 					else if(this.perso == "kitana" && this.forward>=1 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=100 && other.falling==0 && other.gettingup==0){
 						this.fatality = 90;
+						play_sound_eff("fatal1");
+						this.special=2;
+						finishhim = 0;
+						other.invincibilite=1000;
+						fatalitywasdone = true;
+						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
+					}
+					else if(this.perso == "raiden" && this.forward+this.back==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=100 && other.falling==0 && other.gettingup==0){
+						this.fatality = 110;
 						play_sound_eff("fatal1");
 						this.special=2;
 						finishhim = 0;
@@ -1015,6 +1064,15 @@ function main(){
 					else {this.costume = "fanswipe4"}
 					if(this.fatality==64){other.decapitate();play_sound_eff("fan");}
 				}
+				else if(this.perso=="raiden"){
+					if(this.fatality==110){other.y=20;}
+					if(this.fatality>=40){
+						this.costume = "elecgrab"+(Math.floor(this.fatality/4)%2+1);
+						if(this.fatality%8==0){other.electrocuted=4;}
+						if(this.fatality%20==0){play_sound_eff("electrocute");shake_screen(20,4);}
+					}
+					if(this.fatality==40){other.explode();}
+				}
 			}
 			else if(this.decapitated){
 				if(this.decapitated>=2){this.decapitated--;}
@@ -1240,18 +1298,22 @@ function main(){
 				other.drawLife();
 			}
 
-			if(this.electrocuted){
-				this.electrocuted--;
-				ctx.filter = 'brightness(1.8)';
+			
+
+			if(this.hide==0){
+				if(this.electrocuted){
+					this.electrocuted--;
+					ctx.filter = 'brightness(1.8)';
+				}
+				ctx.scale(2*this.orientation,2);
+				var coords = this.coordinates.get(this.costume);
+				ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.charac.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+				ctx.setTransform(1, 0, 0, 1, 0, 0);
+				ctx.scale(1,1);
+
+				ctx.filter = 'none';
 			}
 
-			ctx.scale(2*this.orientation,2);
-			var coords = this.coordinates.get(this.costume);
-			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.charac.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-
-			ctx.filter = 'none';
 
 			this.drawLife();
 
@@ -1296,6 +1358,15 @@ function main(){
 			this.decapitated = 100;
 			add_to_objects_set(new Head(this.x,this.y+this.charac.height,this.orientation,this.skin,this.coordinates));
 			add_to_objects_set(new Blood(this.x,this.y+this.charac.height-5,this.orientation,"hblood"));
+		}
+
+		explode(){
+			this.hide=1;
+			for(var i=0;i<25;i++){
+				add_to_objects_set(new Organ(this.x,this.y+this.charac.height,this.orientation));
+			}
+			shake_screen(30,6);
+			play_sound_eff("explosion");
 		}
 
 	}
@@ -1627,7 +1698,7 @@ function main(){
 	raiden_coups.set("mkick",{slag : 16, fdur : 12, elag : 16, degats : 10, hitstun : 26, hurtx : 1.5, hurty : 0, hitboxxs : 18, hitboxxe : 51, hitboxys : 0, hitboxye : 98, hitboxxouv : 24, blood_height : 5, blockstun : 14, blockx : 2.5, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov"});
 	raiden_coups.set("hkick",{slag : 14, fdur : 8, elag : 24, movx : 2, degats : 16, hitstun : 38, hurtx : 3.5, hurty : 7, hitboxxs : 20, hitboxxe : 45, hitboxys : 0, hitboxye : 106, hitboxxouv : 30, blood_height : 8, blockstun : 16, blockx : 3.3, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 10, hitsound : "hhit", blood : "mblood", damageonblock : 1, disponibility : "stand", voiceline : "hmov"});
 	raiden_coups.set("clpunch",{slag : 7, fdur : 6, elag : 8, degats : 4, hitstun : 20, hurtx : 1, hurty : 0, hitboxxs : 10, hitboxxe : 42,hitboxys : -1, hitboxye : 20, hitboxxouv : 14, blood_height : 0, blockstun : 10, blockx : 1.3, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "crouch", voiceline : "lmov"});
-	raiden_coups.set("huppercut",{slag : 12, fdur : 10, elag : 26, degats : 20, hitstun : 60, hurtx : 3.1, hurty : 11, hitboxxs : 20, hitboxxe : 46, hitboxys : 0, hitboxye : 120, hitboxxouv : 15, blood_height : 0, blockstun : 16, blockx : 2.5, hiteffect : "fall", hitboxxeyscaling : 0.25, hitlag : 12, hitsound : "hhit", blood : "mblood", damageonblock : 1, disponibility : "crouch", voiceline : "hmov"});
+	raiden_coups.set("huppercut",{slag : 12, fdur : 10, elag : 26, degats : 19, hitstun : 60, hurtx : 3.1, hurty : 11, hitboxxs : 20, hitboxxe : 46, hitboxys : 0, hitboxye : 120, hitboxxouv : 15, blood_height : 0, blockstun : 16, blockx : 2.5, hiteffect : "fall", hitboxxeyscaling : 0.25, hitlag : 12, hitsound : "hhit", blood : "mblood", damageonblock : 1, disponibility : "crouch", voiceline : "hmov"});
 	raiden_coups.set("clkick",{slag : 6, fdur : 6, elag : 8, degats : 6, hitstun : 20, hurtx : 1, hurty : 0, hitboxxs : 10, hitboxxe : 45,hitboxys : -45, hitboxye : -60, hitboxxouv : 14, blood_height : 0, blockstun : 10, blockx : 0.8, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "crouch", voiceline : "lmov"});
 	raiden_coups.set("cmkick",{slag : 8, fdur : 6, elag : 12, degats : 8, hitstun : 22, hurtx : 1, hurty : 0, hitboxxs : 10, hitboxxe : 45,hitboxys : -1, hitboxye : -20, hitboxxouv : 22, blood_height : 0, blockstun : 12, blockx : 1.9, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit", blood : "lblood", damageonblock : 1, disponibility : "crouch", voiceline : "lmov"});
 	raiden_coups.set("jkick",{slag : 6, fdur : 25, elag : 4, degats : 10, hitstun : 35, hurtx : 3.4, hurty : 5, hitboxxs : 0, hitboxxe : 56,hitboxys : -65, hitboxye : 5, hitboxxouv : 22, blood_height : 0, landinglag : 8, blockstun : 10, blockx : 1.9, hiteffect : "fall", hitboxxeyscaling : -1, hitlag : 8, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "air", voiceline : "mmov"});
@@ -1646,6 +1717,7 @@ function main(){
 	sounds_eff.set("hhit",[document.querySelector('#hhitwav1'),document.querySelector('#hhitwav2'),document.querySelector('#hhitwav3')]);
 	sounds_eff.set("fan",[document.querySelector('#fanwav')]);
 	sounds_eff.set("electrocute",[document.querySelector('#electrocutewav')]);
+	sounds_eff.set("explosion",[document.querySelector('#explosion1wav'),document.querySelector('#explosion2wav')]);
 	sounds_eff.set("clementlmov",[document.querySelector('#clementlmov1wav'),document.querySelector('#clementlmov2wav')]);
 	sounds_eff.set("clementmmov",[document.querySelector('#clementmmov1wav'),document.querySelector('#clementmmov2wav')]);
 	sounds_eff.set("clementhmov",[document.querySelector('#clementhmov1wav'),document.querySelector('#clementhmov2wav')]);
@@ -1676,7 +1748,7 @@ function main(){
 
 	characteristics.set("kitana",{png : kitskins,coordinates : kitcoordinates, sex : "f", standnframes : 5, rollspeed : 3, hkickstartnframe : 2,grabxdist : 34, grabydist : 36, stunnframes : 5,
 		width : 34, height : 97,vitesse : 3.2,jumpxspeed : 3.6,backmovnerf : 0.85, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2,
-	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 30, grabfdur : 35, grabdeg : 13, vicposframes : 12, vicposfdur : 50, cds : [70,120,240,60], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,fanlifticonpng], voiceactor : "clement"});
+	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 32, grabfdur : 35, grabdeg : 13, vicposframes : 12, vicposfdur : 50, cds : [70,120,240,60], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,fanlifticonpng], voiceactor : "clement"});
 
 	characteristics.set("raiden",{png : raiskins,coordinates : raicoordinates, sex : "m", standnframes : 8, rollspeed : 5, hkickstartnframe : 3,grabxdist : 32, grabydist : 38, stunnframes : 6,
 		width : 36, height : 100,vitesse : 3,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.42, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.22,
