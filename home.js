@@ -513,10 +513,13 @@ function main(){
 			}
 
 			if(me.perso=="kitana" && me.y==0 && other.y>0 && me.crouching==0 && entre(Math.abs(me.x-other.x),100,150) && me.orientation*other.xspeed<=-2.5 && other.tb>0){this.begincoup("fanlift");}
-			if(Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-this.idealrange)<=me.charac.vitesse*2){
+			if(Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-this.idealrange)<=me.charac.vitesse*2 && movpriority.get(me.mov)<70){
 				if(me.perso=="kitana"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("fanthrow");}}
 				if(me.perso=="raiden"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("boltthrow");}}
 			}
+
+			else if(me.perso=="raiden" && this.attacking*this.rangescaling+Math.abs(me.x-other.x)>=this.idealrange+40 && me.y==0 && other.y>0 && me.crouching==0 && movpriority.get(me.mov)<70)
+				{this.begincoup("thundergod");}
 			
 			else if(this.attacking*this.rangescaling+Math.abs(me.x-other.x)>=this.idealrange){this.pressforward();}
 			else{this.pressbackward();}
@@ -925,6 +928,7 @@ function main(){
 		hurt(other,stats){
 			if(other.mov=="thundergod"){other.movlag=1;other.tb=8;other.xspeed = -1;other.y=0.1;}
 			if(this.invincibilite || end_of_round_countdown){return;}
+			if(other.mov=="thundergod"){other.y=0;}
 			if(this.n==1 && !secondplayerishuman && stats.hiteffect=="projectile"){this.ai.ugothitorblockedaprojectile();}
 			if(this.movlag==0&&this.hurted==0&&this.back>=1&&this.y==0&&stats.hiteffect != "grab" && ((this.crouching<=3 && (other.y>0 || stats.hitboxys>=0) || (this.crouching>3 && other.y==0)) || stats.hiteffect=="projectile")){
 				this.blocking = stats.blockstun;
@@ -972,6 +976,7 @@ function main(){
 			if(this.pv<=0){
 				this.killanim();
 			}
+			if(other.mov=="thundergod"){other.y=0.1;}
 		}
 
 		killanim(){
