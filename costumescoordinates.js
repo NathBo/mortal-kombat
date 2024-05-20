@@ -255,6 +255,9 @@ function getraicoordinates(){
 	raicoordinates.set("bolt2",{offx:314,width:45,offy:1645,height:17,decx:0,decy:0});
 	raicoordinates.set("bolt3",{offx:365,width:45,offy:1645,height:17,decx:0,decy:0});
 	raicoordinates.set("bolt4",{offx:415,width:45,offy:1645,height:17,decx:0,decy:0});
+	raicoordinates.set("thundergod1",{offx:166,width:57,offy:1467,height:95,decx:0,decy:0});
+	raicoordinates.set("thundergod2",{offx:228,width:87,offy:1467,height:95,decx:0,decy:0});
+	raicoordinates.set("thundergod3",{offx:320,width:106,offy:1467,height:95,decx:0,decy:50});
 
 	raicoordinates.set("head",{offx:908,width:22,offy:1885,height:21,decx:0,decy:0});
 	
