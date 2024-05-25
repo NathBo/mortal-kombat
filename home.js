@@ -164,7 +164,6 @@ function main(){
 		afficher(){
 			this.costcpt = (this.costcpt+1)%(4*this.framepercost);
 			this.costume = "bolt"+(Math.floor(this.costcpt/this.framepercost)+1);
-			console.log(this.costume);
 			this.rotation = (this.rotation+this.rotationspeed)%360;
 			ctx.scale(2*this.orientation,2);
 			var coords = raicoordinates.get(this.costume);
@@ -577,7 +576,7 @@ function main(){
 		{
 			
 		}
-		reinit(x,y,perso,n,skin,other){
+		reinit(x,y,perso,n,skin,other,reset_ai=true){
 			this.charac = characteristics.get(perso);
 			this.x = x; this.y = y; this.perso = perso; this.n = n; this.skin = this.charac.png[skin]; this.coordinates = this.charac.coordinates;
 			this.droite=0;this.gauche=0;this.haut=0;this.bas=0;this.poing=0;this.jambe=0;this.special=0;this.dodge=0;
@@ -595,7 +594,7 @@ function main(){
 			this.vicpose = 0;
 			this.cooldowns = [0,0,0,0];
 			this.fatality = 0; this.decapitated = 0; this.electrocuted = 0; this.hide = 0;
-			if(!secondplayerishuman && this.n==1){this.ai = new AI(this,other,difficulte);}
+			if(!secondplayerishuman && this.n==1 && reset_ai){this.ai = new AI(this,other,difficulte);}
 		}
 
 		begincoup(s,other){
@@ -1493,8 +1492,8 @@ function main(){
 		}
 	}
 
-	function reset_game(){
-		j1.reinit(-150,0,persoschoisis[0],0,0,j2);j2.reinit(150,0,persoschoisis[1],1,1,j1);frame_delay = base_frame_delay;
+	function reset_game(reset_ai=true){
+		j1.reinit(-150,0,persoschoisis[0],0,0,j2,reset_ai);j2.reinit(150,0,persoschoisis[1],1,1,j1,reset_ai);frame_delay = base_frame_delay;
 		cpt = 0; objects_to_loop.clear();
 		end_of_round_countdown=0;
 		if(introon){fightstartcountdown = 130;}else{fightstartcountdown=0;}
@@ -1532,7 +1531,7 @@ function main(){
 				return;
 				}
 			
-				else{reset_game();}
+				else{reset_game(false);}
 			}
 		}
 		else if(end_of_round_countdown){
