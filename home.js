@@ -406,7 +406,7 @@ function main(){
 		eviterprojectiles(){
 			for(let value of objects_to_loop.values()){
 				if(value.dangerous){
-					if(Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))<=value.stats.hitboxxe+28+this.me.charac.width/2 && this.me.y==0){this.pressbackward();this.me.bas=1;return true;}
+					if(Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))<=value.stats.hitboxxe+30+this.me.charac.width/2 && this.me.y==0 && this.me.mov!="jumpsquat"){this.pressbackward();this.me.bas=1;return true;}
 					if(this.me.y==0 && (signe(this.me.x-value.x)==signe(value.vitesse)) && Math.abs(this.me.x-value.x)>=value.stats.hitboxxe+80+this.me.charac.width/2-this.wanttojump*6 && value.y+value.stats.hitboxye<=70){this.me.haut=1;this.pressforward(true);return true;}
 				}
 			}
@@ -988,6 +988,14 @@ function main(){
 			}
 		}
 
+
+		losepv(n){
+			this.pv-=n;
+			if(this.pv<=0){
+				this.killanim();
+			}
+		}
+
 		hurt(other,stats){
 			if(other.mov=="thundergod"){other.movlag=1;other.tb=8;other.xspeed = -1;other.y=0.1;}
 			if(this.invincibilite || end_of_round_countdown){return;}
@@ -1046,6 +1054,7 @@ function main(){
 			this.pv = 0;
 			this.falling = 4;
 			this.tb = Math.max(7,this.tb);
+			this.y+=0.1;
 			this.xspeed = signe(this.xspeed)*Math.max(Math.abs(this.xspeed),3);
 			this.invincibilite = 150;
 			play_sound_eff(this.charac.voiceactor+"bighurted")
@@ -1351,6 +1360,9 @@ function main(){
 			}
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
+			ctx.fillStyle = "red";
+			ctx.font = "50px Luminari";
+			ctx.fillText(Math.max(Math.round(timer/60),0).toString(),485,60);
 			
 		}
 
@@ -1493,6 +1505,7 @@ function main(){
 	}
 
 	function reset_game(reset_ai=true){
+		timer = timer_init;
 		j1.reinit(-150,0,persoschoisis[0],0,0,j2,reset_ai);j2.reinit(150,0,persoschoisis[1],1,1,j1,reset_ai);frame_delay = base_frame_delay;
 		cpt = 0; objects_to_loop.clear();
 		end_of_round_countdown=0;
@@ -1514,7 +1527,13 @@ function main(){
 			}
 		}
 		affichtt();
-		if(end_of_round_countdown==0 && finishhim==0 && j1.fatality==0 && j2.fatality==0){checkforend();}
+		if(end_of_round_countdown==0 && finishhim==0 && j1.fatality==0 && j2.fatality==0){
+			checkforend();
+			if(fightstartcountdown==0){
+				timer--;
+				if(timer<0 && timer%20==0){j1.losepv(1);j2.losepv(1);}
+			}
+		}
 		else if(end_of_round_countdown==1){
 			if(fatalitywasdone){
 				fatalitywasdone = 0;
@@ -1835,7 +1854,7 @@ function main(){
 	var gamefreeze = 0; var still_draw = false;
 	var shakex = 0; var shakey = 0; var shakeforce = 0; var shakeframe = 0;
 	var end_of_round_countdown = 0; var fightstartcountdown = 80;
-	var frame_delay = 17; var base_frame_delay = 17; var slowmodur = 0;
+	var frame_delay = 17; var base_frame_delay = 16; var slowmodur = 0;
 	var vitcamera = 7;
 	var pause_after_vicpose = 20;
 	var cpt = 0; var objects_to_loop = new Map();
@@ -1844,7 +1863,7 @@ function main(){
 	var roundwonsj1 = 0; var roundwonsj2 = 0;
 	var finishhim = 0; var fatalitywasdone = false; var fatalitysreen = 0;
 	var persoschoisis = ["kitana","raiden"]; var playerentraindechoisir = 0;
-	var musiqueon = true; var soundeffon = true; var introon = true;
+	var musiqueon = true; var soundeffon = true; var introon = true; var timer = 0; var timer_init = 99*60;
 
 
 	function shake_screen(frames,force){
