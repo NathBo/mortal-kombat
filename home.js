@@ -316,7 +316,7 @@ function main(){
 			this.currisking = 0;
 			this.enviedegrab = Math.floor(Math.random()*5);
 			this.hascommited = 0;
-			this.wanttojump = 0; this.enviedantiair = 0;
+			this.wanttojump = 0-2*(other.perso=="raiden"); this.enviedantiair = 0;
 			this.optionssonoki = [1.25,0.2,0.35,0.5]; //crouch, stand block, crouch block, jump
 			this.chosenoptiononoki = 0;
 			this.foptiononoki = 0;
@@ -407,7 +407,7 @@ function main(){
 			for(let value of objects_to_loop.values()){
 				if(value.dangerous){
 					if(Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))<=value.stats.hitboxxe+28+this.me.charac.width/2 && this.me.y==0){this.pressbackward();this.me.bas=1;return true;}
-					if(this.me.y==0 && Math.abs(this.me.x-value.x)>=value.stats.hitboxxe+80+this.me.charac.width/2-this.wanttojump*3 && value.y+value.stats.hitboxye<=70){this.me.haut=1;this.pressforward(true);return true;}
+					if(this.me.y==0 && (signe(this.me.x-value.x)==signe(value.vitesse)) && Math.abs(this.me.x-value.x)>=value.stats.hitboxxe+80+this.me.charac.width/2-this.wanttojump*6 && value.y+value.stats.hitboxye<=70){this.me.haut=1;this.pressforward(true);return true;}
 				}
 			}
 			return false;
@@ -451,7 +451,7 @@ function main(){
 			var me = this.me;
 			var other = this.other;
 			if(other.crouching&&me.charac.coups.has(me.mov) && me.charac.coups.get(me.mov).hitboxys>=0){this.enviedetaperenbas += 8;}
-			if(me.y>0){this.wanttojump-=1;}
+			if(me.y>0){this.wanttojump-=2;}
 			if(other.y>0 && me.y==0){this.enviedantiair-=3;}
 			if(this.foptiononoki){this.optionssonoki[this.chosenoptiononoki]-=0.1}
 		}
@@ -549,10 +549,10 @@ function main(){
 				else if(other.mov == "thundergod" && Math.abs(me.x-other.x)<=110 && me.y==0){
 					this.pressbackward();
 				}
-				else if(other.charac.coups.has(other.mov) && other.charac.coups.get(other.mov).hitboxye<=0 && Math.random()*10<=this.wanttojump){
+				else if(other.charac.coups.has(other.mov) && other.charac.coups.get(other.mov).hitboxye<=0 && Math.random()*20*difficulte<=this.wanttojump+5){
 					me.haut = 1;this.pressforward;
 				}
-				if(Math.random()*100<this.wanttojump){me.haut = 1;}
+				if(Math.random()*100*(difficulte+1)<this.wanttojump+3){me.haut = 1;}
 			}
 
 			if(me.perso=="kitana" && me.y==0 && other.y>0 && me.crouching==0 && entre(Math.abs(me.x-other.x),100,150) && me.orientation*other.xspeed<=-2.5 && other.tb>0){this.begincoup("fanlift");}
@@ -1332,22 +1332,22 @@ function main(){
 				let sh_f = (this.pvaff-this.pv)*0.8;
 				shake_x = Math.random()*2*sh_f-sh_f;shake_y = Math.random()*2*sh_f-sh_f;
 			}
-			ctx.fillStyle='rgb(148,16,16)';ctx.fillRect(55+this.n*510+shake_x,30+shake_y,400,30);
+			ctx.fillStyle='rgb(148,16,16)';ctx.fillRect(126+this.n*475+shake_x,30+shake_y,288,30);
 			ctx.fillStyle='rgb(107,189,33)';
-			if(this.n==0){ctx.fillRect(55+shake_x,30+shake_y,this.pvaff/this.pvmax*400,30);}
-			else{ctx.fillRect(965-this.pvaff/this.pvmax*400+shake_x,30+shake_y,this.pvaff/this.pvmax*400,30);}
-			ctx.drawImage(lifebarpng,50+this.n*510+shake_x,25+shake_y);
+			if(this.n==0){ctx.fillRect(126+shake_x,30+shake_y,this.pvaff/this.pvmax*288,30);}
+			else{ctx.fillRect(120+475+288+6-this.pvaff/this.pvmax*288+shake_x,30+shake_y,this.pvaff/this.pvmax*288,30);}
+			ctx.drawImage(lifebarpng,120+this.n*475+shake_x,25+shake_y);
 			for(var i=0;i<4;i++){
-				if(this.cooldowns[i]>0){ctx.drawImage(this.charac.icons[i],0,0,50,50*this.cooldowns[i]/this.charac.cds[i],60+this.n*835+(60-120*this.n)*i,80,50,50*this.cooldowns[i]/this.charac.cds[i]);}
+				if(this.cooldowns[i]>0){ctx.drawImage(this.charac.icons[i],0,0,50,50*this.cooldowns[i]/this.charac.cds[i],120+this.n*730+(60-120*this.n)*i,80,50,50*this.cooldowns[i]/this.charac.cds[i]);}
 			}
 			ctx.scale(2,2);
 			if(this.n==0){
 				if(roundwonsj1>=1){ctx.drawImage(roundwoniconpng,7,13);}
-				if(roundwonsj1>=2){ctx.drawImage(roundwoniconpng,7,30);}
+				if(roundwonsj1>=2){ctx.drawImage(roundwoniconpng,24,13);}
 			}
 			else{
 				if(roundwonsj2>=1){ctx.drawImage(roundwoniconpng,490,13);}
-				if(roundwonsj2>=2){ctx.drawImage(roundwoniconpng,490,30);}
+				if(roundwonsj2>=2){ctx.drawImage(roundwoniconpng,473,13);}
 			}
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
