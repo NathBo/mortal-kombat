@@ -1711,7 +1711,7 @@ function main(){
 	raiden_coups.set("grab",{slag : 5, fdur : 3, elag : 12, degats : 12, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 28,hitboxys : 0, hitboxye : -400, hitboxxouv : 15, blood_height : 0, blockstun : 12, blockx : 1.7, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0});
 	raiden_coups.set("teleport",{slag : 11, fdur : 0, elag : 12, degats : 0, hitstun : 0, hurtx : 0.9, hurty : 0, hitboxxs : 0, hitboxxe : 0,hitboxys : 0, hitboxye : -400, hitboxxouv : 15, blood_height : 0, blockstun : 12, blockx : 1.7, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0});
 	raiden_coups.set("boltthrow",{slag : 14, fdur : 0, elag : 30, degats : 8, hitstun : 22, hurtx : 1.1, hurty : 0, hitboxxs : -12, hitboxxe : 12,hitboxys : -8, hitboxye : 8, hitboxxouv : 5, blood_height : 0, blockstun : 10, blockx : 1.5, hiteffect : "projectile", hitboxxeyscaling : 0, hitlag : 7, hitsound : "electrocute", blood : "electrocute", damageonblock : 2,landinglag : 12, disponibility : "stand", voiceline : "mmov", movx : 0});
-	raiden_coups.set("thundergod",{slag : 10, fdur : 30, elag : 0, degats : 13, hitstun : 60, hurtx : 5, hurty : 8, hitboxxs : 20, hitboxxe : 50,hitboxys : 0, hitboxye : 30, hitboxxouv : 40, blood_height : 20, blockstun : 10, blockx : 1.7, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 9, hitsound : "hhit", blood : "mblood", damageonblock : 2, disponibility : "stand", voiceline : "hmov", movx : 0});
+	raiden_coups.set("thundergod",{slag : 10, fdur : 30, elag : 0, degats : 13, hitstun : 60, hurtx : 5, hurty : 8, hitboxxs : 20, hitboxxe : 50,hitboxys : 0, hitboxye : 30, hitboxxouv : 40, blood_height : 20, blockstun : 10, blockx : 1.7, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 9, hitsound : "hhit", blood : "mblood", damageonblock : 2, disponibility : "stand", voiceline : "raidenbullshit", movx : 0});
 	raiden_coups.set("elecgrab",{slag : 8, fdur : 8, elag : 8, degats : 50, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 28,hitboxys : 0, hitboxye : -400, hitboxxouv : 15, blood_height : 0, blockstun : 12, blockx : 1.7, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "electrocute", blood : "electrocute", damageonblock : 1, disponibility : "stand", voiceline : "mmov", movx : 2.5});
 
 
@@ -1722,11 +1722,17 @@ function main(){
 	sounds_eff.set("fan",[document.querySelector('#fanwav')]);
 	sounds_eff.set("electrocute",[document.querySelector('#electrocutewav')]);
 	sounds_eff.set("explosion",[document.querySelector('#explosion1wav'),document.querySelector('#explosion2wav')]);
-	sounds_eff.set("clementlmov",[document.querySelector('#clementlmov1wav'),document.querySelector('#clementlmov2wav')]);
-	sounds_eff.set("clementmmov",[document.querySelector('#clementmmov1wav'),document.querySelector('#clementmmov2wav')]);
-	sounds_eff.set("clementhmov",[document.querySelector('#clementhmov1wav'),document.querySelector('#clementhmov2wav')]);
-	sounds_eff.set("clementhurted",[document.querySelector('#clementhurted1wav'),document.querySelector('#clementhurted2wav')]);
-	sounds_eff.set("clementbighurted",[document.querySelector('#clementbighurtedwav')]);
+	sounds_eff.set("femalelmov",[document.querySelector('#femalelmov1wav'),document.querySelector('#femalelmov2wav')]);
+	sounds_eff.set("femalemmov",[document.querySelector('#femalemmov1wav'),document.querySelector('#femalemmov2wav')]);
+	sounds_eff.set("femalehmov",[document.querySelector('#femalehmov1wav'),document.querySelector('#femalehmov2wav')]);
+	sounds_eff.set("femalehurted",[document.querySelector('#femalehurted1wav'),document.querySelector('#femalehurted2wav')]);
+	sounds_eff.set("femalebighurted",[document.querySelector('#femalebighurtedwav')]);
+	sounds_eff.set("malelmov",[document.querySelector('#malelmov1wav'),document.querySelector('#malelmov2wav')]);
+	sounds_eff.set("malemmov",[document.querySelector('#malemmov1wav'),document.querySelector('#malemmov2wav')]);
+	sounds_eff.set("malehmov",[document.querySelector('#malehmov1wav'),document.querySelector('#malehmov2wav')]);
+	sounds_eff.set("malehurted",[document.querySelector('#malehurted1wav'),document.querySelector('#malehurted2wav')]);
+	sounds_eff.set("malebighurted",[document.querySelector('#malebighurtedwav')]);
+	sounds_eff.set("maleraidenbullshit",[document.querySelector('#raidenbullshit1wav'),document.querySelector('#raidenbullshit2wav'),document.querySelector('#raidenbullshit3wav'),document.querySelector('#raidenbullshit4wav'),document.querySelector('#raidenbullshit5wav')]);
 	sounds_eff.set("fatal1",[document.querySelector('#fatal1wav')]);
 	sounds_eff.set("fatal2",[document.querySelector('#fatal2wav')]);
 	sounds_eff.set("fatality",[document.querySelector('#fatalitywav')]);
@@ -1752,11 +1758,11 @@ function main(){
 
 	characteristics.set("kitana",{png : kitskins,coordinates : kitcoordinates, sex : "f", standnframes : 5, rollspeed : 3, hkickstartnframe : 2,grabxdist : 34, grabydist : 36, stunnframes : 5,
 		width : 34, height : 97,vitesse : 3.2,jumpxspeed : 3.6,backmovnerf : 0.85, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2, hurtcontrol : 0.2,
-	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 32, grabfdur : 35, grabdeg : 13, vicposframes : 12, vicposfdur : 50, cds : [70,120,240,60], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,fanlifticonpng], voiceactor : "clement"});
+	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 32, grabfdur : 35, grabdeg : 13, vicposframes : 12, vicposfdur : 50, cds : [70,120,240,60], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,fanlifticonpng], voiceactor : "female"});
 
 	characteristics.set("raiden",{png : raiskins,coordinates : raicoordinates, sex : "m", standnframes : 8, rollspeed : 5, hkickstartnframe : 3,grabxdist : 32, grabydist : 38, stunnframes : 6,
 		width : 36, height : 100,vitesse : 3,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.42, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.2,
-		airdrift : 0.14, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : raiden_coups, pv : 95, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 6, vicposfdur : 36, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "clement"});
+		airdrift : 0.14, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : raiden_coups, pv : 95, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 6, vicposfdur : 36, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male"});
 
 
 	var movpriority = new Map(); 	//you can cancel a mov by a mov of priority stritcly superior
