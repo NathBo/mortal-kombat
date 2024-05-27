@@ -320,6 +320,12 @@ function main(){
 			this.optionssonoki = [1.25,0.2,0.35,0.5]; //crouch, stand block, crouch block, jump
 			this.chosenoptiononoki = 0;
 			this.foptiononoki = 0;
+			var grade = new Map();
+			function aux(val,key,_){
+				grade.set(key,Math.random());
+			}
+			me.charac.coups.forEach(aux);
+			this.grade=grade;
 			switch(this.difficulty){
 				case 0:
 					this.donothingchance = 0.85;
@@ -344,7 +350,7 @@ function main(){
 					this.cancelnormaldelay = 10;
 					this.commitmentonwalk = 5;
 					this.optionssonoki[Math.floor(Math.random()*4)]+=1;
-					this.fduroptiononoki = 20;
+					this.fduroptiononoki = 18;
 					break;
 
 				case 2:
@@ -450,14 +456,27 @@ function main(){
 		ugothit(){
 			var me = this.me;
 			var other = this.other;
+			this.grade.set(me.mov,this.grade.get(me.mov-3));
 			if(other.crouching&&me.charac.coups.has(me.mov) && me.charac.coups.get(me.mov).hitboxys>=0){this.enviedetaperenbas += 8;}
 			if(me.y>0){this.wanttojump-=2;}
 			if(other.y>0 && me.y==0){this.enviedantiair-=3;}
 			if(this.foptiononoki){this.optionssonoki[this.chosenoptiononoki]-=0.1}
 		}
 
+		ugotahit(){
+			var me = this.me;
+			var other = this.other;
+			this.grade.set(me.mov,this.grade.get(me.mov+3));
+			this.enviedegrab = Math.max(this.enviedegrab-2,-10);
+			if(other.crouching&&me.charac.coups.has(me.mov) && me.charac.coups.get(me.mov).hitboxys>=0){this.enviedetaperenbas -= 8;}
+			if(me.y>0){this.wanttojump+=2;}
+			if(other.y>0 && me.y==0){this.enviedantiair+=3;}
+		}
+
+		
+
 		ugotblocked(){
-			this.enviedegrab +=2;
+			this.enviedegrab = Math.min(this.enviedegrab+1,10);
 			this.attacking-=1;
 			if(this.other.crouching>3){this.wanttojump += 1;}
 		}
@@ -488,6 +507,7 @@ function main(){
 				if(coups.get(m).slag<=other.hurted){conviction = -100+movpriority.get(m); conviction -= coups.get(m).degats/2;}
 				if(m=="huppercut" && other.y>0){conviction -= 0;}
 				conviction += thiis.inconsistency*Math.random();
+				conviction-=thiis.grade.get(m);
 
 				if(conviction<=limiteup){movtodo = m;limiteup = conviction;}
 			}
@@ -1027,6 +1047,9 @@ function main(){
 				}
 				if(this.n==1 && !secondplayerishuman && stats.hiteffect != "projectile"){
 					this.ai.ugothit();
+				}
+				if(this.n==0 && !secondplayerishuman && stats.hiteffect != "projectile"){
+					other.ai.ugotahit();
 				}
 					this.hurted = stats.hitstun;
 				this.xspeed = stats.hurtx*other.orientation;
