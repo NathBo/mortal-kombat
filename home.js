@@ -1433,12 +1433,14 @@ function main(){
 	}
 
 	function drawStage(){
+		if(fatalitywasdone || fatalitysreen){ctx.filter = 'brightness(0.5)';}
 		ctx.scale(2,2);
 		ctx.drawImage(towerbackgroundpng,-18-camerax/5,0);
 		ctx.drawImage(towerstructurepng,-camerax+238-stage_size/2+shakex,shakey);
 		ctx.drawImage(towergroundpng,-camerax+256-stage_size/2+shakex,178+shakey);
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.scale(1,1);
+		ctx.filter = 'none';
 	}
 
 
@@ -1452,7 +1454,7 @@ function main(){
 		let m = stage_size/2-256;
 		if(camerax<-m){camerax=-m}
 		if(camerax>m){camerax=m}
-		if(j1.fatality == 0 && j2.fatality == 0){drawStage();}
+		drawStage();
 		if(fightstartcountdown>=60){
 			if(fightstartcountdown==129){roundswav[roundwonsj1+roundwonsj2].play();}
 			ctx.fillStyle = "yellow";
