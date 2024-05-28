@@ -323,6 +323,7 @@ function main(){
 			var grade = new Map();
 			function aux(val,key,_){
 				grade.set(key,Math.random());
+				console.log(key);
 			}
 			me.charac.coups.forEach(aux);
 			this.grade=grade;
@@ -338,6 +339,7 @@ function main(){
 					this.commitmentonwalk = 5;
 					this.optionssonoki[Math.floor(Math.random()*4)]+=1;
 					this.fduroptiononoki = 30;
+					this.reaction_time = 20;
 					break;
 				
 				case 1:
@@ -351,6 +353,7 @@ function main(){
 					this.commitmentonwalk = 5;
 					this.optionssonoki[Math.floor(Math.random()*4)]+=1;
 					this.fduroptiononoki = 18;
+					this.reaction_time = 15;
 					break;
 
 				case 2:
@@ -364,6 +367,7 @@ function main(){
 					this.commitmentonwalk = 5;
 					this.optionssonoki[Math.floor(Math.random()*4)]+=0.8;
 					this.fduroptiononoki = 10;
+					this.reaction_time = 12;
 					break;
 
 				case 3:
@@ -376,6 +380,7 @@ function main(){
 					this.cancelnormaldelay = 3;
 					this.commitmentonwalk = 3;
 					this.fduroptiononoki = 7;
+					this.reaction_time = 8;
 					break;
 				default:
 					this.donothingchance = 0;
@@ -387,6 +392,7 @@ function main(){
 					this.cancelnormaldelay = 1;
 					this.commitmentonwalk = 1;
 					this.fduroptiononoki = 5;
+					this.reaction_time = 4;
 					break;
 			}
 		}
@@ -456,8 +462,9 @@ function main(){
 		ugothit(){
 			var me = this.me;
 			var other = this.other;
-			this.grade.set(me.mov,this.grade.get(me.mov-3));
+			this.grade.set(me.mov,this.grade.get(me.mov)-3);
 			if(other.crouching&&me.charac.coups.has(me.mov) && me.charac.coups.get(me.mov).hitboxys>=0){this.enviedetaperenbas += 8;}
+			if(other.crouching){this.wanttojump+=1;}
 			if(me.y>0){this.wanttojump-=2;}
 			if(other.y>0 && me.y==0){this.enviedantiair-=3;}
 			if(this.foptiononoki){this.optionssonoki[this.chosenoptiononoki]-=0.1}
@@ -466,7 +473,7 @@ function main(){
 		ugotahit(){
 			var me = this.me;
 			var other = this.other;
-			this.grade.set(me.mov,this.grade.get(me.mov+3));
+			this.grade.set(me.mov,this.grade.get(me.mov)+3);
 			this.enviedegrab = Math.max(this.enviedegrab-2,-10);
 			if(other.crouching&&me.charac.coups.has(me.mov) && me.charac.coups.get(me.mov).hitboxys>=0){this.enviedetaperenbas -= 8;}
 			if(me.y>0){this.wanttojump+=2;}
@@ -494,7 +501,8 @@ function main(){
 			
 			var movtodo = "";
 			var limiteup = this.baserisk+this.currisking+me.pv/10;
-			if(other.charac.coups.has(other.mov) && Math.abs(me.x-other.x)<=other.charac.coups.get(other.mov).hitboxxe+mywidth/2 && other.movlag>=other.charac.coups.get(other.mov).elag-1){
+			var c = other.charac.coups.get(other.mov);
+			if(other.charac.coups.has(other.mov) && other.movlag<=c.slag+c.fdur+c.elag-this.reaction_time && Math.abs(me.x-other.x)<=c.hitboxxe+mywidth/2 && other.movlag>=c.elag-1){
 				limiteup = other.movlag-2-other.charac.coups.get(other.mov).fdur - other.charac.coups.get(other.mov).elag;
 			}
 			if(other.mov == "thundergod" && Math.abs(me.x-other.x)<=120 && me.y==0){limiteup-=30;}
@@ -506,10 +514,12 @@ function main(){
 				if(other.y>0 && me.y==0){conviction-=thiis.enviedantiair;}
 				if(coups.get(m).slag<=other.hurted){conviction = -100+movpriority.get(m); conviction -= coups.get(m).degats/2;}
 				if(m=="huppercut" && other.y>0){conviction -= 0;}
+				if(me.y>0 && me.tb<0){conviction-=40;console.log(m,conviction,limiteup);}
 				conviction += thiis.inconsistency*Math.random();
 				conviction-=thiis.grade.get(m);
+				console.log(m,thiis.grade.get(m));
 
-				if(conviction<=limiteup){movtodo = m;limiteup = conviction;}
+				if(conviction<=limiteup){movtodo = m;limiteup = conviction;console.log(m);}
 			}
 			moves.forEach(aux);
 			if(me.mov != ""){var stats = coups.get(me.mov)}
@@ -554,6 +564,7 @@ function main(){
 			}
 			if(Math.random()<this.donothingchance){return;}
 			var other = this.other;
+			var c = other.charac.coups.get(other.mov);
 			me.bas = 0; me.haut = 0; me.poing = 0; me.jambe = 0; me.dodge = 0; me.special = 0;
 			this.attacking = minvalabs(this.attacking-1+Math.random()*2+this.agressivite+(other.hurted>0),10);
 			this.currisking = minvalabs(this.currisking-1+Math.random()*2,10);
@@ -562,7 +573,7 @@ function main(){
 				this.attack(moves);
 			}
 			if(!me.charac.coups.has(me.mov)){
-				if(other.charac.coups.has(other.mov) && Math.abs(me.x-other.x)<=other.charac.coups.get(other.mov).hitboxxe+me.charac.width/2+me.charac.vitesse*this.commitmentonwalk+5 && other.movlag>=other.charac.coups.get(other.mov).elag-1){
+				if(other.charac.coups.has(other.mov) && other.movlag<=c.slag+c.fdur+c.elag-this.reaction_time && Math.abs(me.x-other.x)<=c.hitboxxe+me.charac.width/2+me.charac.vitesse*this.commitmentonwalk+5 && other.movlag>=c.elag-1){
 					this.pressbackward();
 					if(other.charac.coups.has(other.mov).hitboxys<0 && other.y==0){this.bas = 1;}
 				}
@@ -576,7 +587,7 @@ function main(){
 			}
 
 			if(me.perso=="kitana" && me.y==0 && other.y>0 && me.crouching==0 && entre(Math.abs(me.x-other.x),100,150) && me.orientation*other.xspeed<=-2.5 && other.tb>0){this.begincoup("fanlift");}
-			if(Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-this.idealrange)<=me.charac.vitesse*2 && movpriority.get(me.mov)<70){
+			if(Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-this.idealrange)<=me.charac.vitesse*2+other.movlag*3 && movpriority.get(me.mov)<70 && other.mov != "thundergod"){
 				if(me.perso=="kitana"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("fanthrow");}}
 				if(me.perso=="raiden"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("boltthrow");}}
 			}
@@ -948,7 +959,7 @@ function main(){
 						break;
 					case "thundergod":
 						var stats = this.charac.coups.get(this.mov);
-						if(this.movlag<=stats.elag+stats.fdur){this.x += 6*this.orientation;if(this.movlag>1){this.movlag++;}}
+						if(this.movlag<=stats.elag+stats.fdur){this.x += 6*this.orientation;if(this.movlag==2){this.movlag++;}}
 						if(Math.abs(this.x-camerax)>decalagex-this.charac.width/2){this.movlag=0;this.mov="";this.tb=7;this.xspeed = -this.orientation;this.y=0.1;}
 						break;
 				}
@@ -1748,7 +1759,7 @@ function main(){
 	raiden_coups.set("clkick",{slag : 6, fdur : 6, elag : 8, degats : 6, hitstun : 20, hurtx : 1, hurty : 0, hitboxxs : 10, hitboxxe : 45,hitboxys : -45, hitboxye : -60, hitboxxouv : 14, blood_height : 0, blockstun : 10, blockx : 0.8, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "crouch", voiceline : "lmov", movx : 0});
 	raiden_coups.set("cmkick",{slag : 8, fdur : 6, elag : 12, degats : 8, hitstun : 22, hurtx : 1, hurty : 0, hitboxxs : 10, hitboxxe : 45,hitboxys : -1, hitboxye : -20, hitboxxouv : 22, blood_height : 0, blockstun : 12, blockx : 1.9, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit", blood : "lblood", damageonblock : 1, disponibility : "crouch", voiceline : "lmov", movx : 0});
 	raiden_coups.set("jkick",{slag : 6, fdur : 25, elag : 4, degats : 10, hitstun : 35, hurtx : 3.4, hurty : 5, hitboxxs : 0, hitboxxe : 56,hitboxys : -65, hitboxye : 5, hitboxxouv : 22, blood_height : 0, landinglag : 8, blockstun : 10, blockx : 1.9, hiteffect : "fall", hitboxxeyscaling : -1, hitlag : 8, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "air", voiceline : "mmov", movx : 0});
-	raiden_coups.set("jskick",{slag : 8, fdur : 15, elag : 7, degats : 11, hitstun : 28, hurtx : 0.8, hurty : 0, hitboxxs : 10, hitboxxe : 56,hitboxys : -10, hitboxye : 20, hitboxxouv : 12, blood_height : 0, landinglag : 8, blockstun : 10, blockx : 1.3, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 8, hitsound : "mhit", blood : "lblood", damageonblock : 1, disponibility : "air", voiceline : "mmov", movx : 0});
+	raiden_coups.set("jskick",{slag : 8, fdur : 15, elag : 7, degats : 11, hitstun : 28, hurtx : 0.8, hurty : 0, hitboxxs : 10, hitboxxe : 56,hitboxys : -20, hitboxye : 20, hitboxxouv : 12, blood_height : 0, landinglag : 8, blockstun : 10, blockx : 1.3, hiteffect : "none", hitboxxeyscaling : 0.5, hitlag : 8, hitsound : "mhit", blood : "lblood", damageonblock : 1, disponibility : "air", voiceline : "mmov", movx : 0});
 	raiden_coups.set("jpunch",{slag : 6, fdur : 10, elag : 10, degats : 9, hitstun : 22, hurtx : 1.2, hurty : 0, hitboxxs : 40, hitboxxe : 59,hitboxys : -50, hitboxye : 10, hitboxxouv : 32, blood_height : 0, landinglag : 8, blockstun : 12, blockx : 1.9, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "air", voiceline : "mmov", movx : 0});
 	raiden_coups.set("grab",{slag : 5, fdur : 3, elag : 12, degats : 12, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 28,hitboxys : 0, hitboxye : -400, hitboxxouv : 15, blood_height : 0, blockstun : 12, blockx : 1.7, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0});
 	raiden_coups.set("teleport",{slag : 11, fdur : 0, elag : 12, degats : 0, hitstun : 0, hurtx : 0.9, hurty : 0, hitboxxs : 0, hitboxxe : 0,hitboxys : 0, hitboxye : -400, hitboxxouv : 15, blood_height : 0, blockstun : 12, blockx : 1.7, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0});
