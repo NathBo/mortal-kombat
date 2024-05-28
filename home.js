@@ -323,7 +323,6 @@ function main(){
 			var grade = new Map();
 			function aux(val,key,_){
 				grade.set(key,Math.random());
-				console.log(key);
 			}
 			me.charac.coups.forEach(aux);
 			this.grade=grade;
@@ -505,7 +504,7 @@ function main(){
 			if(other.charac.coups.has(other.mov) && other.movlag<=c.slag+c.fdur+c.elag-this.reaction_time && Math.abs(me.x-other.x)<=c.hitboxxe+mywidth/2 && other.movlag>=c.elag-1){
 				limiteup = other.movlag-2-other.charac.coups.get(other.mov).fdur - other.charac.coups.get(other.mov).elag;
 			}
-			if(other.mov == "thundergod" && Math.abs(me.x-other.x)<=120 && me.y==0){limiteup-=30;}
+			if(other.mov == "thundergod" && other.movlag<=c.slag+c.fdur+c.elag-this.reaction_time && Math.abs(me.x-other.x)<=120 && me.y==0){limiteup-=50;}
 			function aux(m){
 				var conviction = coups.get(m).slag;
 				conviction += (coups.get(m).hitboxys>=0)*thiis.enviedetaperenbas;
@@ -514,12 +513,11 @@ function main(){
 				if(other.y>0 && me.y==0){conviction-=thiis.enviedantiair;}
 				if(coups.get(m).slag<=other.hurted){conviction = -100+movpriority.get(m); conviction -= coups.get(m).degats/2;}
 				if(m=="huppercut" && other.y>0){conviction -= 0;}
-				if(me.y>0 && me.tb<0){conviction-=40;console.log(m,conviction,limiteup);}
+				if(me.y>0 && me.tb<0){conviction-=40;}
 				conviction += thiis.inconsistency*Math.random();
 				conviction-=thiis.grade.get(m);
-				console.log(m,thiis.grade.get(m));
 
-				if(conviction<=limiteup){movtodo = m;limiteup = conviction;console.log(m);}
+				if(conviction<=limiteup){movtodo = m;limiteup = conviction;}
 			}
 			moves.forEach(aux);
 			if(me.mov != ""){var stats = coups.get(me.mov)}
@@ -577,9 +575,7 @@ function main(){
 					this.pressbackward();
 					if(other.charac.coups.has(other.mov).hitboxys<0 && other.y==0){this.bas = 1;}
 				}
-				else if(other.mov == "thundergod" && Math.abs(me.x-other.x)<=110 && me.y==0){
-					this.pressbackward();
-				}
+				
 				else if(other.charac.coups.has(other.mov) && other.charac.coups.get(other.mov).hitboxye<=0 && Math.random()*20*difficulte<=this.wanttojump+5){
 					me.haut = 1;this.pressforward;
 				}
