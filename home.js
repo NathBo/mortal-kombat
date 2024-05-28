@@ -418,7 +418,7 @@ function main(){
 			for(let value of objects_to_loop.values()){
 				if(value.dangerous){
 					if(Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))<=value.stats.hitboxxe+30+this.me.charac.width/2 && this.me.y==0 && this.me.mov!="jumpsquat"){this.pressbackward();this.me.bas=1;return true;}
-					if(this.me.y==0 && (signe(this.me.x-value.x)==signe(value.vitesse)) && Math.abs(this.me.x-value.x)>=value.stats.hitboxxe+80+this.me.charac.width/2-this.wanttojump*6 && value.y+value.stats.hitboxye<=70){this.me.haut=1;this.pressforward(true);return true;}
+					if((this.me.y==0 && (signe(this.me.x-value.x)==signe(value.vitesse)) && Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))>=value.stats.hitboxxe+90+this.me.charac.width/2-this.wanttojump*6 && value.y+value.stats.hitboxye<=70) || this.me.mov=="jumpsquat"){this.me.haut=1;this.pressforward(true);return true;}
 				}
 			}
 			return false;
@@ -461,7 +461,7 @@ function main(){
 		ugothit(){
 			var me = this.me;
 			var other = this.other;
-			this.grade.set(me.mov,this.grade.get(me.mov)-3);
+			this.grade.set(me.mov,this.grade.get(me.mov)-8);
 			if(other.crouching&&me.charac.coups.has(me.mov) && me.charac.coups.get(me.mov).hitboxys>=0){this.enviedetaperenbas += 8;}
 			if(other.crouching){this.wanttojump+=1;}
 			if(me.y>0){this.wanttojump-=2;}
@@ -472,7 +472,7 @@ function main(){
 		ugotahit(){
 			var me = this.me;
 			var other = this.other;
-			this.grade.set(me.mov,this.grade.get(me.mov)+3);
+			this.grade.set(me.mov,this.grade.get(me.mov)+8);
 			this.enviedegrab = Math.max(this.enviedegrab-2,-10);
 			if(other.crouching&&me.charac.coups.has(me.mov) && me.charac.coups.get(me.mov).hitboxys>=0){this.enviedetaperenbas -= 8;}
 			if(me.y>0){this.wanttojump+=2;}
@@ -504,7 +504,7 @@ function main(){
 			if(other.charac.coups.has(other.mov) && other.movlag<=c.slag+c.fdur+c.elag-this.reaction_time && Math.abs(me.x-other.x)<=c.hitboxxe+mywidth/2 && other.movlag>=c.elag-1){
 				limiteup = other.movlag-2-other.charac.coups.get(other.mov).fdur - other.charac.coups.get(other.mov).elag;
 			}
-			if(other.mov == "thundergod" && other.movlag<=c.slag+c.fdur+c.elag-this.reaction_time && Math.abs(me.x-other.x)<=120 && me.y==0){limiteup-=50;}
+			if(other.mov == "thundergod" && other.movlag<=c.slag+c.fdur+c.elag-this.reaction_time && Math.abs(me.x-other.x)<=120 && me.y==0){limiteup= (Math.abs(me.x-other.x)-40)/6;}
 			function aux(m){
 				var conviction = coups.get(m).slag;
 				conviction += (coups.get(m).hitboxys>=0)*thiis.enviedetaperenbas;
@@ -583,7 +583,7 @@ function main(){
 			}
 
 			if(me.perso=="kitana" && me.y==0 && other.y>0 && me.crouching==0 && entre(Math.abs(me.x-other.x),100,150) && me.orientation*other.xspeed<=-2.5 && other.tb>0){this.begincoup("fanlift");}
-			if(Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-this.idealrange)<=me.charac.vitesse*2+other.movlag*3 && movpriority.get(me.mov)<70 && other.mov != "thundergod"){
+			if(Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-this.idealrange)<=me.charac.vitesse*2+other.movlag*3 && movpriority.get(me.mov)<70 && !(other.mov == "thundergod" || other.mov == "boltthrow" || other.mov == "fanthrow")){
 				if(me.perso=="kitana"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("fanthrow");}}
 				if(me.perso=="raiden"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("boltthrow");}}
 			}
@@ -824,6 +824,7 @@ function main(){
 						other.y=0;
 						play_sound_eff("fatal1");
 						this.special=2;
+						other.x = this.x + 39*this.orientation;
 						finishhim = 0;
 						other.invincibilite=1000;
 						fatalitywasdone = true;
@@ -949,6 +950,7 @@ function main(){
 
 					case "boltthrow":
 						var stats = this.charac.coups.get(this.mov);
+						this.crouching=0;
 						if(this.movlag==stats.elag){
 							add_to_objects_set(new Bolt(this.x+20*this.orientation,this.y+60,this.orientation,other,stats));
 						}
