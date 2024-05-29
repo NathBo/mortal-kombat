@@ -319,8 +319,10 @@ function main(){
 			this.wanttojump = 0-2*(other.perso=="raiden"); this.enviedantiair = 0;
 			this.optionssonoki = [1.25,0.2,0.35,0.5]; //crouch, stand block, crouch block, jump
 			this.chosenoptiononoki = 0;
+			this.eviterprochainprojo = true;
 			this.foptiononoki = 0;
 			this.lastmovehitby = "lpucnh";
+			this.wanttowavedash=false;
 			var grade = new Map();
 			function aux(val,key,_){
 				grade.set(key,Math.random()*5);
@@ -340,12 +342,14 @@ function main(){
 					this.optionssonoki[Math.floor(Math.random()*4)]+=1;
 					this.fduroptiononoki = 15;
 					this.reaction_time = 20;
+					this.chanceeviterprojo = 0.6;
+					this.distancetowavedash = 500;
 					break;
 				
 				case 1:
 					this.donothingchance = 0.5;
 					this.dontattackchance = 0.9;
-					this.agressivite = 0.005;
+					this.agressivite = 0.0005;
 					this.baserisk = 70+Math.floor(Math.random()*10);
 					this.inconsistency = 8;
 					this.cancelcombodelay = 3;
@@ -354,26 +358,30 @@ function main(){
 					this.optionssonoki[Math.floor(Math.random()*4)]+=1;
 					this.fduroptiononoki = 0;
 					this.reaction_time = 15;
+					this.chanceeviterprojo = 0.9;
+					this.distancetowavedash = 500;
 					break;
 
 				case 2:
 					this.donothingchance = 0;
 					this.dontattackchance = 0.4;
-					this.agressivite = 0.01+Math.random()*0.01;
+					this.agressivite = 0.001+Math.random()*0.0005;
 					this.baserisk = 60+Math.floor(Math.random()*10);
 					this.inconsistency = 8;
-					this.cancelcombodelay = 2;
+					this.cancelcombodelay = 3;
 					this.cancelnormaldelay = 6;
 					this.commitmentonwalk = 5;
 					this.optionssonoki[Math.floor(Math.random()*4)]+=0.8;
 					this.fduroptiononoki = 0;
 					this.reaction_time = 12;
+					this.chanceeviterprojo = 0.95;
+					this.distancetowavedash = 200;
 					break;
 
 				case 3:
 					this.donothingchance = 0;
 					this.dontattackchance = 0;
-					this.agressivite = 0.04;
+					this.agressivite = 0.004;
 					this.baserisk = 60;
 					this.inconsistency = 5;
 					this.cancelcombodelay = 1;
@@ -381,11 +389,13 @@ function main(){
 					this.commitmentonwalk = 3;
 					this.fduroptiononoki = 0;
 					this.reaction_time = 8;
+					this.chanceeviterprojo = 1;
+					this.distancetowavedash = 90;
 					break;
 				default:
 					this.donothingchance = 0;
 					this.dontattackchance = 0;
-					this.agressivite = 0.1;
+					this.agressivite = 0.01;
 					this.baserisk = 50;
 					this.inconsistency = 2;
 					this.cancelcombodelay = 1;
@@ -393,6 +403,8 @@ function main(){
 					this.commitmentonwalk = 1;
 					this.fduroptiononoki = 0;
 					this.reaction_time = 4;
+					this.chanceeviterprojo = 1;
+					this.distancetowavedash = 60;
 					break;
 			}
 		}
@@ -464,6 +476,7 @@ function main(){
 		ugothit(){
 			var me = this.me;
 			var other = this.other;
+			this.wanttowavedash=false;
 			this.grade.set(me.mov,this.grade.get(me.mov)-8);
 			this.lastmovehitby = other.mov;
 			if(other.crouching&&me.charac.coups.has(me.mov) && me.charac.coups.get(me.mov).hitboxys>=0){this.enviedetaperenbas += 8;}
@@ -471,6 +484,7 @@ function main(){
 			if(me.y>0){this.wanttojump-=2;}
 			if(other.y>0 && me.y==0){this.enviedantiair-=3;}
 			if(this.foptiononoki){this.optionssonoki[this.chosenoptiononoki]-=0.1}
+			this.eviterprochainprojo = (Math.random()<=this.chanceeviterprojo);
 		}
 
 		ugotahit(){
@@ -493,6 +507,12 @@ function main(){
 
 		ugothitorblockedaprojectile(){
 			this.agressivite+=0.005;
+		}
+
+		beginwavedash(){
+			this.me.haut=1;
+			this.wanttowavedash=true;
+			console.log("begin wavedash");
 		}
 
 		attack(moves){
@@ -540,7 +560,7 @@ function main(){
 			if(end_of_round_countdown || me.pv<=0){me.droite = 0;me.gauche = 0;me.bas = 0;return;}
 			if(this.hascommited){this.hascommited--;}
 			else{me.droite = 0;me.gauche = 0;}
-			if(this.eviterprojectiles()){return;}
+			if(this.eviterprochainprojo){if(this.eviterprojectiles()){return;}}
 			if(me.gettingup){
 				if(me.gettingup==1){this.chosenoptiononoki = getrandomwithcoeff(this.optionssonoki);this.foptiononoki = this.fduroptiononoki;}
 			}
@@ -566,11 +586,19 @@ function main(){
 				if(me.gettingup==0){this.foptiononoki--;}
 				return;
 			}
-			if(Math.random()<this.donothingchance){return;}
 			var other = this.other;
 			var c = other.charac.coups.get(other.mov);
+			if(this.wanttowavedash && me.y>0){
+				if(Math.abs(me.x-other.x)-this.idealrange>0){this.pressforward();}
+				else{this.pressbackward();}
+				me.bas=1; me.dodge=1;
+				this.wanttowavedash=false;
+				console.log("wavedash");
+				return;
+			}
+			if(Math.random()<this.donothingchance){return;}
 			me.bas = 0; me.haut = 0; me.poing = 0; me.jambe = 0; me.dodge = 0; me.special = 0;
-			this.attacking = minvalabs(this.attacking-1+Math.random()*2+this.agressivite+(other.hurted>0),10);
+			this.attacking = minvalabs(this.attacking-1+Math.random()*2+this.agressivite+(other.hurted>0)*0.2-(me.hurted>0)*0.2,10);
 			this.currisking = minvalabs(this.currisking-1+Math.random()*2,10);
 			if(Math.random()>this.dontattackchance){
 				var moves = this.movesinrange(me.orientation*(other.x-me.x));
@@ -599,6 +627,8 @@ function main(){
 
 			else if(me.perso=="raiden" && this.currisking>=0 && Math.abs(Math.abs(me.x-other.x-other.xspeed*10)-120)<=40 && me.y==0 && other.y>0 && me.crouching==0 && movpriority.get(me.mov)<70 && other.tb<0)
 				{this.begincoup("thundergod");}
+
+			else if(Math.abs(Math.abs(me.x-other.x)-this.idealrange)>=this.distancetowavedash){this.beginwavedash();}
 			
 			else if(this.attacking*this.rangescaling+Math.abs(me.x-other.x)>=this.idealrange){this.pressforward();}
 			else{this.pressbackward();}
