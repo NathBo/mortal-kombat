@@ -1329,7 +1329,7 @@ function main(){
 						break;
 				}
 			}
-			else if (this.y>0){
+			else if (this.y>0 && !is_in_charc_screen){
 				if(this.xspeed == 0){this.costume = "jump2";}
 				else{
 					
@@ -1399,7 +1399,7 @@ function main(){
 			}
 
 
-			this.drawLife();
+			if(!is_in_charc_screen){this.drawLife();}
 
 
 		
@@ -1620,6 +1620,9 @@ function main(){
 				if(roundwonsj1>=2 || roundwonsj2>=2){
 				roundwonsj1 = 0; roundwonsj2 = 0; camerax = 0;
 				persolocked = [0,0];
+				is_in_charc_screen = true;
+				reset_for_charac_screen(0);
+				reset_for_charac_screen(1);
 				setTimeout(menupersos,frame_delay);
 				return;
 				}
@@ -1650,6 +1653,11 @@ function main(){
 		if(slowmodur){slowmodur--;}
 		else{frame_delay = base_frame_delay;}
 		setTimeout(loop,frame_delay);
+	}
+
+	function reset_for_charac_screen(n){
+		if(n==0){j1.reinit(-210,60,liste_persos[persosovered[0]],0,0,j2,true);}
+		else{j2.reinit(210,60,liste_persos[persosovered[1]],1,0,j1,true);}
 	}
 
 	function menupersos(){
@@ -1705,21 +1713,21 @@ function main(){
 		}
 		if(j1.droite==1){
 			j1.droite=2;
-			if(!persolocked[0]){persosovered[0]=Math.min(liste_persos.length-1,persosovered[0]+1);}
-			else if(!secondplayerishuman){persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]+1);}
+			if(!persolocked[0]){persosovered[0]=Math.min(liste_persos.length-1,persosovered[0]+1);reset_for_charac_screen(0);}
+			else if(!secondplayerishuman){persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]+1);reset_for_charac_screen(1);}
 		}
 		if(j1.gauche==1){
 			j1.gauche=2;
-			if(!persolocked[0]){persosovered[0]=Math.max(0,persosovered[0]-1);}
-			else if(!secondplayerishuman){persosovered[1]=Math.min(0,persosovered[1]-1);}
+			if(!persolocked[0]){persosovered[0]=Math.max(0,persosovered[0]-1);reset_for_charac_screen(0);}
+			else if(!secondplayerishuman){persosovered[1]=Math.max(0,persosovered[1]-1);reset_for_charac_screen(1);}
 		}
 		if(j2.droite==1){
 			j2.droite=2;
-			if(!persolocked[1]){persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]+1);}
+			if(!persolocked[1]){persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]+1);reset_for_charac_screen(1);}
 		}
 		if(j2.gauche==1){
 			j2.gauche=2;
-			if(!persolocked[1]){persosovered[1]=Math.max(0,persosovered[1]-1);}
+			if(!persolocked[1]){persosovered[1]=Math.max(0,persosovered[1]-1);reset_for_charac_screen(1);}
 		}
 		if(j2.poing==1 && secondplayerishuman){
 			j2.poing=2;
@@ -1728,9 +1736,12 @@ function main(){
 		if(persolocked[0] && persolocked[1]){
 			persoschoisis = [liste_persos[persosovered[0]],liste_persos[persosovered[1]]]
 			reset_game();
+			is_in_charc_screen = false;
 			setTimeout(loop,frame_delay);
 			return;
 		}
+		j1.afficher(j2);
+		j2.afficher(j1);
 		setTimeout(menupersos,frame_delay);
 	}
 
@@ -1956,7 +1967,8 @@ function main(){
 	var persoschoisis = ["kitana","raiden"]; var persolocked = [0,0]; var persosovered = [0,0];
 	var musiqueon = true; var soundeffon = true; var introon = true; var timer = 0; var timer_init = 99*60;
 	var liste_persos = ["raiden","kitana"];
-	var chartimer = 0; var chartimercycle = 4; var difficultynames = ["Easy","Normal","Hard","Insane","Terminator"]
+	var chartimer = 0; var chartimercycle = 4; var difficultynames = ["Easy","Normal","Hard","Insane","Terminator"];
+	var is_in_charc_screen = true;
 
 
 	function shake_screen(frames,force){
@@ -2020,5 +2032,7 @@ function main(){
 	document.addEventListener("mousedown", clickEvent);
 	document.addEventListener("mouseup", unclickEvent);
 
+	reset_for_charac_screen(0);
+	reset_for_charac_screen(1);
 	menupersos();
 }
