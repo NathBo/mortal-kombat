@@ -1620,7 +1620,7 @@ function main(){
 				if(roundwonsj1>=2 || roundwonsj2>=2){
 				roundwonsj1 = 0; roundwonsj2 = 0; camerax = 0;
 				persolocked = [0,0];
-				setTimeout(menu,frame_delay);
+				setTimeout(menupersos,frame_delay);
 				return;
 				}
 			
@@ -1653,20 +1653,35 @@ function main(){
 	}
 
 	function menupersos(){
+		resizecanvas();
 		chartimer = (chartimer+1)%(chartimercycle*2);
 		ctx.fillStyle = "black";
 		ctx.fillRect(0,0,1024,576);
-		//ctx.font = "70px serif";
-		//ctx.fillStyle = "white";
-		//ctx.fillText("Kitana",380,100);
-		//ctx.fillText("Raiden",380,476);
-		//ctx.fillText("Player "+(playerentraindechoisir+1)+ " pick !",300,290);
 		ctx.scale(2.32,2.32);
 		ctx.drawImage(characterscreenpng,92,0);
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.scale(3,3);
 		for(var i=0;i<liste_persos.length;i++){
 			ctx.drawImage(characteristics.get(liste_persos[i]).icon,128+24*i,57);
+		}
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		ctx.scale(2,2);
+		ctx.drawImage(playericonpng,8,210);
+		if(secondplayerishuman){
+			ctx.drawImage(playericonpng,482,210);
+		}
+		else{
+			ctx.drawImage(boticonpng,482,210);
+			ctx.fillStyle = "white";
+			ctx.font = "18px serif";
+			ctx.fillText(difficultynames[difficulte],410,220);
+			ctx.fillText(" -   +",420,240);
+		}
+		if(click==1){
+			click=2;
+			if(entre(clickx,482/512,505/512) && entre(clicky,210/250,241/250)){secondplayerishuman = !secondplayerishuman}
+			if(!secondplayerishuman && entre(clickx,425/512,435/512) && entre(clicky,230/250,240/250)){difficulte = Math.max(difficulte-1,0)}
+			if(!secondplayerishuman && entre(clickx,444/512,454/512) && entre(clicky,230/250,240/250)){difficulte = Math.min(difficulte+1,difficultynames.length-1)}
 		}
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.scale(1,1);
@@ -1678,6 +1693,7 @@ function main(){
 			ctx.strokeStyle = "green";
 			ctx.strokeRect(384+72*persosovered[1],171,63,96);
 		}
+
 		
 		//ctx.font = "20px serif";
 		//ctx.fillText("1",415+72*persosovered[0],205);
@@ -1718,52 +1734,6 @@ function main(){
 		setTimeout(menupersos,frame_delay);
 	}
 
-	function menudifficulte(){
-		ctx.fillStyle = "black";
-		ctx.fillRect(0,0,1024,576);
-		ctx.font = "70px serif";
-		ctx.fillStyle = "white";
-		ctx.fillText("Easy",416,55);
-		ctx.fillText("Normal",390,160);
-		ctx.fillText("Hard",416,265);
-		ctx.fillText("Insane",390,370);
-		ctx.fillText("Terminator",350,475);
-		if(click==1){
-			click=2;
-			difficulte = Math.floor(clicky*5);
-			setTimeout(menupersos,frame_delay);
-			return;
-		}
-		setTimeout(menudifficulte,frame_delay);
-	}
-
-
-	function menu(){
-		resizecanvas();
-		ctx.fillStyle = "black";
-		ctx.fillRect(0,0,1024,576);
-		ctx.font = "100px serif";
-		ctx.fillStyle = "white";
-		ctx.fillText("Versus Battle",256,100);
-		ctx.fillText("AI Battle",350,476);
-		if(click==1){
-			click=2;
-			if(clicky<0.3){
-				secondplayerishuman = true;
-				reset_game();
-				playerentraindechoisir = 0;
-				setTimeout(menupersos,frame_delay);
-				return;
-			}
-			else if(clicky>0.7){
-				secondplayerishuman = false;
-				playerentraindechoisir = 0;
-				setTimeout(menudifficulte,frame_delay);
-				return;
-			}
-		}
-		setTimeout(menu,frame_delay);
-	}
 
 	var canvas = document.getElementById("canvas");
 	var ctx = canvas.getContext("2d");
@@ -1807,6 +1777,8 @@ function main(){
 	var characterscreenpng = new Image();characterscreenpng.src = 'ressource/stages/character_screen.png';
 	var raideniconpng=new Image();raideniconpng.src = 'ressource/icons/raiden.png';
 	var kitanaiconpng=new Image();kitanaiconpng.src = 'ressource/icons/kitana.png';
+	var boticonpng=new Image();boticonpng.src = 'ressource/icons/bot.png';
+	var playericonpng=new Image();playericonpng.src = 'ressource/icons/player.png';
 
 	var kitcoordinates = getkitcoordinates();
 	var raicoordinates = getraicoordinates();
@@ -1881,7 +1853,7 @@ function main(){
 	var fightwav = document.querySelector('#fightwav');
 
 	var musiques = [document.querySelector('#mkthemeremixwav')];
-	var secondplayerishuman = false;
+	var secondplayerishuman = true;
 	musiques[0].loop = true;
 	
 	musiques[0].play();
@@ -1978,13 +1950,13 @@ function main(){
 	var pause_after_vicpose = 20;
 	var cpt = 0; var objects_to_loop = new Map();
 	var click = 0;var clickx=0; var clicky = 0;
-	var difficulte = 0;
+	var difficulte = 1;
 	var roundwonsj1 = 0; var roundwonsj2 = 0;
 	var finishhim = 0; var fatalitywasdone = false; var fatalitysreen = 0;
 	var persoschoisis = ["kitana","raiden"]; var persolocked = [0,0]; var persosovered = [0,0];
 	var musiqueon = true; var soundeffon = true; var introon = true; var timer = 0; var timer_init = 99*60;
 	var liste_persos = ["raiden","kitana"];
-	var chartimer = 0; var chartimercycle = 4;
+	var chartimer = 0; var chartimercycle = 4; var difficultynames = ["Easy","Normal","Hard","Insane","Terminator"]
 
 
 	function shake_screen(frames,force){
@@ -2048,5 +2020,5 @@ function main(){
 	document.addEventListener("mousedown", clickEvent);
 	document.addEventListener("mouseup", unclickEvent);
 
-	menu();
+	menupersos();
 }
