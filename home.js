@@ -1619,6 +1619,7 @@ function main(){
 			else {
 				if(roundwonsj1>=2 || roundwonsj2>=2){
 				roundwonsj1 = 0; roundwonsj2 = 0; camerax = 0;
+				persolocked = [0,0];
 				setTimeout(menu,frame_delay);
 				return;
 				}
@@ -1652,25 +1653,67 @@ function main(){
 	}
 
 	function menupersos(){
+		chartimer = (chartimer+1)%(chartimercycle*2);
 		ctx.fillStyle = "black";
 		ctx.fillRect(0,0,1024,576);
-		ctx.font = "70px serif";
-		ctx.fillStyle = "white";
-		ctx.fillText("Kitana",380,100);
-		ctx.fillText("Raiden",380,476);
-		ctx.fillText("Player "+(playerentraindechoisir+1)+ " pick !",300,290);
-		if(click==1){
-			click=2;
-			if(clicky<=0.5){persoschoisis[playerentraindechoisir] = "kitana";}
-			else{persoschoisis[playerentraindechoisir] = "raiden";}
-			if(playerentraindechoisir==1){
-				reset_game();
-				setTimeout(loop,frame_delay);
-				return;
-			}
-			else{
-				playerentraindechoisir=1;
-			}
+		//ctx.font = "70px serif";
+		//ctx.fillStyle = "white";
+		//ctx.fillText("Kitana",380,100);
+		//ctx.fillText("Raiden",380,476);
+		//ctx.fillText("Player "+(playerentraindechoisir+1)+ " pick !",300,290);
+		ctx.scale(2.32,2.32);
+		ctx.drawImage(characterscreenpng,92,0);
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		ctx.scale(3,3);
+		for(var i=0;i<liste_persos.length;i++){
+			ctx.drawImage(characteristics.get(liste_persos[i]).icon,128+24*i,57);
+		}
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		ctx.scale(1,1);
+		if(chartimer<chartimercycle || persolocked[0]){
+			ctx.strokeStyle = "red";
+			ctx.strokeRect(384+72*persosovered[0],171,63,96);
+		}
+		if(chartimer>=chartimercycle || persolocked[1]){
+			ctx.strokeStyle = "green";
+			ctx.strokeRect(384+72*persosovered[1],171,63,96);
+		}
+		
+		//ctx.font = "20px serif";
+		//ctx.fillText("1",415+72*persosovered[0],205);
+		//ctx.fillText("2",415+72*persosovered[1],230);
+		if(j1.poing==1){
+			j1.poing=2;
+			if(!persolocked[0]){persolocked[0]=true;}
+			else if(!secondplayerishuman){persolocked[1]=true;}
+		}
+		if(j1.droite==1){
+			j1.droite=2;
+			if(!persolocked[0]){persosovered[0]=Math.min(liste_persos.length-1,persosovered[0]+1);}
+			else if(!secondplayerishuman){persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]+1);}
+		}
+		if(j1.gauche==1){
+			j1.gauche=2;
+			if(!persolocked[0]){persosovered[0]=Math.max(0,persosovered[0]-1);}
+			else if(!secondplayerishuman){persosovered[1]=Math.min(0,persosovered[1]-1);}
+		}
+		if(j2.droite==1){
+			j2.droite=2;
+			if(!persolocked[1]){persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]+1);}
+		}
+		if(j2.gauche==1){
+			j2.gauche=2;
+			if(!persolocked[1]){persosovered[1]=Math.max(0,persosovered[1]-1);}
+		}
+		if(j2.poing==1 && secondplayerishuman){
+			j2.poing=2;
+			persolocked[1]=true;
+		}
+		if(persolocked[0] && persolocked[1]){
+			persoschoisis = [liste_persos[persosovered[0]],liste_persos[persosovered[1]]]
+			reset_game();
+			setTimeout(loop,frame_delay);
+			return;
 		}
 		setTimeout(menupersos,frame_delay);
 	}
@@ -1761,6 +1804,9 @@ function main(){
 	var towergroundpng = new Image();towergroundpng.src = 'ressource/stages/towerground.png';
 	var towerbackgroundpng = new Image();towerbackgroundpng.src = 'ressource/stages/towerbackground.png';
 	var towerstructurepng = new Image();towerstructurepng.src = 'ressource/stages/towerstructure.png';
+	var characterscreenpng = new Image();characterscreenpng.src = 'ressource/stages/character_screen.png';
+	var raideniconpng=new Image();raideniconpng.src = 'ressource/icons/raiden.png';
+	var kitanaiconpng=new Image();kitanaiconpng.src = 'ressource/icons/kitana.png';
 
 	var kitcoordinates = getkitcoordinates();
 	var raicoordinates = getraicoordinates();
@@ -1848,11 +1894,11 @@ function main(){
 	}
 
 
-	characteristics.set("kitana",{png : kitskins,coordinates : kitcoordinates, sex : "f", standnframes : 5, rollspeed : 3, hkickstartnframe : 2,grabxdist : 34, grabydist : 36, stunnframes : 5,
+	characteristics.set("kitana",{png : kitskins,coordinates : kitcoordinates, sex : "f", standnframes : 5, rollspeed : 3, hkickstartnframe : 2,grabxdist : 34, grabydist : 36, stunnframes : 5, icon : kitanaiconpng,
 		width : 34, height : 97,vitesse : 3.2,jumpxspeed : 3.6,backmovnerf : 0.85, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2, hurtcontrol : 0.2,
 	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 32, grabfdur : 35, grabdeg : 13, vicposframes : 12, vicposfdur : 50, cds : [70,120,240,60], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,fanlifticonpng], voiceactor : "female"});
 
-	characteristics.set("raiden",{png : raiskins,coordinates : raicoordinates, sex : "m", standnframes : 8, rollspeed : 5, hkickstartnframe : 3,grabxdist : 32, grabydist : 38, stunnframes : 6,
+	characteristics.set("raiden",{png : raiskins,coordinates : raicoordinates, sex : "m", standnframes : 8, rollspeed : 5, hkickstartnframe : 3,grabxdist : 32, grabydist : 38, stunnframes : 6, icon : raideniconpng,
 		width : 36, height : 100,vitesse : 3,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.42, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.2,
 		airdrift : 0.14, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : raiden_coups, pv : 95, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 6, vicposfdur : 36, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male"});
 
@@ -1935,8 +1981,10 @@ function main(){
 	var difficulte = 0;
 	var roundwonsj1 = 0; var roundwonsj2 = 0;
 	var finishhim = 0; var fatalitywasdone = false; var fatalitysreen = 0;
-	var persoschoisis = ["kitana","raiden"]; var playerentraindechoisir = 0;
+	var persoschoisis = ["kitana","raiden"]; var persolocked = [0,0]; var persosovered = [0,0];
 	var musiqueon = true; var soundeffon = true; var introon = true; var timer = 0; var timer_init = 99*60;
+	var liste_persos = ["raiden","kitana"];
+	var chartimer = 0; var chartimercycle = 4;
 
 
 	function shake_screen(frames,force){
