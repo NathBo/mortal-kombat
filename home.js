@@ -1779,6 +1779,7 @@ function main(){
 			persolocked[1]=true;
 			characteristics.get(liste_persos[persosovered[1]]).namewav.currentTime=0;
 			characteristics.get(liste_persos[persosovered[1]]).namewav.play();
+			j2.vicpose=1;
 		}
 		if(j1.poing==1){
 			j1.poing=2;
@@ -1786,11 +1787,13 @@ function main(){
 				persolocked[0]=true;
 				characteristics.get(liste_persos[persosovered[0]]).namewav.currentTime=0;
 				characteristics.get(liste_persos[persosovered[0]]).namewav.play();
+				j1.vicpose=1;
 			}
 			else if(!secondplayerishuman && !persolocked[1]){
 				persolocked[1]=true;
 				characteristics.get(liste_persos[persosovered[1]]).namewav.currentTime=0;
 				characteristics.get(liste_persos[persosovered[1]]).namewav.play();
+				j2.vicpose=1;
 			}
 		}
 		if(persolocked[0] && persolocked[1]){
