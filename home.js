@@ -2,6 +2,11 @@ function entre(a,b,c){
 	return (a>=b && a<=c)
 }
 
+function distance(a,b){
+	if (a<b){return b-a;}
+	return a-b
+}
+
 function signe(a){
 	if(a<0){return -1}
 	else if(a==0){return 0}
@@ -513,7 +518,6 @@ function main(){
 		beginwavedash(){
 			this.me.haut=1;
 			this.wanttowavedash=true;
-			console.log("begin wavedash");
 		}
 
 		attack(moves){
@@ -594,7 +598,6 @@ function main(){
 				else{this.pressbackward();}
 				me.bas=1; me.dodge=1;
 				this.wanttowavedash=false;
-				console.log("wavedash");
 				return;
 			}
 			if(Math.random()<this.donothingchance){return;}
@@ -615,7 +618,7 @@ function main(){
 				}
 				
 				else if(other.charac.coups.has(other.mov) && other.charac.coups.get(other.mov).hitboxye<=0 && other.y==0 && Math.random()*20*difficulte<=this.wanttojump+5){
-					me.haut = 1;this.pressforward;console.log("jump");
+					me.haut = 1;this.pressforward;
 				}
 				if(Math.random()*100*(difficulte+1)<this.wanttojump+3){me.haut = 1;}
 			}
@@ -1081,7 +1084,7 @@ function main(){
 
 		hurt(other,stats){
 			if(other.mov=="thundergod"){other.movlag=1;other.tb=8;other.xspeed = -1;other.y=0.1;}
-			if(other.mov=="squarepunch"){other.movlag=1;other.tb=0;other.xspeed = -1;console.log("stop");}
+			if(other.mov=="squarepunch"){other.movlag=1;other.tb=0;other.xspeed = -1;}
 			if(this.invincibilite || end_of_round_countdown){return;}
 			if(other.mov=="thundergod"){other.y=0;}
 			if(this.n==1 && !secondplayerishuman && stats.hiteffect=="projectile"){this.ai.ugothitorblockedaprojectile();}
@@ -2183,4 +2186,106 @@ function main(){
 	reset_for_charac_screen(1);
 	var functiontoexecute = titlescreen;
 	globalloop();
+
+
+	const gamepads = new Map();
+
+		function gamepadHandler(event, connected) {
+  			const gamepad = event.gamepad;
+  			// Note:
+  			// gamepad === navigator.getGamepads()[gamepad.index]
+
+  			if (connected) {
+    			gamepads.set(gamepad.index,gamepad);
+  			} else {
+    			gamepads.delete(gamepad.index);
+  			}
+}
+		
+		
+window.addEventListener(
+	"gamepadconnected",
+	(e) => {
+	  gamepadHandler(e, true);
+	},
+	false,
+  );
+  window.addEventListener(
+	"gamepaddisconnected",
+	(e) => {
+	  gamepadHandler(e, false);
+	},
+	false,
+  );
+	function pressed(b){
+		if (typeof(b) == "object") {
+			return b.pressed;
+			}
+			return b == 1.0;
+	}
+	function bonstick(controls,a){
+		if(controls==a+"true"||controls==a+"false"){return 1;}
+		return 0
+	}
+
+	function buttonPressed(b) {
+		if (typeof(b) == "object") {
+			return b.pressed;
+		}
+		return b == 1.0;
+		}
+		
+		function gameLoop() {
+		var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+		if (!gamepads)
+			return;
+		
+		var gp = gamepads[0];
+
+		var i=0;
+		for (r=0;r<gp.buttons.length;r++){
+			if(controls[0]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.droite=0}else {if(j1.droite==0){j1.droite=1}}}
+			if(controls[1]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.gauche=0}else {if(j1.gauche==0){j1.gauche=1}}}
+			if(controls[2]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.haut=0}else {if(j1.haut==0){j1.haut=1}}}
+			if(controls[3]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.bas=0}else {if(j1.bas==0){j1.bas=1}}}
+			if(controls[4]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.poing=0}else {if(j1.poing==0){j1.poing=1}}}
+			if(controls[5]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.jambe=0}else {if(j1.jambe==0){j1.jambe=1}}}
+			if(controls[6]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.special=0}else {if(j1.special==0){j1.special=1}}}
+			if(controls[7]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.dodge=0}else {if(j1.dodge==0){j1.dodge=1}}}
+			if(controls[8]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.droite=0}else {if(j2.droite==0){j2.droite=1}}}
+			if(controls[9]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.gauche=0}else {if(j2.gauche==0){j2.gauche=1}}}
+			if(controls[10]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.haut=0}else {if(j2.haut==0){j2.haut=1}}}
+			if(controls[11]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.bas=0}else {if(j2.bas==0){j2.bas=1}}}
+			if(controls[12]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.poing=0}else {if(j2.poing==0){j2.poing=1}}}
+			if(controls[13]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.jambe=0}else {if(j2.jambe==0){j2.jambe=1}}}
+			if(controls[14]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.special=0}else {if(j2.special==0){j2.special=1}}}
+			if(controls[15]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.dodge=0}else {if(j2.dodge==0){j2.dodge=1}}}
+			if(buttonPressed(gp.buttons[r])){key=i.toString()+r.toString(20);}
+		}
+
+		for (r=0;r<gp.axes.length;r++){
+			var s=gp.axes[r];
+			if(distance(s,0)>0.5 && distance(s,0)<1.5){key="stick"+i.toString()+r.toString(20)+(s>=0.5).toString()}
+			if(bonstick(controls[0],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5||(s>0.5)!=(controls[0].substr(7,1)=="t")){j1.droite=0;}else {if(j1.droite==0&&(s>0.5)==(controls[0].substr(7,1)=="t")){j1.droite=1}}}
+			if(bonstick(controls[1],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5||(s>0.5)==(controls[0].substr(7,1)=="t")){j1.gauche=0}else {if(j1.gauche==0&&(s>0.5)==(controls[1].substr(7,1)=="t")){j1.gauche=1}}}
+			if(bonstick(controls[2],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5){j1.haut=0}else {if(j1.haut==0&&(s>0.5)==(controls[2].substr(7,1)=="t")){j1.haut=1}}}
+			if(bonstick(controls[3],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5){j1.bas=0}else {if(j1.bas==0&&(s>0.5)==(controls[3].substr(7,1)=="t")){j1.bas=1}}}
+			if(bonstick(controls[4],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5){j1.poing=0}else {if(j1.poing==0&&(s>0.5)==(controls[4].substr(7,1)=="t")){j1.poing=1}}}
+			if(bonstick(controls[5],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5){j1.jambe=0}else {if(j1.jambe==0&&(s>0.5)==(controls[5].substr(7,1)=="t")){j1.jambe=1}}}
+			if(bonstick(controls[6],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5){j1.special=0}else {if(j1.special==0&&(s>0.5)==(controls[6].substr(7,1)=="t")){j1.special=1}}}
+			if(bonstick(controls[7],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5||(s>0.5)!=(controls[0].substr(7,1)=="t")){j1.dodge=0}else {if(j1.dodge==0&&(s>0.5)==(controls[7].substr(7,1)=="t")){j1.dodge=1;}}}
+			if(bonstick(controls[8],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5||(s>0.5)!=(controls[8].substr(7,1)=="t")){j2.droite=0;}else {if(j2.droite==0&&(s>0.5)==(controls[8].substr(7,1)=="t")){j2.droite=1}}}
+			if(bonstick(controls[9],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5||(s>0.5)==(controls[8].substr(7,1)=="t")){j2.gauche=0}else {if(j2.gauche==0&&(s>0.5)==(controls[9].substr(7,1)=="t")){j2.gauche=1}}}
+			if(bonstick(controls[10],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5){j2.haut=0}else {if(j2.haut==0&&(s>0.5)==(controls[10].substr(7,1)=="t")){j2.haut=1}}}
+			if(bonstick(controls[11],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5){j2.bas=0}else {if(j2.bas==0&&(s>0.5)==(controls[11].substr(7,1)=="t")){j2.bas=1}}}
+			if(bonstick(controls[12],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5){j2.poing=0}else {if(j2.poing==0&&(s>0.5)==(controls[12].substr(7,1)=="t")){j2.poing=1}}}
+			if(bonstick(controls[13],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5){j2.jambe=0}else {if(j2.jambe==0&&(s>0.5)==(controls[13].substr(7,1)=="t")){j2.jambe=1}}}
+			if(bonstick(controls[14],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5){j2.special=0}else {if(j2.special==0&&(s>0.5)==(controls[14].substr(7,1)=="t")){j2.special=1}}}
+			if(bonstick(controls[15],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5||(s>0.5)!=(controls[0].substr(7,1)=="t")){j2.dodge=0}else {if(j2.dodge==0&&(s>0.5)==(controls[15].substr(7,1)=="t")){j2.dodge=1;}}}
+
+			
+		
+		}
+	}
+	var manetteshandleur=setInterval(gameLoop,16);
 }
