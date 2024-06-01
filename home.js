@@ -1646,7 +1646,7 @@ function main(){
 				reset_for_charac_screen(0);
 				reset_for_charac_screen(1);
 				lockincountdown=0;
-				setTimeout(menupersos,frame_delay);
+				functiontoexecute = menupersos;
 				return;
 				}
 			
@@ -1678,7 +1678,6 @@ function main(){
 		if(fightstartcountdown){fightstartcountdown--;}
 		if(slowmodur){slowmodur--;}
 		else{frame_delay = base_frame_delay;}
-		setTimeout(loop,frame_delay);
 	}
 
 	function reset_for_charac_screen(n){
@@ -1802,13 +1801,18 @@ function main(){
 				persoschoisis = [liste_persos[persosovered[0]],liste_persos[persosovered[1]]]
 				reset_game();
 				is_in_charc_screen = false;
-				setTimeout(loop,frame_delay);
+				functiontoexecute = loop;
 				return;
 			}
 		}
 		j1.afficher(j2);
 		j2.afficher(j1);
-		setTimeout(menupersos,frame_delay);
+		
+	}
+
+	function globalloop(){
+		setTimeout(globalloop,frame_delay);
+		functiontoexecute();
 	}
 
 
@@ -2106,5 +2110,6 @@ function main(){
 
 	reset_for_charac_screen(0);
 	reset_for_charac_screen(1);
-	menupersos();
+	var functiontoexecute = menupersos;
+	globalloop();
 }
