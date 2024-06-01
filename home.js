@@ -1690,9 +1690,9 @@ function main(){
 		chartimer = (chartimer+1)%(chartimercycle*2);
 		ctx.fillStyle = "black";
 		ctx.fillRect(0,0,1024,576);
-		ctx.scale(2.32,2.32);
+		//ctx.scale(2.32,2.32);
 		//ctx.drawImage(characterscreenpng,92,0);
-		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		//ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.scale(3,3);
 		for(var i=0;i<liste_persos.length;i++){
 			ctx.drawImage(characteristics.get(liste_persos[i]).icon,128+24*i,57);
@@ -1715,6 +1715,7 @@ function main(){
 			if(entre(clickx,482/512,505/512) && entre(clicky,210/250,241/250)){secondplayerishuman = !secondplayerishuman}
 			if(!secondplayerishuman && entre(clickx,425/512,435/512) && entre(clicky,230/250,240/250)){difficulte = Math.max(difficulte-1,0)}
 			if(!secondplayerishuman && entre(clickx,444/512,454/512) && entre(clicky,230/250,240/250)){difficulte = Math.min(difficulte+1,difficultynames.length-1)}
+			if(entre(clickx,400/1024,610/1024) && entre(clicky,450/500,480/500)){functiontoexecute = titlescreen;}
 		}
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.scale(1,1);
@@ -1805,9 +1806,78 @@ function main(){
 				return;
 			}
 		}
+		
 		j1.afficher(j2);
 		j2.afficher(j1);
-		
+		ctx.fillStyle = "white";
+		ctx.font = "30px serif";
+		ctx.fillText("Go to title screen",400,470);
+	}
+
+	function parameters_screen(){
+		resizecanvas();
+		ctx.fillStyle = "black";
+		ctx.fillRect(0,0,1024,576);
+		ctx.fillStyle = "white";
+		ctx.font = "30px serif";
+		ctx.fillText("Go to title screen",400,470);
+		ctx.fillText("Player1:",0,25);
+		ctx.fillText("Right",120,25);
+		ctx.fillText("Left",220,25);
+		ctx.fillText("Jump",320,25);
+		ctx.fillText("Down",420,25);
+		ctx.fillText("Punch",520,25);
+		ctx.fillText("Kick",620,25);
+		ctx.fillText("Special",720,25);
+		ctx.fillText("Grab",820,25);
+		ctx.fillText("Player2:",0,125);
+		ctx.fillText("Right",120,125);
+		ctx.fillText("Left",220,125);
+		ctx.fillText("Jump",320,125);
+		ctx.fillText("Down",420,125);
+		ctx.fillText("Punch",520,125);
+		ctx.fillText("Kick",620,125);
+		ctx.fillText("Special",720,125);
+		ctx.fillText("Grab",820,125);
+		if(controlafaire!=-1){
+			if(key!=""){
+				ctx.fillText(key,120+(controlafaire%8)*100,55+100*(controlafaire>=8));
+				controls[controlafaire]=key;key="";
+			}
+			else{
+				ctx.fillText(controls[controlafaire],120+(controlafaire%8)*100,55+100*(controlafaire>=8));
+			}
+		}
+		if(click==1){
+			click=2;
+			if(entre(clickx,400/1024,610/1024) && entre(clicky,450/500,480/500)){functiontoexecute = titlescreen;}
+			else if(entre(clickx,120/1024,920/1024)&&entre(clicky,10/500,40/500)){controlafaire=Math.floor((clickx-120/1024)/(100/1024));}
+			else if(entre(clickx,120/1024,920/1024)&&entre(clicky,110/500,140/500)){controlafaire=8+Math.floor((clickx-120/1024)/(100/1024));}
+		}
+	}
+
+	function titlescreen(){
+		resizecanvas();
+		ctx.fillStyle = "black";
+		ctx.fillRect(0,0,1024,576);
+		ctx.scale(2,2);
+		ctx.drawImage(logopng,150,20);
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		ctx.fillStyle = "yellow";
+		ctx.font = "40px serif";
+		ctx.fillText("Fight CPU",80,370);
+		ctx.fillStyle = "red";
+		ctx.fillText("Versus mode",380,370);
+		ctx.fillStyle = "white";
+		ctx.fillText("Parameters",740,370);
+		if(click==1){
+			click=2;
+			if(entre(clicky,340/500,380/500)){
+				if(entre(clickx,80/1024,260/1024)){functiontoexecute = menupersos;secondplayerishuman=false;}
+				else if(entre(clickx,380/1024,590/1024)){functiontoexecute = menupersos;secondplayerishuman=true;}
+				else if(entre(clickx,740/1024,920/1024)){functiontoexecute = parameters_screen;}
+			}
+		}
 	}
 
 	function globalloop(){
@@ -1861,6 +1931,7 @@ function main(){
 	var kitanaiconpng=new Image();kitanaiconpng.src = 'ressource/icons/kitana.png';
 	var boticonpng=new Image();boticonpng.src = 'ressource/icons/bot.png';
 	var playericonpng=new Image();playericonpng.src = 'ressource/icons/player.png';
+	var logopng=new Image();logopng.src = 'ressource/ui/logo.png';
 
 	var kitcoordinates = getkitcoordinates();
 	var raicoordinates = getraicoordinates();
@@ -1893,9 +1964,9 @@ function main(){
 	raiden_coups.set("hpunch",{slag : 14, fdur : 10, elag : 16, degats : 10, hitstun : 28, hurtx : 1.3, hurty : 0, hitboxxs : 11, hitboxxe : 49, hitboxys : 0, hitboxye : 82, hitboxxouv : 21, blood_height : 0, blockstun : 14, blockx : 2.5, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0});
 	raiden_coups.set("lkick",{slag : 8, fdur : 8, elag : 14, degats : 6, hitstun : 20, hurtx : 1.1, hurty : 0, hitboxxs : 18, hitboxxe : 54, hitboxys : 0, hitboxye : 40, hitboxxouv : 12, blood_height : -5, blockstun : 12, blockx : 1.7, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0});
 	raiden_coups.set("mkick",{slag : 16, fdur : 12, elag : 16, degats : 10, hitstun : 26, hurtx : 1.5, hurty : 0, hitboxxs : 18, hitboxxe : 51, hitboxys : 0, hitboxye : 98, hitboxxouv : 24, blood_height : 5, blockstun : 14, blockx : 2.5, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov"});
-	raiden_coups.set("hkick",{slag : 14, fdur : 8, elag : 24, degats : 16, hitstun : 38, hurtx : 3.5, hurty : 7, hitboxxs : 20, hitboxxe : 45, hitboxys : 0, hitboxye : 106, hitboxxouv : 30, blood_height : 8, blockstun : 16, blockx : 3.3, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 10, hitsound : "hhit", blood : "mblood", damageonblock : 1, disponibility : "stand", voiceline : "hmov", movx : 2});
+	raiden_coups.set("hkick",{slag : 14, fdur : 8, elag : 24, degats : 16, hitstun : 38, hurtx : 3.5, hurty : 7, hitboxxs : 20, hitboxxe : 48, hitboxys : 0, hitboxye : 106, hitboxxouv : 30, blood_height : 8, blockstun : 16, blockx : 3.3, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 10, hitsound : "hhit", blood : "mblood", damageonblock : 1, disponibility : "stand", voiceline : "hmov", movx : 2});
 	raiden_coups.set("clpunch",{slag : 7, fdur : 6, elag : 8, degats : 4, hitstun : 20, hurtx : 1, hurty : 0, hitboxxs : 10, hitboxxe : 42,hitboxys : -1, hitboxye : 20, hitboxxouv : 14, blood_height : 0, blockstun : 10, blockx : 1.3, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "crouch", voiceline : "lmov", movx : 0});
-	raiden_coups.set("huppercut",{slag : 12, fdur : 10, elag : 26, degats : 19, hitstun : 60, hurtx : 3.1, hurty : 11, hitboxxs : 20, hitboxxe : 46, hitboxys : 0, hitboxye : 120, hitboxxouv : 15, blood_height : 0, blockstun : 16, blockx : 2.5, hiteffect : "fall", hitboxxeyscaling : 0.25, hitlag : 12, hitsound : "hhit", blood : "mblood", damageonblock : 1, disponibility : "crouch", voiceline : "hmov", movx : 0});
+	raiden_coups.set("huppercut",{slag : 12, fdur : 10, elag : 28, degats : 19, hitstun : 60, hurtx : 3.1, hurty : 11, hitboxxs : 20, hitboxxe : 46, hitboxys : 0, hitboxye : 120, hitboxxouv : 15, blood_height : 0, blockstun : 16, blockx : 2.5, hiteffect : "fall", hitboxxeyscaling : 0.25, hitlag : 12, hitsound : "hhit", blood : "mblood", damageonblock : 1, disponibility : "crouch", voiceline : "hmov", movx : 0});
 	raiden_coups.set("clkick",{slag : 6, fdur : 6, elag : 8, degats : 6, hitstun : 20, hurtx : 1, hurty : 0, hitboxxs : 10, hitboxxe : 45,hitboxys : -45, hitboxye : -60, hitboxxouv : 14, blood_height : 0, blockstun : 10, blockx : 0.8, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "crouch", voiceline : "lmov", movx : 0});
 	raiden_coups.set("cmkick",{slag : 8, fdur : 6, elag : 12, degats : 8, hitstun : 22, hurtx : 1, hurty : 0, hitboxxs : 10, hitboxxe : 45,hitboxys : -1, hitboxye : -20, hitboxxouv : 22, blood_height : 0, blockstun : 12, blockx : 1.9, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit", blood : "lblood", damageonblock : 1, disponibility : "crouch", voiceline : "lmov", movx : 0});
 	raiden_coups.set("jkick",{slag : 10, fdur : 25, elag : 4, degats : 10, hitstun : 35, hurtx : 3.4, hurty : 5, hitboxxs : 0, hitboxxe : 56,hitboxys : -65, hitboxye : 5, hitboxxouv : 22, blood_height : 0, landinglag : 8, blockstun : 10, blockx : 2.3, hiteffect : "fall", hitboxxeyscaling : -1, hitlag : 8, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "air", voiceline : "mmov", movx : 0});
@@ -2044,7 +2115,7 @@ function main(){
 	var musiqueon = true; var soundeffon = true; var introon = true; var timer = 0; var timer_init = 99*60;
 	var liste_persos = ["raiden","kitana"];
 	var chartimer = 0; var chartimercycle = 3; var difficultynames = ["Easy","Normal","Hard","Insane","Terminator"];
-	var is_in_charc_screen = true; var lockincountdown = 0; var lockincountdownfdur = 40;
+	var is_in_charc_screen = true; var lockincountdown = 0; var lockincountdownfdur = 40; var controlafaire = -1; var key = "";
 
 
 	function shake_screen(frames,force){
@@ -2110,6 +2181,6 @@ function main(){
 
 	reset_for_charac_screen(0);
 	reset_for_charac_screen(1);
-	var functiontoexecute = menupersos;
+	var functiontoexecute = titlescreen;
 	globalloop();
 }
