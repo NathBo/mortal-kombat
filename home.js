@@ -1378,7 +1378,8 @@ function main(){
 			}
 			else{this.standing=0;
 				if(this.forward>=1 || this.back>=1){
-					if(this.forward>=1){this.walking=(this.walking+1)%40;}else{this.walking=(this.walking+31)%32;}
+					var a = 5*this.charac.walknframes;
+					if(this.forward>=1){this.walking=(this.walking+1)%a;}else{this.walking=(this.walking+a-1)%a;}
 					if(this.walking<5){this.costume="walk1"}
 					else if(this.walking<10){this.costume="walk2"}
 					else if(this.walking<15){this.costume="walk3"}
@@ -1386,7 +1387,9 @@ function main(){
 					else if(this.walking<25){this.costume="walk5"}
 					else if(this.walking<30){this.costume="walk6"}
 					else if(this.walking<35){this.costume="walk7"}
-					else {this.costume="walk8"}
+					else if(this.walking<40){this.costume="walk8"}
+					else {this.costume="walk9"}
+					//alert(this.costume);
 				}
 			}
 
@@ -1463,7 +1466,7 @@ function main(){
 		}
 
 		declencher_vicpose(){
-			if(this.pv>0&&end_of_round_countdown==pause_after_vicpose+this.charac.vicposfdur){this.vicpose = 1;}
+			if(this.pv>0&&end_of_round_countdown==pause_after_vicpose+Math.max(this.charac.vicposfdur,35)){this.vicpose = 1;}
 		}
 
 		decapitate(){
@@ -1949,18 +1952,18 @@ function main(){
 
 	var roundswav = [document.querySelector('#round1wav'),document.querySelector('#round2wav'),document.querySelector('#round3wav')];
 
-	characteristics.set("kitana",{png : kitskins,coordinates : kitcoordinates, sex : "f", standnframes : 5, rollspeed : 3, hkickstartnframe : 2,grabxdist : 34, grabydist : 36, stunnframes : 5, icon : kitanaiconpng, namewav : document.querySelector('#kitanawav'),
+	characteristics.set("kitana",{png : kitskins,coordinates : kitcoordinates, sex : "f", standnframes : 5, rollspeed : 3, hkickstartnframe : 2,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : kitanaiconpng, namewav : document.querySelector('#kitanawav'),
 	width : 34, height : 97,vitesse : 3.2,jumpxspeed : 3.6,backmovnerf : 0.85, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2, hurtcontrol : 0.2,
 	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 32, grabfdur : 35, grabdeg : 13, vicposframes : 12, vicposfdur : 50, cds : [70,120,240,240], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,squarepunchiconpng], voiceactor : "female"});
 
-	characteristics.set("raiden",{png : raiskins,coordinates : raicoordinates, sex : "m", standnframes : 8, rollspeed : 5, hkickstartnframe : 3,grabxdist : 32, grabydist : 38, stunnframes : 6, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
+	characteristics.set("raiden",{png : raiskins,coordinates : raicoordinates, sex : "m", standnframes : 8, rollspeed : 5, hkickstartnframe : 3,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 8, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
 	width : 36, height : 107,vitesse : 3,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.42, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.2,
 	airdrift : 0.14, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : raiden_coups, pv : 95, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 6, vicposfdur : 36, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male"});
 
 
-	characteristics.set("scorpion",{png : scoskins,coordinates : scocoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3,grabxdist : 32, grabydist : 38, stunnframes : 6, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
-	width : 40, height : 103,vitesse : 3,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.42, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.2,
-	airdrift : 0.14, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : raiden_coups, pv : 95, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 2, vicposfdur : 12, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male"});
+	characteristics.set("scorpion",{png : scoskins,coordinates : scocoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 9, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
+	width : 40, height : 103,vitesse : 2.9,jumpxspeed : 3.5,backmovnerf : 0.9, gravity : 0.41, jumpforce : 9,jumpsquat : 4, shorthop : 5.2, friction:0.21, hurtcontrol : 0.2,
+	airdrift : 0.15, airmaxspeed : 1.8, airdodgespeed : 5.6, airdodgefdur : 14, landinglag : 6,coups : raiden_coups, pv : 95, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 2, vicposfdur : 12, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male"});
 
 
 
