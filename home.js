@@ -1951,11 +1951,16 @@ function main(){
 
 	characteristics.set("kitana",{png : kitskins,coordinates : kitcoordinates, sex : "f", standnframes : 5, rollspeed : 3, hkickstartnframe : 2,grabxdist : 34, grabydist : 36, stunnframes : 5, icon : kitanaiconpng, namewav : document.querySelector('#kitanawav'),
 	width : 34, height : 97,vitesse : 3.2,jumpxspeed : 3.6,backmovnerf : 0.85, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2, hurtcontrol : 0.2,
-airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 32, grabfdur : 35, grabdeg : 13, vicposframes : 12, vicposfdur : 50, cds : [70,120,240,240], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,squarepunchiconpng], voiceactor : "female"});
+	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 32, grabfdur : 35, grabdeg : 13, vicposframes : 12, vicposfdur : 50, cds : [70,120,240,240], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,squarepunchiconpng], voiceactor : "female"});
 
-characteristics.set("raiden",{png : raiskins,coordinates : raicoordinates, sex : "m", standnframes : 8, rollspeed : 5, hkickstartnframe : 3,grabxdist : 32, grabydist : 38, stunnframes : 6, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
-	width : 36, height : 100,vitesse : 3,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.42, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.2,
+	characteristics.set("raiden",{png : raiskins,coordinates : raicoordinates, sex : "m", standnframes : 8, rollspeed : 5, hkickstartnframe : 3,grabxdist : 32, grabydist : 38, stunnframes : 6, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
+	width : 36, height : 107,vitesse : 3,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.42, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.2,
 	airdrift : 0.14, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : raiden_coups, pv : 95, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 6, vicposfdur : 36, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male"});
+
+
+	characteristics.set("scorpion",{png : scoskins,coordinates : scocoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3,grabxdist : 32, grabydist : 38, stunnframes : 6, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
+	width : 40, height : 103,vitesse : 3,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.42, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.2,
+	airdrift : 0.14, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : raiden_coups, pv : 95, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 2, vicposfdur : 12, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male"});
 
 
 
@@ -1980,7 +1985,7 @@ characteristics.set("raiden",{png : raiskins,coordinates : raicoordinates, sex :
 	var finishhim = 0; var fatalitywasdone = false; var fatalitysreen = 0;
 	var persoschoisis = ["kitana","raiden"]; var persolocked = [0,0]; var persosovered = [0,0];
 	var musiqueon = true; var soundeffon = true; var introon = true; var timer = 0; var timer_init = 99*60;
-	var liste_persos = ["raiden","kitana"];
+	var liste_persos = ["raiden","kitana","scorpion"];
 	var chartimer = 0; var chartimercycle = 3; var difficultynames = ["Easy","Normal","Hard","Insane","Terminator"];
 	var is_in_charc_screen = true; var lockincountdown = 0; var lockincountdownfdur = 40; var controlafaire = -1; var key = "";
 

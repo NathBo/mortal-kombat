@@ -44,7 +44,7 @@ var characteristics = new Map();
 
 
 
-        var movpriority = new Map(); 	//you can cancel a mov by a mov of priority stritcly superior
+    var movpriority = new Map(); 	//you can cancel a mov by a mov of priority stritcly superior
 	movpriority.set("",0);
 	movpriority.set("forward_dash",10);
 	movpriority.set("back_dash",10);

@@ -6,6 +6,9 @@ var lifebarpng=new Image();lifebarpng.src = 'ressource/ui/barlife.png';
 	var raipng = new Image();raipng.src = 'ressource/characters/raiden.png';
 	var rai2png = new Image();rai2png.src = 'ressource/characters/raiden2.png';
 	var raiskins = [raipng,rai2png];
+    var scopng = new Image();scopng.src = 'ressource/characters/scorpion.png';
+	var sco2png = new Image();sco2png.src = 'ressource/characters/scorpion2.png';
+    var scoskins = [scopng,sco2png];
 
 	var fanpng=new Image();fanpng.src = 'ressource/characters/fan.png';
 	var fatalitypng=new Image();fatalitypng.src = 'ressource/icons/fatality.png';
@@ -38,6 +41,7 @@ var lifebarpng=new Image();lifebarpng.src = 'ressource/ui/barlife.png';
 
     var kitcoordinates = getkitcoordinates();
 	var raicoordinates = getraicoordinates();
+    var scocoordinates = getscocoordinates();
 
 	var bloodcoordinates = getbloodcoordinates();
 
