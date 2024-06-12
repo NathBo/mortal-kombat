@@ -738,16 +738,31 @@ function main(){
 				if(this.grabbing==this.charac.grabfdur){this.end_grab(other);}
 				else if(this.grabbing == Math.floor(this.charac.grabfdur*5/7)){
 					other.grabbed=0;
-					other.falling=1;
-					other.y = 0;
-					other.hurted = 15;
-					other.x = this.x - this.orientation*(this.charac.width+other.charac.width)/1.4;
-					other.xspeed = -0.2*this.orientation;
-					lag_game(8);
-					shake_screen(10,3);
-					play_sound_eff("mhit");
-					other.pv -= this.charac.grabdeg;
-					if(other.pv<=0){other.killanim();}
+					other.falling=10;
+					if(this.perso=="scorpion"){
+						var stats = this.charac.coups.get("grab");
+						other.y = 30;
+						other.hurted = stats.hitstun;
+						other.xspeed = -stats.hurtx*this.orientation;
+						other.tb = stats.hurty;
+						//play_sound_eff("mhit");
+						other.pv -= this.charac.grabdeg;
+						//other.orientation*=-1;
+						if(other.pv<=0){other.killanim();}
+						this.falling=1;
+						this.hurted=1;
+					}
+					else{
+						other.y = 0;
+						other.hurted = 15;
+						other.x = this.x - this.orientation*(this.charac.width+other.charac.width)/1.4;
+						other.xspeed = -0.2*this.orientation;
+						lag_game(8);
+						shake_screen(10,3);
+						play_sound_eff("mhit");
+						other.pv -= this.charac.grabdeg;
+						if(other.pv<=0){other.killanim();}
+					}
 				}
 				return;
 			}
@@ -1308,7 +1323,7 @@ function main(){
 					case "fanlift" :
 					case "elecgrab" :
 						var stats = this.charac.coups.get(this.mov);
-						if(entre(this.movlag,stats.slag,stats.slag+stats.fdur)){this.costume = this.mov+"2"}
+						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.costume = this.mov+"2"}
 						else{this.costume = this.mov+"1";}
 						break;
 
@@ -1402,11 +1417,15 @@ function main(){
 			}
 
 			if(other.grabbed && this.grabbed==0){
+				var angletot = Math.PI;
+				if(this.perso=="scorpion"){
+					angletot = Math.PI*1/2;
+				}
 				if(this.grabbing<=this.charac.grabfdur*1/7){var othercost = "grabbed1";}
 				else if(this.grabbing<=this.charac.grabfdur*2/7){var othercost = "grabbed2";}
 				else if(this.grabbing<=this.charac.grabfdur*3/7){var othercost = "grabbed3";}
 				else {var othercost = "grabbed4";}
-				var angle = this.grabbing*7/5/this.charac.grabfdur*Math.PI;
+				var angle = this.grabbing*7/5/this.charac.grabfdur*angletot;
 				var x = this.orientation*this.charac.grabxdist*Math.cos(angle)+this.x;
 				var y = this.charac.grabydist*Math.sin(angle)+this.y;
 				other.x = x;		//pour la camera
@@ -1971,7 +1990,7 @@ function main(){
 
 	characteristics.set("scorpion",{png : scoskins,coordinates : scocoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
 	width : 40, height : 103,vitesse : 2.9,jumpxspeed : 3.5,backmovnerf : 0.9, gravity : 0.41, jumpforce : 9,jumpsquat : 4, shorthop : 5.2, friction:0.21, hurtcontrol : 0.2,
-	airdrift : 0.15, airmaxspeed : 1.8, airdodgespeed : 5.6, airdodgefdur : 14, landinglag : 6,coups : scorpion_coups, pv : 95, getupfdur : 36, grabfdur : 35, grabdeg : 12, vicposframes : 2, vicposfdur : 12, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male"});
+	airdrift : 0.15, airmaxspeed : 1.8, airdodgespeed : 5.6, airdodgefdur : 14, landinglag : 6,coups : scorpion_coups, pv : 95, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 12, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male"});
 
 
 
