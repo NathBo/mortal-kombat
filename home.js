@@ -1272,25 +1272,32 @@ function main(){
 
 					case "lkick" :
 					case "mkick" :
+						var nframes = this.charac.kicknframe;
 						var stats = this.charac.coups.get(this.mov);
-						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.costume = this.mov+"5"}
-						else if(entre(this.movlag,0,stats.elag/4)||entre(this.movlag,stats.elag+stats.fdur+3*stats.slag/4,stats.elag+stats.fdur+stats.slag)){this.costume = this.mov+"1"}
-						else if(entre(this.movlag,0,stats.elag/2)||entre(this.movlag,stats.elag+stats.fdur+stats.slag/2,stats.elag+stats.fdur+stats.slag)){this.costume = this.mov+"2"}
-						else if(entre(this.movlag,0,3*stats.elag/4)||entre(this.movlag,stats.elag+stats.fdur+stats.slag/4,stats.elag+stats.fdur+stats.slag)){this.costume = this.mov+"3"}
-						else{this.costume = this.mov+"4";}
+						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.costume = this.mov+nframes.toString()}
+						else if (this.movlag<stats.elag){
+							var a = Math.floor(this.movlag/stats.elag*(nframes-1))+1;
+							this.costume = this.mov+a.toString();
+						}
+						else{
+							var a = nframes-1-Math.floor((this.movlag-stats.elag-stats.fdur)/stats.slag*(nframes-1));
+							this.costume = this.mov+a.toString();
+						}
 						break;
 
 					case "hkick" :
 						var stats = this.charac.coups.get(this.mov);
 						var n = this.charac.hkickstartnframe;
+						var nframes = this.charac.hkickendnframe;
 						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.costume = this.mov+(n+1)}
 						else if(this.movlag>=stats.elag+stats.fdur){
 							var a = n-Math.floor(((this.movlag-(stats.elag+stats.fdur))/stats.slag)*n)
-							this.costume = this.mov+a
+							this.costume = this.mov+a;
 						}
-						else if(this.movlag>=stats.elag*2/3){this.costume = this.mov+(n+2)}
-						else if(this.movlag>=stats.elag/3){this.costume = this.mov+(n+3)}
-						else {this.costume = this.mov+(n+4)}
+						else{
+							var a = nframes+n+1-Math.floor(this.movlag/stats.elag*(nframes));
+							this.costume = this.mov+a;
+						}
 						break;
 
 					case "clpunch" :
@@ -1953,18 +1960,18 @@ function main(){
 
 	var roundswav = [document.querySelector('#round1wav'),document.querySelector('#round2wav'),document.querySelector('#round3wav')];
 
-	characteristics.set("kitana",{png : kitskins,coordinates : kitcoordinates, sex : "f", standnframes : 5, rollspeed : 3, hkickstartnframe : 2,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : kitanaiconpng, namewav : document.querySelector('#kitanawav'),
+	characteristics.set("kitana",{png : kitskins,coordinates : kitcoordinates, sex : "f", standnframes : 5, rollspeed : 3, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : kitanaiconpng, namewav : document.querySelector('#kitanawav'),
 	width : 34, height : 97,vitesse : 3.2,jumpxspeed : 3.6,backmovnerf : 0.85, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2, hurtcontrol : 0.2,
 	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 32, grabfdur : 35, grabdeg : 13, vicposframes : 12, vicposfdur : 50, cds : [70,120,240,240], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,squarepunchiconpng], voiceactor : "female"});
 
-	characteristics.set("raiden",{png : raiskins,coordinates : raicoordinates, sex : "m", standnframes : 8, rollspeed : 5, hkickstartnframe : 3,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 8, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
+	characteristics.set("raiden",{png : raiskins,coordinates : raicoordinates, sex : "m", standnframes : 8, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 3, kicknframe : 5,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 8, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
 	width : 36, height : 107,vitesse : 3,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.42, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.2,
 	airdrift : 0.14, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : raiden_coups, pv : 95, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 6, vicposfdur : 36, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male"});
 
 
-	characteristics.set("scorpion",{png : scoskins,coordinates : scocoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3,grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
+	characteristics.set("scorpion",{png : scoskins,coordinates : scocoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
 	width : 40, height : 103,vitesse : 2.9,jumpxspeed : 3.5,backmovnerf : 0.9, gravity : 0.41, jumpforce : 9,jumpsquat : 4, shorthop : 5.2, friction:0.21, hurtcontrol : 0.2,
-	airdrift : 0.15, airmaxspeed : 1.8, airdodgespeed : 5.6, airdodgefdur : 14, landinglag : 6,coups : raiden_coups, pv : 95, getupfdur : 36, grabfdur : 35, grabdeg : 12, vicposframes : 2, vicposfdur : 12, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male"});
+	airdrift : 0.15, airmaxspeed : 1.8, airdodgespeed : 5.6, airdodgefdur : 14, landinglag : 6,coups : scorpion_coups, pv : 95, getupfdur : 36, grabfdur : 35, grabdeg : 12, vicposframes : 2, vicposfdur : 12, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male"});
 
 
 
