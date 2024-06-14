@@ -624,13 +624,16 @@ function main(){
 			}
 
 			if(me.perso=="kitana" && me.y==0 && other.y>0 && me.crouching==0 && entre(Math.abs(me.x-other.x),100,150) && me.orientation*other.xspeed<=-2.5 && other.tb>0){this.begincoup("fanlift");}
-			if(Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-this.idealrange)<=me.charac.vitesse*2+other.movlag*3 && movpriority.get(me.mov)<70 && !(other.mov == "thundergod" || other.mov == "boltthrow" || other.mov == "fanthrow")){
+			if(Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-this.idealrange)<=me.charac.vitesse*2+other.movlag*3 && movpriority.get(me.mov)<70 && !(other.mov == "thundergod" || other.mov == "boltthrow" || other.mov == "fanthrow" || other.mov=="hell_gates")){
 				if(me.perso=="kitana"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("fanthrow");}}
 				if(me.perso=="raiden"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("boltthrow");}}
 			}
 
 			else if(me.perso=="raiden" && this.currisking>=0 && Math.abs(Math.abs(me.x-other.x-other.xspeed*10)-120)<=40 && me.y==0 && other.y>0 && me.crouching==0 && movpriority.get(me.mov)<70 && other.tb<0)
 				{this.begincoup("thundergod");}
+
+			else if(me.perso=="scorpion" && this.currisking>=0 && Math.abs(me.x-other.x-other.xspeed*10)>=80 && me.y==0 && me.crouching==0 && movpriority.get(me.mov)<70 && other.tb<=0)
+				{this.begincoup("hell_gates");}
 
 			else if(Math.abs(Math.abs(me.x-other.x)-this.idealrange)>=this.distancetowavedash){this.beginwavedash();}
 			
@@ -675,6 +678,7 @@ function main(){
 			if(s == "jkick"){if(this.x<other.x){this.orientation = 1;}else{this.orientation = -1;}}
 			var cd = cd_dependance.get(s);
 			if(this.cooldowns[cd]){return;}
+			if(s == "hell_gates"){this.orientation*=-1;}
 			if(movpriority.get(s)==70 && movpriority.get(this.mov)>=70){return;}
 			play_sound_eff(this.charac.voiceactor+stats.voiceline);
 			this.cooldowns[cd] = this.charac.cds[cd];
@@ -920,6 +924,10 @@ function main(){
 						this.begincoup("elecgrab",other);
 						this.special = 2;
 					}
+					else if(this.perso == "scorpion" && this.back>=1 && this.special==1 && this.bas==0 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[2]==0 && this.crouching==0){
+						this.begincoup("hell_gates",other);
+						this.special = 2;
+					}
 					else if(this.forward>=1&&movpriority.get(this.mov)<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
 						this.x+=this.charac.vitesse*this.orientation;this.xspeed = 0;
 						let d = (this.charac.width+other.charac.width)/3;
@@ -1031,6 +1039,17 @@ function main(){
 						if(this.movlag<=stats.elag+stats.fdur){this.x += 6*this.orientation;if(this.movlag==2){this.movlag++;}}
 						if(Math.abs(this.x-camerax)>decalagex-this.charac.width/2){this.movlag=0;this.mov="";this.tb=7;this.xspeed = -this.orientation;this.y=0.1;}
 						break;
+					case "hell_gates":
+						var stats = this.charac.coups.get(this.mov);
+						if(this.movlag==stats.elag+stats.fdur){this.tb=6;this.y+=1;fixcamera=30;}
+						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.xspeed=9*this.orientation;}
+						if(Math.abs(this.x+this.xspeed-camerax)>decalagex-this.charac.width/2){
+							this.x += 2*decalagex*signe(camerax-this.x);
+							this.mov = "";this.movlag=0;
+							if(this.jambe==1){this.mov= "jkick";this.movlag=29;}
+							this.xspeed = 7*this.orientation;
+						}
+						break;
 				}
 				this.movlag--;
 				if(this.movlag == 0){
@@ -1098,6 +1117,7 @@ function main(){
 		}
 
 		hurt(other,stats){
+			if(stats.hiteffect==""){return;}
 			if(other.mov=="thundergod"){other.movlag=1;other.tb=8;other.xspeed = -1;other.y=0.1;}
 			if(other.mov=="squarepunch"){other.movlag=1;other.tb=0;other.xspeed = -1;}
 			if(this.invincibilite || end_of_round_countdown){return;}
@@ -1375,6 +1395,10 @@ function main(){
 						else if(entre(this.movlag,stats.elag+stats.fdur,stats.elag+stats.fdur+2)){this.costume = "jpunch1";}
 						else{this.costume = "jump2";}
 						break;
+
+					case "hell_gates" :
+						var stats = this.charac.coups.get(this.mov);
+						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.costume="jump2"}
 				}
 			}
 			else if (this.y>0 && !is_in_charc_screen){
@@ -1543,8 +1567,11 @@ function main(){
 		ctx.fillStyle = "black";
 		ctx.fillRect(0,0,1024,576);
 		var idealcamerax = (j1.x+j2.x)/2;
-		if(Math.abs(camerax-idealcamerax)<=vitcamera){camerax = idealcamerax;}
-		else{camerax+=signe(idealcamerax-camerax)*vitcamera;}
+		if(fixcamera){fixcamera--;}
+		else{
+			if(Math.abs(camerax-idealcamerax)<=vitcamera){camerax = idealcamerax;}
+			else{camerax+=signe(idealcamerax-camerax)*vitcamera;}
+		}
 		let m = stage_size/2-256;
 		if(camerax<-m){camerax=-m}
 		if(camerax>m){camerax=m}
@@ -1990,7 +2017,7 @@ function main(){
 
 	characteristics.set("scorpion",{png : scoskins,coordinates : scocoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
 	width : 40, height : 103,vitesse : 2.9,jumpxspeed : 3.5,backmovnerf : 0.9, gravity : 0.41, jumpforce : 9,jumpsquat : 4, shorthop : 5.2, friction:0.21, hurtcontrol : 0.2,
-	airdrift : 0.15, airmaxspeed : 1.8, airdodgespeed : 5.6, airdodgefdur : 14, landinglag : 6,coups : scorpion_coups, pv : 95, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 12, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male"});
+	airdrift : 0.15, airmaxspeed : 1.8, airdodgespeed : 5.6, airdodgefdur : 14, landinglag : 6,coups : scorpion_coups, pv : 95, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 12, cds : [150,180,140,360], icons : [elecgrabiconpng,thundergodiconpng,hellgatesiconpng,teleporticonpng], voiceactor : "male"});
 
 
 
@@ -2002,7 +2029,7 @@ function main(){
 	var ground = 240;
 	var stage_size = 720;
 	var camerax = 0;
-	var gamefreeze = 0; var still_draw = false;
+	var gamefreeze = 0; var still_draw = false; var fixcamera = 0;
 	var shakex = 0; var shakey = 0; var shakeforce = 0; var shakeframe = 0;
 	var end_of_round_countdown = 0; var fightstartcountdown = 80;
 	var frame_delay = 17; var base_frame_delay = 16; var slowmodur = 0;
