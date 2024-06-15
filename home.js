@@ -1145,7 +1145,7 @@ function main(){
 		{
 			this.hurted--;
 			this.movlag = 0;this.mov = "";
-			this.x += this.xspeed*(1-(this.gauche!=0)*c.hurtcontrol+(this.droite!=0)*c.hurtcontrol);
+			this.x += this.xspeed*(1-(this.forward!=0 && this.y>0)*c.hurtcontrol+(this.back!=0 && this.y>0)*c.hurtcontrol);
 			let d = (this.charac.width+other.charac.width)/3;
 			if(Math.abs(this.x-other.x)<d && this.y==0 && other.y==0){
 				this.x=(this.x+other.x)/2+signe(this.x-other.x)*d;
@@ -1164,7 +1164,7 @@ function main(){
 			if(this.charac.coups.has(this.mov)){
 				var stats = this.charac.coups.get(this.mov);
 				if(this.y==0 && other.y>0 && stats.hitboxys<0){return;}
-				if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){
+				if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){
 					var hitboxxe = stats.hitboxxe;
 					if(other.charac.coups.has(other.mov)){
 						var stats2 = other.charac.coups.get(other.mov)
@@ -2112,7 +2112,7 @@ function main(){
 
 	characteristics.set("scorpion",{png : scoskins,coordinates : scocoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
 	width : 40, height : 103,vitesse : 2.9,jumpxspeed : 3.5,backmovnerf : 0.9, gravity : 0.41, jumpforce : 9,jumpsquat : 4, shorthop : 5.2, friction:0.21, hurtcontrol : 0.2,
-	airdrift : 0.15, airmaxspeed : 1.8, airdodgespeed : 5.6, airdodgefdur : 14, landinglag : 6,coups : scorpion_coups, pv : 95, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 12, cds : [150,180,140,360], icons : [spearthrowiconpng,thundergodiconpng,hellgatesiconpng,teleporticonpng], voiceactor : "male"});
+	airdrift : 0.15, airmaxspeed : 1.8, airdodgespeed : 5.6, airdodgefdur : 14, landinglag : 6,coups : scorpion_coups, pv : 95, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 12, cds : [150,180,180,360], icons : [spearthrowiconpng,thundergodiconpng,hellgatesiconpng,teleporticonpng], voiceactor : "male"});
 
 
 
