@@ -28,6 +28,7 @@ var lifebarpng=new Image();lifebarpng.src = 'ressource/ui/barlife.png';
 	var thundergodiconpng=new Image();thundergodiconpng.src = 'ressource/icons/thundergod_icon.png';
 	var elecgrabiconpng=new Image();elecgrabiconpng.src = 'ressource/icons/elecgrab_icon.png';
 	var hellgatesiconpng=new Image();hellgatesiconpng.src = 'ressource/icons/hell_gates_icon.png';
+	var spearthrowiconpng=new Image();spearthrowiconpng.src = 'ressource/icons/spear_throw_icon.png';
 	var bloodpng = new Image();bloodpng.src = 'ressource/visual_effects/blood.png';
 	var towergroundpng = new Image();towergroundpng.src = 'ressource/stages/towerground.png';
 	var towerbackgroundpng = new Image();towerbackgroundpng.src = 'ressource/stages/towerbackground.png';

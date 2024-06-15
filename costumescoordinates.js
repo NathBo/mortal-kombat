@@ -375,6 +375,14 @@ function getscocoordinates(){
     scocoordinates.set("stunned3",{offx:227,width:32,offy:1136,height:99,decx:0,decy:0});
     scocoordinates.set("stunned4",{offx:269,width:33,offy:1134,height:101,decx:1,decy:0});
     scocoordinates.set("stunned5",{offx:310,width:44,offy:1134,height:101,decx:0,decy:0});
+	scocoordinates.set("spear_throw1",{offx:15,width:52,offy:1245,height:101,decx:0,decy:0});
+	scocoordinates.set("spear_throw2",{offx:76,width:54,offy:1245,height:101,decx:0,decy:0});
+	scocoordinates.set("spear_throw3",{offx:138,width:76,offy:1245,height:101,decx:0,decy:0});
+	scocoordinates.set("spear_throw4",{offx:221,width:60,offy:1245,height:101,decx:0,decy:0});
+	scocoordinates.set("spear_throw5",{offx:289,width:41,offy:1244,height:102,decx:0,decy:0});
+	scocoordinates.set("spear_throw6",{offx:338,width:48,offy:1245,height:101,decx:0,decy:0});
+	scocoordinates.set("spear",{offx:396,width:27,offy:1276,height:8,decx:0,decy:0});
+	scocoordinates.set("spear_nohead",{offx:516,width:21,offy:1309,height:8,decx:0,decy:0});
 
 	scocoordinates.set("head",{offx:296,width:14,offy:1791,height:17,decx:0,decy:0});
 	
