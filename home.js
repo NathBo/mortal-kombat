@@ -245,6 +245,44 @@ function main(){
 		}
 	}
 
+	class ScorpionFlame{
+		constructor(x,y,orientation,other,stats){
+			this.x = x; this.y = y; this.orientation = orientation;
+			this.other = other;
+			this.width=22;
+			this.height=44;
+			this.totdur = 31;this.vitesse=6;
+			this.stats = stats;
+			this.dur = this.totdur;
+			this.num = cpt;
+			this.rotation = 0; this.rotationspeed = 16;
+			this.dangerous = false;
+			this.explosion = 0;
+			
+		}
+
+		loop(){
+			if(this.y>0){this.y -= this.vitesse;this.x += this.orientation*this.vitesse;}
+			else {this.y=0;this.explosion++;this.dur--;this.x = this.other.x;}
+		}
+
+		afficher(){
+			ctx.scale(2*this.orientation,2);
+			if(this.explosion==1){this.other.burn();}
+			if(this.explosion==0){this.costume = "flame";this.width=14;}
+			else{this.costume = "flame_explosion"+(Math.floor(this.explosion/4)+1).toString();this.width=50;}
+			var coords = scocoordinates.get(this.costume);
+			ctx.drawImage(scopng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			if(this.dur==0){this.delete();return;}
+		}
+
+		delete(){
+			objects_to_loop.delete(this.num);
+		}
+	}
+
 
 	class Wave{
 		constructor(x,y,orientation,other,stats){
@@ -328,9 +366,10 @@ function main(){
 	}
 
 	class Organ{
-		constructor(x,y,orientation){
+		constructor(x,y,orientation, burning=false){
 			this.x = x; this.y = y; this.orientation = orientation;
-			this.coords = bloodcoordinates.get("organ"+(Math.floor(Math.random()*6)+1));
+			if(burning){this.coords = bloodcoordinates.get("burningorgan"+(Math.floor(Math.random()*3)+1));}
+			else{this.coords = bloodcoordinates.get("organ"+(Math.floor(Math.random()*6)+1));}
 			this.width=this.coords.width;
 			this.height=this.coords.height;
 			this.num = cpt;
@@ -738,7 +777,7 @@ function main(){
 			this.blocking = 0; this.falling = 0; this.gettingup = 0; this.grabbing = 0; this.grabbed = 0;
 			this.vicpose = 0;
 			this.cooldowns = [0,0,0,0];
-			this.fatality = 0; this.decapitated = 0; this.electrocuted = 0; this.hide = 0;
+			this.fatality = 0; this.decapitated = 0; this.electrocuted = 0; this.hide = 0; this.burning = 0;
 			if(!secondplayerishuman && this.n==1 && reset_ai){this.ai = new AI(this,other,difficulte);}
 		}
 
@@ -960,6 +999,19 @@ function main(){
 						play_sound_eff("fatal1");
 						this.special=2;
 						other.x = this.x + 39*this.orientation;
+						finishhim = 0;
+						other.invincibilite=1000;
+						fatalitywasdone = true;
+						this.mov = ""; this.movlag=0;
+						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
+					}
+					else if(this.perso == "scorpion" && this.forward && this.special==1 && finishhim && entre(Math.abs(this.x-other.x),75,125) && other.gettingup==0 && other.y<=30){
+						this.fatality = 180;
+						other.falling=0;
+						other.y=0;
+						play_sound_eff("fatal1");
+						this.special=2;
+						other.x = this.x + 100*this.orientation;
 						finishhim = 0;
 						other.invincibilite=1000;
 						fatalitywasdone = true;
@@ -1302,6 +1354,23 @@ function main(){
 					}
 					if(this.fatality==40){other.explode();}
 				}
+				else if(this.perso=="scorpion"){
+					var n = 1;
+					if(this.fatality>=176){n=1;}
+					else if(this.fatality>=172){n=2;}
+					else if (this.fatality>=168){n=3;}
+					else if(this.fatality>=138){n=4;}
+					else if(this.fatality>=132){n=5;}
+					else if(this.fatality>=70){n=6;}
+					else if(this.fatality>=64){n=5;}
+					else if(this.fatality>=24){n=4;}
+					else if(this.fatality>=16){n=3;}
+					else if(this.fatality>=8){n=2;}
+					if(this.fatality==130){add_to_objects_set(new ScorpionFlame(this.x+22*this.orientation,this.y+71,this.orientation,other,stats,this));}
+					if(this.fatality==4){other.explode();}
+					if(this.fatality==40){play_sound_eff("toasty");}
+					this.costume = "flaming_skull"+n.toString();
+				}
 			}
 			else if(this.decapitated){
 				if(this.decapitated>=2){this.decapitated--;}
@@ -1568,8 +1637,16 @@ function main(){
 			}
 
 			
-
-			if(this.hide==0){
+			if(this.burning && !this.hide){
+				this.costume = "burning"+(Math.floor(this.burning/4)+1).toString();
+				this.burning = (this.burning+1)%19+1;
+				ctx.scale(2*this.orientation,2);
+				var coords = bloodcoordinates.get(this.costume);
+				ctx.drawImage(bloodpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.charac.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+				ctx.setTransform(1, 0, 0, 1, 0, 0);
+				ctx.scale(1,1);
+			}
+			else if(this.hide==0){
 				if(this.electrocuted){
 					this.electrocuted--;
 					ctx.filter = 'brightness(1.8)';
@@ -1634,10 +1711,16 @@ function main(){
 		explode(){
 			this.hide=1;
 			for(var i=0;i<25;i++){
-				add_to_objects_set(new Organ(this.x,this.y+this.charac.height,this.orientation));
+				add_to_objects_set(new Organ(this.x,this.y+this.charac.height,this.orientation, (this.burning!=0)));
 			}
+			if(!this.burning){add_to_objects_set(new Head(this.x,this.y+this.charac.height,this.orientation,this.skin,this.coordinates));}
 			shake_screen(30,6);
 			play_sound_eff("explosion");
+		}
+
+		burn(){
+			this.burning=1;
+			play_sound_eff(this.charac.voiceactor+"bighurted");
 		}
 
 	}
@@ -2098,6 +2181,7 @@ function main(){
 	sounds_eff.set("finishher",[document.querySelector('#finishherwav')]);
 	sounds_eff.set("finishhim",[document.querySelector('#finishhimwav')]);
 	sounds_eff.set("wins",[document.querySelector('#winswav')]);
+	sounds_eff.set("toasty",[document.querySelector('#toastywav')]);
 	sounds_eff.set("cursor_move",[document.querySelector('#cursorwav')]);
 
 	

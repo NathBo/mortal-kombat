@@ -387,6 +387,21 @@ function getscocoordinates(){
 	//scocoordinates.set("leg_takedown2",{offx:640,width:68,offy:1244,height:102,decx:0,decy:0});
 	scocoordinates.set("leg_takedown2",{offx:715,width:70,offy:1244,height:102,decx:0,decy:0});
 	scocoordinates.set("leg_takedown3",{offx:794,width:67,offy:1244,height:102,decx:0,decy:0});
+	scocoordinates.set("flaming_skull1",{offx:15,width:34,offy:1354,height:106,decx:0,decy:0});
+	scocoordinates.set("flaming_skull2",{offx:59,width:34,offy:1354,height:106,decx:0,decy:0});
+	scocoordinates.set("flaming_skull3",{offx:101,width:43,offy:1354,height:106,decx:0,decy:0});
+	scocoordinates.set("flaming_skull4",{offx:152,width:34,offy:1354,height:106,decx:0,decy:0});
+	scocoordinates.set("flaming_skull5",{offx:196,width:34,offy:1354,height:106,decx:0,decy:0});
+	scocoordinates.set("flaming_skull6",{offx:239,width:37,offy:1354,height:106,decx:0,decy:0});
+	scocoordinates.set("flame",{offx:297,width:14,offy:1444,height:17,decx:0,decy:0});
+	scocoordinates.set("flame_explosion1",{offx:417,width:43,offy:1364,height:96,decx:0,decy:0});
+	scocoordinates.set("flame_explosion2",{offx:468,width:42,offy:1364,height:96,decx:0,decy:0});
+	scocoordinates.set("flame_explosion3",{offx:517,width:56,offy:1364,height:96,decx:0,decy:0});
+	scocoordinates.set("flame_explosion4",{offx:580,width:54,offy:1364,height:96,decx:0,decy:0});
+	scocoordinates.set("flame_explosion5",{offx:642,width:54,offy:1364,height:96,decx:0,decy:0});
+	scocoordinates.set("flame_explosion6",{offx:704,width:60,offy:1364,height:96,decx:0,decy:0});
+	scocoordinates.set("flame_explosion7",{offx:772,width:60,offy:1364,height:96,decx:0,decy:0});
+	scocoordinates.set("flame_explosion8",{offx:840,width:59,offy:1364,height:96,decx:0,decy:0});
 
 	scocoordinates.set("head",{offx:296,width:14,offy:1791,height:17,decx:0,decy:0});
 	
@@ -422,6 +437,14 @@ function getbloodcoordinates(){
 	bloodcoordinates.set("organ4",{offx:5,width:15,offy:402,height:19,decx:0,decy:0});
 	bloodcoordinates.set("organ5",{offx:201,width:11,offy:411,height:10,decx:0,decy:0});
 	bloodcoordinates.set("organ6",{offx:351,width:16,offy:403,height:18,decx:0,decy:0});
+	bloodcoordinates.set("burningorgan1",{offx:201,width:10,offy:445,height:13,decx:0,decy:0});
+	bloodcoordinates.set("burningorgan2",{offx:219,width:5,offy:448,height:10,decx:0,decy:0});
+	bloodcoordinates.set("burningorgan3",{offx:314,width:19,offy:448,height:10,decx:0,decy:0});
+	bloodcoordinates.set("burning1",{offx:5,width:42,offy:481,height:109,decx:0,decy:0});
+	bloodcoordinates.set("burning2",{offx:56,width:43,offy:481,height:109,decx:0,decy:0});
+	bloodcoordinates.set("burning3",{offx:109,width:41,offy:481,height:109,decx:0,decy:0});
+	bloodcoordinates.set("burning4",{offx:159,width:37,offy:481,height:109,decx:0,decy:0});
+	bloodcoordinates.set("burning5",{offx:205,width:37,offy:481,height:109,decx:0,decy:0});
 
     return bloodcoordinates;
 }
