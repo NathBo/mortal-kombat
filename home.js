@@ -581,6 +581,16 @@ function main(){
 			this.wanttowavedash=true;
 		}
 
+		thereisaprojo(){
+			for(let value of objects_to_loop.values()){
+				if(value.dangerous){
+					if(Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))<=value.stats.hitboxxe+60+this.me.charac.width/2 && this.me.y==0 && this.me.mov!="jumpsquat"){return true;}
+					if((this.me.y==0 && (signe(this.me.x-value.x)==signe(value.vitesse)) && Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))>=value.stats.hitboxxe+90+this.me.charac.width/2-this.wanttojump*6 && value.y+value.stats.hitboxye<=70) || this.me.mov=="jumpsquat"){return true;}
+				}
+			}
+			return false;
+		}
+
 		attack(moves){
 			var me = this.me;
 			var other = this.other;
@@ -697,7 +707,7 @@ function main(){
 			else if(me.perso=="scorpion" && this.currisking-me.pv/20>=-2 && Math.abs(me.x-other.x-other.xspeed*10)>=80 && me.y==0 && me.crouching==0 && movpriority.get(me.mov)<70 && other.tb<=0 && me.y==0)
 				{this.begincoup("hell_gates");}
 
-			else if(Math.abs(Math.abs(me.x-other.x)-this.idealrange)>=this.distancetowavedash){this.beginwavedash();}
+			else if(Math.abs(Math.abs(me.x-other.x)-this.idealrange)>=this.distancetowavedash && !this.thereisaprojo()){this.beginwavedash();}
 			
 			else if(this.attacking*this.rangescaling+Math.abs(me.x-other.x)>=this.idealrange){this.pressforward();}
 			else{this.pressbackward();}
