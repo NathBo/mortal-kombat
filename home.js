@@ -788,7 +788,8 @@ function main(){
 			if(["clpunch","clkick","cmkick"].includes(s)){this.crouching = Math.max(this.crouching,4);}
 			if(s == "jkick"){if(this.x<other.x){this.orientation = 1;}else{this.orientation = -1;}}
 			var cd = cd_dependance.get(s);
-			if(this.cooldowns[cd]){return;}
+			if(this.cooldowns[cd]){if(this.cooldowns[cd]>bufferwindow){this.special=2;}return;}
+			else if(cd != -1){this.special=2;}
 			if(s == "hell_gates"){this.orientation*=-1;}
 			if(movpriority.get(s)==70 && movpriority.get(this.mov)>=70){return;}
 			play_sound_eff(this.charac.voiceactor+stats.voiceline);
@@ -978,9 +979,8 @@ function main(){
 						this.begincoup("grab",other);
 						this.dodge = 2;
 					}
-					else if(this.perso == "kitana" && this.forward+this.back==0 && this.bas==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[0]==0 && this.crouching==0){
+					else if(this.perso == "kitana" && this.forward+this.back==0 && this.bas==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.crouching==0){
 						this.begincoup("fanthrow",other);
-						this.special = 2;
 					}
 					else if(this.perso == "kitana" && this.forward>=1 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=80 && other.falling==0 && other.gettingup==0){
 						this.fatality = 90;
@@ -1019,48 +1019,38 @@ function main(){
 						this.mov = ""; this.movlag=0;
 						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
 					}
-					else if(this.perso == "kitana" && this.forward>=1 && this.special==1 && this.bas==0 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[1]==0 && this.crouching==0){
+					else if(this.perso == "kitana" && this.forward>=1 && this.special==1 && this.bas==0 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.crouching==0){
 						this.begincoup("fanswipe",other);
-						this.special = 2;
 					}
 					else if(this.perso == "kitana" && this.back>=1 && this.special==1 && this.bas==0 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[2]==0 && this.crouching==0){
 						this.begincoup("fanlift",other);
-						this.special = 2;
 					}
-					else if(this.perso == "kitana" && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[3]==0){
+					else if(this.perso == "kitana" && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("squarepunch",other);
 						this.invincibilite=15;
 						this.y=1;
 						this.tb=9;
-						this.special = 2;
 					}
-					else if(this.perso == "raiden" && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[3]==0){
+					else if(this.perso == "raiden" && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("teleport",other);
-						this.special = 2;
 					}
-					else if(this.perso == "raiden" && this.back>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[2]==0){
+					else if(this.perso == "raiden" && this.back>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("boltthrow",other);
-						this.special = 2;
 					}
-					else if(this.perso == "raiden" && this.forward>=1 && this.crouching==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[1]==0){
+					else if(this.perso == "raiden" && this.forward>=1 && this.crouching==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("thundergod",other);
-						this.special = 2;
 					}
-					else if(this.perso == "raiden" && this.forward+this.back==0 && this.crouching==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[0]==0){
+					else if(this.perso == "raiden" && this.forward+this.back==0 && this.crouching==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("elecgrab",other);
-						this.special = 2;
 					}
-					else if(this.perso == "scorpion" && this.back>=1 && this.special==1 && this.bas==0 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[2]==0 && this.crouching==0){
+					else if(this.perso == "scorpion" && this.back>=1 && this.special==1 && this.bas==0 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.crouching==0){
 						this.begincoup("hell_gates",other);
-						this.special = 2;
 					}
-					else if(this.perso == "scorpion" && this.back==0 && this.forward==0 && this.special==1 && this.bas==0 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[0]==0 && this.crouching==0){
+					else if(this.perso == "scorpion" && this.back==0 && this.forward==0 && this.special==1 && this.bas==0 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.crouching==0){
 						this.begincoup("spear_throw",other);
-						this.special = 2;
 					}
-					else if(this.perso == "scorpion" && this.crouching>=4 && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[3]==0){
+					else if(this.perso == "scorpion" && this.crouching>=4 && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("leg_takedown",other);
-						this.special = 2;
 					}
 					else if(this.forward>=1&&movpriority.get(this.mov)<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
 						this.x+=this.charac.vitesse*this.orientation;this.xspeed = 0;
@@ -2241,6 +2231,7 @@ function main(){
 	var is_in_charc_screen = true; var lockincountdown = 0; var lockincountdownfdur = 40; var controlafaire = -1; var key = "";
 	var Width= window.innerWidth; var Height=window.innerHeight;
 	var decalage = 0; var wdecalagey = 0;
+	var bufferwindow = 5;
 
 
 	function shake_screen(frames,force){
