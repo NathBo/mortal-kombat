@@ -792,6 +792,7 @@ function main(){
 			if(s == "hell_gates"){this.orientation*=-1;}
 			if(movpriority.get(s)==70 && movpriority.get(this.mov)>=70){return;}
 			play_sound_eff(this.charac.voiceactor+stats.voiceline);
+			if(stats.coupwav != ""){play_sound_eff(stats.coupwav);}
 			this.cooldowns[cd] = this.charac.cds[cd];
 			this.mov = s;
 			this.xspeed += stats.movx*this.orientation;
@@ -2183,6 +2184,9 @@ function main(){
 	sounds_eff.set("wins",[document.querySelector('#winswav')]);
 	sounds_eff.set("toasty",[document.querySelector('#toastywav')]);
 	sounds_eff.set("cursor_move",[document.querySelector('#cursorwav')]);
+	sounds_eff.set("coup",[document.querySelector('#coup1wav'),document.querySelector('#coup2wav'),document.querySelector('#coup3wav'),document.querySelector('#coup4wav'),document.querySelector('#coup5wav')]);
+	sounds_eff.set("grapple",[document.querySelector('#grapplewav')]);
+	sounds_eff.set("teleport",[document.querySelector('#teleportwav')]);
 
 	
 
