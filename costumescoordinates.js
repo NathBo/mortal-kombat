@@ -383,6 +383,10 @@ function getscocoordinates(){
 	scocoordinates.set("spear_throw6",{offx:338,width:48,offy:1245,height:101,decx:0,decy:0});
 	scocoordinates.set("spear",{offx:396,width:27,offy:1276,height:8,decx:0,decy:0});
 	scocoordinates.set("spear_nohead",{offx:516,width:21,offy:1309,height:8,decx:0,decy:0});
+	scocoordinates.set("leg_takedown1",{offx:572,width:60,offy:1244,height:102,decx:0,decy:0});
+	//scocoordinates.set("leg_takedown2",{offx:640,width:68,offy:1244,height:102,decx:0,decy:0});
+	scocoordinates.set("leg_takedown2",{offx:715,width:70,offy:1244,height:102,decx:0,decy:0});
+	scocoordinates.set("leg_takedown3",{offx:794,width:67,offy:1244,height:102,decx:0,decy:0});
 
 	scocoordinates.set("head",{offx:296,width:14,offy:1791,height:17,decx:0,decy:0});
 	

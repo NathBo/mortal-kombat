@@ -693,7 +693,7 @@ function main(){
 			else if(me.perso=="raiden" && this.currisking+me.pv/10>=0.5 && Math.abs(Math.abs(me.x-other.x-other.xspeed*10)-120)<=40 && me.y==0 && other.y>0 && me.crouching==0 && movpriority.get(me.mov)<70 && other.tb<0)
 				{this.begincoup("thundergod");}
 
-			else if(me.perso=="scorpion" && this.currisking-me.pv/20>=-2 && Math.abs(me.x-other.x-other.xspeed*10)>=80 && me.y==0 && me.crouching==0 && movpriority.get(me.mov)<70 && other.tb<=0)
+			else if(me.perso=="scorpion" && this.currisking-me.pv/20>=-2 && Math.abs(me.x-other.x-other.xspeed*10)>=80 && me.y==0 && me.crouching==0 && movpriority.get(me.mov)<70 && other.tb<=0 && me.y==0)
 				{this.begincoup("hell_gates");}
 
 			else if(Math.abs(Math.abs(me.x-other.x)-this.idealrange)>=this.distancetowavedash){this.beginwavedash();}
@@ -744,6 +744,7 @@ function main(){
 			play_sound_eff(this.charac.voiceactor+stats.voiceline);
 			this.cooldowns[cd] = this.charac.cds[cd];
 			this.mov = s;
+			this.xspeed += stats.movx*this.orientation;
 			this.movlag = stats.slag+stats.fdur+stats.elag;
 			if(other.hurted){other.invincibilite=0;}
 		}
@@ -993,6 +994,10 @@ function main(){
 						this.begincoup("spear_throw",other);
 						this.special = 2;
 					}
+					else if(this.perso == "scorpion" && this.crouching>=4 && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[3]==0){
+						this.begincoup("leg_takedown",other);
+						this.special = 2;
+					}
 					else if(this.forward>=1&&movpriority.get(this.mov)<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
 						this.x+=this.charac.vitesse*this.orientation;this.xspeed = 0;
 						let d = (this.charac.width+other.charac.width)/3;
@@ -1052,11 +1057,6 @@ function main(){
 						else{this.xspeed = 0;}
 						break;
 
-					case "hkick":
-					case "elecgrab" :
-						var stats = this.charac.coups.get(this.mov);
-						if(this.movlag == stats.elag+stats.fdur+stats.slag-1){this.xspeed += stats.movx*this.orientation;}
-						break;
 
 					case "fanthrow":
 						var stats = this.charac.coups.get(this.mov);
@@ -1194,7 +1194,6 @@ function main(){
 		}
 
 		hurt(other,stats){
-			console.log(stats);
 			if(stats.hiteffect==""){return;}
 			if(other.mov=="thundergod"){other.movlag=1;other.tb=8;other.xspeed = -1;other.y=0.1;}
 			if(other.mov=="squarepunch"){other.movlag=1;other.tb=0;other.xspeed = -1;}
@@ -1380,6 +1379,7 @@ function main(){
 					case "hpunch" :
 					case "cmkick" :
 					case "thundergod" :
+					case "leg_takedown" :
 						var stats = this.charac.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.costume = this.mov+"3"}
 						else if(entre(this.movlag,0,stats.elag/2)||entre(this.movlag,stats.elag+stats.fdur+stats.slag/2,stats.elag+stats.fdur+stats.slag)){this.costume = this.mov+"1"}
@@ -2112,7 +2112,7 @@ function main(){
 
 	characteristics.set("scorpion",{png : scoskins,coordinates : scocoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
 	width : 40, height : 103,vitesse : 2.9,jumpxspeed : 3.5,backmovnerf : 0.9, gravity : 0.41, jumpforce : 9,jumpsquat : 4, shorthop : 5.2, friction:0.21, hurtcontrol : 0.2,
-	airdrift : 0.15, airmaxspeed : 1.8, airdodgespeed : 5.6, airdodgefdur : 14, landinglag : 6,coups : scorpion_coups, pv : 95, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 12, cds : [150,180,180,360], icons : [spearthrowiconpng,thundergodiconpng,hellgatesiconpng,teleporticonpng], voiceactor : "male"});
+	airdrift : 0.15, airmaxspeed : 1.8, airdodgespeed : 5.6, airdodgefdur : 14, landinglag : 6,coups : scorpion_coups, pv : 95, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 12, cds : [150,180,180,120], icons : [spearthrowiconpng,thundergodiconpng,hellgatesiconpng,legtakedowniconpng], voiceactor : "male"});
 
 
 
