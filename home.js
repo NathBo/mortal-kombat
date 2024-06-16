@@ -544,7 +544,7 @@ function main(){
 			var other = this.other;
 			this.wanttowavedash=false;
 			this.grade.set(me.mov,this.grade.get(me.mov)-8);
-			this.lastmovehitby = other.mov;
+			if(me.hurted==0){this.lastmovehitby = other.mov;}
 			if(other.crouching&&me.charac.coups.has(me.mov) && me.charac.coups.get(me.mov).hitboxys>=0){this.enviedetaperenbas += 8;}
 			if(other.crouching){this.wanttojump+=1;}
 			if(me.y>0){this.wanttojump-=2;}
