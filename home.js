@@ -552,7 +552,7 @@ function main(){
 			var prio = movpriority.get(me.mov);
 			function aux(val,key,_){
 				var newd = d-other.orientation*(other.xspeed+Math.max(other.xspeed-other.charac.friction*val.slag,0))/2*val.slag;
-				newd -= val.movx**2/other.charac.friction/2
+				newd -= val.movx**2/other.charac.friction/3;
 				if((other.y>0 || other.mov == "jumpsquat") && me.y==0){
 					newd = d-other.orientation*other.xspeed*val.slag;
 					if(other.tb>=0 || other.y+(other.tb+other.tb-other.charac.gravity*val.slag/2)/2*val.slag>val.hitboxye-10 || newd<0){return;}
