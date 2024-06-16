@@ -44,7 +44,8 @@ function main(){
 	function resizecanvas(){
 		Width= window.innerWidth;
 		Height=window.innerHeight;
-		  if(Height>=Width*500/1024){Heigth=Width*500/1024;canvas.style.left = "0px";decalage=0;}else if(Width*500/1024>Height){Width=Height/500*1024;canvas.style.left = (window.innerWidth-Width)/2+"px";decalage=(window.innerWidth-Width)/2}
+		  if(Height>Width*500/1024){Height=Width*500/1024;canvas.style.left = "0px";canvas.style.top = (window.innerHeight-Height)/2+"px";decalage=0;wdecalagey=(window.innerHeight-Height)/2;}
+		  else if(Width*500/1024>Height){Width=Height/500*1024;canvas.style.left = (window.innerWidth-Width)/2+"px";decalage=(window.innerWidth-Width)/2; canvas.style.top = "0px";wdecalagey=0;}
 		  canvas.style.width  = Width+'px';
 		  canvas.style.height  = Height+'px';
 	}
@@ -2110,7 +2111,7 @@ function main(){
 	airdrift : 0.14, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : raiden_coups, pv : 95, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 6, vicposfdur : 36, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male"});
 
 
-	characteristics.set("scorpion",{png : scoskins,coordinates : scocoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
+	characteristics.set("scorpion",{png : scoskins,coordinates : scocoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : scorpioniconpng, namewav : document.querySelector('#scorpionwav'),
 	width : 40, height : 103,vitesse : 2.9,jumpxspeed : 3.5,backmovnerf : 0.9, gravity : 0.41, jumpforce : 9,jumpsquat : 4, shorthop : 5.2, friction:0.21, hurtcontrol : 0.2,
 	airdrift : 0.15, airmaxspeed : 1.8, airdodgespeed : 5.6, airdodgefdur : 14, landinglag : 6,coups : scorpion_coups, pv : 95, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 12, cds : [150,180,180,120], icons : [spearthrowiconpng,thundergodiconpng,hellgatesiconpng,legtakedowniconpng], voiceactor : "male"});
 
@@ -2140,6 +2141,8 @@ function main(){
 	var liste_persos = ["raiden","kitana","scorpion"];
 	var chartimer = 0; var chartimercycle = 3; var difficultynames = ["Easy","Normal","Hard","Insane","Terminator"];
 	var is_in_charc_screen = true; var lockincountdown = 0; var lockincountdownfdur = 40; var controlafaire = -1; var key = "";
+	var Width= window.innerWidth; var Height=window.innerHeight;
+	var decalage = 0; var wdecalagey = 0;
 
 
 	function shake_screen(frames,force){
@@ -2193,7 +2196,7 @@ function main(){
 		if(e.code==controls[15]){j2.dodge=0}
 	}
 	function clickEvent(e){
-		clickx=(e.pageX-decalage)/Width;clicky=e.pageY/Height;click=1;
+		clickx=(e.pageX-decalage)/Width;clicky=(e.pageY-wdecalagey)/Height;click=1;
 	}
 	function unclickEvent(_){
 		click=0;
