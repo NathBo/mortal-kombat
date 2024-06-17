@@ -327,7 +327,7 @@ function main(){
 	}
 
 	class Head{
-		constructor(x,y,orientation,skin,coords){
+		constructor(x,y,orientation,skin,coords, power=2){
 			this.x = x; this.y = y; this.orientation = orientation; this.skin = skin; this.coords = coords;
 			this.width=22;
 			this.height=44;
@@ -335,7 +335,7 @@ function main(){
 			this.num = cpt;
 			this.rotation = 0; this.rotationspeed = 16;
 			this.gravity = 0.15;
-			this.tb=Math.random()*2+2;
+			this.tb=Math.random()*2+power;
 			this.vitesse = -1-Math.random();
 			this.dangerous = false;
 			
@@ -1705,7 +1705,7 @@ function main(){
 			for(var i=0;i<25;i++){
 				add_to_objects_set(new Organ(this.x,this.y+this.charac.height,this.orientation, (this.burning!=0)));
 			}
-			if(!this.burning){add_to_objects_set(new Head(this.x,this.y+this.charac.height,this.orientation,this.skin,this.coordinates));}
+			if(!this.burning){add_to_objects_set(new Head(this.x,this.y+this.charac.height,this.orientation,this.skin,this.coordinates,5.5));}
 			shake_screen(30,6);
 			play_sound_eff("explosion");
 		}
