@@ -31,9 +31,17 @@ var lifebarpng=new Image();lifebarpng.src = 'ressource/ui/barlife.png';
 	var spearthrowiconpng=new Image();spearthrowiconpng.src = 'ressource/icons/spear_throw_icon.png';
 	var legtakedowniconpng=new Image();legtakedowniconpng.src = 'ressource/icons/leg_takedown_icon.png';
 	var bloodpng = new Image();bloodpng.src = 'ressource/visual_effects/blood.png';
+
 	var towergroundpng = new Image();towergroundpng.src = 'ressource/stages/towerground.png';
 	var towerbackgroundpng = new Image();towerbackgroundpng.src = 'ressource/stages/towerbackground.png';
 	var towerstructurepng = new Image();towerstructurepng.src = 'ressource/stages/towerstructure.png';
+	var deadpoolpng = new Image();deadpoolpng.src = 'ressource/stages/deadpool.png';
+	var stagesstruct = [towerstructurepng, deadpoolpng];
+	var stagesground = [towergroundpng, null];
+	var stagesbackground = [towerbackgroundpng, null];
+	var grounds = [240,220];
+	var stagesizes = [720,686];
+
 	var characterscreenpng = new Image();characterscreenpng.src = 'ressource/stages/character_screen.png';
 	var raideniconpng=new Image();raideniconpng.src = 'ressource/icons/raiden.png';
 	var kitanaiconpng=new Image();kitanaiconpng.src = 'ressource/icons/kitana.png';

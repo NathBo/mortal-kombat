@@ -1333,8 +1333,8 @@ function main(){
 			slow_game(60,2);
 			shake_screen(25,6);
 			lag_game(20);
-			musiques[0].pause();
-			roundover_musiques[0].play();
+			musiques[chosenstage].pause();
+			roundover_musiques[chosenstage].play();
 			if(finishhim){end_of_round_countdown=180;finishhim=0;}
 		}
 
@@ -1746,9 +1746,9 @@ function main(){
 	function drawStage(){
 		if(fatalitywasdone || fatalitysreen){ctx.filter = 'brightness(0.5)';}
 		ctx.scale(2,2);
-		ctx.drawImage(towerbackgroundpng,-18-camerax/5,0);
-		ctx.drawImage(towerstructurepng,-camerax+238-stage_size/2+shakex,shakey);
-		ctx.drawImage(towergroundpng,-camerax+256-stage_size/2+shakex,178+shakey);
+		if(stagesbackground[chosenstage] != null){ctx.drawImage(stagesbackground[chosenstage],-18-camerax/5,0);}
+		if(stagesstruct[chosenstage] != null){ctx.drawImage(stagesstruct[chosenstage],-camerax+238-stage_size/2+shakex,shakey);}
+		if(stagesground[chosenstage] != null){ctx.drawImage(stagesground[chosenstage],-camerax+256-stage_size/2+shakex,178+shakey);}
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.scale(1,1);
 		ctx.filter = 'none';
@@ -1777,7 +1777,7 @@ function main(){
 		}
 		else if(fightstartcountdown){
 			if(fightstartcountdown==50){fightwav.play();}
-			else if(fightstartcountdown==1 && musiqueon){musiques[0].currentTime=0;musiques[0].play();}
+			else if(fightstartcountdown==1 && musiqueon){musiques[chosenstage].currentTime=0;musiques[chosenstage].play();}
 			ctx.scale(3,3);
 			if(fightstartcountdown%6>=3){ctx.drawImage(fightrediconpng,122,50);}
 			else{ctx.drawImage(fightyellowiconpng,122,50);}
@@ -1827,7 +1827,7 @@ function main(){
 
 	function checkforend(){
 		if(j1.pv<=0){
-			musiques[0].pause();
+			musiques[chosenstage].pause();
 			j1.pv=0;
 			if(j2.pv>0){roundwonsj2 ++;}
 			if(roundwonsj2>=2 && finishhim==0){
@@ -1839,7 +1839,7 @@ function main(){
 			}
 		}
 		if(j2.pv<=0){
-			musiques[0].pause();
+			musiques[chosenstage].pause();
 			j2.pv=0;
 			if(j1.pv>0){roundwonsj1 ++;}
 			if(roundwonsj1>=2 && finishhim==0){
@@ -2055,6 +2055,8 @@ function main(){
 				persoschoisis = [liste_persos[persosovered[0]],liste_persos[persosovered[1]]]
 				reset_game();
 				is_in_charc_screen = false;
+				ground = grounds[chosenstage];
+				stage_size = stagesizes[chosenstage];
 				functiontoexecute = loop;
 				return;
 			}
@@ -2197,12 +2199,14 @@ function main(){
 
 	var fightwav = document.querySelector('#fightwav');
 
-	var musiques = [document.querySelector('#mkthemeremixwav')];
-	var roundover_musiques = [document.querySelector('#roundoverwav')];
+	var musiques = [document.querySelector('#towerwav'), document.querySelector('#deadpoolwav')];
+	var roundover_musiques = [document.querySelector('#towerroundoverwav'),document.querySelector('#deadpoolroundoverwav')];
 	
-	musiques[0].loop = true;
+	for (var i=0; i<musiques.length; i++){
+		musiques[i].loop = true;
+	}
 	
-
+	var chosenstage = 1;
 
 	var roundswav = [document.querySelector('#round1wav'),document.querySelector('#round2wav'),document.querySelector('#round3wav')];
 
