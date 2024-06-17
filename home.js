@@ -426,7 +426,9 @@ function main(){
 			this.chosenoptiononoki = 0;
 			this.eviterprochainprojo = true;
 			this.foptiononoki = 0;
-			this.lastmovehitby = "lpucnh";
+			this.timesinceoki=0;
+			this.lastmovehitonoki = "";
+			this.lastmovehitby = "lpunch";
 			this.wanttowavedash=false;
 			var grade = new Map();
 			function aux(val,key,_){
@@ -585,6 +587,7 @@ function main(){
 			this.wanttowavedash=false;
 			this.grade.set(me.mov,this.grade.get(me.mov)-8);
 			if(me.hurted==0){this.lastmovehitby = other.mov;}
+			if(this.timesinceoki){this.lastmovehitonoki=other.mov;}
 			if(other.crouching&&me.charac.coups.has(me.mov) && me.charac.coups.get(me.mov).hitboxys>=0){this.enviedetaperenbas += 8;}
 			if(other.crouching){this.wanttojump+=1;}
 			if(me.y>0){this.wanttojump-=2;}
@@ -677,7 +680,11 @@ function main(){
 			else{me.droite = 0;me.gauche = 0;}
 			if(this.eviterprochainprojo){if(this.eviterprojectiles()){return;}}
 			if(me.gettingup){
+				this.timesinceoki=5;
 				if(me.gettingup==1){this.chosenoptiononoki = getrandomwithcoeff(this.optionssonoki);this.foptiononoki = this.fduroptiononoki;}
+			}
+			else if(this.timesinceoki){
+				this.timesinceoki--;
 			}
 			if(this.foptiononoki){
 				me.bas = 0; me.haut = 0; me.poing = 0; me.jambe = 0; me.dodge = 0; me.special = 0;
@@ -720,11 +727,13 @@ function main(){
 			}
 			var reaction_time = this.reaction_time;
 			if(other.mov == this.lastmovehitby){reaction_time=0;}
+			if(this.timesinceoki && other.mov == this.lastmovehitonoki){reaction_time=0;}
 			if(!me.charac.coups.has(me.mov)){
 				if(other.charac.coups.has(other.mov) && other.movlag<=c.slag+c.fdur+c.elag-reaction_time && Math.abs(me.x-other.x)<=c.hitboxxe+me.charac.width/2+me.charac.vitesse*this.commitmentonwalk+5 && other.movlag>=c.elag-1){
 					this.pressbackward();
 					if(other.charac.coups.get(other.mov).hitboxys<0 && other.y==0){me.crouching = 6;}
 					if(other.charac.coups.get(other.mov).hiteffect=="grab"){me.bas=1;me.gauche=0;me.droite=0;}
+					return;
 				}
 				
 				else if(other.charac.coups.has(other.mov) && other.charac.coups.get(other.mov).hitboxye<=0 && other.y==0 && Math.random()*20*difficulte<=this.wanttojump+5){
