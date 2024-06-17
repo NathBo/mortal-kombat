@@ -723,7 +723,7 @@ function main(){
 			if(!me.charac.coups.has(me.mov)){
 				if(other.charac.coups.has(other.mov) && other.movlag<=c.slag+c.fdur+c.elag-reaction_time && Math.abs(me.x-other.x)<=c.hitboxxe+me.charac.width/2+me.charac.vitesse*this.commitmentonwalk+5 && other.movlag>=c.elag-1){
 					this.pressbackward();
-					if(other.charac.coups.get(other.mov).hitboxys<0 && other.y==0){me.bas = 1;}
+					if(other.charac.coups.get(other.mov).hitboxys<0 && other.y==0){me.crouching = 6;}
 					if(other.charac.coups.get(other.mov).hiteffect=="grab"){me.bas=1;me.gauche=0;me.droite=0;}
 				}
 				
@@ -931,6 +931,7 @@ function main(){
 					else if(this.bas==0&&this.crouching>0&&this.movlag==0){this.crouching--;}
 					if(this.haut==1&&movpriority.get(this.mov)<20&&end_of_round_countdown==0){
 						this.mov = "jumpsquat";this.movlag = c.jumpsquat;
+						play_sound_eff(this.charac.voiceactor+"lmov");
 						this.crouching = 0;
 						this.haut = 2;
 						if(this.xspeed==0){
