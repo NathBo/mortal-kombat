@@ -1334,6 +1334,7 @@ function main(){
 			shake_screen(25,6);
 			lag_game(20);
 			musiques[0].pause();
+			roundover_musiques[0].play();
 			if(finishhim){end_of_round_countdown=180;finishhim=0;}
 		}
 
@@ -2197,6 +2198,7 @@ function main(){
 	var fightwav = document.querySelector('#fightwav');
 
 	var musiques = [document.querySelector('#mkthemeremixwav')];
+	var roundover_musiques = [document.querySelector('#roundoverwav')];
 	
 	musiques[0].loop = true;
 	
