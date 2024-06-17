@@ -1270,6 +1270,7 @@ function main(){
 						if(this.falling==0){this.falling = 1;}
 						this.crouching = 0;
 						play_sound_eff(this.charac.voiceactor+"hurted");
+						if(Math.random()<stats.degats/20){play_sound_eff("compliment");}
 						break;
 					case "grab" :
 						other.begin_grab(this);
@@ -2173,6 +2174,7 @@ function main(){
 	sounds_eff.set("finishhim",[document.querySelector('#finishhimwav')]);
 	sounds_eff.set("wins",[document.querySelector('#winswav')]);
 	sounds_eff.set("toasty",[document.querySelector('#toastywav')]);
+	sounds_eff.set("compliment",[document.querySelector('#compliment1wav'),document.querySelector('#compliment2wav'),document.querySelector('#compliment3wav'),document.querySelector('#compliment4wav')]);
 	sounds_eff.set("cursor_move",[document.querySelector('#cursorwav')]);
 	sounds_eff.set("coup",[document.querySelector('#coup1wav'),document.querySelector('#coup2wav'),document.querySelector('#coup3wav'),document.querySelector('#coup4wav'),document.querySelector('#coup5wav')]);
 	sounds_eff.set("grapple",[document.querySelector('#grapplewav')]);
