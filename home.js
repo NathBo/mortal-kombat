@@ -1210,6 +1210,7 @@ function main(){
 			else if(this.y<0 && this.tb<=0){this.y=0;this.tb=0;}
 			if(Math.abs(this.x-camerax)>decalagex-this.charac.width/2){this.x = signe(this.x-camerax)*(decalagex+signe(this.x-camerax)*camerax-this.charac.width/2);}
 			if(this.y<=0 && this.falling){this.getup();}
+			if(this.pushed>0){this.pushed--;this.x+=this.pushx;}
 		}
 		
 		}
@@ -1271,7 +1272,7 @@ function main(){
 						if(this.falling==0){this.falling = 1;}
 						this.crouching = 0;
 						play_sound_eff(this.charac.voiceactor+"hurted");
-						if(Math.random()<stats.degats/20){play_sound_eff("compliment");}
+						if(Math.random()<stats.degats/25){play_sound_eff("compliment");}
 						break;
 					case "grab" :
 						other.begin_grab(this);
