@@ -40,7 +40,7 @@ var lifebarpng=new Image();lifebarpng.src = 'ressource/ui/barlife.png';
 	var stagesground = [towergroundpng, null];
 	var stagesbackground = [towerbackgroundpng, null];
 	var grounds = [240,220];
-	var stagesizes = [720,686];
+	var stagesizes = [720,670];
 
 	var characterscreenpng = new Image();characterscreenpng.src = 'ressource/stages/character_screen.png';
 	var raideniconpng=new Image();raideniconpng.src = 'ressource/icons/raiden.png';
