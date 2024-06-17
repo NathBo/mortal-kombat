@@ -1284,6 +1284,7 @@ function main(){
 						if(Math.random()<stats.degats/25){play_sound_eff("compliment");}
 						break;
 					case "grab" :
+						this.ai.ugothit();
 						other.begin_grab(this);
 						return;
 					case "projectile" :
