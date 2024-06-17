@@ -1074,7 +1074,7 @@ function main(){
 					
 				}
 				else{
-					if(this.dodge==1&&this.movlag==0)
+					if(this.dodge==1&&this.movlag==0 && end_of_round_countdown==0)
 					{
 						this.dodge=2;this.movlag = c.airdodgefdur;this.mov = "air_dodge";
 						this.falling = 0;
@@ -2055,6 +2055,7 @@ function main(){
 				persoschoisis = [liste_persos[persosovered[0]],liste_persos[persosovered[1]]]
 				reset_game();
 				is_in_charc_screen = false;
+				chosenstage = Math.floor(Math.random()*numberofstages);
 				ground = grounds[chosenstage];
 				stage_size = stagesizes[chosenstage];
 				functiontoexecute = loop;
@@ -2206,7 +2207,7 @@ function main(){
 		musiques[i].loop = true;
 	}
 	
-	var chosenstage = 1;
+	var chosenstage = 1; var numberofstages = 2;
 
 	var roundswav = [document.querySelector('#round1wav'),document.querySelector('#round2wav'),document.querySelector('#round3wav')];
 
