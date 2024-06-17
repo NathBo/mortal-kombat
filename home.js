@@ -1955,7 +1955,7 @@ function main(){
 			if(entre(clickx,482/512,505/512) && entre(clicky,210/250,241/250)){secondplayerishuman = !secondplayerishuman}
 			if(!secondplayerishuman && entre(clickx,425/512,435/512) && entre(clicky,230/250,240/250)){difficulte = Math.max(difficulte-1,0)}
 			if(!secondplayerishuman && entre(clickx,444/512,454/512) && entre(clicky,230/250,240/250)){difficulte = Math.min(difficulte+1,difficultynames.length-1)}
-			if(entre(clickx,400/1024,610/1024) && entre(clicky,450/500,480/500)){functiontoexecute = titlescreen;}
+			if(entre(clickx,400/1024,610/1024) && entre(clicky,450/500,480/500)){persolocked = [0,0];functiontoexecute = titlescreen;return;}
 		}
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.scale(1,1);
@@ -1979,7 +1979,7 @@ function main(){
 				reset_for_charac_screen(0);
 				play_sound_eff("cursor_move");
 			}
-			else if(!secondplayerishuman){
+			else if(!secondplayerishuman && !persolocked[1]){
 				persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]+1);
 				reset_for_charac_screen(1);
 				play_sound_eff("cursor_move");
@@ -1992,7 +1992,7 @@ function main(){
 				reset_for_charac_screen(0);
 				play_sound_eff("cursor_move");
 			}
-			else if(!secondplayerishuman){
+			else if(!secondplayerishuman && !persolocked[1]){
 				persosovered[1]=Math.max(0,persosovered[1]-1);
 				reset_for_charac_screen(1);
 				play_sound_eff("cursor_move");
