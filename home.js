@@ -1284,7 +1284,7 @@ function main(){
 						if(Math.random()<stats.degats/25){play_sound_eff("compliment");}
 						break;
 					case "grab" :
-						this.ai.ugothit();
+						if(this.n==0 && !secondplayerishuman){this.ai.ugothit();}
 						other.begin_grab(this);
 						return;
 					case "projectile" :
@@ -1746,7 +1746,7 @@ function main(){
 	function drawStage(){
 		if(fatalitywasdone || fatalitysreen){ctx.filter = 'brightness(0.5)';}
 		ctx.scale(2,2);
-		if(stagesbackground[chosenstage] != null){ctx.drawImage(stagesbackground[chosenstage],-18-camerax/5,0);}
+		if(stagesbackground[chosenstage] != null){ctx.drawImage(stagesbackground[chosenstage],-90*backgroundscroll[chosenstage]-camerax*backgroundscroll[chosenstage],0);}
 		if(stagesstruct[chosenstage] != null){ctx.drawImage(stagesstruct[chosenstage],-camerax+238-stage_size/2+shakex,shakey);}
 		if(stagesground[chosenstage] != null){ctx.drawImage(stagesground[chosenstage],-camerax+256-stage_size/2+shakex,178+shakey);}
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -2055,7 +2055,7 @@ function main(){
 				persoschoisis = [liste_persos[persosovered[0]],liste_persos[persosovered[1]]]
 				reset_game();
 				is_in_charc_screen = false;
-				chosenstage = Math.floor(Math.random()*numberofstages);
+				//chosenstage = Math.floor(Math.random()*numberofstages);
 				ground = grounds[chosenstage];
 				stage_size = stagesizes[chosenstage];
 				functiontoexecute = loop;
@@ -2200,14 +2200,14 @@ function main(){
 
 	var fightwav = document.querySelector('#fightwav');
 
-	var musiques = [document.querySelector('#towerwav'), document.querySelector('#deadpoolwav')];
-	var roundover_musiques = [document.querySelector('#towerroundoverwav'),document.querySelector('#deadpoolroundoverwav')];
+	var musiques = [document.querySelector('#towerwav'), document.querySelector('#deadpoolwav'), document.querySelector("#wastewav")];
+	var roundover_musiques = [document.querySelector('#towerroundoverwav'),document.querySelector('#deadpoolroundoverwav'),document.querySelector("#watseroundoverwav")];
 	
 	for (var i=0; i<musiques.length; i++){
 		musiques[i].loop = true;
 	}
 	
-	var chosenstage = 1; var numberofstages = 2;
+	var chosenstage = 2; var numberofstages = 2;
 
 	var roundswav = [document.querySelector('#round1wav'),document.querySelector('#round2wav'),document.querySelector('#round3wav')];
 
