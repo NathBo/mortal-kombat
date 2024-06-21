@@ -2055,7 +2055,7 @@ function main(){
 				persoschoisis = [liste_persos[persosovered[0]],liste_persos[persosovered[1]]]
 				reset_game();
 				is_in_charc_screen = false;
-				//chosenstage = Math.floor(Math.random()*numberofstages);
+				chosenstage = Math.floor(Math.random()*numberofstages);
 				ground = grounds[chosenstage];
 				stage_size = stagesizes[chosenstage];
 				functiontoexecute = loop;
@@ -2207,7 +2207,7 @@ function main(){
 		musiques[i].loop = true;
 	}
 	
-	var chosenstage = 4; var numberofstages = 2;
+	var chosenstage = 4; var numberofstages = 5;
 
 	var roundswav = [document.querySelector('#round1wav'),document.querySelector('#round2wav'),document.querySelector('#round3wav')];
 
