@@ -2200,14 +2200,14 @@ function main(){
 
 	var fightwav = document.querySelector('#fightwav');
 
-	var musiques = [document.querySelector('#towerwav'), document.querySelector('#deadpoolwav'), document.querySelector("#wastewav"), document.querySelector("#forestwav")];
-	var roundover_musiques = [document.querySelector('#towerroundoverwav'),document.querySelector('#deadpoolroundoverwav'),document.querySelector("#watseroundoverwav"), document.querySelector("#forestroundoverwav")];
+	var musiques = [document.querySelector('#towerwav'), document.querySelector('#deadpoolwav'), document.querySelector("#wastewav"), document.querySelector("#forestwav"),  document.querySelector("#gorowav")];
+	var roundover_musiques = [document.querySelector('#towerroundoverwav'),document.querySelector('#deadpoolroundoverwav'),document.querySelector("#watseroundoverwav"), document.querySelector("#forestroundoverwav"),document.querySelector("#forestroundoverwav")];
 	
 	for (var i=0; i<musiques.length; i++){
 		musiques[i].loop = true;
 	}
 	
-	var chosenstage = 3; var numberofstages = 2;
+	var chosenstage = 4; var numberofstages = 2;
 
 	var roundswav = [document.querySelector('#round1wav'),document.querySelector('#round2wav'),document.querySelector('#round3wav')];
 
