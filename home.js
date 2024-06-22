@@ -743,7 +743,7 @@ function main(){
 			}
 
 			if(me.perso=="kitana" && me.y==0 && other.y>0 && me.crouching==0 && entre(Math.abs(me.x-other.x),100,150) && me.orientation*other.xspeed<=-2.5 && other.tb>0){this.begincoup("fanlift");}
-			if(Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-this.idealrange)<=me.charac.vitesse*2+other.movlag*3 && movpriority.get(me.mov)<70 && !(other.mov == "thundergod" || other.mov == "boltthrow" || other.mov == "fanthrow" || other.mov=="hell_gates" || other.mov == "spear_throw")){
+			if(Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-this.idealrange)<=me.charac.vitesse*2+other.movlag*3 && me.y==0 && movpriority.get(me.mov)<70 && !(other.mov == "thundergod" || other.mov == "boltthrow" || other.mov == "fanthrow" || other.mov=="hell_gates" || other.mov == "spear_throw" || other.mov == "slide")){
 				if(me.perso=="kitana"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("fanthrow");}}
 				if(me.perso=="raiden"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("boltthrow");}}
 				if(me.perso=="scorpion" && this.currisking+me.pv/10>=2){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("spear_throw");}}
@@ -754,6 +754,9 @@ function main(){
 
 			else if(me.perso=="scorpion" && this.currisking-me.pv/20>=-2 && Math.abs(me.x-other.x-other.xspeed*10)>=80 && me.y==0 && me.crouching==0 && movpriority.get(me.mov)<70 && other.tb<=0 && me.y==0)
 				{this.begincoup("hell_gates");}
+
+			else if(me.perso=="subzero" && me.y==0 && other.y==0 && Math.abs(Math.abs(me.x-other.x)-this.idealrange)>=60 && Math.abs(me.x-other.x)<=120 && movpriority.get(me.mov)<70 && !this.thereisaprojo())
+				{this.begincoup("slide");}
 
 			else if(Math.abs(Math.abs(me.x-other.x)-this.idealrange)>=this.distancetowavedash && !this.thereisaprojo()){this.beginwavedash();}
 			
@@ -1062,6 +1065,9 @@ function main(){
 					else if(this.perso == "scorpion" && this.crouching>=4 && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("leg_takedown",other);
 					}
+					else if(this.perso == "subzero" && this.forward>=1 && this.crouching==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+						this.begincoup("slide",other);
+					}
 					else if(this.forward>=1&&movpriority.get(this.mov)<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
 						this.x+=this.charac.vitesse*this.orientation;this.xspeed = 0;
 						let d = (this.charac.width+other.charac.width)/3;
@@ -1186,6 +1192,10 @@ function main(){
 						}
 						else if(this.movlag == stats.elag-40+1){this.movlag=0;this.mov="";}
 						break;
+					case "slide":
+						var stats = this.charac.coups.get(this.mov);
+						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.xspeed=6*this.orientation;}
+						break;
 				}
 				this.movlag--;
 				if(this.movlag == 0){
@@ -1198,10 +1208,10 @@ function main(){
 			}
 			this.x += this.xspeed;
 			if(this.pushed>0){this.pushed--;this.x+=this.pushx;}
-			let d = (this.charac.width+other.charac.width)/4;
+			let d = (this.charac.width+other.charac.width)/3;
 			if(Math.abs(this.x-other.x)<d && this.y==0 && other.y==0){
 				this.x=(this.x+other.x)/2+signe(this.x-other.x)*d;
-				other.x=(this.x+other.x)/2-signe(this.x-other.x)*d;
+				this.xspeed=0;
 			}
 			if(Math.abs(this.x-camerax)>decalagex-this.charac.width/2){this.x = signe(this.x-camerax)*(decalagex+signe(this.x-camerax)*camerax-this.charac.width/2)}
 		}
@@ -1228,7 +1238,7 @@ function main(){
 		{
 			if(this.charac.coups.has(this.mov)){
 				var stats = this.charac.coups.get(this.mov);
-				if(this.y==0 && other.y>0 && stats.hitboxys<0){return;}
+				if(this.y==0 && other.y>0 && stats.hitboxye<0 && this.mov != "slide"){return;}
 				if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){
 					var hitboxxe = stats.hitboxxe;
 					if(other.charac.coups.has(other.mov)){
@@ -1240,10 +1250,10 @@ function main(){
 							if(stats.hitboxys<=-1 || this.y>0){other.hurt(this,stats);}
 						}
 						else if(other.y==0){
-							if(entre((other.y-this.y),stats.hitboxys,stats.hitboxxe+other.charac.height/3)){other.hurt(this,stats);}
+							if(entre((other.y-this.y),stats.hitboxys,stats.hitboxye+other.charac.height/3)){other.hurt(this,stats);}
 						}
 						else{
-							if(entre((other.y-this.y),stats.hitboxys-other.charac.height/6,stats.hitboxxe+other.charac.height/6)){other.hurt(this,stats);}
+							if(entre((other.y-this.y),stats.hitboxys-other.charac.height/6,stats.hitboxye+other.charac.height/6)){other.hurt(this,stats);}
 						}
 					}
 				}
@@ -1265,7 +1275,8 @@ function main(){
 			if(this.invincibilite || end_of_round_countdown){return;}
 			if(other.mov=="thundergod"){other.y=0;}
 			if(this.n==1 && !secondplayerishuman && (stats.hiteffect=="projectile" || stats.hiteffect=="spear")){this.ai.ugothitorblockedaprojectile();}
-			if(this.movlag==0&&this.hurted==0&&this.back>=1&&this.y==0&&stats.hiteffect != "grab" && ((this.crouching<=3 && (other.y>0 || stats.hitboxys>=0) || (this.crouching>3 && other.y==0)) || stats.hiteffect=="projectile")){
+			if(this.blocking && this.bas && this.back){this.crouching=6;}
+			if(this.movlag==0&&this.hurted==0&&this.back>=1&&this.y==0&&stats.hiteffect != "grab" && this.pv>0 && ((this.crouching<=3 && (other.y>0 || stats.hitboxys>=0) || (this.crouching>3 && other.y==0)) || stats.hiteffect=="projectile")){
 				this.blocking = stats.blockstun;
 				this.pv-=stats.damageonblock;
 				if(this.pv<=0){this.pv = 1;}
@@ -1325,6 +1336,7 @@ function main(){
 		killanim(){
 			this.pv = 0;
 			this.falling = 4;
+			this.crouching=0;
 			this.tb = Math.max(7,this.tb);
 			this.y+=0.1;
 			this.xspeed = signe(this.xspeed)*Math.max(Math.abs(this.xspeed),3);
@@ -1508,6 +1520,7 @@ function main(){
 					case "jpunch" :
 					case "fanlift" :
 					case "elecgrab" :
+					case "slide" :
 						var stats = this.charac.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.costume = this.mov+"2"}
 						else{this.costume = this.mov+"1";}
@@ -2226,7 +2239,7 @@ function main(){
 
 	characteristics.set("subzero",{png : subskins,coordinates : subcoordinates, sex : "m", standnframes : 10, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : scorpioniconpng, namewav : document.querySelector('#scorpionwav'),
 		width : 39, height : 103,vitesse : 3,jumpxspeed : 3.4,backmovnerf : 0.9, gravity : 0.41, jumpforce : 9.1,jumpsquat : 3, shorthop : 6.3, friction:0.17, hurtcontrol : 0.18,
-		airdrift : 0.13, airmaxspeed : 1.8, airdodgespeed : 5.7, airdodgefdur : 15, landinglag : 9, coups : subzero_coups, pv : 95, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 14, cds : [150,180,180,120], icons : [spearthrowiconpng,thundergodiconpng,hellgatesiconpng,legtakedowniconpng], voiceactor : "male"});
+		airdrift : 0.13, airmaxspeed : 1.8, airdodgespeed : 5.7, airdodgefdur : 15, landinglag : 9, coups : subzero_coups, pv : 95, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 14, cds : [150,150,180,120], icons : [spearthrowiconpng,slideiconpng,hellgatesiconpng,legtakedowniconpng], voiceactor : "male"});
 	
 
 
