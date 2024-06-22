@@ -2224,7 +2224,10 @@ function main(){
 	width : 40, height : 103,vitesse : 2.9,jumpxspeed : 3.5,backmovnerf : 0.9, gravity : 0.41, jumpforce : 9,jumpsquat : 4, shorthop : 5.2, friction:0.21, hurtcontrol : 0.2,
 	airdrift : 0.15, airmaxspeed : 1.8, airdodgespeed : 5.6, airdodgefdur : 14, landinglag : 6,coups : scorpion_coups, pv : 95, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 12, cds : [150,180,180,120], icons : [spearthrowiconpng,thundergodiconpng,hellgatesiconpng,legtakedowniconpng], voiceactor : "male"});
 
-
+	characteristics.set("subzero",{png : subskins,coordinates : subcoordinates, sex : "m", standnframes : 10, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : scorpioniconpng, namewav : document.querySelector('#scorpionwav'),
+		width : 40, height : 103,vitesse : 2.9,jumpxspeed : 3.5,backmovnerf : 0.9, gravity : 0.41, jumpforce : 9,jumpsquat : 4, shorthop : 5.2, friction:0.21, hurtcontrol : 0.2,
+		airdrift : 0.15, airmaxspeed : 1.8, airdodgespeed : 5.6, airdodgefdur : 14, landinglag : 6,coups : scorpion_coups, pv : 95, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 12, cds : [150,180,180,120], icons : [spearthrowiconpng,thundergodiconpng,hellgatesiconpng,legtakedowniconpng], voiceactor : "male"});
+	
 
 
 	j1 = new Joueur();
@@ -2246,8 +2249,8 @@ function main(){
 	var roundwonsj1 = 0; var roundwonsj2 = 0;
 	var finishhim = 0; var fatalitywasdone = false; var fatalitysreen = 0;
 	var persoschoisis = ["kitana","raiden"]; var persolocked = [0,0]; var persosovered = [0,0];
-	var musiqueon = true; var soundeffon = true; var introon = true; var timer = 0; var timer_init = 99*60;
-	var liste_persos = ["raiden","kitana","scorpion"];
+	var musiqueon = false; var soundeffon = false; var introon = true; var timer = 0; var timer_init = 99*60;
+	var liste_persos = ["raiden","kitana","scorpion","subzero"];
 	var chartimer = 0; var chartimercycle = 3; var difficultynames = ["Easy","Normal","Hard","Insane","Terminator"];
 	var is_in_charc_screen = true; var lockincountdown = 0; var lockincountdownfdur = 40; var controlafaire = -1; var key = "";
 	var Width= window.innerWidth; var Height=window.innerHeight;
