@@ -424,13 +424,13 @@ function getsubcoordinates(){
 	subcoordinates.set("crouching1",{offx:762,width:39,offy:17,height:103,decx:0,decy:0});
 	subcoordinates.set("crouching2",{offx:823,width:39,offy:17,height:103,decx:0,decy:0});
 	subcoordinates.set("walk1",{offx:14,width:42,offy:129,height:110,decx:0,decy:-3});
-	subcoordinates.set("walk2",{offx:64,width:42,offy:129,height:110,decx:0,decy:-4});
+	subcoordinates.set("walk2",{offx:64,width:42,offy:129,height:110,decx:0,decy:-3});
 	subcoordinates.set("walk3",{offx:115,width:41,offy:129,height:110,decx:0,decy:-6});
 	subcoordinates.set("walk4",{offx:164,width:41,offy:129,height:110,decx:0,decy:-2});
-	subcoordinates.set("walk5",{offx:214,width:41,offy:129,height:110,decx:0,decy:-1});
+	subcoordinates.set("walk5",{offx:214,width:41,offy:129,height:110,decx:0,decy:-2});
 	subcoordinates.set("walk6",{offx:264,width:41,offy:129,height:110,decx:0,decy:-2});
 	subcoordinates.set("walk7",{offx:314,width:41,offy:129,height:110,decx:0,decy:-3});
-	subcoordinates.set("walk8",{offx:363,width:41,offy:129,height:110,decx:0,decy:-3});
+	subcoordinates.set("walk8",{offx:363,width:41,offy:129,height:110,decx:0,decy:-4});
 	subcoordinates.set("walk9",{offx:412,width:49,offy:129,height:110,decx:0,decy:-2});
 	subcoordinates.set("jump1",{offx:485,width:45,offy:129,height:110,decx:0,decy:0});
 	subcoordinates.set("jump2",{offx:539,width:47,offy:161,height:78,decx:0,decy:0});
@@ -473,8 +473,8 @@ function getsubcoordinates(){
 	subcoordinates.set("getup2",{offx:810,width:72,offy:1047,height:78,decx:0,decy:0});
 	subcoordinates.set("getup3",{offx:891,width:63,offy:1047,height:78,decx:0,decy:0});
 	subcoordinates.set("getup4",{offx:964,width:32,offy:1047,height:78,decx:0,decy:0});
-	subcoordinates.set("blocking1",{offx:416,width:36,offy:17,height:103,decx:0,decy:0});
-	subcoordinates.set("blocking2",{offx:461,width:36,offy:17,height:103,decx:0,decy:0});
+	subcoordinates.set("blocking1",{offx:549,width:37,offy:17,height:103,decx:0,decy:0});
+	subcoordinates.set("blocking2",{offx:594,width:36,offy:17,height:103,decx:0,decy:0});
 	subcoordinates.set("cblocking1",{offx:886,width:37,offy:17,height:103,decx:0,decy:0});
 	subcoordinates.set("cblocking2",{offx:932,width:40,offy:17,height:103,decx:0,decy:0});
 	subcoordinates.set("churted1",{offx:510,width:43,offy:946,height:71,decx:0,decy:0});
