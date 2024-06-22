@@ -421,8 +421,8 @@ function getsubcoordinates(){
 	subcoordinates.set("stand8",{offx:400,width:38,offy:17,height:103,decx:-1,decy:0});
 	subcoordinates.set("stand9",{offx:447,width:38,offy:17,height:103,decx:-1,decy:0});
 	subcoordinates.set("stand10",{offx:494,width:37,offy:17,height:103,decx:0,decy:0});
-	subcoordinates.set("crouching1",{offx:629,width:39,offy:17,height:103,decx:0,decy:0});
-	subcoordinates.set("crouching2",{offx:690,width:39,offy:17,height:103,decx:0,decy:0});
+	subcoordinates.set("crouching1",{offx:762,width:39,offy:17,height:103,decx:0,decy:0});
+	subcoordinates.set("crouching2",{offx:823,width:39,offy:17,height:103,decx:0,decy:0});
 	subcoordinates.set("walk1",{offx:14,width:42,offy:129,height:110,decx:0,decy:-3});
 	subcoordinates.set("walk2",{offx:64,width:42,offy:129,height:110,decx:0,decy:-4});
 	subcoordinates.set("walk3",{offx:115,width:41,offy:129,height:110,decx:0,decy:-6});
@@ -475,8 +475,8 @@ function getsubcoordinates(){
 	subcoordinates.set("getup4",{offx:964,width:32,offy:1047,height:78,decx:0,decy:0});
 	subcoordinates.set("blocking1",{offx:416,width:36,offy:17,height:103,decx:0,decy:0});
 	subcoordinates.set("blocking2",{offx:461,width:36,offy:17,height:103,decx:0,decy:0});
-	subcoordinates.set("cblocking1",{offx:753,width:37,offy:17,height:103,decx:0,decy:0});
-	subcoordinates.set("cblocking2",{offx:799,width:40,offy:17,height:103,decx:0,decy:0});
+	subcoordinates.set("cblocking1",{offx:886,width:37,offy:17,height:103,decx:0,decy:0});
+	subcoordinates.set("cblocking2",{offx:932,width:40,offy:17,height:103,decx:0,decy:0});
 	subcoordinates.set("churted1",{offx:510,width:43,offy:946,height:71,decx:0,decy:0});
 	subcoordinates.set("churted2",{offx:562,width:46,offy:946,height:71,decx:0,decy:0});
 	subcoordinates.set("clpunch1",{offx:347,width:55,offy:736,height:73,decx:0,decy:0});
@@ -507,8 +507,8 @@ function getsubcoordinates(){
 	subcoordinates.set("grabbed2",{offx:418,width:34,offy:1025,height:99,decx:0,decy:0});
 	subcoordinates.set("grabbed3",{offx:459,width:46,offy:1025,height:99,decx:0,decy:0});
 	subcoordinates.set("grabbed4",{offx:513,width:46,offy:1025,height:99,decx:0,decy:0});
-	subcoordinates.set("victory1",{offx:986,width:44,offy:134,height:105,decx:0,decy:0});
-	subcoordinates.set("victory2",{offx:1039,width:41,offy:134,height:105,decx:0,decy:0});
+	subcoordinates.set("victory1",{offx:994,width:34,offy:124,height:129,decx:0,decy:0});
+	subcoordinates.set("victory2",{offx:1045,width:33,offy:124,height:129,decx:0,decy:0});
     subcoordinates.set("decapitated1",{offx:15,width:15,offy:1716,height:92,decx:0,decy:0});
     subcoordinates.set("decapitated2",{offx:38,width:24,offy:1716,height:92,decx:0,decy:0});
     subcoordinates.set("decapitated3",{offx:68,width:25,offy:1716,height:92,decx:0,decy:0});
