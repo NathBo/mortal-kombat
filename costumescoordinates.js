@@ -522,6 +522,10 @@ function getsubcoordinates(){
     subcoordinates.set("stunned5",{offx:310,width:44,offy:1134,height:101,decx:0,decy:0});
 	subcoordinates.set("slide1",{offx:876,width:58,offy:1364,height:95,decx:0,decy:0});
 	subcoordinates.set("slide2",{offx:944,width:58,offy:1364,height:95,decx:0,decy:0});
+	subcoordinates.set("iceball1",{offx:15,width:37,offy:1249,height:97,decx:0,decy:0});
+	subcoordinates.set("iceball2",{offx:62,width:52,offy:1249,height:97,decx:0,decy:0});
+	subcoordinates.set("iceball3",{offx:122,width:52,offy:1249,height:97,decx:0,decy:0});
+	subcoordinates.set("iceball",{offx:465,width:72,offy:1326,height:20,decx:0,decy:0});
 
 	subcoordinates.set("head",{offx:296,width:14,offy:1791,height:17,decx:0,decy:0});
 	
