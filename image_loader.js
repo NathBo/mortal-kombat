@@ -35,6 +35,7 @@ var lifebarpng=new Image();lifebarpng.src = 'ressource/ui/barlife.png';
 	var legtakedowniconpng=new Image();legtakedowniconpng.src = 'ressource/icons/leg_takedown_icon.png';
 	var slideiconpng=new Image();slideiconpng.src = 'ressource/icons/slide_icon.png';
 	var iceballiconpng=new Image();iceballiconpng.src = 'ressource/icons/iceball_icon.png';
+	var iceflaskiconpng=new Image();iceflaskiconpng.src = 'ressource/icons/iceflask_icon.png';
 
 	var bloodpng = new Image();bloodpng.src = 'ressource/visual_effects/blood.png';
 

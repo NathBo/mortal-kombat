@@ -230,6 +230,55 @@ function main(){
 	}
 
 
+	class IceFlask{
+		constructor(x,y,orientation,other,stats){
+			this.x = x; this.y = y; this.orientation = orientation;
+			this.other = other;
+			this.width=64;
+			this.height=20;
+			this.totdur = 70;this.vitesse=0;
+			this.stats = stats;
+			this.dur = this.totdur;
+			this.num = cpt;
+			this.dangerous = true;
+			
+		}
+
+		loop(){
+			var stats = this.stats; var other = this.other;
+			if(other.invincibilite==0 && this.dangerous &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
+				if(other.y==0){
+					other.hurt(this,stats);this.dur=20;
+				}
+			}
+		}
+
+		afficher(){
+			if(this.dur<=3){
+				this.costume = "oiceflask3";
+			}
+			if(this.dur<=6){
+				this.dangerous=false;
+				this.costume = "oiceflask2";
+			}
+			else{
+				this.costume = "oiceflask1";
+			}
+			ctx.scale(2*this.orientation,2);
+			var coords = subcoordinates.get(this.costume);
+			ctx.drawImage(subpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			if(gamefreeze==0){this.dur--;}
+			if(this.dur==0){this.delete();return;}
+		}
+
+		delete(){
+			objects_to_loop.delete(this.num);
+		}
+	}
+
+
 	class Spear{
 		constructor(x,y,orientation,other,stats,owner){
 			this.x = x; this.y = y; this.orientation = orientation; this.owner = owner;
@@ -800,6 +849,9 @@ function main(){
 			else if(me.perso=="scorpion" && this.currisking-me.pv/20>=-2 && Math.abs(me.x-other.x-other.xspeed*10)>=80 && me.y==0 && me.crouching==0 && movpriority.get(me.mov)<70 && other.tb<=0 && me.y==0)
 				{this.begincoup("hell_gates");}
 
+			else if(me.perso=="subzero" && me.y==0 && other.y==0 && other.gettingup && other.gettingup<=other.charac.getupfdur-28 && Math.abs(me.x-other.x)<=100 && movpriority.get(me.mov)<70 && !this.thereisaprojo())
+				{this.begincoup("iceflask");}
+
 			else if(me.perso=="subzero" && me.y==0 && other.y==0 && Math.abs(Math.abs(me.x-other.x)-this.idealrange)>=60 && Math.abs(me.x-other.x)<=120 && movpriority.get(me.mov)<70 && !this.thereisaprojo())
 				{this.begincoup("slide");}
 
@@ -1121,6 +1173,9 @@ function main(){
 					else if(this.perso == "subzero" && this.back==0 && this.forward==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("iceball",other);
 					}
+					else if(this.perso == "subzero" && this.back>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+						this.begincoup("iceflask",other);
+					}
 					else if(this.forward>=1&&movpriority.get(this.mov)<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
 						this.x+=this.charac.vitesse*this.orientation;this.xspeed = 0;
 						let d = (this.charac.width+other.charac.width)/3;
@@ -1256,6 +1311,12 @@ function main(){
 							add_to_objects_set(new Iceball(this.x+20*this.orientation,this.y+60,this.orientation,other,stats));
 						}
 						break;
+					case "iceflask" :
+						var stats = this.charac.coups.get(this.mov);
+						if(this.movlag==1){
+							add_to_objects_set(new IceFlask(this.x+60*this.orientation,this.y-5,this.orientation,other,stats));
+						}
+						break;
 				}
 				this.movlag--;
 				if(this.movlag == 0){
@@ -1332,17 +1393,17 @@ function main(){
 			if(stats.hiteffect==""){return;}
 			if(other.mov=="thundergod"){other.movlag=1;other.tb=8;other.xspeed = -1;other.y=0.1;}
 			if(other.mov=="squarepunch"){other.movlag=1;other.tb=0;other.xspeed = -1;}
-			if(this.invincibilite || end_of_round_countdown){console.log(this.invincibilite);return;}
+			if(this.invincibilite || end_of_round_countdown){return;}
 			if(other.mov=="thundergod"){other.y=0;}
 			if(this.n==1 && !secondplayerishuman && (stats.hiteffect=="projectile" || stats.hiteffect=="spear")){this.ai.ugothitorblockedaprojectile();}
 			if(this.blocking && this.bas && this.back){this.crouching=6;}
-			if(this.movlag==0&&this.hurted==0&&this.back>=1&&this.y==0 && this.freeze==0 &&stats.hiteffect != "grab" && this.pv>0 && ((this.crouching<=3 && (other.y>0 || stats.hitboxys>=0) || (this.crouching>3 && other.y==0)) || stats.hiteffect=="projectile")){
+			if(this.movlag==0&&this.hurted==0&&this.back>=1&&this.y==0 && stats.hiteffect != "iceflask" && this.freeze==0 &&stats.hiteffect != "grab" && this.pv>0 && ((this.crouching<=3 && (other.y>0 || stats.hitboxys>=0) || (this.crouching>3 && other.y==0)) || stats.hiteffect=="projectile")){
 				this.blocking = stats.blockstun;
 				this.pv-=stats.damageonblock;
 				if(this.pv<=0){this.pv = 1;}
 				this.xspeed = -stats.blockx*this.orientation;
 				lag_game(Math.floor(stats.hitlag/0.8));
-				if(this.n==0 && !secondplayerishuman && stats.hiteffect!="projectile" && stats.hiteffect != "spear"&& stats.hiteffect != "freeze"){
+				if(this.n==0 && !secondplayerishuman && stats.hiteffect!="projectile" && stats.hiteffect != "spear" && stats.hiteffect != "freeze"  && stats.hiteffect != "iceflask"){
 					other.ai.ugotblocked();
 				}
 			}
@@ -1350,6 +1411,7 @@ function main(){
 				this.freeze=0;
 				switch (stats.hiteffect){
 					case "fall" :
+					case "iceflask" :
 						if(this.falling==0){this.falling = 1;}
 						this.crouching = 0;
 						play_sound_eff(this.charac.voiceactor+"hurted");
@@ -1366,10 +1428,10 @@ function main(){
 						this.falling=0;
 						this.y=0;
 				}
-				if(this.n==1 && !secondplayerishuman && stats.hiteffect != "projectile" && stats.hiteffect != "spear"&& stats.hiteffect != "freeze"){
+				if(this.n==1 && !secondplayerishuman && stats.hiteffect != "projectile" && stats.hiteffect != "spear"&& stats.hiteffect != "freeze" && stats.hiteffect != "iceflask"){
 					this.ai.ugothit();
 				}
-				if(this.n==0 && !secondplayerishuman && stats.hiteffect != "projectile" && stats.hiteffect != "spear" && stats.hiteffect != "freeze"){
+				if(this.n==0 && !secondplayerishuman && stats.hiteffect != "projectile" && stats.hiteffect != "spear" && stats.hiteffect != "freeze" && stats.hiteffect != "iceflask"){
 					other.ai.ugotahit();
 				}
 					this.hurted = stats.hitstun;
@@ -1659,6 +1721,12 @@ function main(){
 						else if(this.movlag>stats.elag-43){this.costume = "spear_throw4";}
 						else if(this.movlag>stats.elag-46){this.costume = "spear_throw5";}
 						else{this.costume = "spear_throw6";}
+						break;
+
+					case "iceflask" :
+						var stats = this.charac.coups.get(this.mov);
+						var a = 7-Math.floor(this.movlag/stats.slag*(7));
+						this.costume = "iceflask" + a.toString();
 						break;
 
 				}
@@ -2312,7 +2380,7 @@ function main(){
 
 	characteristics.set("subzero",{png : subskins,coordinates : subcoordinates, sex : "m", standnframes : 10, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : scorpioniconpng, namewav : document.querySelector('#scorpionwav'),
 		width : 39, height : 103,vitesse : 3,jumpxspeed : 3.4,backmovnerf : 0.9, gravity : 0.41, jumpforce : 9.1,jumpsquat : 3, shorthop : 6.3, friction:0.17, hurtcontrol : 0.18,
-		airdrift : 0.13, airmaxspeed : 1.8, airdodgespeed : 5.7, airdodgefdur : 15, landinglag : 9, coups : subzero_coups, pv : 95, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 14, cds : [210,150,180,120], icons : [iceballiconpng,slideiconpng,hellgatesiconpng,legtakedowniconpng], voiceactor : "male"});
+		airdrift : 0.13, airmaxspeed : 1.8, airdodgespeed : 5.7, airdodgefdur : 15, landinglag : 9, coups : subzero_coups, pv : 95, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 14, cds : [210,150,180,120], icons : [iceballiconpng,slideiconpng,iceflaskiconpng,legtakedowniconpng], voiceactor : "male"});
 	
 
 

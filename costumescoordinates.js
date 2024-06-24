@@ -526,6 +526,17 @@ function getsubcoordinates(){
 	subcoordinates.set("iceball2",{offx:62,width:52,offy:1249,height:97,decx:0,decy:0});
 	subcoordinates.set("iceball3",{offx:122,width:52,offy:1249,height:97,decx:0,decy:0});
 	subcoordinates.set("iceball",{offx:465,width:72,offy:1326,height:20,decx:0,decy:0});
+	subcoordinates.set("iceflask1",{offx:15,width:41,offy:1357,height:102,decx:0,decy:0});
+	subcoordinates.set("iceflask2",{offx:65,width:39,offy:1357,height:102,decx:0,decy:0});
+	subcoordinates.set("iceflask3",{offx:113,width:50,offy:1357,height:102,decx:0,decy:0});
+	subcoordinates.set("iceflask4",{offx:172,width:65,offy:1357,height:102,decx:0,decy:0});
+	subcoordinates.set("iceflask5",{offx:247,width:86,offy:1357,height:100,decx:0,decy:0});
+	subcoordinates.set("iceflask6",{offx:343,width:98,offy:1357,height:98,decx:0,decy:0});
+	subcoordinates.set("iceflask7",{offx:451,width:105,offy:1357,height:97,decx:0,decy:0});
+	subcoordinates.set("iceflask7",{offx:451,width:105,offy:1357,height:97,decx:0,decy:0});
+	subcoordinates.set("oiceflask1",{offx:566,width:68,offy:1442,height:17,decx:0,decy:0});
+	subcoordinates.set("oiceflask2",{offx:645,width:57,offy:1444,height:15,decx:5,decy:0});
+	subcoordinates.set("oiceflask3",{offx:711,width:40,offy:1448,height:11,decx:10,decy:0});
 
 	subcoordinates.set("head",{offx:296,width:14,offy:1791,height:17,decx:0,decy:0});
 	
