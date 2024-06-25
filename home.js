@@ -931,6 +931,7 @@ function main(){
 			this.pv = this.charac.pv; this.pvmax = this.charac.pv; this.pvaff = this.charac.pv;
 			this.pushed = 0;this.pushx = 0;
 			this.blocking = 0; this.falling = 0; this.gettingup = 0; this.grabbing = 0; this.grabbed = 0;
+			this.comboscaling = 1;
 			this.vicpose = 0;
 			this.cooldowns = [0,0,0,0];
 			this.fatality = 0; this.decapitated = 0; this.electrocuted = 0; this.hide = 0; this.burning = 0;
@@ -1059,6 +1060,7 @@ function main(){
 			}
 			if(this.invincibilite>0){this.invincibilite--;}
 			if(this.gettingup){
+				this.comboscaling=1;
 				this.xspeed = signe(this.xspeed)*Math.max(0,Math.abs(this.xspeed) -c.friction);
 				this.gettingup++;
 				if(this.gettingup == this.charac.getupfdur || (this.gettingup>=this.charac.getupfdur*5/6 && this.haut)){
@@ -1075,6 +1077,7 @@ function main(){
 			}
 			else if(this.hurted==0){
 				this.reoriente(other);
+				this.comboscaling=1;
 
 			
 				if(this.y<=0){
@@ -1493,7 +1496,10 @@ function main(){
 				}
 					this.hurted = stats.hitstun;
 				this.xspeed = stats.hurtx*other.orientation;
-				this.pv -= stats.degats;
+				this.pv -= Math.ceil(stats.degats*this.comboscaling);
+				if(stats.hiteffect=="spear" || stats.hiteffect=="freeze"){this.comboscaling-=0.2;}
+				else{this.comboscaling -= 0.05;}
+				if(this.comboscaling<=minimumcomboscaling){this.comboscaling=minimumcomboscaling;}
 				if(stats.hiteffect != "projectile"){lag_game(stats.hitlag);}
 				play_sound_eff(stats.hitsound);
 				shake_screen(stats.hitlag+2,stats.degats/4);
@@ -2483,7 +2489,7 @@ function main(){
 	var is_in_charc_screen = true; var lockincountdown = 0; var lockincountdownfdur = 40; var controlafaire = -1; var key = "";
 	var Width= window.innerWidth; var Height=window.innerHeight;
 	var decalage = 0; var wdecalagey = 0;
-	var bufferwindow = 5;
+	var bufferwindow = 5; var minimumcomboscaling = 0.5;
 
 
 	function shake_screen(frames,force){
