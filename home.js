@@ -298,7 +298,7 @@ function main(){
 			this.x += this.orientation*this.vitesse;
 			var other = this.other;
 			if(entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
-				if(entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){this.dur=-20;shake_screen(10,8);}
+				if(entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){this.dur=-20;shake_screen(10,6);}
 			}
 		}
 
@@ -1949,7 +1949,7 @@ function main(){
 				add_to_objects_set(new Organ(this.x,this.y+this.charac.height,this.orientation, (this.burning!=0)));
 			}
 			if(!this.burning){add_to_objects_set(new Head(this.x,this.y+this.charac.height,this.orientation,this.skin,this.coordinates,5.5));}
-			shake_screen(30,6);
+			shake_screen(30,10);
 			play_sound_eff("explosion");
 		}
 
