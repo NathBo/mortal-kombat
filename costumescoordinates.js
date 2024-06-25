@@ -533,11 +533,21 @@ function getsubcoordinates(){
 	subcoordinates.set("iceflask5",{offx:247,width:86,offy:1357,height:100,decx:0,decy:0});
 	subcoordinates.set("iceflask6",{offx:343,width:98,offy:1357,height:98,decx:0,decy:0});
 	subcoordinates.set("iceflask7",{offx:451,width:105,offy:1357,height:97,decx:0,decy:0});
-	subcoordinates.set("iceflask7",{offx:451,width:105,offy:1357,height:97,decx:0,decy:0});
 	subcoordinates.set("oiceflask1",{offx:566,width:68,offy:1442,height:17,decx:0,decy:0});
 	subcoordinates.set("oiceflask2",{offx:645,width:57,offy:1444,height:15,decx:5,decy:0});
 	subcoordinates.set("oiceflask3",{offx:711,width:40,offy:1448,height:11,decx:10,decy:0});
-	subcoordinates.set("iceflask2",{offx:65,width:39,offy:1357,height:102,decx:0,decy:0});
+	subcoordinates.set("icegrenade1",{offx:15,width:55,offy:1473,height:103,decx:-10,decy:0});
+	subcoordinates.set("icegrenade2",{offx:79,width:55,offy:1473,height:103,decx:-10,decy:0});
+	subcoordinates.set("icegrenade3",{offx:143,width:55,offy:1473,height:103,decx:-10,decy:0});
+	subcoordinates.set("icegrenade4",{offx:206,width:56,offy:1473,height:103,decx:-11,decy:0});
+	subcoordinates.set("icegrenade5",{offx:271,width:55,offy:1473,height:103,decx:-10,decy:0});
+	subcoordinates.set("icegrenade6",{offx:336,width:55,offy:1473,height:103,decx:-10,decy:0});
+	subcoordinates.set("icegrenade7",{offx:399,width:55,offy:1473,height:103,decx:-10,decy:0});
+	subcoordinates.set("icegrenade8",{offx:464,width:50,offy:1473,height:103,decx:0,decy:0});
+	subcoordinates.set("icegrenade9",{offx:525,width:45,offy:1473,height:103,decx:0,decy:0});
+	subcoordinates.set("icegrenade10",{offx:579,width:76,offy:1473,height:103,decx:0,decy:0});
+	subcoordinates.set("oicegrenade1",{offx:665,width:18,offy:1569,height:7,decx:0,decy:0});
+	subcoordinates.set("oicegrenade2",{offx:694,width:23,offy:1569,height:7,decx:-5,decy:0});
 
 	subcoordinates.set("head",{offx:296,width:14,offy:1791,height:17,decx:0,decy:0});
 	
