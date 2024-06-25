@@ -31,6 +31,26 @@ function sum(a){
 	return rep;
 }
 
+function randomInt(mini, maxi)
+{
+     var nb = mini + (maxi+1-mini)*Math.random();
+     return Math.floor(nb);
+}
+
+Array.prototype.shuffle = function(n)
+{
+     if(!n)
+          n = this.length;
+     if(n > 1)
+     {
+          var i = randomInt(0, n-1);
+          var tmp = this[i];
+          this[i] = this[n-1];
+          this[n-1] = tmp;
+          this.shuffle(n-1);
+     }
+}
+
 function getrandomwithcoeff(a){
 	var cb = Math.random()*sum(a);
 	for(var i=0;i<a.length;i++){
@@ -2087,14 +2107,30 @@ function main(){
 
 	function reset_game(reset_ai=true){
 		timer = timer_init;
-		j1.reinit(-150,0,persoschoisis[0],0,0,j2,reset_ai);j2.reinit(150,0,persoschoisis[1],1,1,j1,reset_ai);frame_delay = base_frame_delay;
+		j1.reinit(-150,0,persoschoisis[0],0,skinschoisis[0],j2,reset_ai);j2.reinit(150,0,persoschoisis[1],1,skinschoisis[1],j1,reset_ai);frame_delay = base_frame_delay;
 		cpt = 0; objects_to_loop.clear();
 		end_of_round_countdown=0;
 		if(introon){fightstartcountdown = 130;}else{fightstartcountdown=0;}
 		fatalitywasdone = false; fatalitysreen = 0;
 	}
 
-	
+	function gobacktotitlescreen(){
+		persolocked = [0,0]; skinschoisis = [0,0];arcadelevel=-1;functiontoexecute = titlescreen;
+		roundwonsj1 = 0; roundwonsj2 = 0; camerax = 0;
+		is_in_charc_screen = true;
+		reset_game(true);
+		reset_for_charac_screen(0);
+		reset_for_charac_screen(1);
+		return;
+	}
+
+	function choserandomstage(){
+		chosenstage = Math.floor(Math.random()*numberofstages);
+		ground = grounds[chosenstage];
+		stage_size = stagesizes[chosenstage];
+	}
+
+
 	function loop(){
 		resizecanvas();
 		if(gamefreeze){gamefreeze--;}
@@ -2126,14 +2162,31 @@ function main(){
 			}
 			else {
 				if(roundwonsj1>=2 || roundwonsj2>=2){
-				roundwonsj1 = 0; roundwonsj2 = 0; camerax = 0;
-				persolocked = [0,0];
-				is_in_charc_screen = true;
-				reset_for_charac_screen(0);
-				reset_for_charac_screen(1);
-				lockincountdown=0;
-				functiontoexecute = menupersos;
-				return;
+					if(roundwonsj1>=2 && arcadelevel>=0){
+						arcadelevel+=1;
+						if(arcadelevel>=liste_persos.length){
+							reset_game(true);
+							gobacktotitlescreen();
+							return;
+						}
+						roundwonsj1 = 0; roundwonsj2 = 0; camerax = 0;
+						persolocked = [0,0];
+						persoschoisis[1] = arcadeorder[arcadelevel];
+						skinschoisis[1] = randomInt(0,1);
+						choserandomstage();
+						if(persoschoisis[1]==persoschoisis[0]){skinschoisis[1]=(skinschoisis[0]+1)%2;}
+						reset_game(true);
+						return;
+					}
+					roundwonsj1 = 0; roundwonsj2 = 0; camerax = 0;
+					persolocked = [0,0];
+					skinschoisis = [0,0];
+					is_in_charc_screen = true;
+					reset_for_charac_screen(0);
+					reset_for_charac_screen(1);
+					lockincountdown=0;
+					functiontoexecute = menupersos;
+					return;
 				}
 			
 				else{reset_game(false);}
@@ -2167,8 +2220,8 @@ function main(){
 	}
 
 	function reset_for_charac_screen(n){
-		if(n==0){j1.reinit(-210,60,liste_persos[persosovered[0]],0,0,j2,true);}
-		else{j2.reinit(210,60,liste_persos[persosovered[1]],1,0,j1,true);}
+		if(n==0){j1.reinit(-210,60,liste_persos[persosovered[0]],0,skinschoisis[0],j2,true);}
+		else{j2.reinit(210,60,liste_persos[persosovered[1]],1,skinschoisis[1],j1,true);}
 	}
 
 	function menupersos(){
@@ -2198,10 +2251,10 @@ function main(){
 		}
 		if(click==1){
 			click=2;
-			if(entre(clickx,482/512,505/512) && entre(clicky,210/250,241/250)){secondplayerishuman = !secondplayerishuman}
-			if(!secondplayerishuman && entre(clickx,425/512,435/512) && entre(clicky,230/250,240/250)){difficulte = Math.max(difficulte-1,0)}
-			if(!secondplayerishuman && entre(clickx,444/512,454/512) && entre(clicky,230/250,240/250)){difficulte = Math.min(difficulte+1,difficultynames.length-1)}
-			if(entre(clickx,400/1024,610/1024) && entre(clicky,450/500,480/500)){persolocked = [0,0];functiontoexecute = titlescreen;return;}
+			if(entre(clickx,482/512,505/512) && entre(clicky,210/250,241/250) && secondplayerchosescharac){secondplayerishuman = !secondplayerishuman}
+			if(!secondplayerishuman && entre(clickx,425/512,435/512) && entre(clicky,230/250,240/250) && arcadelevel<=0){difficulte = Math.max(difficulte-1,0)}
+			if(!secondplayerishuman && entre(clickx,444/512,454/512) && entre(clicky,230/250,240/250) && arcadelevel<=0){difficulte = Math.min(difficulte+1,difficultynames.length-1)}
+			if(entre(clickx,400/1024,610/1024) && entre(clicky,450/500,480/500)){persolocked = [0,0]; skinschoisis = [0,0];functiontoexecute = titlescreen;return;}
 		}
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.scale(1,1);
@@ -2209,7 +2262,7 @@ function main(){
 			ctx.strokeStyle = "red";
 			ctx.strokeRect(384+72*persosovered[0],171,63,96);
 		}
-		if((chartimer>=chartimercycle && persosovered[0]==persosovered[1]) || (chartimer<chartimercycle && persosovered[0]!=persosovered[1]) || persolocked[1]){
+		if(secondplayerchosescharac && ((chartimer>=chartimercycle && persosovered[0]==persosovered[1]) || (chartimer<chartimercycle && persosovered[0]!=persosovered[1]) || persolocked[1])){
 			ctx.strokeStyle = "green";
 			ctx.strokeRect(384+72*persosovered[1],171,63,96);
 		}
@@ -2225,7 +2278,7 @@ function main(){
 				reset_for_charac_screen(0);
 				play_sound_eff("cursor_move");
 			}
-			else if(!secondplayerishuman && !persolocked[1]){
+			else if(!secondplayerishuman && !persolocked[1] && secondplayerchosescharac){
 				persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]+1);
 				reset_for_charac_screen(1);
 				play_sound_eff("cursor_move");
@@ -2238,7 +2291,7 @@ function main(){
 				reset_for_charac_screen(0);
 				play_sound_eff("cursor_move");
 			}
-			else if(!secondplayerishuman && !persolocked[1]){
+			else if(!secondplayerishuman && !persolocked[1] && secondplayerchosescharac){
 				persosovered[1]=Math.max(0,persosovered[1]-1);
 				reset_for_charac_screen(1);
 				play_sound_eff("cursor_move");
@@ -2260,44 +2313,61 @@ function main(){
 				play_sound_eff("cursor_move");
 			}
 		}
-		if(j2.poing==1 && secondplayerishuman && !persolocked[1]){
-			j2.poing=2;
+		if((j2.poing==1 || j2.jambe==1) && secondplayerishuman && !persolocked[1]){
+			if(j2.poing==1){skinschoisis[1]=0;}
+			else{skinschoisis[1]=1;}
+			if(j1.poing==1){j1.poing=2;}
+			else{j1.jambe=2;}
 			persolocked[1]=true;
 			characteristics.get(liste_persos[persosovered[1]]).namewav.currentTime=0;
 			characteristics.get(liste_persos[persosovered[1]]).namewav.play();
+			reset_for_charac_screen(1);
 			j2.vicpose=1;
 		}
-		if(j1.poing==1){
-			j1.poing=2;
+		if(j1.poing==1 || j1.jambe==1){
 			if(!persolocked[0]){
 				persolocked[0]=true;
+				if(j1.poing==1){skinschoisis[0]=0;}
+				else{skinschoisis[0]=1;}
+				if(persolocked[1] && persosovered[1]==persosovered[0]){skinschoisis[0]=(skinschoisis[1]+1)%2;}
 				characteristics.get(liste_persos[persosovered[0]]).namewav.currentTime=0;
 				characteristics.get(liste_persos[persosovered[0]]).namewav.play();
+				reset_for_charac_screen(0);
 				j1.vicpose=1;
 			}
-			else if(!secondplayerishuman && !persolocked[1]){
+			else if(!secondplayerishuman && !persolocked[1] && secondplayerchosescharac){
 				persolocked[1]=true;
+				if(j1.poing==1){skinschoisis[1]=0;}
+				else{skinschoisis[1]=1;}
+				if(persolocked[0] && persosovered[1]==persosovered[0]){skinschoisis[1]=(skinschoisis[0]+1)%2;}
 				characteristics.get(liste_persos[persosovered[1]]).namewav.currentTime=0;
 				characteristics.get(liste_persos[persosovered[1]]).namewav.play();
+				reset_for_charac_screen(1);
 				j2.vicpose=1;
 			}
+			if(j1.poing==1){j1.poing=2;}
+			else{j1.jambe=2;}
 		}
-		if(persolocked[0] && persolocked[1]){
+		if(persolocked[0] && (persolocked[1] || !secondplayerchosescharac)){
 			lockincountdown++;
 			if(lockincountdown>=lockincountdownfdur){
+				lockincountdown=0;
 				persoschoisis = [liste_persos[persosovered[0]],liste_persos[persosovered[1]]]
+				if(!secondplayerchosescharac){
+					persoschoisis[1] = arcadeorder[arcadelevel];
+					skinschoisis[1] = randomInt(0,1);
+					if(persolocked[0] && persoschoisis[1]==persoschoisis[0]){skinschoisis[1]=(skinschoisis[0]+1)%2;}
+				}
 				reset_game();
 				is_in_charc_screen = false;
-				chosenstage = Math.floor(Math.random()*numberofstages);
-				ground = grounds[chosenstage];
-				stage_size = stagesizes[chosenstage];
+				choserandomstage();
 				functiontoexecute = loop;
 				return;
 			}
 		}
 		
 		j1.afficher(j2);
-		j2.afficher(j1);
+		if(secondplayerchosescharac){j2.afficher(j1);}
 		ctx.fillStyle = "white";
 		ctx.font = "30px serif";
 		ctx.fillText("Go to title screen",400,470);
@@ -2339,7 +2409,7 @@ function main(){
 		}
 		if(click==1){
 			click=2;
-			if(entre(clickx,400/1024,610/1024) && entre(clicky,450/500,480/500)){functiontoexecute = titlescreen;}
+			if(entre(clickx,400/1024,610/1024) && entre(clicky,450/500,480/500)){functiontoexecute = titlescreen; skinschoisis = [0,0];}
 			else if(entre(clickx,120/1024,920/1024)&&entre(clicky,10/500,40/500)){controlafaire=Math.floor((clickx-120/1024)/(100/1024));}
 			else if(entre(clickx,120/1024,920/1024)&&entre(clicky,110/500,140/500)){controlafaire=8+Math.floor((clickx-120/1024)/(100/1024));}
 		}
@@ -2359,12 +2429,17 @@ function main(){
 		ctx.fillText("Versus mode",380,370);
 		ctx.fillStyle = "white";
 		ctx.fillText("Parameters",740,370);
+		ctx.fillStyle = "blue";
+		ctx.fillText("Arcade mode",380,430);
 		if(click==1){
 			click=2;
 			if(entre(clicky,340/500,380/500)){
 				if(entre(clickx,80/1024,260/1024)){functiontoexecute = menupersos;secondplayerishuman=false;}
 				else if(entre(clickx,380/1024,590/1024)){functiontoexecute = menupersos;secondplayerishuman=true;}
 				else if(entre(clickx,740/1024,920/1024)){functiontoexecute = parameters_screen;}
+			}
+			else if(entre(clicky,400/500,440/500)){
+				if(entre(clickx,380/1024,590/1024)){functiontoexecute = menupersos;secondplayerishuman=false;arcadelevel=0;arcadeorder.shuffle();secondplayerchosescharac=false;}
 			}
 		}
 	}
@@ -2395,7 +2470,7 @@ function main(){
 		l[n].currentTime = 0; l[n].play();
 	}
 
-	var secondplayerishuman = true;
+	var secondplayerishuman = true; var secondplayerchosescharac = true;
 
 	var sounds_eff = new Map();
 	sounds_eff.set("lhit",[document.querySelector('#lhitwav1'),document.querySelector('#lhitwav2'),document.querySelector('#lhitwav3')]);
@@ -2482,7 +2557,7 @@ function main(){
 	var difficulte = 1;
 	var roundwonsj1 = 0; var roundwonsj2 = 0;
 	var finishhim = 0; var fatalitywasdone = false; var fatalitysreen = 0;
-	var persoschoisis = ["kitana","raiden"]; var persolocked = [0,0]; var persosovered = [0,0];
+	var persoschoisis = ["kitana","raiden"]; var skinschoisis = [0,0]; var persolocked = [0,0]; var persosovered = [0,0];
 	var musiqueon = true; var soundeffon = true; var introon = true; var timer = 0; var timer_init = 99*60;
 	var liste_persos = ["raiden","kitana","scorpion","subzero"];
 	var chartimer = 0; var chartimercycle = 3; var difficultynames = ["Easy","Normal","Hard","Insane","Terminator"];
@@ -2490,6 +2565,7 @@ function main(){
 	var Width= window.innerWidth; var Height=window.innerHeight;
 	var decalage = 0; var wdecalagey = 0;
 	var bufferwindow = 5; var minimumcomboscaling = 0.5;
+	var arcadelevel = -1; var arcadeorder = [...liste_persos]; arcadeorder.shuffle();
 
 
 	function shake_screen(frames,force){
