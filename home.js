@@ -674,6 +674,7 @@ function main(){
 					this.distancetowavedash = 60;
 					break;
 			}
+			//if(youareintutorial && !me.allowedmoves.includes("block")){this.agressivite+=0.01;}	//pour l'instant ca ferait ca tout le temps
 		}
 
 		pressforward(force=false){
@@ -724,6 +725,7 @@ function main(){
 				var newprio = movpriority.get(key);
 				//if (key=="lpunch" || key == "clpunch"){newprio++;}
 				if(me.y==0 && val.disponibility == "air"){}
+				if(youareintutorial && !me.allowedmoves.includes(key)){}
 				else if(cd_dependance.get(key) != -1 && me.cooldowns[cd_dependance.get(key)]){}
 				else if((newprio<=prio || (movpriority.get(key)==100) && me.mov != "")&&thiis.difficulty<4){}
 				else if(other.crouching && val.hitboxys>=0 && (val.hiteffect != "grab" || thiis.enviedegrab<10)){}
@@ -936,9 +938,10 @@ function main(){
 		{
 			
 		}
-		reinit(x,y,perso,n,skin,other,reset_ai=true){
+		reinit(x,y,perso,n,skin,other,reset_ai=true, allowedmoves = []){
 			this.charac = characteristics.get(perso);
 			this.x = x; this.y = y; this.perso = perso; this.n = n; this.skin = this.charac.png[skin]; this.coordinates = this.charac.coordinates;
+			this.allowedmoves = allowedmoves;
 			this.droite=0;this.gauche=0;this.haut=0;this.bas=0;this.poing=0;this.jambe=0;this.special=0;this.dodge=0;
 			this.forward = 0;this.back = 0;
 			if (this.n == 0){this.orientation = 1}else{this.orientation = -1}
@@ -962,6 +965,7 @@ function main(){
 			var stats = this.charac.coups.get(s);
 			this.reoriente(other);
 			if(this.hurted || this.falling || this.gettingup || this.blocking){return;}
+			if(youareintutorial && !this.allowedmoves.includes(s)){return;}
 			if(["clpunch","clkick","cmkick"].includes(s)){this.crouching = Math.max(this.crouching,4);}
 			if(s == "jkick"){if(this.x<other.x){this.orientation = 1;}else{this.orientation = -1;}}
 			var cd = cd_dependance.get(s);
@@ -1020,7 +1024,7 @@ function main(){
 			if(other.fatality){return;}
 			if(fightstartcountdown){return;}
 			if(this.mov == ""){this.movlag = 0;}
-			if(!secondplayerishuman && this.n==1){this.ai.decide();}
+			if(!secondplayerishuman && this.n==1 && difficulte>=0){this.ai.decide();}
 			if(this.orientation==1){
 				this.forward=this.droite;if(this.forward==0){this.back=this.gauche;}else{this.back=0;}
 			}
@@ -1114,9 +1118,9 @@ function main(){
 						else{this.y = 0;this.tb=0;this.xspeed = 0;this.movlag = 0;this.mov = "";}
 						
 					}
-					if (this.bas&&this.movlag == 0){this.crouching = Math.min(this.crouching+1,6);}
+					if (this.bas&&this.movlag == 0 &&!(youareintutorial && !this.allowedmoves.includes("crouch"))){this.crouching = Math.min(this.crouching+1,6);}
 					else if(this.bas==0&&this.crouching>0&&this.movlag==0){this.crouching--;}
-					if(this.haut==1&&movpriority.get(this.mov)<20&&end_of_round_countdown==0){
+					if(this.haut==1&&movpriority.get(this.mov)<20&&end_of_round_countdown==0 &&!(youareintutorial && !this.allowedmoves.includes("jump"))){
 						this.mov = "jumpsquat";this.movlag = c.jumpsquat;
 						play_sound_eff(this.charac.voiceactor+"lmov");
 						this.crouching = 0;
@@ -1480,7 +1484,7 @@ function main(){
 			if(other.mov=="thundergod"){other.y=0;}
 			if(this.n==1 && !secondplayerishuman && (stats.hiteffect=="projectile" || stats.hiteffect=="spear")){this.ai.ugothitorblockedaprojectile();}
 			if(this.blocking && this.bas && this.back){this.crouching=6;}
-			if(this.movlag==0&&this.hurted==0&&this.back>=1&&this.y==0 && stats.hiteffect != "iceflask" && this.freeze==0 &&stats.hiteffect != "grab" && this.pv>0 && ((this.crouching<=3 && (other.y>0 || stats.hitboxys>=0) || (this.crouching>3 && other.y==0)) || stats.hiteffect=="projectile")){
+			if(this.movlag==0&&this.hurted==0&&this.back>=1&&this.y==0 && stats.hiteffect != "iceflask" && this.freeze==0 &&stats.hiteffect != "grab" && this.pv>0 && ((this.crouching<=3 && (other.y>0 || stats.hitboxys>=0) || (this.crouching>3 && other.y==0)) || stats.hiteffect=="projectile") && !(youareintutorial && !this.allowedmoves.includes("block"))){
 				this.blocking = stats.blockstun;
 				this.pv-=stats.damageonblock;
 				if(this.pv<=0){this.pv = 1;}
@@ -2123,7 +2127,8 @@ function main(){
 	function gobacktotitlescreen(){
 		persolocked = [0,0]; skinschoisis = [0,0];arcadelevel=-1;functiontoexecute = titlescreen;
 		roundwonsj1 = 0; roundwonsj2 = 0; camerax = 0;
-		is_in_charc_screen = true; secondplayerchosescharac=true; secondplayerisdummy=false;
+		if(difficulte<0){difficulte=0;}
+		is_in_charc_screen = true; secondplayerchosescharac=true; secondplayerisdummy=false; youareintutorial = false;
 		reset_game(true);
 		reset_for_charac_screen(0);
 		reset_for_charac_screen(1);
@@ -2174,7 +2179,8 @@ function main(){
 			}
 		}
 		else if(end_of_round_countdown==1){
-			if(fatalitywasdone){
+			if(youareintutorial){gobacktotitlescreen();}
+			else if(fatalitywasdone){
 				fatalitywasdone = 0;
 				fatalitysreen = 100;
 				play_sound_eff("fatality");
@@ -2244,6 +2250,20 @@ function main(){
 	function reset_for_charac_screen(n){
 		if(n==0){j1.reinit(-210,60,liste_persos[persosovered[0]],0,skinschoisis[0],j2,true);}
 		else{j2.reinit(210,60,liste_persos[persosovered[1]],1,skinschoisis[1],j1,true);}
+	}
+
+
+	function launchtutorial(tuto){
+		persoschoisis = tuto.char;
+		skinschoisis = [0,1];
+		is_in_charc_screen = false;
+		difficulte = tuto.ai;
+		reset_game(true);
+		j1.pvmax = tuto.pv[0]; j1.pv = tuto.pv[0]; j1.pvaff = tuto.pv[0];
+		j2.pvmax = tuto.pv[1]; j2.pv = tuto.pv[1]; j2.pvaff = tuto.pv[1];
+		j1.allowedmoves = tuto.moves[0]; j2.allowedmoves = tuto.moves[1];
+		choserandomstage();
+		functiontoexecute = loop;
 	}
 
 	function menupersos(){
@@ -2456,6 +2476,8 @@ function main(){
 		ctx.fillText("Arcade mode",380,430);
 		ctx.fillStyle = "gray";
 		ctx.fillText("Training",80,430);
+		ctx.fillStyle = "green";
+		ctx.fillText("Tutorials",740,430);
 		if(click==1){
 			click=2;
 			if(entre(clicky,340/500,380/500)){
@@ -2466,6 +2488,7 @@ function main(){
 			else if(entre(clicky,400/500,440/500)){
 				if(entre(clickx,80/1024,260/1024)){functiontoexecute = menupersos;secondplayerishuman=true;secondplayerisdummy=true;}
 				else if(entre(clickx,380/1024,590/1024)){functiontoexecute = menupersos;secondplayerishuman=false;arcadelevel=0;arcadeorder.shuffle();secondplayerchosescharac=false;}
+				else if(entre(clickx,740/1024,920/1024)){youareintutorial=true; secondplayerishuman = false; tutorialscenenumber = 0; launchtutorial(tutobasics[0]);}
 			}
 		}
 	}
@@ -2592,6 +2615,7 @@ function main(){
 	var decalage = 0; var wdecalagey = 0;
 	var bufferwindow = 5; var minimumcomboscaling = 0.5;
 	var arcadelevel = -1; var arcadeorder = [...liste_persos]; arcadeorder.shuffle();
+	var youareintutorial = false; var tutorialscenenumber = 0;
 
 
 	function shake_screen(frames,force){
