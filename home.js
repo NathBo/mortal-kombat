@@ -1081,6 +1081,7 @@ function main(){
 			if(this.invincibilite>0){this.invincibilite--;}
 			if(this.gettingup){
 				this.comboscaling=1;
+				if(this.n==1 && secondplayerisdummy){this.pv = this.pvmax; this.pvaff = this.pvmax;}
 				this.xspeed = signe(this.xspeed)*Math.max(0,Math.abs(this.xspeed) -c.friction);
 				this.gettingup++;
 				if(this.gettingup == this.charac.getupfdur || (this.gettingup>=this.charac.getupfdur*5/6 && this.haut)){
@@ -1096,9 +1097,11 @@ function main(){
 				if(Math.abs(this.x-camerax)>decalagex-this.charac.width/2){this.x = signe(this.x-camerax)*(decalagex+signe(this.x-camerax)*camerax-this.charac.width/2);}
 			}
 			else if(this.hurted==0){
-				this.reoriente(other);
-				this.comboscaling=1;
-
+				if(this.falling==0){
+					this.reoriente(other);
+					this.comboscaling=1;
+					if(this.n==1 && secondplayerisdummy){this.pv = this.pvmax; this.pvaff = this.pvmax;}
+				}
 			
 				if(this.y<=0){
 					if(this.y<0){
@@ -1517,6 +1520,7 @@ function main(){
 					this.hurted = stats.hitstun;
 				this.xspeed = stats.hurtx*other.orientation;
 				this.pv -= Math.ceil(stats.degats*this.comboscaling);
+				if(this.n==1 && secondplayerisdummy && this.pv<=0){this.pv=1;}
 				if(stats.hiteffect=="spear" || stats.hiteffect=="freeze"){this.comboscaling-=0.2;}
 				else{this.comboscaling -= 0.05;}
 				if(this.comboscaling<=minimumcomboscaling){this.comboscaling=minimumcomboscaling;}
@@ -2154,7 +2158,7 @@ function main(){
 		if(end_of_round_countdown==0 && finishhim==0 && j1.fatality==0 && j2.fatality==0){
 			checkforend();
 			if(fightstartcountdown==0){
-				timer--;
+				if(!secondplayerisdummy){timer--;}
 				if(timer<0 && timer%20==0){j1.losepv(1);j2.losepv(1);}
 			}
 		}
@@ -2326,6 +2330,7 @@ function main(){
 			if(j1.poing==1){j1.poing=2;}
 			else{j1.jambe=2;}
 			persolocked[1]=true;
+			if(persolocked[1] && persosovered[1]==persosovered[0]){skinschoisis[0]=(skinschoisis[1]+1)%2;}
 			characteristics.get(liste_persos[persosovered[1]]).namewav.currentTime=0;
 			characteristics.get(liste_persos[persosovered[1]]).namewav.play();
 			reset_for_charac_screen(1);
@@ -2438,6 +2443,8 @@ function main(){
 		ctx.fillText("Parameters",740,370);
 		ctx.fillStyle = "blue";
 		ctx.fillText("Arcade mode",380,430);
+		ctx.fillStyle = "gray";
+		ctx.fillText("Training",80,430);
 		if(click==1){
 			click=2;
 			if(entre(clicky,340/500,380/500)){
@@ -2446,7 +2453,8 @@ function main(){
 				else if(entre(clickx,740/1024,920/1024)){functiontoexecute = parameters_screen;}
 			}
 			else if(entre(clicky,400/500,440/500)){
-				if(entre(clickx,380/1024,590/1024)){functiontoexecute = menupersos;secondplayerishuman=false;arcadelevel=0;arcadeorder.shuffle();secondplayerchosescharac=false;}
+				if(entre(clickx,80/1024,260/1024)){functiontoexecute = menupersos;secondplayerishuman=true;secondplayerisdummy=true;}
+				else if(entre(clickx,380/1024,590/1024)){functiontoexecute = menupersos;secondplayerishuman=false;arcadelevel=0;arcadeorder.shuffle();secondplayerchosescharac=false;}
 			}
 		}
 	}
@@ -2477,7 +2485,7 @@ function main(){
 		l[n].currentTime = 0; l[n].play();
 	}
 
-	var secondplayerishuman = true; var secondplayerchosescharac = true;
+	var secondplayerishuman = true; var secondplayerchosescharac = true; var secondplayerisdummy = false;
 
 	var sounds_eff = new Map();
 	sounds_eff.set("lhit",[document.querySelector('#lhitwav1'),document.querySelector('#lhitwav2'),document.querySelector('#lhitwav3')]);
