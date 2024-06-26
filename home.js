@@ -2111,17 +2111,19 @@ function main(){
 
 	function reset_game(reset_ai=true){
 		timer = timer_init;
+		gamepaused = false;
+		if(reset_ai){roundwonsj1=0;roundwonsj2=0;}
 		j1.reinit(-150,0,persoschoisis[0],0,skinschoisis[0],j2,reset_ai);j2.reinit(150,0,persoschoisis[1],1,skinschoisis[1],j1,reset_ai);frame_delay = base_frame_delay;
 		cpt = 0; objects_to_loop.clear();
 		end_of_round_countdown=0;
-		if(introon){fightstartcountdown = 130;}else{fightstartcountdown=0;}
+		if(introon && !secondplayerisdummy){fightstartcountdown = 130;}else{fightstartcountdown=1;}
 		fatalitywasdone = false; fatalitysreen = 0;
 	}
 
 	function gobacktotitlescreen(){
 		persolocked = [0,0]; skinschoisis = [0,0];arcadelevel=-1;functiontoexecute = titlescreen;
 		roundwonsj1 = 0; roundwonsj2 = 0; camerax = 0;
-		is_in_charc_screen = true; secondplayerchosescharac=true;
+		is_in_charc_screen = true; secondplayerchosescharac=true; secondplayerisdummy=false;
 		reset_game(true);
 		reset_for_charac_screen(0);
 		reset_for_charac_screen(1);
@@ -2139,6 +2141,15 @@ function main(){
 		resizecanvas();
 		if(gamepaused){
 			if(pausepressed==1){pausepressed=2;gamepaused=false;musiques[chosenstage].play();}
+			ctx.fillStyle = "gray";
+			ctx.fillRect(412,150,200,60);
+			ctx.fillRect(412,250,200,60);
+			ctx.font = "40px serif";
+			ctx.fillStyle = "white";
+			ctx.fillText("Reset",465,190);
+			ctx.fillText("Quit",475,290);
+			if(click==1 && entre(clickx,412/1024,612/1024) && entre(clicky,150/500,210/500)){click=2;reset_game(true);}
+			else if(click==1 && entre(clickx,412/1024,612/1024) && entre(clicky,250/500,310/500)){click=2;reset_game(true);gobacktotitlescreen();}
 			return;
 		}
 		else{
@@ -2330,7 +2341,7 @@ function main(){
 			if(j1.poing==1){j1.poing=2;}
 			else{j1.jambe=2;}
 			persolocked[1]=true;
-			if(persolocked[1] && persosovered[1]==persosovered[0]){skinschoisis[0]=(skinschoisis[1]+1)%2;}
+			if(persolocked[1] && persosovered[1]==persosovered[0]){skinschoisis[1]=(skinschoisis[0]+1)%2;}
 			characteristics.get(liste_persos[persosovered[1]]).namewav.currentTime=0;
 			characteristics.get(liste_persos[persosovered[1]]).namewav.play();
 			reset_for_charac_screen(1);
