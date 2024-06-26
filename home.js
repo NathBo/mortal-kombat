@@ -1444,7 +1444,7 @@ function main(){
 					var hitboxxe = stats.hitboxxe;
 					if(other.charac.coups.has(other.mov)){
 						var stats2 = other.charac.coups.get(other.mov)
-						if(entre(other.movlag,stats2.elag,stats2.elag+stats2.fdur)){hitboxxe+=stats2.hitboxxouv;}
+						if(entre(other.movlag,stats2.elag+1,stats2.elag+stats2.fdur)){hitboxxe+=stats2.hitboxxouv;}
 					}
 					if(entre((other.x-this.x)*this.orientation,stats.hitboxxs-other.charac.width/2,hitboxxe+other.charac.width/2+stats.hitboxxeyscaling*(other.y-(this.y+stats.hitboxys)))){
 						if(other.crouching>3 && other.back==0 && entre((other.y-this.y),stats.hitboxys,stats.hitboxxe+other.charac.height/3)){
@@ -1498,7 +1498,7 @@ function main(){
 						if(Math.random()<stats.degats/25){play_sound_eff("compliment");}
 						break;
 					case "grab" :
-						if(this.n==0 && !secondplayerishuman){this.ai.ugothit();}
+						if(this.n==1 && !secondplayerishuman){this.ai.ugothit();}
 						other.begin_grab(this);
 						return;
 					case "projectile" :
