@@ -60,6 +60,41 @@ function getrandomwithcoeff(a){
 }
 
 
+function printAtWordWrap( context , text, x, y, lineHeight, fitWidth)
+{
+    fitWidth = fitWidth || 0;
+    
+    if (fitWidth <= 0)
+    {
+        context.fillText( text, x, y );
+        return;
+    }
+    var words = text.split(' ');
+    var currentLine = 0;
+    var idx = 1;
+    while (words.length > 0 && idx <= words.length)
+    {
+        var str = words.slice(0,idx).join(' ');
+        var w = context.measureText(str).width;
+        if ( w > fitWidth )
+        {
+            if (idx==1)
+            {
+                idx=2;
+            }
+            context.fillText( words.slice(0,idx-1).join(' '), x, y + (lineHeight*currentLine) );
+            currentLine++;
+            words = words.splice(idx-1);
+            idx = 1;
+        }
+        else
+        {idx++;}
+    }
+    if  (idx > 0)
+        context.fillText( words.join(' '), x, y + (lineHeight*currentLine) );
+}
+
+
 function main(){
 	function resizecanvas(){
 		Width= window.innerWidth;
@@ -725,7 +760,7 @@ function main(){
 				var newprio = movpriority.get(key);
 				//if (key=="lpunch" || key == "clpunch"){newprio++;}
 				if(me.y==0 && val.disponibility == "air"){}
-				if(youareintutorial && !me.allowedmoves.includes(key)){}
+				else if(youareintutorial && !me.allowedmoves.includes(key)){}
 				else if(cd_dependance.get(key) != -1 && me.cooldowns[cd_dependance.get(key)]){}
 				else if((newprio<=prio || (movpriority.get(key)==100) && me.mov != "")&&thiis.difficulty<4){}
 				else if(other.crouching && val.hitboxys>=0 && (val.hiteffect != "grab" || thiis.enviedegrab<10)){}
@@ -802,7 +837,7 @@ function main(){
 			var mywidth = this.other.charac.width;
 			var thiis = this;
 			var reaction_time = this.reaction_time;
-			if(other.mov == this.lastmovehitby){reaction_time=0;}
+			if(other.mov == this.lastmovehitby && !youareintutorial){reaction_time=0;}
 			
 			var movtodo = "";
 			var limiteup = this.baserisk+this.currisking+me.pv/10;
@@ -2153,7 +2188,9 @@ function main(){
 			ctx.fillStyle = "white";
 			ctx.fillText("Reset",465,190);
 			ctx.fillText("Quit",475,290);
-			if(click==1 && entre(clickx,412/1024,612/1024) && entre(clicky,150/500,210/500)){click=2;reset_game(true);}
+			if(click==1 && entre(clickx,412/1024,612/1024) && entre(clicky,150/500,210/500)){
+				click=2;if(youareintutorial){launchtutorial(currentuto);}else{reset_game(true);}
+			}
 			else if(click==1 && entre(clickx,412/1024,612/1024) && entre(clicky,250/500,310/500)){click=2;reset_game(true);gobacktotitlescreen();}
 			return;
 		}
@@ -2174,12 +2211,16 @@ function main(){
 		if(end_of_round_countdown==0 && finishhim==0 && j1.fatality==0 && j2.fatality==0){
 			checkforend();
 			if(fightstartcountdown==0){
-				if(!secondplayerisdummy){timer--;}
+				if(!secondplayerisdummy && !youareintutorial){timer--;}
 				if(timer<0 && timer%20==0){j1.losepv(1);j2.losepv(1);}
 			}
 		}
 		else if(end_of_round_countdown==1){
-			if(youareintutorial){gobacktotitlescreen();}
+			if(youareintutorial){
+				if(j1.pv>0){tutorialscenenumber++;}
+				if(tutorialscenenumber>=tutobasics.length){gobacktotitlescreen();}
+				else{launchtutorial(tutobasics[tutorialscenenumber]);}
+			}
 			else if(fatalitywasdone){
 				fatalitywasdone = 0;
 				fatalitysreen = 100;
@@ -2242,7 +2283,17 @@ function main(){
 				end_of_round_countdown=180;
 			}
 		}
-		if(fightstartcountdown){fightstartcountdown--;}
+		if(fightstartcountdown){
+			if(youareintutorial){
+				ctx.fillStyle = "gray";
+				ctx.fillRect(312,100,400,300);
+				ctx.fillStyle = "white";
+				ctx.font = "20px serif";
+				printAtWordWrap(ctx,currentuto.msg, 332, 140, 22, 360);
+				if(j1.poing==1){j1.poing=2;fightstartcountdown=0;musiques[chosenstage].play();}
+			}
+			else {fightstartcountdown--;}
+		}
 		if(slowmodur){slowmodur--;}
 		else{frame_delay = base_frame_delay;}
 	}
@@ -2255,12 +2306,14 @@ function main(){
 
 	function launchtutorial(tuto){
 		persoschoisis = tuto.char;
+		currentuto = tuto;
 		skinschoisis = [0,1];
 		is_in_charc_screen = false;
 		difficulte = tuto.ai;
 		reset_game(true);
 		j1.pvmax = tuto.pv[0]; j1.pv = tuto.pv[0]; j1.pvaff = tuto.pv[0];
 		j2.pvmax = tuto.pv[1]; j2.pv = tuto.pv[1]; j2.pvaff = tuto.pv[1];
+		j2.ai.wanttojump += tuto.jumper;
 		j1.allowedmoves = tuto.moves[0]; j2.allowedmoves = tuto.moves[1];
 		choserandomstage();
 		functiontoexecute = loop;
@@ -2615,7 +2668,7 @@ function main(){
 	var decalage = 0; var wdecalagey = 0;
 	var bufferwindow = 5; var minimumcomboscaling = 0.5;
 	var arcadelevel = -1; var arcadeorder = [...liste_persos]; arcadeorder.shuffle();
-	var youareintutorial = false; var tutorialscenenumber = 0;
+	var youareintutorial = false; var tutorialscenenumber = 0; var currentuto = null;
 
 
 	function shake_screen(frames,force){
