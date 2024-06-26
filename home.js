@@ -2117,7 +2117,7 @@ function main(){
 	function gobacktotitlescreen(){
 		persolocked = [0,0]; skinschoisis = [0,0];arcadelevel=-1;functiontoexecute = titlescreen;
 		roundwonsj1 = 0; roundwonsj2 = 0; camerax = 0;
-		is_in_charc_screen = true;
+		is_in_charc_screen = true; secondplayerchosescharac=true;
 		reset_game(true);
 		reset_for_charac_screen(0);
 		reset_for_charac_screen(1);
@@ -2133,6 +2133,13 @@ function main(){
 
 	function loop(){
 		resizecanvas();
+		if(gamepaused){
+			if(pausepressed==1){pausepressed=2;gamepaused=false;musiques[chosenstage].play();}
+			return;
+		}
+		else{
+			if(pausepressed==1){pausepressed=2;if(j1.pv>0 && j2.pv>0){gamepaused=true;musiques[chosenstage].pause();}}
+		}
 		if(gamefreeze){gamefreeze--;}
 		else{
 			j1.miseajour(j2);
@@ -2254,7 +2261,7 @@ function main(){
 			if(entre(clickx,482/512,505/512) && entre(clicky,210/250,241/250) && secondplayerchosescharac){secondplayerishuman = !secondplayerishuman}
 			if(!secondplayerishuman && entre(clickx,425/512,435/512) && entre(clicky,230/250,240/250) && arcadelevel<=0){difficulte = Math.max(difficulte-1,0)}
 			if(!secondplayerishuman && entre(clickx,444/512,454/512) && entre(clicky,230/250,240/250) && arcadelevel<=0){difficulte = Math.min(difficulte+1,difficultynames.length-1)}
-			if(entre(clickx,400/1024,610/1024) && entre(clicky,450/500,480/500)){persolocked = [0,0]; skinschoisis = [0,0];functiontoexecute = titlescreen;return;}
+			if(entre(clickx,400/1024,610/1024) && entre(clicky,450/500,480/500)){persolocked = [0,0]; skinschoisis = [0,0];gobacktotitlescreen();return;}
 		}
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.scale(1,1);
@@ -2578,6 +2585,8 @@ function main(){
 
 	
 	var controls=["ArrowRight","ArrowLeft","KeyJ","ArrowDown","KeyB","KeyN","KeyM","KeyH","KeyF","KeyS","KeyE","KeyD","KeyQ","KeyA","KeyZ","KeyW"];
+	var controlspause = "Enter";
+	var pausepressed = 0; var gamepaused = false;
 
 	function logKey(e) {
 		if(e.code==controls[0]){j1.droite=1}
@@ -2598,6 +2607,7 @@ function main(){
 			if(e.code==controls[14]&&j2.special==0){j2.special=1}
 			if(e.code==controls[15]&&j2.dodge==0){j2.dodge=1}
 		}
+		if(e.code==controlspause&&pausepressed==0){pausepressed=1;}
 		key=e.code;
 	}
 	function unlogKey(e){
@@ -2617,6 +2627,7 @@ function main(){
 		if(e.code==controls[13]){j2.jambe=0}
 		if(e.code==controls[14]){j2.special=0}
 		if(e.code==controls[15]){j2.dodge=0}
+		if(e.code==controlspause){pausepressed=0;}
 	}
 	function clickEvent(e){
 		clickx=(e.pageX-decalage)/Width;clicky=(e.pageY-wdecalagey)/Height;click=1;
