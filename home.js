@@ -976,7 +976,7 @@ function main(){
 		reinit(x,y,perso,n,skin,other,reset_ai=true, allowedmoves = []){
 			this.charac = characteristics.get(perso);
 			this.x = x; this.y = y; this.perso = perso; this.n = n; this.skin = this.charac.png[skin]; this.coordinates = this.charac.coordinates;
-			this.allowedmoves = allowedmoves;
+			this.allowedmoves = allowedmoves; this.xinit = x;
 			this.droite=0;this.gauche=0;this.haut=0;this.bas=0;this.poing=0;this.jambe=0;this.special=0;this.dodge=0;
 			this.forward = 0;this.back = 0;
 			if (this.n == 0){this.orientation = 1}else{this.orientation = -1}
@@ -1041,6 +1041,14 @@ function main(){
 			this.grabbing = 0;
 			this.invincibilite = 0;
 			other.grabbed = 0;
+		}
+
+		end_of_combo(){
+			this.comboscaling=1;
+				if(this.n==1 && (secondplayerisdummy || (youareintutorial && currentuto.regenerate && this.pv>0))){
+					this.pv = this.pvmax; this.pvaff = this.pvmax;
+					if(difficulte==-1){this.x=this.xinit;}
+				}
 		}
 
 		miseajour(other){
@@ -1119,8 +1127,7 @@ function main(){
 			}
 			if(this.invincibilite>0){this.invincibilite--;}
 			if(this.gettingup){
-				this.comboscaling=1;
-				if(this.n==1 && (secondplayerisdummy || (youareintutorial && currentuto.regenerate && this.pv>0))){this.pv = this.pvmax; this.pvaff = this.pvmax;}
+				this.end_of_combo();
 				this.xspeed = signe(this.xspeed)*Math.max(0,Math.abs(this.xspeed) -c.friction);
 				this.gettingup++;
 				if(this.gettingup == this.charac.getupfdur || (this.gettingup>=this.charac.getupfdur*5/6 && this.haut)){
@@ -1138,8 +1145,7 @@ function main(){
 			else if(this.hurted==0){
 				if(this.falling==0){
 					this.reoriente(other);
-					this.comboscaling=1;
-					if(this.n==1 && (secondplayerisdummy || (youareintutorial && currentuto.regenerate && this.pv>0))){this.pv = this.pvmax; this.pvaff = this.pvmax;}
+					this.end_of_combo();
 				}
 			
 				if(this.y<=0){
@@ -2479,6 +2485,7 @@ function main(){
 		ctx.fillText("Crouching",80,80);
 		ctx.fillText("Jumping",80,130);
 		ctx.fillText("Specials",80,180);
+		ctx.fillText("Combos",80,230);
 		ctx.font = "30px serif";
 		ctx.fillText("Go to title screen",400,470);
 		if(click==1){

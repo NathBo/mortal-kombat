@@ -107,27 +107,27 @@ var tutocrouch = [
 var tutojump = [
     {
         char : ["scorpion","scorpion"], ai : -1, pv : [20,20], moves : [["jkick", "jskick", "jump"],["clpunch"]], aimoves : [],
-        jumper : 0,
+        jumper : 0, regenerate : false,
         msg : "You can jump by pressing the jump button, once in the air, press kick to do your jump kick (or jkick). Pressing the jump button very briefly or pressing jump and down will perform a short hop"
     },
     {
         char : ["scorpion","scorpion"], ai : 0, pv : [20,20], moves : [["jpunch", "jump"],["lkick", "lpunch"]], aimoves : [],
-        jumper : 0,
+        jumper : 0, regenerate : false,
         msg : "Jump punches (jpunch) are performed similarly, but have a less generous hitbox, they can be used as a combo starter"
     },
     {
         char : ["scorpion","scorpion"], ai : -1, pv : [20,20], moves : [["jskick", "jump"],["lkick", "lpunch"]], aimoves : [],
-        jumper : 0,
+        jumper : 0, regenerate : false,
         msg : "Jump standing kicks (jskick) can only be performed if you have zero momentum in the air"
     },
     {
         char : ["scorpion","scorpion"], ai : 1, pv : [20,20], moves : [["jkick", "jump", "block"],["jkick", "jump", "block"]], aimoves : [],
-        jumper : 30,
+        jumper : 30, regenerate : false,
         msg : "Jump kicks have a triangle hitbox, which means if 2 characters use their jkick, the one above the other will win"
     },
     {
         char : ["scorpion","scorpion"], ai : 0, pv : [80,70], moves : [["jkick", "jpunch", "jskick", "jump", "block"],["jkick", "jpunch", "jskick", "jump", "block", "lpunch", "lkick", "mkick"]], aimoves : [],
-        jumper : 10,
+        jumper : 10, regenerate : false,
         msg : "You now know the basics of jump attacks, here is your final challenge!"
     },
 ]
@@ -135,22 +135,22 @@ var tutojump = [
 var tutospecial = [
     {
         char : ["raiden","raiden"], ai : -1, pv : [20,20], moves : [["elecgrab"],["clpunch"]], aimoves : [],
-        jumper : 0,
+        jumper : 0, regenerate : false,
         msg : "Special moves are all done with the special button, try to use raiden's neutral special by pressing special and no direction"
     },
     {
         char : ["raiden","raiden"], ai : 0, pv : [20,20], moves : [["thundergod", "block"],["lpunch", "lkick", "mkick", "mpunch"]], aimoves : [],
-        jumper : 0,
+        jumper : 0, regenerate : false,
         msg : "As you can see, special moves have a cooldown after being used. Now, try to use raiden's forward special by pressing special and forward"
     },
     {
         char : ["raiden","raiden"], ai : 0, pv : [20,20], moves : [["boltthrow", "block"],["lpunch", "lkick", "mkick", "mpunch"]], aimoves : [],
-        jumper : 0,
+        jumper : 0, regenerate : false,
         msg : "Now, try to use raiden's back special by pressing special and back"
     },
     {
         char : ["scorpion","raiden"], ai : 0, pv : [20,20], moves : [["leg_takedown", "crouch", "block"],["lpunch", "lkick", "mkick", "mpunch"]], aimoves : [],
-        jumper : 0,
+        jumper : 0, regenerate : false,
         msg : "Since raiden's down special doesn't do damage, you will use scorpion's down special by pressing special and down"
     },
     {
@@ -160,9 +160,43 @@ var tutospecial = [
     },
     {
         char : ["raiden","raiden"], ai : 0, pv : [80,80], moves : [["elecgrab", "thundergod", "boltthrow", "teleport", "crouch", "block", "jump"],["elecgrab", "thundergod", "boltthrow", "teleport", "crouch", "block", "jump"]], aimoves : [],
-        jumper : 2,
+        jumper : 2, regenerate : false,
         msg : "You now know the basics of special moves, here is your final challenge! consider beating the arcade mode in easy after this!"
     },
 ]
 
-var tutolineslist = [tutobasics, tutocrouch, tutojump, tutospecial];
+var tutocombo = [
+    {
+        char : ["raiden","raiden"], ai : -1, pv : [20,15], moves : [["lpunch", "hpunch"],["clpunch"]], aimoves : [],
+        jumper : 0,  regenerate : true,
+        msg : "You can cancel a light punch into a heavy punch to do a combo, do it!"
+    },
+    {
+        char : ["raiden","raiden"], ai : -1, pv : [20,25], moves : [["hkick", "hpunch"],["clpunch"]], aimoves : [],
+        jumper : 0,  regenerate : true,
+        msg : "Indeed, you can cancel light moves into heavy moves then into launchers (ie roundhouses and huppercuts) and finally into specials. Try cancelling your hpunch into a roundhouse for example"
+    },
+    {
+        char : ["raiden","raiden"], ai : -1, pv : [20,29], moves : [["lpunch", "hkick", "hpunch"],["clpunch"]], aimoves : [],
+        jumper : 0,  regenerate : true,
+        msg : "Ok now cancel your lpunch into your hpunch into your roundhouse"
+    },
+    {
+        char : ["raiden","raiden"], ai : 0, pv : [30,15], moves : [["lpunch", "hpunch", "block"],["jump", "lpunch", "jpunch"]], aimoves : [],
+        jumper : 4,  regenerate : true,
+        msg : "Now, try to do the lpunch to hpunch combo against a real opponent"
+    },
+    {
+        char : ["raiden","raiden"], ai : -1, pv : [20,22], moves : [["clpunch", "crouch", "huppercut"],["clpunch"]], aimoves : [],
+        jumper : 0,  regenerate : true,
+        msg : "This way of comboing also works when you crouch, try to combo your clpunch into your huppercut for example"
+    },
+    {
+        char : ["kitana","kitana"], ai : 0, pv : [50,20], moves : [["huppercut", "crouch", "block", "clpunch", "clkick", "cmkick", "lpunch", "lkick", "hpunch", "mkick", "hkick"],["jump","jkick", "lpunch", "lkick"]], aimoves : [],
+        jumper : 2, regenerate : true,
+        msg : "Here is your final challenge : do any 20 damage combo against a real opponent"
+    },
+]
+
+
+var tutolineslist = [tutobasics, tutocrouch, tutojump, tutospecial, tutocombo];
