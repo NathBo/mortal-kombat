@@ -2486,6 +2486,7 @@ function main(){
 		ctx.fillText("Jumping",80,130);
 		ctx.fillText("Specials",80,180);
 		ctx.fillText("Combos",80,230);
+		ctx.fillText("Raiden",80,280);
 		ctx.font = "30px serif";
 		ctx.fillText("Go to title screen",400,470);
 		if(click==1){

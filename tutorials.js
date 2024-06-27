@@ -2,7 +2,7 @@ var tutobasics = [
     {
         char : ["raiden","raiden"], ai : -1, pv : [20,15], moves : [["lpunch"],["lpunch"]], aimoves : [],
         jumper : 0, regenerate : false,
-        msg : "Pressing punch and no direction will do a light punch (or lpunch), try to hit the ennemy with it"
+        msg : "Pressing punch (by default B) and no direction will do a light punch (or lpunch), try to hit the ennemy with it"
     },
     {
         char : ["raiden","raiden"], ai : 0, pv : [20,15], moves : [["lpunch"],["lpunch"]], aimoves : [],
@@ -12,7 +12,7 @@ var tutobasics = [
     {
         char : ["raiden","raiden"], ai : -1, pv : [20,15], moves : [["lkick"],["lkick"]], aimoves : [],
         jumper : 0, regenerate : false,
-        msg : "Similarly, light kicks are done by pressing kick and no direction"
+        msg : "Similarly, light kicks are done by pressing kick (by default N) and no direction"
     },
     {
         char : ["raiden","raiden"], ai : 1, pv : [20,15], moves : [["lkick"],["lpunch"]], aimoves : [],
@@ -52,7 +52,7 @@ var tutobasics = [
     {
         char : ["raiden","raiden"], ai : 2, pv : [30,20], moves : [["hkick","grab"],["block"]], aimoves : [],
         jumper : 0, regenerate : false,
-        msg : "However, blocking is beaten by grabs, performed with the grab button"
+        msg : "However, blocking is beaten by grabs, performed with the grab button (H by default)"
     },
     {
         char : ["raiden","raiden"], ai : 0, pv : [80,60], moves : [["lpunch", "lkick", "hpunch", "mkick","hkick","grab", "block"],["lpunch", "lkick", "hpunch", "mkick","hkick","grab", "block", "jump"]], aimoves : [],
@@ -108,7 +108,7 @@ var tutojump = [
     {
         char : ["scorpion","scorpion"], ai : -1, pv : [20,20], moves : [["jkick", "jskick", "jump"],["clpunch"]], aimoves : [],
         jumper : 0, regenerate : false,
-        msg : "You can jump by pressing the jump button, once in the air, press kick to do your jump kick (or jkick). Pressing the jump button very briefly or pressing jump and down will perform a short hop"
+        msg : "You can jump by pressing the jump button (by default J), once in the air, press kick to do your jump kick (or jkick). Pressing the jump button very briefly or pressing jump and down will perform a short hop"
     },
     {
         char : ["scorpion","scorpion"], ai : 0, pv : [20,20], moves : [["jpunch", "jump"],["lkick", "lpunch"]], aimoves : [],
@@ -161,7 +161,7 @@ var tutospecial = [
     {
         char : ["raiden","raiden"], ai : 0, pv : [80,80], moves : [["elecgrab", "thundergod", "boltthrow", "teleport", "crouch", "block", "jump"],["elecgrab", "thundergod", "boltthrow", "teleport", "crouch", "block", "jump"]], aimoves : [],
         jumper : 2, regenerate : false,
-        msg : "You now know the basics of special moves, here is your final challenge! consider beating the arcade mode in easy after this!"
+        msg : "You now know the basics of special moves, here is your final challenge! Consider beating the arcade mode in easy after this!"
     },
 ]
 
@@ -209,4 +209,54 @@ var tutocombo = [
 ]
 
 
-var tutolineslist = [tutobasics, tutocrouch, tutojump, tutospecial, tutocombo];
+var tutoraiden = [
+    {
+        char : ["raiden","raiden"], ai : 2, pv : [20,20], moves : [["elecgrab", "hkick"],["block"]], aimoves : [],
+        jumper : 0,  regenerate : false,
+        msg : "Raiden's neutral special is a command grab which moves him a bit forward, it beats block"
+    },
+    {
+        char : ["raiden","raiden"], ai : 2, pv : [20,20], moves : [["thundergod"],["jump","block"]], aimoves : [],
+        jumper : 60,  regenerate : false,
+        msg : "Raiden's forward special is a giant dash, it is quite effective at punishing jumping opponents or as a surprise. It is also quite hard to punish"
+    },
+    {
+        char : ["raiden","raiden"], ai : 2, pv : [20,20], moves : [["boltthrow", "block"],["hkick"]], aimoves : [],
+        jumper : 0,  regenerate : false,
+        msg : "Raiden's back special is a simple but quite fast projectile. It can be used to stop opponents approaches but its long cooldown stops raiden from becoming a zoner"
+    },
+    {
+        char : ["raiden","kitana"], ai : 2, pv : [8,5], moves : [["teleport", "lpunch"],["fanthrow"]], aimoves : [],
+        jumper : 0,  regenerate : false,
+        msg : "Raiden's down special is a teleport. Use this to punish kitana's fan throws and punch her in the face"
+    },
+    {
+        char : ["raiden","raiden"], ai : -1, pv : [20,29], moves : [["thundergod", "huppercut", "crouch"],[""]], aimoves : [],
+        jumper : 0,  regenerate : true,
+        msg : "Raiden's forward special is a good combo ender. Use it after an huppercut to do a simple but damaging combo"
+    },
+    {
+        char : ["raiden","raiden"], ai : -1, pv : [20,35], moves : [["teleport", "huppercut", "crouch"],[""]], aimoves : [],
+        jumper : 0,  regenerate : true,
+        msg : "Raiden's down special is a good combo extender. Use it after an huppercut to combo into an other huppercut!"
+    },
+    {
+        char : ["raiden","raiden"], ai : -1, pv : [20,45], moves : [["thundergod", "huppercut", "crouch", "teleport"],[""]], aimoves : [],
+        jumper : 0,  regenerate : true,
+        msg : "Now for the big juicy combo, combo an huppercut into the teleport into an other uppercut into your forward special"
+    },
+    {
+        char : ["raiden","raiden"], ai : 1, pv : [25,29], moves : [["thundergod", "huppercut", "crouch", "teleport", "block"],["jump", "hkick"]], aimoves : [],
+        jumper : 4,  regenerate : true,
+        msg : "Now try to hit one of this combos against a real opponent"
+    },
+    {
+        char : ["raiden","raiden"], ai : 1, pv : [95,95], moves : [["elecgrab", "thundergod", "boltthrow", "teleport", "crouch", "block", "jump", "lpunch", "lkick", "hpunch", "hkick", "mkick", "jpunch", "jkick", "jskick", "clpunch", "clkick", "cmkick", "huppercut"],
+        ["elecgrab", "thundergod", "boltthrow", "teleport", "crouch", "block", "jump", "lpunch", "lkick", "hpunch", "hkick", "mkick", "jpunch", "jkick", "jskick", "clpunch", "clkick", "cmkick", "huppercut"]], aimoves : [],
+        jumper : 2, regenerate : false,
+        msg : "You now know the basics of Raiden, here is your final challenge! Consider beating the arcade mode in normal with raiden after this!"
+    },
+]
+
+
+var tutolineslist = [tutobasics, tutocrouch, tutojump, tutospecial, tutocombo, tutoraiden];
