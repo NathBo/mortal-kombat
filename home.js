@@ -1007,6 +1007,7 @@ function main(){
 			if(this.cooldowns[cd]){if(this.cooldowns[cd]>bufferwindow){this.special=2;}return;}
 			else if(cd != -1){this.special=2;}
 			if(s == "hell_gates"){this.orientation*=-1;}
+			if(s == "squarepunch"){this.invincibilite=15;this.y=1;this.tb=9;}
 			if(movpriority.get(s)==70 && movpriority.get(this.mov)>=70){return;}
 			play_sound_eff(this.charac.voiceactor+stats.voiceline);
 			if(stats.coupwav != ""){play_sound_eff(stats.coupwav);}
@@ -1270,9 +1271,6 @@ function main(){
 					}
 					else if(this.perso == "kitana" && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("squarepunch",other);
-						this.invincibilite=15;
-						this.y=1;
-						this.tb=9;
 					}
 					else if(this.perso == "raiden" && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("teleport",other);
@@ -2487,6 +2485,7 @@ function main(){
 		ctx.fillText("Specials",80,180);
 		ctx.fillText("Combos",80,230);
 		ctx.fillText("Raiden",80,280);
+		ctx.fillText("Kitana",80,330);
 		ctx.font = "30px serif";
 		ctx.fillText("Go to title screen",400,470);
 		if(click==1){

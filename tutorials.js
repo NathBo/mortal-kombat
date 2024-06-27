@@ -213,7 +213,7 @@ var tutoraiden = [
     {
         char : ["raiden","raiden"], ai : 2, pv : [20,20], moves : [["elecgrab", "hkick"],["block"]], aimoves : [],
         jumper : 0,  regenerate : false,
-        msg : "Raiden's neutral special is a command grab which moves him a bit forward, it beats block"
+        msg : "Raiden is an all-around fighter, that specializes in punishing opponents mistakes and launching them to the corner. Let's start with Raiden's neutral special, which is a command grab which moves him a bit forward, it beats block"
     },
     {
         char : ["raiden","raiden"], ai : 2, pv : [20,20], moves : [["thundergod"],["jump","block"]], aimoves : [],
@@ -259,4 +259,61 @@ var tutoraiden = [
 ]
 
 
-var tutolineslist = [tutobasics, tutocrouch, tutojump, tutospecial, tutocombo, tutoraiden];
+var tutokitana = [
+    {
+        char : ["kitana","kitana"], ai : -1, pv : [20,20], moves : [["fanthrow"],["block"]], aimoves : [],
+        jumper : 0,  regenerate : false,
+        msg : "Kitana is a turtle character, her projectiles makes opponents want to approach her, but she then has good defensive tools to keep them away. Let's start with Kitana's neutral special, which is a projectile with very low cooldown, making her a good zoner"
+    },
+    {
+        char : ["kitana","kitana"], ai : 0, pv : [20,20], moves : [["fanthrow", "jump"],["jump"]], aimoves : [],
+        jumper : 80,  regenerate : false,
+        msg : "It can also be performed in the air"
+    },
+    {
+        char : ["kitana","kitana"], ai : 1, pv : [50,35], moves : [["fanswipe", "block"],["hkick", "block"]], aimoves : [],
+        jumper : 0,  regenerate : false,
+        msg : "Kitana's forward special is a sweep that outranges most other moves, making her difficult to approach from the ground"
+    },
+    {
+        char : ["kitana","kitana"], ai : 0, pv : [20,20], moves : [["fanlift", "block"],["jump", "jkick"]], aimoves : [],
+        jumper : 80,  regenerate : false,
+        msg : "Kitana's back special is a projectile that goes up and allow for a free punish once it hits, making her quite difficult to approach from the air"
+    },
+    {
+        char : ["kitana","kitana"], ai : 0, pv : [20,20], moves : [["squarepunch", "block"],["jump", "jkick"]], aimoves : [],
+        jumper : 100,  regenerate : false,
+        msg : "Kitana's down special is her only move that helps her get out of the corner, and it does a pretty terrible job at it, making her quite vulnerable once cornered. It is still invulnerable on frame 1 though, and can be used as an anti air"
+    },
+    {
+        char : ["kitana","kitana"], ai : -1, pv : [20,20], moves : [["fanlift", "hkick"],["jump", "jkick"]], aimoves : [],
+        jumper : 100,  regenerate : true,
+        msg : "Kitana's back special can be comboed into from a launcher (a roundhouse from example)"
+    },
+    {
+        char : ["kitana","kitana"], ai : -1, pv : [20,35], moves : [["fanlift", "hkick"],["jump", "jkick"]], aimoves : [],
+        jumper : 100,  regenerate : true,
+        msg : "You can then follow it up with an other roundhouse"
+    },
+    {
+        char : ["kitana","kitana"], ai : -1, pv : [20,42], moves : [["fanlift", "hkick", "squarepunch"],["jump", "jkick"]], aimoves : [],
+        jumper : 100,  regenerate : true,
+        msg : "And then follow with a down special"
+    },
+    {
+        char : ["kitana","kitana"], ai : 0, pv : [20,28], moves : [["fanlift", "hkick", "squarepunch"],["jump", "jkick", "lkick", "hkick"]], aimoves : [],
+        jumper : 20,  regenerate : true,
+        msg : "Now, try this combo against a real opponent"
+    },
+    {
+        char : ["kitana","kitana"], ai : 1, pv : [100,100], moves : [["fanthrow", "fanlift", "fanswipe", "squarepunch", "crouch", "block", "jump", "lpunch", "lkick", "hpunch", "hkick", "mkick", "jpunch", "jkick", "jskick", "clpunch", "clkick", "cmkick", "huppercut"],
+        ["fanthrow", "fanlift", "fanswipe", "squarepunch", "crouch", "block", "jump", "lpunch", "lkick", "hpunch", "hkick", "mkick", "jpunch", "jkick", "jskick", "clpunch", "clkick", "cmkick", "huppercut"]], aimoves : [],
+        jumper : 2, regenerate : false,
+        msg : "You now know the basics of Kitana, here is your final challenge! Consider beating the arcade mode in normal with Kitana after this!"
+    },
+]
+
+
+
+
+var tutolineslist = [tutobasics, tutocrouch, tutojump, tutospecial, tutocombo, tutoraiden, tutokitana];
