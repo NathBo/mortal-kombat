@@ -165,4 +165,4 @@ var tutospecial = [
     },
 ]
 
-
+var tutolineslist = [tutobasics, tutocrouch, tutojump, tutospecial];

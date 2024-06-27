@@ -2469,6 +2469,29 @@ function main(){
 		ctx.fillText("Go to title screen",400,470);
 	}
 
+
+	function menututo(){
+		ctx.fillStyle = "black";
+		ctx.fillRect(0,0,1024,576);
+		ctx.fillStyle = "white";
+		ctx.font = "40px serif";
+		ctx.fillText("Basics",80,30);
+		ctx.fillText("Crouching",80,80);
+		ctx.fillText("Jumping",80,130);
+		ctx.fillText("Specials",80,180);
+		ctx.font = "30px serif";
+		ctx.fillText("Go to title screen",400,470);
+		if(click==1){
+			click=2;
+			if(entre(clickx,400/1024,610/1024) && entre(clicky,450/500,480/500)){persolocked = [0,0]; skinschoisis = [0,0];gobacktotitlescreen();return;}
+			else if(entre(clickx,80/1024, 280/1024) && entre(clicky,0,0.1*tutolineslist.length)){
+				currenttutoline = tutolineslist[Math.floor(clicky*10)];
+				launchtutorial(currenttutoline[0]);
+			}
+		}
+	}
+
+
 	function parameters_screen(){
 		resizecanvas();
 		ctx.fillStyle = "black";
@@ -2541,7 +2564,7 @@ function main(){
 			else if(entre(clicky,400/500,440/500)){
 				if(entre(clickx,80/1024,260/1024)){functiontoexecute = menupersos;secondplayerishuman=true;secondplayerisdummy=true;}
 				else if(entre(clickx,380/1024,590/1024)){functiontoexecute = menupersos;secondplayerishuman=false;arcadelevel=0;arcadeorder.shuffle();secondplayerchosescharac=false;}
-				else if(entre(clickx,740/1024,920/1024)){youareintutorial=true; secondplayerishuman = false; tutorialscenenumber = 0; launchtutorial(currenttutoline[0]);}
+				else if(entre(clickx,740/1024,920/1024)){youareintutorial=true; secondplayerishuman = false; tutorialscenenumber = 0; functiontoexecute = menututo;}
 			}
 		}
 	}
