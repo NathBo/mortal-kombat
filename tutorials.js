@@ -192,7 +192,17 @@ var tutocombo = [
         msg : "This way of comboing also works when you crouch, try to combo your clpunch into your huppercut for example"
     },
     {
-        char : ["kitana","kitana"], ai : 0, pv : [50,20], moves : [["huppercut", "crouch", "block", "clpunch", "clkick", "cmkick", "lpunch", "lkick", "hpunch", "mkick", "hkick"],["jump","jkick", "lpunch", "lkick"]], aimoves : [],
+        char : ["raiden","raiden"], ai : 1, pv : [80,22], moves : [["clpunch", "crouch", "huppercut"],["hkick", "crouch", "block"]], aimoves : [],
+        jumper : 0,  regenerate : true,
+        msg : "This is a very good way of punishing a missed roundhouse for example"
+    },
+    {
+        char : ["raiden","raiden"], ai : -1, pv : [20,27], moves : [["lpunch", "hkick", "jpunch", "jump"],["clpunch"]], aimoves : [],
+        jumper : 0,  regenerate : true,
+        msg : "You can also combo from a jpunch on a grounded opponent. Into a lpunch then into a hkick for example"
+    },
+    {
+        char : ["raiden","raiden"], ai : 0, pv : [50,20], moves : [["huppercut", "crouch", "block", "clpunch", "clkick", "cmkick", "lpunch", "lkick", "hpunch", "mkick", "hkick", "jump", "jpunch"],["jump","jkick", "lpunch", "lkick"]], aimoves : [],
         jumper : 2, regenerate : true,
         msg : "Here is your final challenge : do any 20 damage combo against a real opponent"
     },
