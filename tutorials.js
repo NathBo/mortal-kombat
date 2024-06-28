@@ -357,7 +357,46 @@ var tutoscorpion = [
     },
 ]
 
+var tutosubzero = [
+    {
+        char : ["subzero","subzero"], ai : -1, pv : [20,20], moves : [["slide"],["block"]], aimoves : [],
+        jumper : 0,  regenerate : false,
+        msg : "Subzero is a trap character with powerful combos, but he can have a hard time creating openings for himself. Let's start with his forward special, which is a slide that hits low"
+    },
+    {
+        char : ["subzero","subzero"], ai : -1, pv : [20,15], moves : [["slide", "lpunch"],["block"]], aimoves : [],
+        jumper : 0,  regenerate : true,
+        msg : "You can actually combo this into a light punch it you hit the move at the end of its duration"
+    },
+    {
+        char : ["subzero","subzero"], ai : -1, pv : [20,28], moves : [["slide", "lpunch", "hkick"],["block"]], aimoves : [],
+        jumper : 0,  regenerate : true,
+        msg : "You can even extend the combo into an hkick"
+    },
+    {
+        char : ["subzero","subzero"], ai : -1, pv : [20,25], moves : [["huppercut", "crouch", "iceball"],["block"]], aimoves : [],
+        jumper : 0,  regenerate : true,
+        msg : "Subzero's neutral special is an iceball, which is very good for combos. try to combo an huppercut into an iceball into an other huppercut"
+    },
+    {
+        char : ["subzero","subzero"], ai : 0, pv : [20,25], moves : [["huppercut", "crouch", "iceball"],["jump", "crouch", "block", "jkick", "lpunch", "clkick"]], aimoves : [],
+        jumper : 10,  regenerate : true,
+        msg : "Now, try this combo against a real opponent"
+    },
+    {
+        char : ["subzero","subzero"], ai : 2, pv : [20,10], moves : [["iceflask", "crouch", "clkick", "clpunch", "grab", "hkick"],["crouch", "block"]], aimoves : [],
+        jumper : 10,  regenerate : false,
+        msg : "Subzero's back special creates an iceflask that makes opponents trip on them, even if they block, though they are invulnerable during the tripping. Try to open up the opponent with this move"
+    },
+    {
+        char : ["subzero","subzero"], ai : 1, pv : [100,100], moves : [["iceball", "iceflask", "slide", "crouch", "block", "jump", "lpunch", "lkick", "hpunch", "hkick", "mkick", "jpunch", "jkick", "jskick", "clpunch", "clkick", "cmkick", "huppercut"],
+        ["iceball", "iceflask", "slide", "crouch", "block", "jump", "lpunch", "lkick", "hpunch", "hkick", "mkick", "jpunch", "jkick", "jskick", "clpunch", "clkick", "cmkick", "huppercut"]], aimoves : [],
+        jumper : 2, regenerate : false,
+        msg : "You now know the basics of Subzero, here is your final challenge! Consider beating the arcade mode in normal with Subzero after this!"
+    },
+]
 
 
 
-var tutolineslist = [tutobasics, tutocrouch, tutojump, tutospecial, tutocombo, tutoraiden, tutokitana, tutoscorpion];
+
+var tutolineslist = [tutobasics, tutocrouch, tutojump, tutospecial, tutocombo, tutoraiden, tutokitana, tutoscorpion, tutosubzero];

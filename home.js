@@ -2489,6 +2489,7 @@ function main(){
 		ctx.fillText("Raiden",80,280);
 		ctx.fillText("Kitana",80,330);
 		ctx.fillText("Scorpion",80,380);
+		ctx.fillText("Subzero",80,430);
 		ctx.font = "30px serif";
 		ctx.fillText("Go to title screen",400,470);
 		if(click==1){
