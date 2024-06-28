@@ -947,7 +947,7 @@ function main(){
 			this.movlag = 0;
 			this.mov = "";
 			this.tb = 0; this.xspeed = 0; this.crouching = 0;
-			this.hurted = 0; this.hurtx = 0; this.invincibilite = 0; this.freeze = 0;
+			this.hurted = 0; this.hurtx = 0; this.invincibilite = 0; this.freeze = 0; this.canthurt = false;
 			this.pv = this.charac.pv; this.pvmax = this.charac.pv; this.pvaff = this.charac.pv;
 			this.pushed = 0;this.pushx = 0;
 			this.blocking = 0; this.falling = 0; this.gettingup = 0; this.grabbing = 0; this.grabbed = 0;
@@ -975,7 +975,7 @@ function main(){
 			this.mov = s;
 			this.xspeed += stats.movx*this.orientation;
 			this.movlag = stats.slag+stats.fdur+stats.elag;
-			if(other.hurted){other.invincibilite=0;}
+			this.canthurt = false;
 		}
 
 		reoriente(other){
@@ -1440,6 +1440,7 @@ function main(){
 
 		loop(other)
 		{
+			if(this.canthurt){return;}
 			if(this.charac.coups.has(this.mov)){
 				var stats = this.charac.coups.get(this.mov);
 				if(this.y==0 && other.y>0 && stats.hitboxye<0 && this.mov != "slide"){return;}
@@ -1537,7 +1538,8 @@ function main(){
 			if(this.y>0 && other.y>0 && stats.hiteffect != "projectile" && stats.hiteffect != "freeze"){this.xspeed+=other.xspeed*2/3;this.hurted+=4;}
 			if(Math.abs(this.x+this.xspeed*Math.abs(this.xspeed)/2/this.charac.friction-camerax)>decalagex-this.charac.width/2){other.pushed = Math.min(20,Math.floor((8+stats.hitstun)/2));other.pushx = - this.xspeed * 1.2; if(signe(other.xspeed)==signe(other.orientation)){other.xspeed=0;}}
 			this.tb = stats.hurty;
-			this.invincibilite = stats.fdur+1;
+			other.canthurt = true;
+			if(stats.hiteffect == "iceflask"){this.invincibilite=60;}
 			if(this.pv<=0){
 				this.killanim();
 			}
