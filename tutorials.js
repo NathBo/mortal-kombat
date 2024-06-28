@@ -313,7 +313,51 @@ var tutokitana = [
     },
 ]
 
+var tutoscorpion = [
+    {
+        char : ["scorpion","scorpion"], ai : -1, pv : [20,10], moves : [["spear_throw"],["block"]], aimoves : [],
+        jumper : 0,  regenerate : false,
+        msg : "Scorpion is an agressive character with very fast moves but slow movement. Let's start with his neutral special, which is a grappling spear that gives him a free follow-up"
+    },
+    {
+        char : ["scorpion","scorpion"], ai : -1, pv : [20,20], moves : [["spear_throw", "huppercut", "crouch"],["block"]], aimoves : [],
+        jumper : 0,  regenerate : true,
+        msg : "For example, you can chain this grapple into an huppercut"
+    },
+    {
+        char : ["scorpion","scorpion"], ai : -1, pv : [20,20], moves : [["hell_gates", "jpunch", "jkick"],["block"]], aimoves : [],
+        jumper : 0,  regenerate : false,
+        msg : "His back special, hell gates, lets him teleport from one side of the screen to the other. He can use this to surprise opponents with an aerial attack"
+    },
+    {
+        char : ["scorpion","scorpion"], ai : 0, pv : [20,20], moves : [["leg_takedown", "crouch"],["hkick"]], aimoves : [],
+        jumper : 0,  regenerate : false,
+        msg : "His down special, leg takedown, can be used to hit opponents low and get a mixup afterwards"
+    },
+    {
+        char : ["scorpion","scorpion"], ai : -1, pv : [20,19], moves : [["leg_takedown", "clkick", "cmkick", "crouch"],["hkick"]], aimoves : [],
+        jumper : 0,  regenerate : true,
+        msg : "It is also a very good low combo ender. Try comboing you crouch light kick into you crouch heavy kick into leg takedown"
+    },
+    {
+        char : ["scorpion","scorpion"], ai : -1, pv : [20,30], moves : [["spear_throw", "huppercut", "crouch"],["block"]], aimoves : [],
+        jumper : 0,  regenerate : true,
+        msg : "Now an other combo, try comboing your huppercut into a spear throw into an other huppercut"
+    },
+    {
+        char : ["scorpion","scorpion"], ai : 0, pv : [50,30], moves : [["spear_throw", "huppercut", "crouch"],["jump", "crouch", "block", "jkick", "lpunch", "clkick"]], aimoves : [],
+        jumper : 10,  regenerate : true,
+        msg : "Now try that combo against a real opponent"
+    },
+    {
+        char : ["scorpion","scorpion"], ai : 1, pv : [100,100], moves : [["spear_throw", "hell_gates", "leg_takedown", "crouch", "block", "jump", "lpunch", "lkick", "hpunch", "hkick", "mkick", "jpunch", "jkick", "jskick", "clpunch", "clkick", "cmkick", "huppercut"],
+        ["spear_throw", "hell_gates", "leg_takedown", "crouch", "block", "jump", "lpunch", "lkick", "hpunch", "hkick", "mkick", "jpunch", "jkick", "jskick", "clpunch", "clkick", "cmkick", "huppercut"]], aimoves : [],
+        jumper : 2, regenerate : false,
+        msg : "You now know the basics of Scorpion, here is your final challenge! Consider beating the arcade mode in normal with Scorpion after this!"
+    },
+]
 
 
 
-var tutolineslist = [tutobasics, tutocrouch, tutojump, tutospecial, tutocombo, tutoraiden, tutokitana];
+
+var tutolineslist = [tutobasics, tutocrouch, tutojump, tutospecial, tutocombo, tutoraiden, tutokitana, tutoscorpion];
