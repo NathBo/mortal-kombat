@@ -667,7 +667,7 @@ function main(){
 				case 2:
 					this.donothingchance = 0;
 					this.dontattackchance = 0.4;
-					this.agressivite = 0.001+Math.random()*0.0005;
+					this.agressivite = 0.002;
 					this.baserisk = 60+Math.floor(Math.random()*10);
 					this.inconsistency = 8;
 					this.cancelcombodelay = 3;
@@ -709,6 +709,7 @@ function main(){
 					this.distancetowavedash = 60;
 					break;
 			}
+			if(difficulte>=1 && me.perso=="scorpion"){this.agressivite+=0.005}
 			//if(youareintutorial && !me.allowedmoves.includes("block")){this.agressivite+=0.01;}	//pour l'instant ca ferait ca tout le temps
 		}
 
@@ -950,7 +951,7 @@ function main(){
 			else if(me.perso=="raiden" && this.currisking+me.pv/10>=0.5 && Math.abs(Math.abs(me.x-other.x-other.xspeed*10)-120)<=40 && me.y==0 && other.y>0 && me.crouching==0 && movpriority.get(me.mov)<70 && other.tb<0)
 				{this.begincoup("thundergod");}
 
-			else if(me.perso=="scorpion" && this.currisking-me.pv/20>=-2 && Math.abs(me.x-other.x-other.xspeed*10)>=80 && me.y==0 && me.crouching==0 && movpriority.get(me.mov)<70 && other.tb<=0 && me.y==0)
+			else if(me.perso=="scorpion" && this.currisking-me.pv/20>=-2 && Math.abs(me.x-other.x-other.xspeed*10)>=80 && me.y==0 && me.crouching==0 && movpriority.get(me.mov)<70 && other.tb<=0 && me.y==0 && Math.abs(me.x-me.orientation*120-camerax)>=decalagex)
 				{this.begincoup("hell_gates");}
 
 			else if(me.perso=="subzero" && me.y==0 && other.y==0 && other.gettingup && other.gettingup<=other.charac.getupfdur-28 && Math.abs(me.x-other.x)<=100 && movpriority.get(me.mov)<70 && !this.thereisaprojo())
@@ -1413,10 +1414,10 @@ function main(){
 						if(this.movlag==stats.elag+stats.fdur){this.tb=6;this.y+=1;fixcamera=30;}
 						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.xspeed=9*this.orientation;}
 						if(Math.abs(this.x+this.xspeed-camerax)>decalagex-this.charac.width/2){
-							this.x += 2*decalagex*signe(camerax-this.x);
+							this.x += (2*decalagex+60)*signe(camerax-this.x);
 							this.mov = "";this.movlag=0;
 							if(this.jambe==1){this.mov= "jkick";this.movlag=29;}
-							this.xspeed = 7*this.orientation;
+							this.xspeed = 6*this.orientation;
 						}
 						break;
 					case "spear_throw" :
