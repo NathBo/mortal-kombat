@@ -2194,6 +2194,7 @@ function main(){
 
 	function choserandomstage(){
 		chosenstage = Math.floor(Math.random()*numberofstages);
+		if(arcadelevel>=0){chosenstage = arcadestagesorder[arcadelevel];}
 		ground = grounds[chosenstage];
 		stage_size = stagesizes[chosenstage];
 	}
@@ -2717,7 +2718,7 @@ function main(){
 	var Width= window.innerWidth; var Height=window.innerHeight;
 	var decalage = 0; var wdecalagey = 0;
 	var bufferwindow = 5; var minimumcomboscaling = 0.5;
-	var arcadelevel = -1; var arcadeorder = [...liste_persos]; arcadeorder.shuffle();
+	var arcadelevel = -1; var arcadeorder = [...liste_persos]; arcadeorder.shuffle(); var arcadestagesorder = [1,0,3,4];
 	var youareintutorial = false; var tutorialscenenumber = 0; var currentuto = null; var currenttutoline = tutospecial;
 
 
