@@ -1056,6 +1056,7 @@ function main(){
 		}
 
 		miseajour(other){
+			if(this.movlag===undefined){this.movlag=0;}
 			if(this.freeze){
 				this.freeze--;
 				this.movlag=0;
