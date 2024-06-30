@@ -75,6 +75,7 @@ subzero_coups.set("grab",{slag : 5, fdur : 3, elag : 12, degats : 16, hitstun : 
 subzero_coups.set("slide",{slag : 10, fdur : 20, elag : 7, degats : 10, hitstun : 60, hurtx : 5, hurty : 8, hitboxxs : 20, hitboxxe : 46,hitboxys : -20, hitboxye : -1, hitboxxouv : 40, blood_height : -5, blockstun : 10, blockx : 1.7, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 9, hitsound : "mhit", blood : "mblood", damageonblock : 2, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : ""});
 subzero_coups.set("iceball",{slag : 13, fdur : 0, elag : 31, degats : 0, hitstun : 60, hurtx : 0, hurty : 0, hitboxxs : -12, hitboxxe : 12,hitboxys : -8, hitboxye : 8, hitboxxouv : 5, blood_height : 0, blockstun : 10, blockx : 0.3, hiteffect : "freeze", hitboxxeyscaling : 0, hitlag : 7, hitsound : "freeze", blood : "electrocute", damageonblock : 0,landinglag : 12, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : ""});
 subzero_coups.set("iceflask",{slag : 21, fdur : 0, elag : 0, degats : 0, hitstun : 60, hurtx : 0, hurty : 3.5, hitboxxs : -12, hitboxxe : 12,hitboxys : -8, hitboxye : 8, hitboxxouv : 5, blood_height : 0, blockstun : 10, blockx : 0.3, hiteffect : "iceflask", hitboxxeyscaling : 0, hitlag : 2, hitsound : "freeze", blood : "electrocute", damageonblock : 0,landinglag : 12, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : ""});
+subzero_coups.set("icebody",{slag : 3, fdur : 15, elag : 15, degats : 0, hitstun : 60, hurtx : 0, hurty : 3.5, hitboxxs : -12, hitboxxe : -12,hitboxys : -8, hitboxye : 8, hitboxxouv : 5, blood_height : 0, blockstun : 10, blockx : 0.3, hiteffect : "iceflask", hitboxxeyscaling : 0, hitlag : 2, hitsound : "freeze", blood : "electrocute", damageonblock : 0,landinglag : 12, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : ""});
 
 
 var movpriority = new Map(); 	//you can cancel a mov by a mov of priority stritcly superior
@@ -106,6 +107,7 @@ movpriority.set("leg_takedown",70);
 movpriority.set("slide",70);
 movpriority.set("iceball",70);
 movpriority.set("iceflask",70);
+movpriority.set("icebody",70);
 movpriority.set("air_dodge",100);
 movpriority.set("landing_lag",100);
 movpriority.set("jumpsquat",100);
@@ -148,3 +150,4 @@ cd_dependance.set("airgrab",1);
 cd_dependance.set("slide",1);
 cd_dependance.set("iceball",0);
 cd_dependance.set("iceflask",2);
+cd_dependance.set("icebody",3);

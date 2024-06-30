@@ -536,6 +536,8 @@ function getsubcoordinates(){
 	subcoordinates.set("oiceflask1",{offx:566,width:68,offy:1442,height:17,decx:0,decy:0});
 	subcoordinates.set("oiceflask2",{offx:645,width:57,offy:1444,height:15,decx:5,decy:0});
 	subcoordinates.set("oiceflask3",{offx:711,width:40,offy:1448,height:11,decx:10,decy:0});
+	subcoordinates.set("icebody1",{offx:76,width:37,offy:17,height:103,decx:0,decy:0});
+	subcoordinates.set("icebody2",{offx:76,width:37,offy:1134,height:101,decx:0,decy:0});
 	subcoordinates.set("icegrenade1",{offx:15,width:55,offy:1473,height:103,decx:-10,decy:0});
 	subcoordinates.set("icegrenade2",{offx:79,width:55,offy:1473,height:103,decx:-10,decy:0});
 	subcoordinates.set("icegrenade3",{offx:143,width:55,offy:1473,height:103,decx:-10,decy:0});

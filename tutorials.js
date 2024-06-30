@@ -394,6 +394,11 @@ var tutosubzero = [
         msg : "Subzero's back special creates an iceflask that makes opponents trip on them, even if they block, though they are invulnerable during the tripping. Try to open up the opponent with this move"
     },
     {
+        char : ["subzero","subzero"], ai : 2, pv : [30,15], moves : [["jump" ,"icebody","lpunch", "lkick"],["hkick"]], aimoves : [],
+        jumper : 0, regenerate : false,
+        msg : "Subzero's down special is a parry that freezes opponents who try to attack him"
+    },
+    {
         char : ["subzero","subzero"], ai : 1, pv : [100,100], moves : [["iceball", "iceflask", "slide", "crouch", "block", "jump", "lpunch", "lkick", "hpunch", "hkick", "mkick", "jpunch", "jkick", "jskick", "clpunch", "clkick", "cmkick", "huppercut"],
         ["iceball", "iceflask", "slide", "crouch", "block", "jump", "lpunch", "lkick", "hpunch", "hkick", "mkick", "jpunch", "jkick", "jskick", "clpunch", "clkick", "cmkick", "huppercut"]], aimoves : [],
         jumper : 2, regenerate : false,
