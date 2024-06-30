@@ -330,6 +330,11 @@ var tutoscorpion = [
         msg : "His back special, hell gates, lets him teleport from one side of the screen to the other. He can use this to surprise opponents with an aerial attack"
     },
     {
+        char : ["scorpion","scorpion"], ai : 0, pv : [30,20], moves : [["airgrab", "jump"],["jump", "jkick"]], aimoves : [],
+        jumper : 30,  regenerate : false,
+        msg : "Scorpion's air special is an airgrab"
+    },
+    {
         char : ["scorpion","scorpion"], ai : 0, pv : [20,20], moves : [["leg_takedown", "crouch"],["hkick"]], aimoves : [],
         jumper : 0,  regenerate : false,
         msg : "His down special, leg takedown, can be used to hit opponents low and get a mixup afterwards"
