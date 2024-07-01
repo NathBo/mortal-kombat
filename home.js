@@ -2694,7 +2694,7 @@ function main(){
 	
 	characteristics.set("shao_kahn",{png : shaoskins,coordinates : shaocoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 5,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 8, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
 	width : 40, height : 114,vitesse : 3.2,jumpxspeed : 3.4,backmovnerf : 0.92, gravity : 0.44, jumpforce : 6.5,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.1,
-	airdrift : 0.1, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : raiden_coups, pv : 150, getupfdur : 24, grabfdur : 35, grabdeg : 12, vicposframes : 5, vicposfdur : 36, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male"});
+	airdrift : 0.1, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : shao_coups, pv : 150, getupfdur : 24, grabfdur : 35, grabdeg : 12, vicposframes : 5, vicposfdur : 36, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male"});
 	
 
 
