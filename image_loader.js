@@ -12,6 +12,8 @@ var lifebarpng=new Image();lifebarpng.src = 'ressource/ui/barlife.png';
 	var subpng = new Image();subpng.src = 'ressource/characters/subzero.png';
 	var sub2png = new Image();sub2png.src = 'ressource/characters/subzero2.png';
     var subskins = [subpng,sub2png];
+	var shaopng = new Image();shaopng.src = 'ressource/characters/shaokahn.png';
+	var shaoskins = [shaopng,shaopng];
 
 	var fanpng=new Image();fanpng.src = 'ressource/characters/fan.png';
 	var fatalitypng=new Image();fatalitypng.src = 'ressource/icons/fatality.png';
@@ -73,6 +75,7 @@ var lifebarpng=new Image();lifebarpng.src = 'ressource/ui/barlife.png';
 	var raicoordinates = getraicoordinates();
     var scocoordinates = getscocoordinates();
 	var subcoordinates = getsubcoordinates();
+	var shaocoordinates = getshaocoordinates();
 
 	var bloodcoordinates = getbloodcoordinates();
 

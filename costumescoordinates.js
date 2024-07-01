@@ -558,6 +558,83 @@ function getsubcoordinates(){
 }
 
 
+function getshaocoordinates(){
+	var shaocoordinates = new Map();
+	shaocoordinates.set("stand1",{offx:15,width:40,offy:136,height:114,decx:-2,decy:0});
+	shaocoordinates.set("stand2",{offx:65,width:42,offy:136,height:114,decx:-4,decy:0});
+	shaocoordinates.set("stand3",{offx:116,width:42,offy:136,height:114,decx:-4,decy:0});
+	shaocoordinates.set("stand4",{offx:171,width:44,offy:136,height:114,decx:-2,decy:0});
+	shaocoordinates.set("stand5",{offx:224,width:42,offy:136,height:114,decx:0,decy:0});
+	shaocoordinates.set("stand6",{offx:276,width:38,offy:136,height:114,decx:0,decy:0});
+	shaocoordinates.set("crouching1",{offx:15,width:40,offy:136,height:114,decx:-2,decy:0});
+	shaocoordinates.set("crouching2",{offx:823,width:39,offy:17,height:103,decx:0,decy:0});
+	shaocoordinates.set("walk1",{offx:14,width:40,offy:256,height:119,decx:0,decy:0});
+	shaocoordinates.set("walk2",{offx:63,width:41,offy:256,height:119,decx:-1,decy:-2});
+	shaocoordinates.set("walk3",{offx:113,width:39,offy:256,height:119,decx:0,decy:-3});
+	shaocoordinates.set("walk4",{offx:162,width:39,offy:256,height:119,decx:0,decy:-3});
+	shaocoordinates.set("walk5",{offx:162,width:39,offy:256,height:119,decx:0,decy:-3});
+	shaocoordinates.set("walk6",{offx:210,width:40,offy:256,height:119,decx:-1,decy:-3});
+	shaocoordinates.set("walk7",{offx:259,width:39,offy:256,height:119,decx:0,decy:-2});
+	shaocoordinates.set("walk8",{offx:308,width:39,offy:256,height:119,decx:0,decy:-1});
+	shaocoordinates.set("walk9",{offx:357,width:45,offy:256,height:119,decx:0,decy:-1});
+	shaocoordinates.set("jump1",{offx:116,width:42,offy:136,height:114,decx:-4,decy:0});
+	shaocoordinates.set("jump2",{offx:116,width:42,offy:136,height:114,decx:-4,decy:0});
+	shaocoordinates.set("jump3",{offx:116,width:42,offy:136,height:114,decx:-4,decy:0});
+	shaocoordinates.set("roll1",{offx:116,width:42,offy:136,height:114,decx:-4,decy:0});
+	shaocoordinates.set("roll2",{offx:116,width:42,offy:136,height:114,decx:-4,decy:0});
+	shaocoordinates.set("roll3",{offx:116,width:42,offy:136,height:114,decx:-4,decy:0});
+	shaocoordinates.set("roll4",{offx:116,width:42,offy:136,height:114,decx:-4,decy:0});
+	shaocoordinates.set("roll5",{offx:116,width:42,offy:136,height:114,decx:-4,decy:0});
+	shaocoordinates.set("roll6",{offx:116,width:42,offy:136,height:114,decx:-4,decy:0});
+	shaocoordinates.set("roll7",{offx:116,width:42,offy:136,height:114,decx:-4,decy:0});
+	shaocoordinates.set("lpunch1",{offx:15,width:35,offy:251,height:104,decx:4,decy:0});
+	shaocoordinates.set("lpunch2",{offx:58,width:42,offy:250,height:105,decx:4,decy:0});
+	shaocoordinates.set("lpunch3",{offx:107,width:62,offy:251,height:105,decx:6,decy:0});
+	shaocoordinates.set("hpunch1",{offx:618,width:35,offy:249,height:106,decx:0,decy:0});
+	shaocoordinates.set("hpunch2",{offx:661,width:48,offy:249,height:106,decx:0,decy:0});
+	shaocoordinates.set("hpunch3",{offx:717,width:62,offy:249,height:106,decx:1,decy:0});
+	shaocoordinates.set("lkick1",{offx:15,width:40,offy:468,height:106,decx:-14,decy:0});
+	shaocoordinates.set("lkick2",{offx:62,width:44,offy:468,height:106,decx:-14,decy:0});
+	shaocoordinates.set("lkick3",{offx:113,width:38,offy:468,height:106,decx:-14,decy:0});
+	shaocoordinates.set("lkick4",{offx:459,width:76,offy:468,height:106,decx:-14,decy:0});
+	shaocoordinates.set("mkick1",{offx:15,width:40,offy:468,height:106,decx:-14,decy:0});
+	shaocoordinates.set("mkick2",{offx:62,width:44,offy:468,height:106,decx:-14,decy:0});
+	shaocoordinates.set("mkick3",{offx:113,width:38,offy:468,height:106,decx:-14,decy:0});
+	shaocoordinates.set("mkick4",{offx:159,width:72,offy:468,height:106,decx:-14,decy:0});
+	shaocoordinates.set("hkick1",{offx:15,width:31,offy:583,height:95,decx:0,decy:0});
+	shaocoordinates.set("hkick2",{offx:53,width:41,offy:583,height:95,decx:0,decy:0});
+	shaocoordinates.set("hkick3",{offx:102,width:56,offy:583,height:95,decx:0,decy:0});
+	shaocoordinates.set("hkick4",{offx:165,width:65,offy:583,height:95,decx:0,decy:0});
+	shaocoordinates.set("hkick5",{offx:237,width:53,offy:583,height:95,decx:0,decy:0});
+	shaocoordinates.set("hkick6",{offx:298,width:37,offy:581,height:97,decx:0,decy:0});
+	shaocoordinates.set("hurted1",{offx:340,width:38,offy:621,height:114,decx:0,decy:0});
+	shaocoordinates.set("hurted2",{offx:386,width:37,offy:621,height:114,decx:0,decy:0});
+	shaocoordinates.set("falling1",{offx:15,width:59,offy:743,height:116,decx:0,decy:0});
+	shaocoordinates.set("falling2",{offx:87,width:79,offy:743,height:116,decx:0,decy:12});
+	shaocoordinates.set("falling3",{offx:174,width:78,offy:802,height:57,decx:0,decy:0});
+	shaocoordinates.set("grounded1",{offx:337,width:89,offy:806,height:54,decx:0,decy:-2});
+	shaocoordinates.set("grounded2",{offx:435,width:93,offy:806,height:54,decx:0,decy:-2});
+	shaocoordinates.set("getup1",{offx:551,width:74,offy:792,height:67,decx:0,decy:0});
+	shaocoordinates.set("getup2",{offx:635,width:66,offy:785,height:74,decx:0,decy:0});
+	shaocoordinates.set("getup3",{offx:711,width:56,offy:774,height:85,decx:0,decy:0});
+	shaocoordinates.set("getup4",{offx:774,width:45,offy:756,height:103,decx:0,decy:0});
+	shaocoordinates.set("blocking1",{offx:459,width:39,offy:137,height:114,decx:0,decy:0});
+	shaocoordinates.set("blocking2",{offx:509,width:37,offy:137,height:114,decx:0,decy:0});
+	shaocoordinates.set("huppercut1",{offx:15,width:36,offy:687,height:122,decx:0,decy:0});
+	shaocoordinates.set("huppercut2",{offx:58,width:70,offy:687,height:122,decx:0,decy:0});
+	shaocoordinates.set("huppercut3",{offx:138,width:53,offy:687,height:122,decx:0,decy:0});
+	shaocoordinates.set("huppercut4",{offx:198,width:36,offy:687,height:122,decx:0,decy:0});
+	shaocoordinates.set("huppercut5",{offx:293,width:35,offy:687,height:122,decx:0,decy:0});
+	shaocoordinates.set("victory1",{offx:289,width:51,offy:15,height:110,decx:0,decy:0});
+	shaocoordinates.set("victory2",{offx:351,width:56,offy:15,height:110,decx:0,decy:0});
+	shaocoordinates.set("victory3",{offx:289,width:51,offy:15,height:110,decx:0,decy:0});
+	shaocoordinates.set("victory4",{offx:351,width:56,offy:15,height:110,decx:0,decy:0});
+	shaocoordinates.set("victory5",{offx:415,width:54,offy:15,height:110,decx:0,decy:0});
+
+	return shaocoordinates;
+}
+
+
 function getbloodcoordinates(){
     var bloodcoordinates = new Map();
 	bloodcoordinates.set("lblood1",{offx:4,width:15,offy:62,height:18,decx:0,decy:0});

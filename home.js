@@ -1056,6 +1056,7 @@ function main(){
 		}
 
 		miseajour(other){
+			if(this.perso=="shao_kahn"){this.crouching=0;}
 			if(this.movlag===undefined){this.movlag=0;}
 			if(this.freeze){
 				this.freeze--;
@@ -2688,9 +2689,15 @@ function main(){
 	airdrift : 0.15, airmaxspeed : 1.8, airdodgespeed : 5.6, airdodgefdur : 14, landinglag : 6,coups : scorpion_coups, pv : 95, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 12, cds : [150,100,180,120], icons : [spearthrowiconpng,airgrabiconpng,hellgatesiconpng,legtakedowniconpng], voiceactor : "male"});
 
 	characteristics.set("subzero",{png : subskins,coordinates : subcoordinates, sex : "m", standnframes : 10, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : subzeroiconpng, namewav : document.querySelector('#subzerowav'),
-		width : 39, height : 103,vitesse : 3,jumpxspeed : 3.4,backmovnerf : 0.9, gravity : 0.41, jumpforce : 9.1,jumpsquat : 3, shorthop : 6.3, friction:0.17, hurtcontrol : 0.18,
-		airdrift : 0.13, airmaxspeed : 1.8, airdodgespeed : 5.7, airdodgefdur : 15, landinglag : 9, coups : subzero_coups, pv : 95, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 14, cds : [210,150,240,270], icons : [iceballiconpng,slideiconpng,iceflaskiconpng,icebodyiconpng], voiceactor : "male"});
+	width : 39, height : 103,vitesse : 3,jumpxspeed : 3.4,backmovnerf : 0.9, gravity : 0.41, jumpforce : 9.1,jumpsquat : 3, shorthop : 6.3, friction:0.17, hurtcontrol : 0.18,
+	airdrift : 0.13, airmaxspeed : 1.8, airdodgespeed : 5.7, airdodgefdur : 15, landinglag : 9, coups : subzero_coups, pv : 95, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 14, cds : [210,150,240,270], icons : [iceballiconpng,slideiconpng,iceflaskiconpng,icebodyiconpng], voiceactor : "male"});
 	
+	characteristics.set("shao_kahn",{png : shaoskins,coordinates : shaocoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 3, kicknframe : 5,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 8, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
+	width : 40, height : 114,vitesse : 3.2,jumpxspeed : 3.4,backmovnerf : 0.92, gravity : 0.44, jumpforce : 6.5,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.1,
+	airdrift : 0.1, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : raiden_coups, pv : 150, getupfdur : 24, grabfdur : 35, grabdeg : 12, vicposframes : 5, vicposfdur : 36, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male"});
+	
+
+
 
 
 	j1 = new Joueur();
@@ -2713,7 +2720,7 @@ function main(){
 	var finishhim = 0; var fatalitywasdone = false; var fatalitysreen = 0;
 	var persoschoisis = ["kitana","raiden"]; var skinschoisis = [0,0]; var persolocked = [0,0]; var persosovered = [0,0];
 	var musiqueon = true; var soundeffon = true; var introon = true; var timer = 0; var timer_init = 99*60;
-	var liste_persos = ["raiden","kitana","scorpion","subzero"];
+	var liste_persos = ["raiden","kitana","scorpion","subzero", "shao_kahn"];
 	var chartimer = 0; var chartimercycle = 3; var difficultynames = ["Easy","Normal","Hard","Insane","Terminator"];
 	var is_in_charc_screen = true; var lockincountdown = 0; var lockincountdownfdur = 40; var controlafaire = -1; var key = "";
 	var Width= window.innerWidth; var Height=window.innerHeight;
