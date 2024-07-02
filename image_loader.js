@@ -55,7 +55,6 @@ var lifebarpng=new Image();lifebarpng.src = 'ressource/ui/barlife.png';
 	var forestbackgroundpng = new Image();forestbackgroundpng.src = 'ressource/stages/livingforestbackground.png';
 	var gorobackgroundpng = new Image();gorobackgroundpng.src = 'ressource/stages/gorobackground.png';
 	var gorostructurepng = new Image();gorostructurepng.src = 'ressource/stages/gorostructure.png';
-	var kahngroundpng = new Image();kahngroundpng.src = 'ressource/stages/kahnground.png';
 	var kahnstructurepng = new Image();kahnstructurepng.src = 'ressource/stages/kahnstructure.png';
 	var kahnbackgroundpng = new Image();kahnbackgroundpng.src = 'ressource/stages/kahnbackground.png';
 	var stagesstruct = [towerstructurepng, deadpoolpng, wastestructurepng, forestgroundpng, gorostructurepng, kahnstructurepng];
