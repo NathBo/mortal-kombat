@@ -2230,7 +2230,6 @@ function main(){
 
 	function choserandomstage(){
 		chosenstage = Math.floor(Math.random()*numberofstages);
-		chosenstage = 5;
 		if(arcadelevel>=0){chosenstage = arcadestagesorder[arcadelevel];}
 		ground = grounds[chosenstage];
 		stage_size = stagesizes[chosenstage];
@@ -2293,14 +2292,15 @@ function main(){
 				if(roundwonsj1>=2 || roundwonsj2>=2){
 					if(roundwonsj1>=2 && arcadelevel>=0){
 						arcadelevel+=1;
-						if(arcadelevel>=liste_persos.length){
+						if(arcadelevel>liste_persos.length){
 							reset_game(true);
 							gobacktotitlescreen();
 							return;
 						}
 						roundwonsj1 = 0; roundwonsj2 = 0; camerax = 0;
 						persolocked = [0,0];
-						persoschoisis[1] = arcadeorder[arcadelevel];
+						if(arcadelevel==liste_persos.length){persoschoisis[1] = "shao_kahn"}
+						else{persoschoisis[1] = arcadeorder[arcadelevel];}
 						skinschoisis[1] = randomInt(0,1);
 						choserandomstage();
 						if(persoschoisis[1]==persoschoisis[0]){skinschoisis[1]=(skinschoisis[0]+1)%2;}
@@ -2323,9 +2323,14 @@ function main(){
 		}
 		else if(end_of_round_countdown){
 			end_of_round_countdown--;
-			if(end_of_round_countdown==110 && j1.pv>0){characteristics.get(persoschoisis[0]).namewav.play();}
-			if(end_of_round_countdown==110 && j2.pv>0){characteristics.get(persoschoisis[1]).namewav.play();}
-			if(end_of_round_countdown==60 && (j1.pv>0 || j2.pv>0)){play_sound_eff("wins");}
+			if(j1.pv<=0 && j2.perso=="shao_kahn" && j2.pv>0){
+				if(end_of_round_countdown==100){play_sound_eff("shaowinquote");}
+			}
+			else{
+				if(end_of_round_countdown==110 && j1.pv>0){characteristics.get(persoschoisis[0]).namewav.play();}
+				if(end_of_round_countdown==110 && j2.pv>0){characteristics.get(persoschoisis[1]).namewav.play();}
+				if(end_of_round_countdown==60 && (j1.pv>0 || j2.pv>0)){play_sound_eff("wins");}
+			}
 			j1.declencher_vicpose();
 			j2.declencher_vicpose();
 		}
@@ -2510,7 +2515,12 @@ function main(){
 				lockincountdown=0;
 				persoschoisis = [liste_persos[persosovered[0]],liste_persos[persosovered[1]]]
 				if(!secondplayerchosescharac){
-					persoschoisis[1] = arcadeorder[arcadelevel];
+					if(arcadelevel==liste_persos.length){
+						persoschoisis[1] = "shao_kahn";
+					}
+					else{
+						persoschoisis[1] = arcadeorder[arcadelevel];
+					}
 					skinschoisis[1] = randomInt(0,1);
 					if(persolocked[0] && persoschoisis[1]==persoschoisis[0]){skinschoisis[1]=(skinschoisis[0]+1)%2;}
 				}
@@ -2690,6 +2700,7 @@ function main(){
 	sounds_eff.set("wins",[document.querySelector('#winswav')]);
 	sounds_eff.set("toasty",[document.querySelector('#toastywav')]);
 	sounds_eff.set("compliment",[document.querySelector('#compliment1wav'),document.querySelector('#compliment2wav'),document.querySelector('#compliment3wav'),document.querySelector('#compliment4wav')]);
+	sounds_eff.set("shaowinquote",[document.querySelector('#shaowinquote1wav'),document.querySelector('#shaowinquote2wav'),document.querySelector('#shaowinquote3wav')]);
 	sounds_eff.set("cursor_move",[document.querySelector('#cursorwav')]);
 	sounds_eff.set("coup",[document.querySelector('#coup1wav'),document.querySelector('#coup2wav'),document.querySelector('#coup3wav'),document.querySelector('#coup4wav'),document.querySelector('#coup5wav')]);
 	sounds_eff.set("grapple",[document.querySelector('#grapplewav')]);
@@ -2729,7 +2740,7 @@ function main(){
 	
 	characteristics.set("shao_kahn",{png : shaoskins,coordinates : shaocoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 5,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 8, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
 	width : 40, height : 114,vitesse : 3.2,jumpxspeed : 3.4,backmovnerf : 0.92, gravity : 0.44, jumpforce : 6.5,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.1,
-	airdrift : 0.1, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : shao_coups, pv : 150, getupfdur : 24, grabfdur : 35, grabdeg : 12, vicposframes : 5, vicposfdur : 36, cds : [150,180,150,360], icons : [elecgrabiconpng,chargeiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male"});
+	airdrift : 0.1, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : shao_coups, pv : 150, getupfdur : 24, grabfdur : 35, grabdeg : 12, vicposframes : 6, vicposfdur : 42, cds : [150,180,150,360], icons : [elecgrabiconpng,chargeiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male"});
 	
 
 
@@ -2755,13 +2766,13 @@ function main(){
 	var finishhim = 0; var fatalitywasdone = false; var fatalitysreen = 0;
 	var persoschoisis = ["kitana","raiden"]; var skinschoisis = [0,0]; var persolocked = [0,0]; var persosovered = [0,0];
 	var musiqueon = true; var soundeffon = true; var introon = true; var timer = 0; var timer_init = 99*60;
-	var liste_persos = ["raiden","kitana","scorpion","subzero", "shao_kahn"];
+	var liste_persos = ["raiden","kitana","scorpion","subzero"];
 	var chartimer = 0; var chartimercycle = 3; var difficultynames = ["Easy","Normal","Hard","Insane","Terminator"];
 	var is_in_charc_screen = true; var lockincountdown = 0; var lockincountdownfdur = 40; var controlafaire = -1; var key = "";
 	var Width= window.innerWidth; var Height=window.innerHeight;
 	var decalage = 0; var wdecalagey = 0;
 	var bufferwindow = 5; var minimumcomboscaling = 0.5;
-	var arcadelevel = -1; var arcadeorder = [...liste_persos]; arcadeorder.shuffle(); var arcadestagesorder = [1,0,3,4];
+	var arcadelevel = -1; var arcadeorder = [...liste_persos]; arcadeorder.shuffle(); var arcadestagesorder = [1,0,3,4,5];
 	var youareintutorial = false; var tutorialscenenumber = 0; var currentuto = null; var currenttutoline = tutospecial;
 
 

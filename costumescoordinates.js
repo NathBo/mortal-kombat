@@ -612,8 +612,8 @@ function getshaocoordinates(){
 	shaocoordinates.set("falling1",{offx:15,width:59,offy:743,height:116,decx:0,decy:0});
 	shaocoordinates.set("falling2",{offx:87,width:79,offy:743,height:116,decx:0,decy:12});
 	shaocoordinates.set("falling3",{offx:174,width:78,offy:802,height:57,decx:0,decy:0});
-	shaocoordinates.set("grounded1",{offx:337,width:89,offy:806,height:54,decx:0,decy:-2});
-	shaocoordinates.set("grounded2",{offx:435,width:93,offy:806,height:54,decx:0,decy:-2});
+	shaocoordinates.set("grounded1",{offx:337,width:89,offy:806,height:54,decx:0,decy:-5});
+	shaocoordinates.set("grounded2",{offx:435,width:93,offy:806,height:54,decx:0,decy:-5});
 	shaocoordinates.set("getup1",{offx:551,width:74,offy:792,height:67,decx:0,decy:0});
 	shaocoordinates.set("getup2",{offx:635,width:66,offy:785,height:74,decx:0,decy:0});
 	shaocoordinates.set("getup3",{offx:711,width:56,offy:774,height:85,decx:0,decy:0});
@@ -630,6 +630,7 @@ function getshaocoordinates(){
 	shaocoordinates.set("victory3",{offx:289,width:51,offy:15,height:110,decx:0,decy:0});
 	shaocoordinates.set("victory4",{offx:351,width:56,offy:15,height:110,decx:0,decy:0});
 	shaocoordinates.set("victory5",{offx:415,width:54,offy:15,height:110,decx:0,decy:0});
+	shaocoordinates.set("victory6",{offx:415,width:54,offy:15,height:110,decx:0,decy:0});
 	shaocoordinates.set("charge1",{offx:162,width:46,offy:622,height:113,decx:0,decy:0});
 	shaocoordinates.set("charge2",{offx:218,width:77,offy:622,height:113,decx:-15,decy:0});
 
