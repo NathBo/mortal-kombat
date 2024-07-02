@@ -933,7 +933,7 @@ function main(){
 					if(me.perso=="subzero" && other.movlag>c.elag+c.fdur+3 && me.y==0){this.begincoup("icebody");}
 					this.pressbackward();
 					if(other.charac.coups.get(other.mov).hitboxys<0 && other.y==0){me.bas = 1;}
-					if(other.charac.coups.get(other.mov).hiteffect=="grab"){me.bas=1;me.gauche=0;me.droite=0;}
+					if(other.charac.coups.get(other.mov).hiteffect=="grab" && me.perso!="shao_kahn"){me.haut=1;}
 					return;
 				}
 				
@@ -1525,7 +1525,7 @@ function main(){
 							if(stats.hitboxys<=0 || this.y>0){other.hurt(this,stats);}
 						}
 						else if(other.y==0){
-							if(entre((other.y-this.y),stats.hitboxys,stats.hitboxye+other.charac.height/3)){other.hurt(this,stats);}
+							if(entre((other.y-this.y),stats.hitboxys-2,stats.hitboxye+other.charac.height/3)){other.hurt(this,stats);}
 						}
 						else{
 							if(entre((other.y-this.y),stats.hitboxys-other.charac.height/6,stats.hitboxye+other.charac.height/6)){other.hurt(this,stats);}
@@ -1546,6 +1546,7 @@ function main(){
 		hurt(other,stats){
 			if(stats.hiteffect==""){return;}
 			if(this.perso=="shao_kahn" && stats.hiteffect=="grab"){return;}
+			if(this.mov=="jumpsquat" && stats.hiteffect=="grab"){return;}
 			if(other.mov=="thundergod"){other.movlag=1;other.tb=8;other.xspeed = -1;other.y=0.1;}
 			if(other.mov=="squarepunch"){other.movlag=1;other.tb=0;other.xspeed = -1;}
 			if(this.invincibilite || end_of_round_countdown){return;}
