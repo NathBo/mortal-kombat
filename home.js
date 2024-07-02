@@ -570,7 +570,7 @@ function main(){
 			this.num = cpt;
 			this.rotation = 0; this.rotationspeed = 16;
 			this.gravity = 0.2;
-			this.tb=Math.random()*4+3;
+			this.tb=Math.random()*4.5+3.5;
 			this.vitesse = -2+Math.random()*4;
 			this.dangerous = false;
 			
@@ -1638,10 +1638,13 @@ function main(){
 			this.y+=0.1;
 			this.xspeed = signe(this.xspeed)*Math.max(Math.abs(this.xspeed),3);
 			this.invincibilite = 150;
-			play_sound_eff(this.charac.voiceactor+"bighurted")
-			slow_game(60,2);
-			shake_screen(25,6);
-			lag_game(20);
+			if(this.perso=="shao_kahn" && roundwonsj1>=1){this.explode();}
+			else{
+				play_sound_eff(this.charac.voiceactor+"bighurted")
+				slow_game(60,2);
+				shake_screen(25,6);
+				lag_game(20);
+			}
 			musiques[chosenstage].pause();
 			roundover_musiques[chosenstage].play();
 			if(finishhim){end_of_round_countdown=180;finishhim=0;}
@@ -2058,10 +2061,16 @@ function main(){
 		explode(){
 			this.hide=1;
 			for(var i=0;i<25;i++){
-				add_to_objects_set(new Organ(this.x,this.y+this.charac.height,this.orientation, (this.burning!=0)));
+				add_to_objects_set(new Organ(this.x,this.y+this.charac.height/2,this.orientation, (this.burning!=0)));
 			}
-			if(!this.burning){add_to_objects_set(new Head(this.x,this.y+this.charac.height,this.orientation,this.skin,this.coordinates,5.5));}
-			shake_screen(30,10);
+			if(this.perso!="shao_kahn"){
+				if(!this.burning){add_to_objects_set(new Head(this.x,this.y+this.charac.height,this.orientation,this.skin,this.coordinates,5.5));}
+				shake_screen(30,10);
+			}
+			else{
+				shake_screen(40,15);
+				slow_game(40,2);
+			}
 			play_sound_eff("explosion");
 		}
 
@@ -2187,7 +2196,7 @@ function main(){
 			musiques[chosenstage].pause();
 			j2.pv=0;
 			if(j1.pv>0){roundwonsj1 ++;}
-			if(roundwonsj1>=2 && finishhim==0){
+			if(roundwonsj1>=2 && finishhim==0 && j2.perso!="shao_kahn"){
 				finishhim = 300;
 			}
 			else{
