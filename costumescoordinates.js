@@ -630,6 +630,8 @@ function getshaocoordinates(){
 	shaocoordinates.set("victory3",{offx:289,width:51,offy:15,height:110,decx:0,decy:0});
 	shaocoordinates.set("victory4",{offx:351,width:56,offy:15,height:110,decx:0,decy:0});
 	shaocoordinates.set("victory5",{offx:415,width:54,offy:15,height:110,decx:0,decy:0});
+	shaocoordinates.set("charge1",{offx:162,width:46,offy:622,height:113,decx:0,decy:0});
+	shaocoordinates.set("charge2",{offx:218,width:77,offy:622,height:113,decx:-15,decy:0});
 
 	return shaocoordinates;
 }

@@ -78,9 +78,10 @@ subzero_coups.set("iceflask",{slag : 21, fdur : 0, elag : 0, degats : 0, hitstun
 subzero_coups.set("icebody",{slag : 3, fdur : 15, elag : 15, degats : 0, hitstun : 60, hurtx : 0, hurty : 3.5, hitboxxs : -12, hitboxxe : -12,hitboxys : -8, hitboxye : 8, hitboxxouv : 5, blood_height : 0, blockstun : 10, blockx : 0.3, hiteffect : "iceflask", hitboxxeyscaling : 0, hitlag : 2, hitsound : "freeze", blood : "electrocute", damageonblock : 0,landinglag : 12, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : ""});
 
 var shao_coups = new Map();
-shao_coups.set("lpunch",{slag : 9, fdur : 5, elag : 12, degats : 8, hitstun : 25, hurtx : 1.1, hurty : 0, hitboxxs : 15, hitboxxe : 48,hitboxys : 0, hitboxye : 95, hitboxxouv : 19, blood_height : 10, blockstun : 12, blockx : 1.7, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : "coup"});
-shao_coups.set("hpunch",{slag : 14, fdur : 9, elag : 16, degats : 12, hitstun : 32, hurtx : 1.3, hurty : 0, hitboxxs : 11, hitboxxe : 52, hitboxys : 0, hitboxye : 82, hitboxxouv : 21, blood_height : 0, blockstun : 14, blockx : 2.5, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : "coup"});
-shao_coups.set("hkick",{slag : 17, fdur : 8, elag : 18, degats : 20, hitstun : 90, hurtx : 4, hurty : 7.5, hitboxxs : 20, hitboxxe : 50, hitboxys : 0, hitboxye : 100, hitboxxouv : 30, blood_height : 8, blockstun : 16, blockx : 3.3, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 10, hitsound : "hhit", blood : "mblood", damageonblock : 1, disponibility : "stand", voiceline : "hmov", movx : 3, coupwav : "coup"});
+shao_coups.set("lpunch",{slag : 9, fdur : 5, elag : 12, degats : 8, hitstun : 25, hurtx : 1.1, hurty : 0, hitboxxs : 15, hitboxxe : 48,hitboxys : 0, hitboxye : 95, hitboxxouv : 19, blood_height : 10, blockstun : 12, blockx : 1.7, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 6, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : "coup"});
+shao_coups.set("hpunch",{slag : 14, fdur : 9, elag : 16, degats : 12, hitstun : 32, hurtx : 1.3, hurty : 0, hitboxxs : 11, hitboxxe : 52, hitboxys : 0, hitboxye : 82, hitboxxouv : 21, blood_height : 0, blockstun : 14, blockx : 2.5, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 8, hitsound : "mhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : "coup"});
+shao_coups.set("hkick",{slag : 17, fdur : 8, elag : 18, degats : 20, hitstun : 90, hurtx : 4, hurty : 8.5, hitboxxs : 20, hitboxxe : 50, hitboxys : 0, hitboxye : 100, hitboxxouv : 30, blood_height : 8, blockstun : 16, blockx : 3.3, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 12, hitsound : "hhit", blood : "mblood", damageonblock : 1, disponibility : "stand", voiceline : "hmov", movx : 3, coupwav : "coup"});
+shao_coups.set("charge",{slag : 9, fdur : 20, elag : 7, degats : 13, hitstun : 60, hurtx : 5.2, hurty : 8, hitboxxs : 20, hitboxxe : 46,hitboxys : 0, hitboxye : 90, hitboxxouv : 40, blood_height : -5, blockstun : 35, blockx : 1, hiteffect : "guard_break", hitboxxeyscaling : 0, hitlag : 11, hitsound : "mhit", blood : "mblood", damageonblock : 4, disponibility : "stand", voiceline : "hmov", movx : 0, coupwav : "coup"});
 
 
 
@@ -114,6 +115,7 @@ movpriority.set("slide",70);
 movpriority.set("iceball",70);
 movpriority.set("iceflask",70);
 movpriority.set("icebody",70);
+movpriority.set("charge",70);
 movpriority.set("air_dodge",100);
 movpriority.set("landing_lag",100);
 movpriority.set("jumpsquat",100);
@@ -157,3 +159,4 @@ cd_dependance.set("slide",1);
 cd_dependance.set("iceball",0);
 cd_dependance.set("iceflask",2);
 cd_dependance.set("icebody",3);
+cd_dependance.set("charge",1);
