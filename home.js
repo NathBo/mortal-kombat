@@ -2230,6 +2230,7 @@ function main(){
 
 	function choserandomstage(){
 		chosenstage = Math.floor(Math.random()*numberofstages);
+		chosenstage = 5;
 		if(arcadelevel>=0){chosenstage = arcadestagesorder[arcadelevel];}
 		ground = grounds[chosenstage];
 		stage_size = stagesizes[chosenstage];
@@ -2698,8 +2699,8 @@ function main(){
 
 	var fightwav = document.querySelector('#fightwav');
 
-	var musiques = [document.querySelector('#towerwav'), document.querySelector('#deadpoolwav'), document.querySelector("#wastewav"), document.querySelector("#forestwav"),  document.querySelector("#gorowav")];
-	var roundover_musiques = [document.querySelector('#towerroundoverwav'),document.querySelector('#deadpoolroundoverwav'),document.querySelector("#wasteroundoverwav"), document.querySelector("#forestroundoverwav"),document.querySelector("#forestroundoverwav")];
+	var musiques = [document.querySelector('#towerwav'), document.querySelector('#deadpoolwav'), document.querySelector("#wastewav"), document.querySelector("#forestwav"),  document.querySelector("#gorowav"), document.querySelector("#mkwav")];
+	var roundover_musiques = [document.querySelector('#towerroundoverwav'),document.querySelector('#deadpoolroundoverwav'),document.querySelector("#wasteroundoverwav"), document.querySelector("#forestroundoverwav"),document.querySelector("#forestroundoverwav"), document.querySelector("#forestroundoverwav")];
 	
 	for (var i=0; i<musiques.length; i++){
 		musiques[i].loop = true;
