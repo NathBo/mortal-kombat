@@ -1356,8 +1356,9 @@ function main(){
 					}
 					else if(this.perso == "kitana" && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[0]==0){
 						this.begincoup("fanthrow",other);
+						var stats = this.charac.coups.get(this.mov);
 						this.cooldowns[0] = this.charac.cds[0];
-						this.movlag=Math.ceil(this.movlag/1.8);
+						this.movlag=stats.elag+6;
 						this.special = 2;
 						this.xspeed/=2;
 					}
@@ -1403,13 +1404,13 @@ function main(){
 
 					case "squarepunch":
 						var stats = this.charac.coups.get(this.mov);
-						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.tb=0;this.xspeed=7*this.orientation;}
+						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.tb=0;this.xspeed=8*this.orientation;}
 						if(this.movlag<=stats.elag){this.xspeed=0;}
 						break;
 
 					case "teleport":
 						var stats = this.charac.coups.get(this.mov);
-						if(this.movlag==stats.elag+8){this.invincibilite=16;}
+						if(this.movlag==stats.elag+7){this.invincibilite=14;}
 						if(this.movlag==stats.elag){
 							var x = other.x+this.orientation*(this.charac.width/2+other.charac.width/2+10);
 							if(Math.abs(x-camerax)>decalagex-this.charac.width/2){x = other.x-this.orientation*(this.charac.width/2+other.charac.width/2+10);}
