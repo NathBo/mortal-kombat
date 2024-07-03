@@ -1522,8 +1522,8 @@ function main(){
 						if(entre(other.movlag,stats2.elag+1,stats2.elag+stats2.fdur)){hitboxxe+=stats2.hitboxxouv;}
 					}
 					if(entre((other.x-this.x)*this.orientation,stats.hitboxxs-other.charac.width/2,hitboxxe+other.charac.width/2+stats.hitboxxeyscaling*(other.y-(this.y+stats.hitboxys)))){
-						if(other.crouching>3 && entre((other.y-this.y),stats.hitboxys,stats.hitboxxe+other.charac.height/3)){
-							if(stats.hitboxys<=0 || this.y>0){other.hurt(this,stats);}
+						if(other.crouching>3){
+							if((stats.hitboxys<=0 || this.y>0)  && entre((other.y-this.y),stats.hitboxys,stats.hitboxxe+other.charac.height/3)){other.hurt(this,stats);}
 						}
 						else if(other.y==0){
 							if(entre((other.y-this.y),stats.hitboxys-2,stats.hitboxye+other.charac.height/3)){other.hurt(this,stats);}
@@ -2740,8 +2740,8 @@ function main(){
 	airdrift : 0.13, airmaxspeed : 1.8, airdodgespeed : 5.7, airdodgefdur : 15, landinglag : 9, coups : subzero_coups, pv : 95, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 14, cds : [210,150,240,270], icons : [iceballiconpng,slideiconpng,iceflaskiconpng,icebodyiconpng], voiceactor : "male"});
 	
 	characteristics.set("shao_kahn",{png : shaoskins,coordinates : shaocoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 5,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 8, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
-	width : 40, height : 114,vitesse : 3.2,jumpxspeed : 3.4,backmovnerf : 0.92, gravity : 0.44, jumpforce : 6.5,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.1,
-	airdrift : 0.1, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : shao_coups, pv : 150, getupfdur : 24, grabfdur : 35, grabdeg : 12, vicposframes : 6, vicposfdur : 42, cds : [150,180,150,360], icons : [elecgrabiconpng,chargeiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male"});
+	width : 40, height : 114,vitesse : 3.1,jumpxspeed : 3.4,backmovnerf : 0.92, gravity : 0.44, jumpforce : 6.5,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.1,
+	airdrift : 0.1, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : shao_coups, pv : 140, getupfdur : 24, grabfdur : 35, grabdeg : 12, vicposframes : 6, vicposfdur : 42, cds : [150,240,150,360], icons : [elecgrabiconpng,chargeiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male"});
 	
 
 

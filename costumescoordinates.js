@@ -572,11 +572,10 @@ function getshaocoordinates(){
 	shaocoordinates.set("walk2",{offx:63,width:41,offy:256,height:119,decx:-1,decy:-2});
 	shaocoordinates.set("walk3",{offx:113,width:39,offy:256,height:119,decx:0,decy:-3});
 	shaocoordinates.set("walk4",{offx:162,width:39,offy:256,height:119,decx:0,decy:-3});
-	shaocoordinates.set("walk5",{offx:162,width:39,offy:256,height:119,decx:0,decy:-3});
-	shaocoordinates.set("walk6",{offx:210,width:40,offy:256,height:119,decx:-1,decy:-3});
-	shaocoordinates.set("walk7",{offx:259,width:39,offy:256,height:119,decx:0,decy:-2});
-	shaocoordinates.set("walk8",{offx:308,width:39,offy:256,height:119,decx:0,decy:-1});
-	shaocoordinates.set("walk9",{offx:357,width:45,offy:256,height:119,decx:0,decy:-1});
+	shaocoordinates.set("walk5",{offx:210,width:40,offy:256,height:119,decx:-1,decy:-3});
+	shaocoordinates.set("walk6",{offx:259,width:39,offy:256,height:119,decx:0,decy:-2});
+	shaocoordinates.set("walk7",{offx:308,width:39,offy:256,height:119,decx:0,decy:-1});
+	shaocoordinates.set("walk8",{offx:357,width:45,offy:256,height:119,decx:0,decy:-1});
 	shaocoordinates.set("jump1",{offx:116,width:42,offy:136,height:114,decx:-4,decy:0});
 	shaocoordinates.set("jump2",{offx:116,width:42,offy:136,height:114,decx:-4,decy:0});
 	shaocoordinates.set("jump3",{offx:116,width:42,offy:136,height:114,decx:-4,decy:0});
