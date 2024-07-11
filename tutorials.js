@@ -70,7 +70,7 @@ var tutocrouch = [
     {
         char : ["kitana","kitana"], ai : 0, pv : [20,15], moves : [["clpunch", "crouch", "block"],["hkick"]], aimoves : [],
         jumper : 0, regenerate : false,
-        msg : "By crouching, you will also not get hit by high moves, as long as you dont try to block them, use this to beat your ennemy"
+        msg : "By crouching, you will also not get hit by high moves, use this to beat your ennemy. (Examples of high moves are light punches, heavy punches, roundhouses and huppercuts)"
     },
     {
         char : ["kitana","kitana"], ai : 2, pv : [20,15], moves : [["clpunch", "crouch","hkick", "block"],["block"]], aimoves : [],
