@@ -669,6 +669,17 @@ function getliucoordinates(){
 	liucoordinates.set("stunned5",{offx:805,width:35,offy:1306,height:104,decx:0,decy:0});
 	liucoordinates.set("stunned6",{offx:848,width:35,offy:1306,height:104,decx:0,decy:0});
 	liucoordinates.set("head",{offx:754,width:19,offy:2128,height:16,decx:0,decy:0});
+	liucoordinates.set("flying_kick1",{offx:287,width:47,offy:1011,height:57,decx:0,decy:10});
+	liucoordinates.set("flying_kick2",{offx:344,width:68,offy:1011,height:57,decx:0,decy:10});
+	liucoordinates.set("fireball1",{offx:15,width:31,offy:1419,height:98,decx:-3,decy:0});
+	liucoordinates.set("fireball2",{offx:55,width:36,offy:1419,height:98,decx:-4,decy:0});
+	liucoordinates.set("fireball",{offx:546,width:49,offy:1501,height:16,decx:-19,decy:0});
+	liucoordinates.set("bicycle1",{offx:15,width:66,offy:1525,height:55,decx:0,decy:0});
+	liucoordinates.set("bicycle2",{offx:91,width:66,offy:1525,height:55,decx:0,decy:0});
+	liucoordinates.set("bicycle3",{offx:164,width:66,offy:1525,height:55,decx:0,decy:0});
+	liucoordinates.set("bicycle4",{offx:234,width:71,offy:1525,height:55,decx:0,decy:0});
+	liucoordinates.set("bicycle5",{offx:315,width:68,offy:1525,height:55,decx:0,decy:0});
+	liucoordinates.set("bicycle6",{offx:392,width:59,offy:1525,height:55,decx:0,decy:0});
 	
 
     return liucoordinates;

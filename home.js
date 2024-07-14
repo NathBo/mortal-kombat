@@ -284,6 +284,49 @@ function main(){
 		}
 	}
 
+	class Fireball{
+		constructor(x,y,orientation,other,stats){
+			this.x = x; this.y = y; this.orientation = orientation;
+			this.other = other;
+			this.width=30;
+			this.height=16;
+			this.totdur = 50;this.vitesse=7;
+			this.stats = stats;
+			this.dur = this.totdur;
+			this.num = cpt;
+			this.dangerous = true;
+			
+		}
+
+		loop(){
+			this.x += this.orientation*this.vitesse;
+			var stats = this.stats; var other = this.other;
+			if(other.invincibilite==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
+				if(other.y==0){
+					if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
+				}
+				else{
+					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){other.hurt(this,stats);this.dur=1;}
+				}
+			}
+		}
+
+		afficher(){
+			this.costume = "fireball";
+			ctx.scale(2*this.orientation,2);
+			var coords = liucoordinates.get(this.costume);
+			ctx.drawImage(liupng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			if(gamefreeze==0){this.dur--;}
+			if(this.dur==0){this.delete();return;}
+		}
+
+		delete(){
+			objects_to_loop.delete(this.num);
+		}
+	}
+
 
 	class IceFlask{
 		constructor(x,y,orientation,other,stats){
@@ -1016,6 +1059,8 @@ function main(){
 			if(s == "hell_gates"){this.orientation*=-1;}
 			if(s == "squarepunch"){this.invincibilite=15;this.y=1;this.tb=9;}
 			if(s == "icebody"){this.crouching = 0;}
+			if(s == "flying_kick" && this.y==0){this.y=20;}
+			if(s == "bicycle" && this.y==0){this.y=40;}
 			if(movpriority.get(s)==70 && movpriority.get(this.mov)>=70){return;}
 			play_sound_eff(this.charac.voiceactor+stats.voiceline);
 			if(stats.coupwav != ""){play_sound_eff(stats.coupwav);}
@@ -1317,6 +1362,15 @@ function main(){
 					else if(this.perso == "subzero" && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("icebody",other);
 					}
+					else if(this.perso == "liukang" && this.forward>=1 && this.crouching==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+						this.begincoup("flying_kick",other);
+					}
+					else if(this.perso == "liukang" && this.back==0 && this.crouching==0 && this.bas==0 && this.forward==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+						this.begincoup("fireball",other);
+					}
+					else if(this.perso == "liukang" && this.back>=1 && this.crouching==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+						this.begincoup("bicycle",other);
+					}
 					else if(this.perso == "shao_kahn" && this.forward>=1 && this.crouching==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("charge",other);
 					}
@@ -1364,6 +1418,9 @@ function main(){
 					}
 					else if(this.perso == "scorpion" && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[1]==0){
 						this.begincoup("airgrab",other);
+					}
+					else if(this.perso == "liukang" && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+						this.begincoup("flying_kick",other);
 					}
 					this.y+=this.tb;
 					if(this.droite&&this.xspeed<c.airmaxspeed){this.xspeed+=c.airdrift}else if(this.gauche && this.xspeed>-c.airmaxspeed){this.xspeed-=c.airdrift}
@@ -1471,7 +1528,27 @@ function main(){
 							add_to_objects_set(new IceFlask(this.x+60*this.orientation,this.y-5,this.orientation,other,stats));
 						}
 						break;
-				}
+					case "flying_kick":
+						var stats = this.charac.coups.get(this.mov);
+						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.x += 8*this.orientation;this.xspeed=0;}
+						this.tb=0;
+						break;
+					case "bicycle":
+						var stats = this.charac.coups.get(this.mov);
+						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){
+							this.x += 4*this.orientation;this.xspeed=0;
+							if((stats.elag+stats.fdur-this.movlag)%6==0){this.canthurt=false;}
+						}
+						this.tb=0;
+						break;
+					case "fireball":
+						var stats = this.charac.coups.get(this.mov);
+						this.crouching=0;
+						if(this.movlag==stats.elag){
+							add_to_objects_set(new Fireball(this.x+25*this.orientation,this.y+70,this.orientation,other,stats));
+						}
+						break;
+					}
 				this.movlag--;
 				if(this.movlag == 0){
 					if(this.mov == "jumpsquat"){this.mov = "";if(this.haut>=1 && this.bas == 0){this.tb = c.jumpforce;this.y = c.jumpforce;}else{this.tb = c.shorthop;this.y = c.shorthop;}}
@@ -1553,6 +1630,7 @@ function main(){
 			if(this.invincibilite || end_of_round_countdown){return;}
 			if(other.mov=="thundergod"){other.y=0;}
 			if(other.mov=="charge"){other.movlag=8;other.xspeed=0;}
+			if(other.mov=="flying_kick"){other.movlag=13;other.xspeed=0;}
 			if(this.mov == "icebody"){
 				var s = this.charac.coups.get("icebody");
 				if(entre(this.movlag, s.elag+1, s.elag + s.fdur)){this.other.afficher(this);other.freeze=60;other.movlag=0;other.mov="";play_sound_eff("freeze");return;}
@@ -1840,8 +1918,18 @@ function main(){
 					case "slide" :
 					case "icebody" :
 					case "charge" :
+					case "flying_kick" :
 						var stats = this.charac.coups.get(this.mov);
-						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.costume = this.mov+"2"}
+						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.costume = this.mov+"2"}
+						else{this.costume = this.mov+"1";}
+						break;
+
+					case "bicycle" :
+						var stats = this.charac.coups.get(this.mov);
+						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){
+							var n = Math.floor((stats.elag+stats.fdur-this.movlag)/2)%6+1;
+							this.costume = this.mov+n.toString()
+						}
 						else{this.costume = this.mov+"1";}
 						break;
 
@@ -1883,6 +1971,7 @@ function main(){
 						break;
 
 					case "boltthrow" :
+					case "fireball" :
 						var stats = this.charac.coups.get(this.mov);
 						if(entre(this.movlag,stats.slag,stats.slag+stats.fdur+stats.elag-10)){this.costume = this.mov+"2"}
 						else{this.costume = this.mov+"1";}
