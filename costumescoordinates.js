@@ -641,15 +641,15 @@ function getliucoordinates(){
 	liucoordinates.set("jskick2",{offx:344,width:68,offy:1011,height:57,decx:0,decy:10});
 	liucoordinates.set("jkick1",{offx:287,width:47,offy:1011,height:57,decx:0,decy:10});
 	liucoordinates.set("jkick2",{offx:344,width:68,offy:1011,height:57,decx:0,decy:10});
-	liucoordinates.set("grabbing1",{offx:61,width:69,offy:567,height:123,decx:0,decy:0});
-	liucoordinates.set("grabbing2",{offx:135,width:60,offy:567,height:123,decx:0,decy:0});
-	liucoordinates.set("grabbing3",{offx:202,width:40,offy:567,height:123,decx:0,decy:0});
-	liucoordinates.set("grabbing4",{offx:249,width:45,offy:567,height:123,decx:0,decy:0});
-	liucoordinates.set("grabbing5",{offx:300,width:47,offy:567,height:123,decx:0,decy:0});
-	liucoordinates.set("grabbed1",{offx:13,width:41,offy:1350,height:98,decx:0,decy:0});
-	liucoordinates.set("grabbed2",{offx:57,width:56,offy:1350,height:98,decx:0,decy:0});
-	liucoordinates.set("grabbed3",{offx:117,width:60,offy:1350,height:98,decx:0,decy:0});
-	liucoordinates.set("grabbed4",{offx:183,width:52,offy:1350,height:98,decx:0,decy:0});
+	liucoordinates.set("grabbing1",{offx:15,width:52,offy:523,height:93,decx:0,decy:0});
+	liucoordinates.set("grabbing2",{offx:73,width:48,offy:523,height:93,decx:0,decy:0});
+	liucoordinates.set("grabbing3",{offx:127,width:56,offy:523,height:93,decx:0,decy:0});
+	liucoordinates.set("grabbing4",{offx:190,width:63,offy:523,height:93,decx:0,decy:0});
+	liucoordinates.set("grabbing5",{offx:261,width:62,offy:523,height:93,decx:0,decy:0});
+	liucoordinates.set("grabbed1",{offx:15,width:46,offy:1316,height:94,decx:0,decy:0});
+	liucoordinates.set("grabbed2",{offx:67,width:66,offy:1316,height:94,decx:0,decy:0});
+	liucoordinates.set("grabbed3",{offx:142,width:46,offy:1316,height:94,decx:0,decy:0});
+	liucoordinates.set("grabbed4",{offx:193,width:49,offy:1316,height:94,decx:0,decy:0});
 	liucoordinates.set("victory1",{offx:15,width:32,offy:275,height:111,decx:0,decy:0});
 	liucoordinates.set("victory2",{offx:56,width:75,offy:275,height:111,decx:-22,decy:0});
 	liucoordinates.set("victory3",{offx:140,width:61,offy:275,height:111,decx:-14,decy:0});
@@ -668,7 +668,7 @@ function getliucoordinates(){
 	liucoordinates.set("stunned4",{offx:761,width:35,offy:1306,height:104,decx:0,decy:0});
 	liucoordinates.set("stunned5",{offx:805,width:35,offy:1306,height:104,decx:0,decy:0});
 	liucoordinates.set("stunned6",{offx:848,width:35,offy:1306,height:104,decx:0,decy:0});
-	liucoordinates.set("head",{offx:908,width:22,offy:1885,height:21,decx:0,decy:0});
+	liucoordinates.set("head",{offx:754,width:19,offy:2128,height:16,decx:0,decy:0});
 	
 
     return liucoordinates;
