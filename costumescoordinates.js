@@ -680,6 +680,15 @@ function getliucoordinates(){
 	liucoordinates.set("bicycle4",{offx:234,width:71,offy:1525,height:55,decx:0,decy:0});
 	liucoordinates.set("bicycle5",{offx:315,width:68,offy:1525,height:55,decx:0,decy:0});
 	liucoordinates.set("bicycle6",{offx:392,width:59,offy:1525,height:55,decx:0,decy:0});
+	liucoordinates.set("cycle1",{offx:15,width:50,offy:1620,height:84,decx:0,decy:0});
+	liucoordinates.set("cycle2",{offx:69,width:70,offy:1620,height:84,decx:0,decy:0});
+	liucoordinates.set("cycle3",{offx:144,width:53,offy:1595,height:106,decx:0,decy:0});
+	liucoordinates.set("cycle4",{offx:204,width:62,offy:1595,height:106,decx:0,decy:0});
+	liucoordinates.set("cycle5",{offx:273,width:78,offy:1620,height:84,decx:0,decy:15});
+	liucoordinates.set("cycle6",{offx:360,width:44,offy:1592,height:109,decx:0,decy:0});
+	liucoordinates.set("cycle7",{offx:411,width:56,offy:1592,height:109,decx:0,decy:0});
+	liucoordinates.set("cycle8",{offx:476,width:72,offy:1592,height:109,decx:0,decy:0});
+	liucoordinates.set("cycle9",{offx:15,width:50,offy:1620,height:84,decx:0,decy:0});
 	
 
     return liucoordinates;

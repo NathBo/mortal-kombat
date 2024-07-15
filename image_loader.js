@@ -44,6 +44,10 @@ var lifebarpng=new Image();lifebarpng.src = 'ressource/ui/barlife.png';
 	var iceflaskiconpng=new Image();iceflaskiconpng.src = 'ressource/icons/iceflask_icon.png';
 	var icebodyiconpng=new Image();icebodyiconpng.src = 'ressource/icons/icebody_icon.png';
 	var chargeiconpng=new Image();chargeiconpng.src = 'ressource/icons/charge_icon.png';
+	var flying_kickiconpng=new Image();flying_kickiconpng.src = 'ressource/icons/flying_kick_icon.png';
+	var fireballiconpng=new Image();fireballiconpng.src = 'ressource/icons/fireball_icon.png';
+	var bicycleiconpng=new Image();bicycleiconpng.src = 'ressource/icons/bicycle_icon.png';
+	var cycleiconpng=new Image();cycleiconpng.src = 'ressource/icons/cycle_icon.png';
 
 	var bloodpng = new Image();bloodpng.src = 'ressource/visual_effects/blood.png';
 

@@ -91,10 +91,10 @@ liukang_coups.set("jkick",{slag : 8, fdur : 25, elag : 4, degats : 9, hitstun : 
 liukang_coups.set("jskick",{slag : 8, fdur : 25, elag : 4, degats : 9, hitstun : 35, hurtx : 3.4, hurty : 5, hitboxxs : 0, hitboxxe : 56,hitboxys : -65, hitboxye : 5, hitboxxouv : 22, blood_height : 0, landinglag : 8, blockstun : 10, blockx : 2.3, hiteffect : "fall", hitboxxeyscaling : -1, hitlag : 8, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "air", voiceline : "mmov", movx : 0, coupwav : "coup"});
 liukang_coups.set("jpunch",{slag : 5, fdur : 9, elag : 10, degats : 6, hitstun : 24, hurtx : 1.2, hurty : 0, hitboxxs : 40, hitboxxe : 59,hitboxys : -50, hitboxye : 10, hitboxxouv : 32, blood_height : 0, landinglag : 6, blockstun : 12, blockx : 2.3, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "air", voiceline : "mmov", movx : 0, coupwav : "coup"});
 liukang_coups.set("grab",{slag : 4, fdur : 3, elag : 12, degats : 16, hitstun : 60, hurtx : 3.2, hurty : 6, hitboxxs : 5, hitboxxe : 38,hitboxys : 0, hitboxye : -1, hitboxxouv : 15, blood_height : 0, blockstun : 12, blockx : 1.7, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : "coup"});
-liukang_coups.set("flying_kick",{slag : 8, fdur : 18, elag : 12, degats : 9, hitstun : 35, hurtx : 4, hurty : 5, hitboxxs : 0, hitboxxe : 56,hitboxys : -65, hitboxye : 5, hitboxxouv : 22, blood_height : 0, landinglag : 8, blockstun : 9, blockx : 2.3, hiteffect : "fall", hitboxxeyscaling : -0.2, hitlag : 8, hitsound : "mhit", blood : "mblood", damageonblock : 1, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : "coup"});
+liukang_coups.set("flying_kick",{slag : 8, fdur : 18, elag : 12, degats : 9, hitstun : 35, hurtx : 4, hurty : 5, hitboxxs : 0, hitboxxe : 56,hitboxys : -65, hitboxye : 5, hitboxxouv : 22, blood_height : -20, landinglag : 8, blockstun : 9, blockx : 2.3, hiteffect : "fall", hitboxxeyscaling : -0.2, hitlag : 8, hitsound : "mhit", blood : "mblood", damageonblock : 1, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : "coup"});
 liukang_coups.set("fireball",{slag : 12, fdur : 0, elag : 30, degats : 6, hitstun : 17, hurtx : 1.1, hurty : 0, hitboxxs : -12, hitboxxe : 12,hitboxys : -8, hitboxye : 8, hitboxxouv : 5, blood_height : 0, blockstun : 8, blockx : 1.5, hiteffect : "projectile", hitboxxeyscaling : 0, hitlag : 7, hitsound : "lhit", blood : "lblood", damageonblock : 2,landinglag : 12, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : ""});
-liukang_coups.set("bicycle",{slag : 8, fdur : 30, elag : 8, degats : 2, hitstun : 25, hurtx : 4, hurty : 0, hitboxxs : 0, hitboxxe : 56,hitboxys : -65, hitboxye : 5, hitboxxouv : 22, blood_height : 0, landinglag : 8, blockstun : 9, blockx : 2.3, hiteffect : "none", hitboxxeyscaling : -0.2, hitlag : 8, hitsound : "mhit", blood : "mblood", damageonblock : 1, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : "coup"});
-
+liukang_coups.set("bicycle",{slag : 8, fdur : 30, elag : 6, degats : 2, hitstun : 32, hurtx : 3, hurty : 0, hitboxxs : 0, hitboxxe : 56,hitboxys : -65, hitboxye : 5, hitboxxouv : 22, blood_height : -20, landinglag : 8, blockstun : 9, blockx : 2.3, hiteffect : "none", hitboxxeyscaling : -0.2, hitlag : 6, hitsound : "mhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : "coup"});
+liukang_coups.set("cycle",{slag : 0, fdur : 0, elag : 27, degats : 0, hitstun : 0, hurtx : 0.9, hurty : 0, hitboxxs : 0, hitboxxe : 0,hitboxys : 0, hitboxye : -1, hitboxxouv : 15, blood_height : 0, blockstun : 12, blockx : 1.7, hiteffect : "", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : "coup"});
 
 
 
@@ -138,6 +138,10 @@ movpriority.set("iceball",70);
 movpriority.set("iceflask",70);
 movpriority.set("icebody",70);
 movpriority.set("charge",70);
+movpriority.set("flying_kick",70);
+movpriority.set("fireball",70);
+movpriority.set("bicycle",70);
+movpriority.set("cycle",70);
 movpriority.set("air_dodge",100);
 movpriority.set("landing_lag",100);
 movpriority.set("jumpsquat",100);
@@ -182,3 +186,7 @@ cd_dependance.set("iceball",0);
 cd_dependance.set("iceflask",2);
 cd_dependance.set("icebody",3);
 cd_dependance.set("charge",1);
+cd_dependance.set("flying_kick",1);
+cd_dependance.set("fireball",0);
+cd_dependance.set("bicycle",2);
+cd_dependance.set("cycle",3);

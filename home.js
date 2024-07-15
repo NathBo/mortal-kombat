@@ -974,6 +974,7 @@ function main(){
 			if(!me.charac.coups.has(me.mov)){
 				if(other.charac.coups.has(other.mov) && other.movlag<=c.slag+c.fdur+c.elag-reaction_time && Math.abs(me.x-other.x)<=c.hitboxxe+me.charac.width/2+me.charac.vitesse*this.commitmentonwalk+5 && other.movlag>=c.elag-1){
 					if(me.perso=="subzero" && other.movlag>c.elag+c.fdur+3 && me.y==0){this.begincoup("icebody");}
+					if(me.perso=="liukang" && other.movlag>c.elag+c.fdur+1 && me.y==0){this.begincoup("cycle");}
 					this.pressbackward();
 					if(other.charac.coups.get(other.mov).hitboxys<0 && other.y==0){me.bas = 1;}
 					if(other.charac.coups.get(other.mov).hiteffect=="grab" && me.perso!="shao_kahn"){me.haut=1;}
@@ -987,11 +988,12 @@ function main(){
 			}
 
 			if(me.perso=="kitana" && me.y==0 && other.y>0 && me.crouching==0 && entre(Math.abs(me.x-other.x),100,150) && me.orientation*other.xspeed<=-2.5 && other.tb>0){this.begincoup("fanlift");}
-			if(Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-this.idealrange)<=me.charac.vitesse*2+other.movlag*3 && me.y==0 && movpriority.get(me.mov)<70 && !(other.mov == "thundergod" || other.mov == "boltthrow" || other.mov == "fanthrow" || other.mov=="hell_gates" || other.mov == "spear_throw" || other.mov == "slide" || other.mov == "iceball")){
+			if(Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-this.idealrange)<=me.charac.vitesse*2+other.movlag*3 && me.y==0 && movpriority.get(me.mov)<70 && !(other.mov == "thundergod" || other.mov == "boltthrow" || other.mov == "fanthrow" || other.mov=="hell_gates" || other.mov == "spear_throw" || other.mov == "slide" || other.mov == "iceball" || other.mov == "fireball" || other.mov == "flying_kick")){
 				if(me.perso=="kitana"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("fanthrow");}}
 				if(me.perso=="raiden"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("boltthrow");}}
 				if(me.perso=="scorpion" && this.currisking+me.pv/10>=2){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("spear_throw");}}
 				if(me.perso=="subzero"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("iceball");}}
+				if(me.perso=="liukang" && this.currisking-me.pv/10>=2){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("fireball");}}
 			}
 
 			else if(me.perso=="raiden" && this.currisking+me.pv/10>=0.5 && Math.abs(Math.abs(me.x-other.x-other.xspeed*10)-120)<=40 && me.y==0 && other.y>0 && me.crouching==0 && movpriority.get(me.mov)<70 && other.tb<0)
@@ -1061,6 +1063,7 @@ function main(){
 			if(s == "icebody"){this.crouching = 0;}
 			if(s == "flying_kick" && this.y==0){this.y=20;}
 			if(s == "bicycle" && this.y==0){this.y=40;}
+			if(s == "cycle" && this.y==0){this.invincibilite=20;}
 			if(movpriority.get(s)==70 && movpriority.get(this.mov)>=70){return;}
 			play_sound_eff(this.charac.voiceactor+stats.voiceline);
 			if(stats.coupwav != ""){play_sound_eff(stats.coupwav);}
@@ -1362,6 +1365,9 @@ function main(){
 					else if(this.perso == "subzero" && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("icebody",other);
 					}
+					else if(this.perso == "liukang" && this.bas>=1 && this.crouching>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+						this.begincoup("cycle",other);
+					}
 					else if(this.perso == "liukang" && this.forward>=1 && this.crouching==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("flying_kick",other);
 					}
@@ -1531,12 +1537,12 @@ function main(){
 					case "flying_kick":
 						var stats = this.charac.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.x += 8*this.orientation;this.xspeed=0;}
-						this.tb=0;
+						if(this.movlag>stats.elag){this.tb=0;}
 						break;
 					case "bicycle":
 						var stats = this.charac.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){
-							this.x += 4*this.orientation;this.xspeed=0;
+							this.x += 3*this.orientation;this.xspeed=0;
 							if((stats.elag+stats.fdur-this.movlag)%6==0){this.canthurt=false;}
 						}
 						this.tb=0;
@@ -1547,6 +1553,10 @@ function main(){
 						if(this.movlag==stats.elag){
 							add_to_objects_set(new Fireball(this.x+25*this.orientation,this.y+70,this.orientation,other,stats));
 						}
+						break;
+					case "cycle":
+						var stats = this.charac.coups.get(this.mov);
+						this.x -= 4.5*this.orientation;this.xspeed=0;
 						break;
 					}
 				this.movlag--;
@@ -1906,6 +1916,15 @@ function main(){
 							var a = nframes+n+1-Math.floor(this.movlag/stats.elag*(nframes));
 							this.costume = this.mov+a;
 						}
+						break;
+
+					case "cycle" :
+						var stats = this.charac.coups.get(this.mov);
+						var n = 9;
+
+						var a = 1+Math.floor(this.movlag/stats.elag*(n));
+						this.costume = this.mov+a;
+						
 						break;
 
 					case "clpunch" :
@@ -2835,7 +2854,7 @@ function main(){
 	
 	characteristics.set("liukang",{png : liuskins,coordinates : liucoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 2, hkickendnframe : 2, kicknframe : 4,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 9, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
 	width : 36, height : 98,vitesse : 3.4,jumpxspeed : 3.5,backmovnerf : 0.9, gravity : 0.42, jumpforce : 9.2,jumpsquat : 2, shorthop : 6.1, friction:0.21, hurtcontrol : 0.2, grabtype : "launch",
-	airdrift : 0.14, airmaxspeed : 2.1, airdodgespeed : 6, airdodgefdur : 13, landinglag : 8,coups : liukang_coups, pv : 95, getupfdur : 36, grabfdur : 15, grabdeg : 11, vicposframes : 6, vicposfdur : 30, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male"});
+	airdrift : 0.14, airmaxspeed : 2.1, airdodgespeed : 6, airdodgefdur : 13, landinglag : 8,coups : liukang_coups, pv : 95, getupfdur : 36, grabfdur : 15, grabdeg : 11, vicposframes : 6, vicposfdur : 30, cds : [150,70,90,180], icons : [fireballiconpng,flying_kickiconpng,bicycleiconpng,cycleiconpng], voiceactor : "male"});
 	
 
 
