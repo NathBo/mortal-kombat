@@ -13,7 +13,7 @@ var lifebarpng=new Image();lifebarpng.src = 'ressource/ui/barlife.png';
 	var sub2png = new Image();sub2png.src = 'ressource/characters/subzero2.png';
     var subskins = [subpng,sub2png];
 	var liupng = new Image();liupng.src = 'ressource/characters/liukang.png';
-	var liu2png = new Image();liu2png.src = 'ressource/characters/liukang2.png';
+	var liu2png = new Image();liu2png.src = 'ressource/characters/liukang3.png';
 	var liuskins = [liupng,liu2png];
 	var shaopng = new Image();shaopng.src = 'ressource/characters/shaokahn.png';
 	var shaoskins = [shaopng,shaopng];

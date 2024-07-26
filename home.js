@@ -1836,8 +1836,8 @@ function main(){
 						this.costume = "huppercut5"
 					}
 					if(this.fatality==49){
-						if(this.memoryslot>=5){
-							other.decapitate(1.8+this.memoryslot*0.3);this.poing=2;
+						if(this.memoryslot>=4){
+							other.decapitate(2+this.memoryslot*0.4);this.poing=2;
 							play_sound_eff("hhit");
 							lag_game(10);
 							shake_screen(12,6);
@@ -2555,12 +2555,13 @@ function main(){
 		chartimer = (chartimer+1)%(chartimercycle*2);
 		ctx.fillStyle = "black";
 		ctx.fillRect(0,0,1024,576);
+		var leftside = 112;
 		//ctx.scale(2.32,2.32);
 		//ctx.drawImage(characterscreenpng,92,0);
 		//ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.scale(3,3);
 		for(var i=0;i<liste_persos.length;i++){
-			ctx.drawImage(characteristics.get(liste_persos[i]).icon,128+24*i,57);
+			ctx.drawImage(characteristics.get(liste_persos[i]).icon,leftside+24*i,57);
 		}
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.scale(2,2);
@@ -2586,11 +2587,11 @@ function main(){
 		ctx.scale(1,1);
 		if(chartimer<chartimercycle || persolocked[0]){
 			ctx.strokeStyle = "red";
-			ctx.strokeRect(384+72*persosovered[0],171,63,96);
+			ctx.strokeRect(leftside*3+72*persosovered[0],171,63,96);
 		}
 		if(secondplayerchosescharac && ((chartimer>=chartimercycle && persosovered[0]==persosovered[1]) || (chartimer<chartimercycle && persosovered[0]!=persosovered[1]) || persolocked[1])){
 			ctx.strokeStyle = "green";
-			ctx.strokeRect(384+72*persosovered[1],171,63,96);
+			ctx.strokeRect(leftside*3+72*persosovered[1],171,63,96);
 		}
 
 		
