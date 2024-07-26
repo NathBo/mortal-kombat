@@ -1037,6 +1037,7 @@ function main(){
 			this.movlag = 0;
 			this.mov = "";
 			this.tb = 0; this.xspeed = 0; this.crouching = 0;
+			this.memoryslot = 0;
 			this.hurted = 0; this.hurtx = 0; this.invincibilite = 0; this.freeze = 0; this.canthurt = false;
 			this.pv = this.charac.pv; this.pvmax = this.charac.pv; this.pvaff = this.charac.pv;
 			this.pushed = 0;this.pushx = 0;
@@ -1317,6 +1318,20 @@ function main(){
 						this.fatality = 100;
 						play_sound_eff("fatal1");
 						this.special=2;
+						finishhim = 0;
+						other.invincibilite=1000;
+						fatalitywasdone = true;
+						this.mov = ""; this.movlag=0;
+						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
+					}
+					else if(this.perso == "liukang" && this.bas && this.special==1 && finishhim && entre(Math.abs(this.x-other.x),130,190) && other.gettingup==0 && other.y<=30){
+						this.fatality = 99;
+						other.falling=0;
+						other.y=0;
+						this.canthurt=false;
+						play_sound_eff("fatal1");
+						this.special=2;
+						other.x = this.x + 160*this.orientation;
 						finishhim = 0;
 						other.invincibilite=1000;
 						fatalitywasdone = true;
@@ -1792,6 +1807,47 @@ function main(){
 					if(this.fatality==46){add_to_objects_set(new IceGrenade(this.x+22*this.orientation,this.y+71,this.orientation,other,stats,this));}
 					this.costume = "icegrenade"+n.toString();
 				}
+				else if(this.perso=="liukang"){
+					if(this.poing==1){
+						this.memoryslot++;
+						this.poing=2;
+					}
+					if(this.fatality>=70){
+						var n = 9;
+
+						var a = 9-Math.floor((this.fatality-70)/30*(n));
+						this.costume = "cycle"+a;
+						this.x+=3.5*this.orientation;
+					}
+					else if(this.fatality>=56){
+						this.x+=0.5*this.orientation;
+						this.costume = "huppercut1"
+					}
+					else if(this.fatality>=53){
+						this.costume = "huppercut2"
+					}
+					else if(this.fatality>=50){
+						this.costume = "huppercut3"
+					}
+					else if(this.fatality>=10 || gamefreeze){
+						this.costume = "huppercut4"
+					}
+					else{
+						this.costume = "huppercut5"
+					}
+					if(this.fatality==49){
+						if(this.memoryslot>=5){
+							other.decapitate(1.8+this.memoryslot*0.3);this.poing=2;
+							play_sound_eff("hhit");
+							lag_game(10);
+							shake_screen(12,6);
+							this.fatality--;
+						}
+						else if(!this.canthurt){other.invincibilite=0;other.hurt(this,this.charac.coups.get("huppercut"));this.fatality=1;}
+					}
+					if(this.fatality==99){play_sound_eff("liummov");}
+					if(this.fatality==58){play_sound_eff("liuhmov");}
+				}
 			}
 			else if(this.decapitated){
 				if(this.decapitated>=2){this.decapitated--;}
@@ -2162,9 +2218,9 @@ function main(){
 			if(this.pv>0&&end_of_round_countdown==pause_after_vicpose+Math.max(this.charac.vicposfdur,35)){this.vicpose = 1;}
 		}
 
-		decapitate(){
+		decapitate(power = 2){
 			this.decapitated = 100;
-			add_to_objects_set(new Head(this.x,this.y+this.charac.height,this.orientation,this.skin,this.coordinates));
+			add_to_objects_set(new Head(this.x,this.y+this.charac.height,this.orientation,this.skin,this.coordinates, power));
 			add_to_objects_set(new Blood(this.x,this.y+this.charac.height-5,this.orientation,"hblood"));
 		}
 
