@@ -381,7 +381,7 @@ function main(){
 			this.x = x; this.y = y; this.orientation = orientation;
 			this.other = other;
 			this.width=18;
-			this.height=7;
+			this.height=30;
 			this.totdur = 70;this.vitesse=7;
 			this.costcpt = 0;
 			this.framepercost = 3;
@@ -2935,7 +2935,7 @@ function main(){
 	var end_of_round_countdown = 0; var fightstartcountdown = 80;
 	var frame_delay = 17; var base_frame_delay = 16; var slowmodur = 0;
 	var vitcamera = 7;
-	var pause_after_vicpose = 20;
+	var pause_after_vicpose = 30;
 	var cpt = 0; var objects_to_loop = new Map();
 	var click = 0;var clickx=0; var clicky = 0;
 	var difficulte = 1;
