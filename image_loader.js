@@ -76,6 +76,7 @@ var lifebarpng=new Image();lifebarpng.src = 'ressource/ui/barlife.png';
 	var kitanaiconpng=new Image();kitanaiconpng.src = 'ressource/icons/kitana.png';
 	var scorpioniconpng=new Image();scorpioniconpng.src = 'ressource/icons/scorpion.png';
 	var subzeroiconpng=new Image();subzeroiconpng.src = 'ressource/icons/subzero.png';
+	var liukangiconpng=new Image();liukangiconpng.src = 'ressource/icons/liukang.png';
 	var boticonpng=new Image();boticonpng.src = 'ressource/icons/bot.png';
 	var playericonpng=new Image();playericonpng.src = 'ressource/icons/player.png';
 	var logopng=new Image();logopng.src = 'ressource/ui/logo.png';

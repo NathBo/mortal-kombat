@@ -2802,6 +2802,12 @@ function main(){
 	sounds_eff.set("malecomehere",[document.querySelector('#comehere1wav'),document.querySelector('#comehere2wav')]);
 	sounds_eff.set("malebighurted",[document.querySelector('#malebighurtedwav')]);
 	sounds_eff.set("maleraidenbullshit",[document.querySelector('#raidenbullshit1wav'),document.querySelector('#raidenbullshit2wav'),document.querySelector('#raidenbullshit3wav'),document.querySelector('#raidenbullshit4wav'),document.querySelector('#raidenbullshit5wav')]);
+	sounds_eff.set("liulmov",[document.querySelector('#liulmov1wav'),document.querySelector('#liulmov2wav')]);
+	sounds_eff.set("liummov",[document.querySelector('#liummov1wav'),document.querySelector('#liummov2wav')]);
+	sounds_eff.set("liuhmov",[document.querySelector('#liuhmov1wav'),document.querySelector('#liuhmov2wav')]);
+	sounds_eff.set("liuhurted",[document.querySelector('#liuhurted1wav'),document.querySelector('#liuhurted2wav')]);
+	sounds_eff.set("liubighurted",[document.querySelector('#liubighurted1wav'),document.querySelector('#liubighurted2wav')]);
+	sounds_eff.set("liubullshit",[document.querySelector('#liukangbullshit1wav'),document.querySelector('#liukangbullshit2wav')]);
 	sounds_eff.set("fatal1",[document.querySelector('#fatal1wav')]);
 	sounds_eff.set("fatal2",[document.querySelector('#fatal2wav')]);
 	sounds_eff.set("fatality",[document.querySelector('#fatalitywav')]);
@@ -2852,9 +2858,9 @@ function main(){
 	width : 40, height : 114,vitesse : 3.1,jumpxspeed : 3.4,backmovnerf : 0.92, gravity : 0.44, jumpforce : 6.5,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.1,grabtype : "launch",
 	airdrift : 0.1, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : shao_coups, pv : 140, getupfdur : 24, grabfdur : 35, grabdeg : 12, vicposframes : 6, vicposfdur : 42, cds : [150,240,150,360], icons : [elecgrabiconpng,chargeiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male"});
 	
-	characteristics.set("liukang",{png : liuskins,coordinates : liucoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 2, hkickendnframe : 2, kicknframe : 4,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 9, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
+	characteristics.set("liukang",{png : liuskins,coordinates : liucoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 2, hkickendnframe : 2, kicknframe : 4,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 9, icon : liukangiconpng, namewav : document.querySelector('#liukangwav'),
 	width : 36, height : 98,vitesse : 3.4,jumpxspeed : 3.5,backmovnerf : 0.9, gravity : 0.42, jumpforce : 9.2,jumpsquat : 2, shorthop : 6.1, friction:0.21, hurtcontrol : 0.2, grabtype : "launch",
-	airdrift : 0.14, airmaxspeed : 2.1, airdodgespeed : 6, airdodgefdur : 13, landinglag : 8,coups : liukang_coups, pv : 95, getupfdur : 36, grabfdur : 15, grabdeg : 11, vicposframes : 6, vicposfdur : 30, cds : [150,70,90,180], icons : [fireballiconpng,flying_kickiconpng,bicycleiconpng,cycleiconpng], voiceactor : "male"});
+	airdrift : 0.14, airmaxspeed : 2.1, airdodgespeed : 6, airdodgefdur : 13, landinglag : 8,coups : liukang_coups, pv : 95, getupfdur : 36, grabfdur : 15, grabdeg : 11, vicposframes : 6, vicposfdur : 30, cds : [150,70,90,180], icons : [fireballiconpng,flying_kickiconpng,bicycleiconpng,cycleiconpng], voiceactor : "liu"});
 	
 
 
