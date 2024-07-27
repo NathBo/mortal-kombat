@@ -689,6 +689,7 @@ function main(){
 					this.reaction_time = 20;
 					this.chanceeviterprojo = 0.6;
 					this.distancetowavedash = 500;
+					this.parryrate = 0.2;
 					break;
 				
 				case 1:
@@ -705,6 +706,7 @@ function main(){
 					this.reaction_time = 15;
 					this.chanceeviterprojo = 0.9;
 					this.distancetowavedash = 500;
+					this.parryrate = 0.5;
 					break;
 
 				case 2:
@@ -721,6 +723,7 @@ function main(){
 					this.reaction_time = 12;
 					this.chanceeviterprojo = 0.95;
 					this.distancetowavedash = 200;
+					this.parryrate = 0.9;
 					break;
 
 				case 3:
@@ -736,6 +739,7 @@ function main(){
 					this.reaction_time = 8;
 					this.chanceeviterprojo = 1;
 					this.distancetowavedash = 90;
+					this.parryrate = 1;
 					break;
 				default:
 					this.donothingchance = 0;
@@ -750,6 +754,7 @@ function main(){
 					this.reaction_time = 4;
 					this.chanceeviterprojo = 1;
 					this.distancetowavedash = 60;
+					this.parryrate = 1;
 					break;
 			}
 			if(difficulte>=1 && me.perso=="scorpion"){this.agressivite+=0.005}
@@ -1672,7 +1677,7 @@ function main(){
 					this.hurted = stats.blockstun;
 					this.crouching=0;
 				}
-				else if(this.perfectblock>perfectblockcd){
+				else if(this.perfectblock>perfectblockcd && !(this.n==1 && !secondplayerishuman && Math.random()>this.ai.parryrate)){
 					console.log("perfectblock");
 					this.blocking = Math.ceil(stats.blockstun/3);
 					play_sound_eff("parry");
