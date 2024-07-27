@@ -1037,7 +1037,7 @@ function main(){
 			this.movlag = 0;
 			this.mov = "";
 			this.tb = 0; this.xspeed = 0; this.crouching = 0;
-			this.memoryslot = 0;
+			this.memoryslot = 0; this.backframes = 0;
 			this.hurted = 0; this.hurtx = 0; this.invincibilite = 0; this.freeze = 0; this.canthurt = false;
 			this.pv = this.charac.pv; this.pvmax = this.charac.pv; this.pvaff = this.charac.pv;
 			this.pushed = 0;this.pushx = 0;
@@ -1112,6 +1112,9 @@ function main(){
 		miseajour(other){
 			if(this.perso=="shao_kahn"){this.crouching=0;}
 			if(this.movlag===undefined){this.movlag=0;}
+			if(this.perfectblock>1){this.perfectblock--;}
+			else if(this.perfectblock==1){if(this.back==0){this.perfectblock=0;}}
+			else if(this.back){this.perfectblock = framesforperfectblock + perfectblockcd}
 			if(this.freeze){
 				this.freeze--;
 				this.movlag=0;
@@ -1656,6 +1659,7 @@ function main(){
 			if(other.mov=="thundergod"){other.y=0;}
 			if(other.mov=="charge"){other.movlag=8;other.xspeed=0;}
 			if(other.mov=="flying_kick"){other.movlag=13;other.xspeed=0;}
+			var parrywasdone = false;
 			if(this.mov == "icebody"){
 				var s = this.charac.coups.get("icebody");
 				if(entre(this.movlag, s.elag+1, s.elag + s.fdur)){this.other.afficher(this);other.freeze=60;other.movlag=0;other.mov="";play_sound_eff("freeze");return;}
@@ -1667,13 +1671,21 @@ function main(){
 					this.hurted = stats.blockstun;
 					this.crouching=0;
 				}
+				else if(this.perfectblock>perfectblockcd){
+					console.log("perfectblock");
+					this.blocking = Math.ceil(stats.blockstun/2);
+					play_sound_eff("parry");
+					parrywasdone = true;
+					this.perfectblock=1;
+				}
 				else{
 					this.blocking = stats.blockstun;
 				}
-				this.pv-=stats.damageonblock;
+				if(!parrywasdone){this.pv-=stats.damageonblock;}
 				if(this.pv<=0){this.pv = 1;}
 				this.xspeed = -stats.blockx*this.orientation;
-				lag_game(Math.floor(stats.hitlag/0.8));
+				if(parrywasdone){lag_game(11);}
+				else{lag_game(Math.floor(stats.hitlag/0.8));}
 				if(this.n==0 && !secondplayerishuman && stats.hiteffect!="projectile" && stats.hiteffect != "spear" && stats.hiteffect != "freeze"  && stats.hiteffect != "iceflask"){
 					other.ai.ugotblocked();
 				}
@@ -2848,6 +2860,7 @@ function main(){
 	sounds_eff.set("lhit",[document.querySelector('#lhitwav1'),document.querySelector('#lhitwav2'),document.querySelector('#lhitwav3')]);
 	sounds_eff.set("mhit",[document.querySelector('#mhitwav1'),document.querySelector('#mhitwav2'),document.querySelector('#mhitwav3')]);
 	sounds_eff.set("hhit",[document.querySelector('#hhitwav1'),document.querySelector('#hhitwav2'),document.querySelector('#hhitwav3')]);
+	sounds_eff.set("parry",[document.querySelector('#parrywav')]);
 	sounds_eff.set("fan",[document.querySelector('#fanwav')]);
 	sounds_eff.set("freeze",[document.querySelector('#freezewav')]);
 	sounds_eff.set("electrocute",[document.querySelector('#electrocutewav')]);
@@ -2954,6 +2967,7 @@ function main(){
 	var Width= window.innerWidth; var Height=window.innerHeight;
 	var decalage = 0; var wdecalagey = 0;
 	var bufferwindow = 5; var minimumcomboscaling = 0.5;
+	var framesforperfectblock = 10; var perfectblockcd = 10;
 	var arcadelevel = -1; var arcadeorder = [...liste_persos]; arcadeorder.shuffle(); var arcadestagesorder = [1,0,3,2,4,5];
 	var youareintutorial = false; var tutorialscenenumber = 0; var currentuto = null; var currenttutoline = tutospecial;
 
