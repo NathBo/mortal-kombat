@@ -1064,7 +1064,7 @@ function main(){
 			if(s == "icebody"){this.crouching = 0;}
 			if(s == "flying_kick" && this.y==0){this.y=20;}
 			if(s == "bicycle" && this.y==0){this.y=40;}
-			if(s == "cycle" && this.y==0){this.invincibilite=20;}
+			if(s == "cycle" && this.y==0){this.invincibilite=23;}
 			if(movpriority.get(s)==70 && movpriority.get(this.mov)>=70){return;}
 			play_sound_eff(this.charac.voiceactor+stats.voiceline);
 			if(stats.coupwav != ""){play_sound_eff(stats.coupwav);}
@@ -1380,7 +1380,7 @@ function main(){
 					else if(this.perso == "subzero" && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("icebody",other);
 					}
-					else if(this.perso == "liukang" && this.bas>=1 && this.crouching>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+					else if(this.perso == "liukang" && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("cycle",other);
 					}
 					else if(this.perso == "liukang" && this.forward>=1 && this.crouching==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
@@ -2717,10 +2717,11 @@ function main(){
 		ctx.fillText("Jumping",80,130);
 		ctx.fillText("Specials",80,180);
 		ctx.fillText("Combos",80,230);
-		ctx.fillText("Raiden",80,280);
-		ctx.fillText("Kitana",80,330);
-		ctx.fillText("Scorpion",80,380);
-		ctx.fillText("Subzero",80,430);
+		ctx.fillText("Raiden",400,30);
+		ctx.fillText("Kitana",400,80);
+		ctx.fillText("Scorpion",400,130);
+		ctx.fillText("Subzero",400,180);
+		ctx.fillText("Liu Kang",400,230);
 		ctx.font = "30px serif";
 		ctx.fillText("Go to title screen",400,470);
 		if(click==1){
@@ -2728,6 +2729,10 @@ function main(){
 			if(entre(clickx,400/1024,610/1024) && entre(clicky,450/500,480/500)){persolocked = [0,0]; skinschoisis = [0,0];gobacktotitlescreen();return;}
 			else if(entre(clickx,80/1024, 280/1024) && entre(clicky,0,0.1*tutolineslist.length)){
 				currenttutoline = tutolineslist[Math.floor(clicky*10)];
+				launchtutorial(currenttutoline[0]);
+			}
+			else if(entre(clickx,400/1024, 600/1024) && entre(clicky,0,0.1*tutopersoslist.length)){
+				currenttutoline = tutopersoslist[Math.floor(clicky*10)];
 				launchtutorial(currenttutoline[0]);
 			}
 		}

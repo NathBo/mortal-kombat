@@ -399,14 +399,54 @@ var tutosubzero = [
         msg : "Subzero's down special is a parry that freezes opponents who try to attack him"
     },
     {
-        char : ["subzero","subzero"], ai : 1, pv : [100,100], moves : [["iceball", "iceflask", "slide", "crouch", "block", "jump", "lpunch", "lkick", "hpunch", "hkick", "mkick", "jpunch", "jkick", "jskick", "clpunch", "clkick", "cmkick", "huppercut"],
+        char : ["subzero","subzero"], ai : 1, pv : [100,100], moves : [["iceball", "iceflask", "slide", "icebody", "crouch", "block", "jump", "lpunch", "lkick", "hpunch", "hkick", "mkick", "jpunch", "jkick", "jskick", "clpunch", "clkick", "cmkick", "huppercut"],
         ["iceball", "iceflask", "slide", "crouch", "block", "jump", "lpunch", "lkick", "hpunch", "hkick", "mkick", "jpunch", "jkick", "jskick", "clpunch", "clkick", "cmkick", "huppercut"]], aimoves : [],
         jumper : 2, regenerate : false,
         msg : "You now know the basics of Subzero, here is your final challenge! Consider beating the arcade mode in normal with Subzero after this!"
     },
 ]
 
+var tutoliukang = [
+    {
+        char : ["liukang","liukang"], ai : -1, pv : [20,20], moves : [["flying_kick", "jump"],["block"]], aimoves : [],
+        jumper : 0,  regenerate : false,
+        msg : "Liu Kang is pixie character, which means he is super fast but has pretty low damage. His most important moves is his forward special, that makes him fly towards the opponent in the air. Note that this counts as an overhead and that it can also be done in the air"
+    },
+    {
+        char : ["liukang","liukang"], ai : -1, pv : [20,30], moves : [["flying_kick", "lpunch", "hpunch", "hkick"],["block"]], aimoves : [],
+        jumper : 0,  regenerate : true,
+        msg : "This move is what allows Liu Kang to keep pressuring the opponent, but also a very good combo ender. Try to combo light punch into heavy punch into roundhouse and then confirm into the forward special"
+    },
+    {
+        char : ["liukang","liukang"], ai : -1, pv : [20,20], moves : [["fireball", "huppercut", "crouch"],["block"]], aimoves : [],
+        jumper : 0,  regenerate : true,
+        msg : "Liu Kang neutral special is a fireball, that is not particularly useful for zoning, but allows him to combo from its huppercut, which he cannot do with his forward special"
+    },
+    {
+        char : ["liukang","liukang"], ai : -1, pv : [20,20], moves : [["bicycle"],["block"]], aimoves : [],
+        jumper : 0,  regenerate : false,
+        msg : "Liu Kang's back special is a multi-hit slow dash, it is very vulnerable to projectile though"
+    },
+    {
+        char : ["liukang","liukang"], ai : -1, pv : [20,18], moves : [["bicycle", "flying_kick", "jump"],["block"]], aimoves : [],
+        jumper : 0,  regenerate : true,
+        msg : "You can combo it into an air flying kick"
+    },
+    {
+        char : ["liukang","subzero"], ai : 1, pv : [20,18], moves : [["cycle", "flying_kick", "crouch"],["block", "hkick"]], aimoves : [],
+        jumper : 0,  regenerate : false,
+        msg : "Liu Kang's down special is a backdash that is invincible on frame 1. It is very useful to escape pressure on wake up. Try to evade the ennemy's roundhouse with this and counter with a flying kick"
+    },
+    {
+        char : ["liukang","liukang"], ai : 1, pv : [100,100], moves : [["fireball", "bicycle", "flying_kick", "cycle", "crouch", "block", "jump", "lpunch", "lkick", "hpunch", "hkick", "mkick", "jpunch", "jkick", "jskick", "clpunch", "clkick", "cmkick", "huppercut"],
+        ["fireball", "bicycle", "flying_kick", "cycle", "crouch", "block", "jump", "lpunch", "lkick", "hpunch", "hkick", "mkick", "jpunch", "jkick", "jskick", "clpunch", "clkick", "cmkick", "huppercut"]], aimoves : [],
+        jumper : 2, regenerate : false,
+        msg : "You now know the basics of Liu Kang, here is your final challenge! Consider beating the arcade mode in normal with Liu Kang after this!"
+    },
+]
 
 
 
-var tutolineslist = [tutobasics, tutocrouch, tutojump, tutospecial, tutocombo, tutoraiden, tutokitana, tutoscorpion, tutosubzero];
+
+var tutolineslist = [tutobasics, tutocrouch, tutojump, tutospecial, tutocombo];
+var tutopersoslist = [tutoraiden, tutokitana, tutoscorpion, tutosubzero, tutoliukang]
