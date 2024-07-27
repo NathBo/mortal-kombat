@@ -1674,7 +1674,7 @@ function main(){
 				}
 				else if(this.perfectblock>perfectblockcd){
 					console.log("perfectblock");
-					this.blocking = Math.ceil(stats.blockstun/2);
+					this.blocking = Math.ceil(stats.blockstun/3);
 					play_sound_eff("parry");
 					parrywasdone = true;
 					this.perfectblock=1;
@@ -2972,7 +2972,7 @@ function main(){
 	var Width= window.innerWidth; var Height=window.innerHeight;
 	var decalage = 0; var wdecalagey = 0;
 	var bufferwindow = 5; var minimumcomboscaling = 0.5;
-	var framesforperfectblock = 10; var perfectblockcd = 10;
+	var framesforperfectblock = 9; var perfectblockcd = 9;
 	var arcadelevel = -1; var arcadeorder = [...liste_persos]; arcadeorder.shuffle(); var arcadestagesorder = [1,0,3,2,4,5];
 	var youareintutorial = false; var tutorialscenenumber = 0; var currentuto = null; var currenttutoline = tutospecial;
 
