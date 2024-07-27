@@ -1037,7 +1037,7 @@ function main(){
 			this.movlag = 0;
 			this.mov = "";
 			this.tb = 0; this.xspeed = 0; this.crouching = 0;
-			this.memoryslot = 0; this.backframes = 0;
+			this.memoryslot = 0; this.perfectblock = 0; this.parrying = 0;
 			this.hurted = 0; this.hurtx = 0; this.invincibilite = 0; this.freeze = 0; this.canthurt = false;
 			this.pv = this.charac.pv; this.pvmax = this.charac.pv; this.pvaff = this.charac.pv;
 			this.pushed = 0;this.pushx = 0;
@@ -1115,6 +1115,7 @@ function main(){
 			if(this.perfectblock>1){this.perfectblock--;}
 			else if(this.perfectblock==1){if(this.back==0){this.perfectblock=0;}}
 			else if(this.back){this.perfectblock = framesforperfectblock + perfectblockcd}
+			if(this.parrying){this.parrying=0;}
 			if(this.freeze){
 				this.freeze--;
 				this.movlag=0;
@@ -1677,6 +1678,7 @@ function main(){
 					play_sound_eff("parry");
 					parrywasdone = true;
 					this.perfectblock=1;
+					this.parrying=1;
 				}
 				else{
 					this.blocking = stats.blockstun;
@@ -2178,6 +2180,9 @@ function main(){
 				}
 				if(this.freeze){
 					ctx.filter = 'brightness(1.2) saturate(0.5)';
+				}
+				if(this.parrying){
+					ctx.filter = 'brightness(1.5) saturate(1.5)';
 				}
 				ctx.scale(2*this.orientation,2);
 				var coords = this.coordinates.get(this.costume);
