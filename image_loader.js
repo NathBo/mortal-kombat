@@ -3,6 +3,9 @@ var lifebarpng=new Image();lifebarpng.src = 'ressource/ui/barlife.png';
 	var kitpng=new Image();kitpng.src = 'ressource/characters/kitana.png';
 	var kit2png=new Image();kit2png.src = 'ressource/characters/kitana2.png';
 	var kitskins = [kitpng,kit2png];
+	var milpng=new Image();milpng.src = 'ressource/characters/mileena.png';
+	var mil2png=new Image();mil2png.src = 'ressource/characters/mileena2.png';
+	var milskins = [milpng,mil2png];
 	var raipng = new Image();raipng.src = 'ressource/characters/raiden.png';
 	var rai2png = new Image();rai2png.src = 'ressource/characters/raiden2.png';
 	var raiskins = [raipng,rai2png];
@@ -83,6 +86,7 @@ var lifebarpng=new Image();lifebarpng.src = 'ressource/ui/barlife.png';
 
 
     var kitcoordinates = getkitcoordinates();
+	var milcoordinates = getmilcoordinates();
 	var raicoordinates = getraicoordinates();
     var scocoordinates = getscocoordinates();
 	var subcoordinates = getsubcoordinates();

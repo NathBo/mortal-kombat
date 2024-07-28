@@ -133,6 +133,136 @@ function getkitcoordinates(){
 }
 
 
+function getmilcoordinates(){
+    var milcoordinates = new Map();
+	milcoordinates.set("stand1",{offx:67,width:43,offy:26,height:98,decx:-9,decy:0});
+	milcoordinates.set("stand2",{offx:119,width:45,offy:26,height:98,decx:-11,decy:0});
+	milcoordinates.set("stand3",{offx:173,width:47,offy:26,height:98,decx:-12,decy:0});
+	milcoordinates.set("stand4",{offx:230,width:47,offy:26,height:98,decx:-11,decy:0});
+	milcoordinates.set("stand5",{offx:285,width:47,offy:26,height:98,decx:-9,decy:0});
+	milcoordinates.set("stand6",{offx:338,width:47,offy:26,height:98,decx:-8,decy:0});
+	milcoordinates.set("stand7",{offx:390,width:47,offy:26,height:98,decx:-6,decy:0});
+	milcoordinates.set("stand8",{offx:441,width:47,offy:26,height:98,decx:-5,decy:0});
+	milcoordinates.set("stand9",{offx:492,width:47,offy:26,height:98,decx:-6,decy:0});
+	milcoordinates.set("stand10",{offx:542,width:43,offy:26,height:98,decx:-8,decy:0});
+	milcoordinates.set("crouching1",{offx:802,width:37,offy:26,height:98,decx:0,decy:-1});
+	milcoordinates.set("crouching2",{offx:850,width:36,offy:26,height:98,decx:0,decy:-1});
+	milcoordinates.set("walk1",{offx:15,width:36,offy:137,height:102,decx:-8,decy:-5});
+	milcoordinates.set("walk2",{offx:62,width:36,offy:137,height:102,decx:0,decy:-5});
+	milcoordinates.set("walk3",{offx:103,width:36,offy:136,height:103,decx:0,decy:-6});
+	milcoordinates.set("walk4",{offx:143,width:36,offy:137,height:102,decx:0,decy:-3});
+	milcoordinates.set("walk5",{offx:185,width:36,offy:137,height:102,decx:0,decy:-3});
+	milcoordinates.set("walk6",{offx:226,width:36,offy:137,height:102,decx:0,decy:-3});
+	milcoordinates.set("walk7",{offx:265,width:36,offy:137,height:102,decx:-1,decy:-3});
+	milcoordinates.set("walk8",{offx:308,width:36,offy:137,height:102,decx:0,decy:-4});
+	milcoordinates.set("jump1",{offx:412,width:36,offy:135,height:111,decx:0,decy:0});
+	milcoordinates.set("jump2",{offx:459,width:32,offy:135,height:111,decx:0,decy:0});
+	milcoordinates.set("jump3",{offx:505,width:34,offy:135,height:111,decx:0,decy:0});
+	milcoordinates.set("roll1",{offx:550,width:36,offy:194,height:52,decx:0,decy:20});
+	milcoordinates.set("roll2",{offx:589,width:40,offy:194,height:52,decx:0,decy:20});
+	milcoordinates.set("roll3",{offx:633,width:36,offy:194,height:52,decx:0,decy:20});
+	milcoordinates.set("roll4",{offx:678,width:36,offy:194,height:52,decx:0,decy:20});
+	milcoordinates.set("roll5",{offx:721,width:36,offy:194,height:52,decx:0,decy:20});
+	milcoordinates.set("roll6",{offx:663,width:36,offy:194,height:52,decx:0,decy:20});
+	milcoordinates.set("roll7",{offx:807,width:41,offy:194,height:52,decx:0,decy:20});
+	milcoordinates.set("lpunch1",{offx:16,width:39,offy:388,height:97,decx:0,decy:0});
+	milcoordinates.set("lpunch2",{offx:65,width:51,offy:388,height:97,decx:0,decy:0});
+	milcoordinates.set("hpunch3",{offx:125,width:59,offy:388,height:97,decx:2,decy:0});
+	milcoordinates.set("hpunch1",{offx:16,width:39,offy:388,height:97,decx:0,decy:0});
+	milcoordinates.set("hpunch2",{offx:65,width:51,offy:388,height:97,decx:0,decy:0});
+	milcoordinates.set("lpunch3",{offx:656,width:63,offy:388,height:97,decx:0,decy:0});
+	milcoordinates.set("lkick1",{offx:298,width:40,offy:607,height:98,decx:-8,decy:0});
+	milcoordinates.set("lkick2",{offx:349,width:30,offy:607,height:98,decx:12,decy:0});
+	milcoordinates.set("lkick3",{offx:390,width:36,offy:607,height:98,decx:14,decy:0});
+	milcoordinates.set("lkick4",{offx:437,width:52,offy:607,height:98,decx:14,decy:0});
+	milcoordinates.set("lkick5",{offx:498,width:61,offy:607,height:98,decx:14,decy:0});
+	milcoordinates.set("mkick1",{offx:298,width:40,offy:607,height:98,decx:-8,decy:0});
+	milcoordinates.set("mkick2",{offx:349,width:30,offy:607,height:98,decx:12,decy:0});
+	milcoordinates.set("mkick3",{offx:390,width:36,offy:607,height:98,decx:14,decy:0});
+	milcoordinates.set("mkick4",{offx:437,width:52,offy:607,height:98,decx:14,decy:0});
+	milcoordinates.set("mkick5",{offx:216,width:58,offy:607,height:98,decx:14,decy:0});
+	milcoordinates.set("hkick1",{offx:15,width:36,offy:713,height:106,decx:0,decy:0});
+	milcoordinates.set("hkick2",{offx:63,width:43,offy:713,height:106,decx:2,decy:0});
+	milcoordinates.set("hkick3",{offx:118,width:47,offy:713,height:106,decx:18,decy:0});
+	milcoordinates.set("hkick4",{offx:175,width:39,offy:713,height:106,decx:16,decy:0});
+	milcoordinates.set("hkick5",{offx:223,width:21,offy:713,height:106,decx:12,decy:0});
+	milcoordinates.set("hkick6",{offx:255,width:41,offy:713,height:106,decx:-4,decy:0});
+	milcoordinates.set("hurted1",{offx:15,width:39,offy:1051,height:92,decx:0,decy:0});
+	milcoordinates.set("hurted2",{offx:65,width:42,offy:1051,height:92,decx:0,decy:0});
+	milcoordinates.set("falling1",{offx:460,width:57,offy:1181,height:83,decx:0,decy:0});
+	milcoordinates.set("falling2",{offx:527,width:74,offy:1181,height:83,decx:0,decy:0});
+	milcoordinates.set("falling3",{offx:610,width:68,offy:1181,height:83,decx:0,decy:0});
+	milcoordinates.set("grounded1",{offx:690,width:69,offy:1222,height:42,decx:0,decy:0});
+	milcoordinates.set("grounded2",{offx:770,width:78,offy:1241,height:23,decx:0,decy:0});
+	milcoordinates.set("getup1",{offx:421,width:63,offy:1342,height:35,decx:0,decy:0});
+	milcoordinates.set("getup2",{offx:494,width:36,offy:1322,height:55,decx:0,decy:0});
+	milcoordinates.set("getup3",{offx:539,width:26,offy:1301,height:76,decx:0,decy:0});
+	milcoordinates.set("getup4",{offx:574,width:37,offy:1275,height:102,decx:0,decy:0});
+	milcoordinates.set("blocking1",{offx:597,width:33,offy:19,height:105,decx:0,decy:0});
+	milcoordinates.set("blocking2",{offx:641,width:35,offy:19,height:105,decx:0,decy:0});
+	milcoordinates.set("cblocking1",{offx:902,width:32,offy:49,height:75,decx:0,decy:0});
+	milcoordinates.set("cblocking2",{offx:944,width:35,offy:49,height:75,decx:0,decy:0});
+	milcoordinates.set("churted1",{offx:538,width:38,offy:1083,height:60,decx:0,decy:0});
+	milcoordinates.set("churted2",{offx:587,width:43,offy:1086,height:57,decx:0,decy:0});
+	milcoordinates.set("clpunch1",{offx:319,width:37,offy:877,height:62,decx:2,decy:0});
+	milcoordinates.set("clpunch2",{offx:365,width:47,offy:879,height:60,decx:2,decy:0});
+	milcoordinates.set("huppercut1",{offx:15,width:53,offy:880,height:59,decx:-14,decy:0});
+	milcoordinates.set("huppercut2",{offx:79,width:53,offy:830,height:109,decx:0,decy:0});
+	milcoordinates.set("huppercut3",{offx:143,width:58,offy:830,height:109,decx:0,decy:0});
+	milcoordinates.set("huppercut4",{offx:210,width:41,offy:830,height:109,decx:2,decy:0});
+	milcoordinates.set("huppercut5",{offx:262,width:39,offy:830,height:109,decx:-2,decy:0});
+	milcoordinates.set("clkick1",{offx:612,width:30,offy:878,height:61,decx:0,decy:-6});
+	milcoordinates.set("clkick2",{offx:654,width:55,offy:879,height:60,decx:0,decy:-9});
+	milcoordinates.set("cmkick1",{offx:612,width:30,offy:878,height:61,decx:0,decy:0});
+	milcoordinates.set("cmkick2",{offx:473,width:45,offy:879,height:60,decx:6,decy:-2});
+	milcoordinates.set("cmkick3",{offx:528,width:64,offy:878,height:61,decx:6,decy:-2});
+	milcoordinates.set("jpunch1",{offx:15,width:67,offy:991,height:47,decx:-6,decy:10});
+	milcoordinates.set("jpunch2",{offx:92,width:88,offy:985,height:53,decx:-9,decy:10});
+	milcoordinates.set("jskick1",{offx:203,width:34,offy:960,height:78,decx:0,decy:8});
+	milcoordinates.set("jskick2",{offx:246,width:46,offy:950,height:88,decx:0,decy:8});
+	milcoordinates.set("jkick1",{offx:314,width:51,offy:974,height:64,decx:0,decy:10});
+	milcoordinates.set("jkick2",{offx:375,width:64,offy:975,height:63,decx:0,decy:10});
+	milcoordinates.set("grabbing1",{offx:15,width:56,offy:494,height:105,decx:0,decy:0});
+	milcoordinates.set("grabbing2",{offx:81,width:36,offy:494,height:105,decx:-2,decy:0});
+	milcoordinates.set("grabbing3",{offx:127,width:47,offy:494,height:105,decx:-17,decy:0});
+	milcoordinates.set("grabbing4",{offx:186,width:61,offy:494,height:105,decx:-30,decy:0});
+	milcoordinates.set("grabbing5",{offx:258,width:61,offy:494,height:105,decx:-30,decy:0});
+	milcoordinates.set("grabbed1",{offx:15,width:35,offy:1282,height:95,decx:0,decy:0});
+	milcoordinates.set("grabbed2",{offx:59,width:56,offy:1282,height:95,decx:0,decy:0});
+	milcoordinates.set("grabbed3",{offx:124,width:72,offy:1282,height:95,decx:0,decy:0});
+	milcoordinates.set("grabbed4",{offx:205,width:41,offy:1282,height:95,decx:0,decy:0});
+	milcoordinates.set("victory1",{offx:15,width:22,offy:249,height:126,decx:3,decy:0});
+	milcoordinates.set("victory2",{offx:47,width:44,offy:249,height:126,decx:-9,decy:0});
+	milcoordinates.set("victory3",{offx:101,width:46,offy:249,height:126,decx:-9,decy:0});
+	milcoordinates.set("victory4",{offx:157,width:51,offy:249,height:126,decx:-12,decy:0});
+	milcoordinates.set("victory5",{offx:219,width:81,offy:249,height:126,decx:-28,decy:0});
+	milcoordinates.set("victory6",{offx:219,width:81,offy:249,height:126,decx:-28,decy:0});
+	milcoordinates.set("victory7",{offx:310,width:90,offy:249,height:126,decx:-34,decy:0});
+	milcoordinates.set("victory8",{offx:409,width:86,offy:249,height:126,decx:-30,decy:0});
+	milcoordinates.set("victory9",{offx:504,width:69,offy:249,height:126,decx:-14,decy:0});
+	milcoordinates.set("victory10",{offx:584,width:37,offy:249,height:126,decx:2,decy:0});
+	milcoordinates.set("victory11",{offx:631,width:33,offy:249,height:126,decx:2,decy:0});
+	milcoordinates.set("victory12",{offx:677,width:30,offy:249,height:126,decx:2,decy:0});
+    milcoordinates.set("decapitated1",{offx:530,width:20,offy:1732,height:90,decx:0,decy:0});
+    milcoordinates.set("decapitated2",{offx:558,width:26,offy:1732,height:90,decx:0,decy:0});
+    milcoordinates.set("decapitated3",{offx:589,width:31,offy:1732,height:90,decx:0,decy:0});
+    milcoordinates.set("decapitated4",{offx:626,width:47,offy:1732,height:90,decx:0,decy:0});
+    milcoordinates.set("decapitated5",{offx:678,width:56,offy:1732,height:90,decx:0,decy:0});
+    milcoordinates.set("decapitated6",{offx:741,width:75,offy:1732,height:90,decx:0,decy:0});
+    milcoordinates.set("stunned1",{offx:670,width:38,offy:1276,height:101,decx:0,decy:0});
+    milcoordinates.set("stunned2",{offx:714,width:36,offy:1276,height:101,decx:-2,decy:0});
+    milcoordinates.set("stunned3",{offx:760,width:40,offy:1276,height:101,decx:-4,decy:0});
+    milcoordinates.set("stunned4",{offx:805,width:36,offy:1276,height:101,decx:0,decy:0});
+    milcoordinates.set("stunned5",{offx:846,width:35,offy:1276,height:101,decx:2,decy:0});
+
+	milcoordinates.set("head",{offx:852,width:18,offy:1799,height:25,decx:0,decy:0});
+	
+
+    return milcoordinates;
+}
+
+
+
 function getraicoordinates(){
     var raicoordinates = new Map();
 	raicoordinates.set("stand1",{offx:72,width:37,offy:14,height:107,decx:0,decy:0});
