@@ -1012,7 +1012,7 @@ function main(){
 			else if(me.perso=="shao_kahn" && this.currisking>=-5 && ((Math.abs(Math.abs(me.x-other.x-other.xspeed*10)-120)<=40 && me.y==0 && other.y>0 && me.crouching==0 && movpriority.get(me.mov)<70 && other.tb<=0) || (other.crouching>=4 && Math.abs(me.x-other.x)<=120 && me.y==0)))
 				{this.begincoup("charge");}
 
-			else if(me.perso=="scorpion" && this.currisking-me.pv/20>=-2 && Math.abs(me.x-other.x-other.xspeed*10)>=80 && me.y==0 && me.crouching==0 && movpriority.get(me.mov)<70 && other.tb<=0 && me.y==0 && Math.abs(me.x-me.orientation*180-camerax)>=decalagex)
+			else if(me.perso=="scorpion" && this.currisking-me.pv/20>=-2 && Math.abs(me.x-other.x-other.xspeed*10)>=80 && me.y==0 && me.crouching==0 && movpriority.get(me.mov)<70 && other.tb<=0 && me.y==0 && Math.abs(me.x-me.orientation*180-camerax)>=decalagex && me.cooldowns[2]==0)
 				{this.begincoup("hell_gates");}
 
 			else if(me.perso=="subzero" && me.y==0 && other.y==0 && other.gettingup && other.gettingup<=other.charac.getupfdur-28 && Math.abs(me.x-other.x)<=100 && movpriority.get(me.mov)<70 && !this.thereisaprojo())
@@ -1022,6 +1022,15 @@ function main(){
 
 			else if(me.perso=="subzero" && me.y==0 && other.y==0 && Math.abs(Math.abs(me.x-other.x)-this.idealrange)>=60 && Math.abs(me.x-other.x)<=120 && movpriority.get(me.mov)<70 && !this.thereisaprojo())
 				{this.begincoup("slide");}
+
+			else if(me.perso=="scorpion" && Math.abs(me.x-other.x)>=60 && Math.abs(-stage_size/2*me.orientation-me.x)<=180 && me.y==0 && me.crouching==0 && movpriority.get(me.mov)<70 && Math.abs(me.x-me.orientation*180-camerax)>=decalagex && me.cooldowns[2]<=10)
+				{this.begincoup("hell_gates");}
+			
+			else if(me.perso=="kitana" && me.y==0 && Math.abs(me.x-other.x)<=100 && other.movlag>=20 && Math.abs(-stage_size/2*me.orientation-me.x)<=150 && me.cooldowns[3]<=5 && movpriority.get(me.mov)<70)
+				{this.begincoup("squarepunch");}
+
+			else if(me.perso=="raiden" && me.y==0 && Math.abs(me.x-other.x)>=60 && Math.abs(-stage_size/2*me.orientation-me.x)<=130 && other.y>=40 && me.cooldowns[3]<=5 && movpriority.get(me.mov)<70)
+				{this.begincoup("teleport");}
 
 			else if(Math.abs(Math.abs(me.x-other.x)-this.idealrange)>=this.distancetowavedash && !this.thereisaprojo()){this.beginwavedash();}
 			
