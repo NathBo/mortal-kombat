@@ -670,7 +670,7 @@ function main(){
 			this.wanttowavedash=false;
 			var grade = new Map();
 			function aux(val,key,_){
-				grade.set(key,Math.random()*5);
+				grade.set(key,Math.floor(Math.random()*5));
 			}
 			me.charac.coups.forEach(aux);
 			this.grade=grade;
@@ -757,8 +757,11 @@ function main(){
 					this.parryrate = 1;
 					break;
 			}
-			if(difficulte>=1 && me.perso=="scorpion"){this.agressivite+=0.005}
+			if(difficulte>=1 && me.perso=="scorpion"){this.agressivite+=0.002}
 			if(me.perso=="shao_kahn"){this.wanttojump-=20;}
+			if(me.perso=="kitana"){this.idealrange=150;}
+			if(me.perso=="raiden"){this.enviedantiair+=2;}
+			if(me.perso=="liukang"){this.idealrange=90;}
 			//if(youareintutorial && !me.allowedmoves.includes("block")){this.agressivite+=0.01;}	//pour l'instant ca ferait ca tout le temps
 		}
 
@@ -781,8 +784,9 @@ function main(){
 		}
 
 		eviterprojectiles(){
+			var me = this.me;
 			for(let value of objects_to_loop.values()){
-				if(value.dangerous){
+				if(value.dangerous && value.other===me){
 					if(this.me.perso == "shao_kahn" && this.me.cooldowns[1]==0 && Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))<=value.stats.hitboxxe+30+this.me.charac.width/2 && this.me.y==0 && this.me.mov!="jumpsquat"){this.begincoup("charge");return true;}
 					if(Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))<=value.stats.hitboxxe+30+this.me.charac.width/2 && this.me.y==0 && this.me.mov!="jumpsquat"){this.pressbackward();if(value.vitesse>0){this.me.bas=1;}return true;}
 					if((this.me.y==0 && (signe(this.me.x-value.x)==signe(value.vitesse)) && Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))>=value.stats.hitboxxe+90+this.me.charac.width/2-this.wanttojump*6 && value.y+value.stats.hitboxye<=70) || this.me.mov=="jumpsquat"){this.me.haut=1;this.pressforward(true);return true;}
@@ -872,8 +876,9 @@ function main(){
 		}
 
 		thereisaprojo(){
+			var me = this.me;
 			for(let value of objects_to_loop.values()){
-				if(value.dangerous){
+				if(value.dangerous && value.other===me){
 					if(Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))<=value.stats.hitboxxe+60+this.me.charac.width/2 && this.me.y==0 && this.me.mov!="jumpsquat"){return true;}
 					if((this.me.y==0 && (signe(this.me.x-value.x)==signe(value.vitesse)) && Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))>=value.stats.hitboxxe+90+this.me.charac.width/2-this.wanttojump*6 && value.y+value.stats.hitboxye<=70) || this.me.mov=="jumpsquat"){return true;}
 				}
@@ -891,7 +896,7 @@ function main(){
 			if(other.mov == this.lastmovehitby && !youareintutorial){reaction_time=0;}
 			
 			var movtodo = "";
-			var limiteup = this.baserisk+this.currisking+me.pv/10;
+			var limiteup = Math.max(Math.max(other.hurted,other.freeze),this.baserisk+this.currisking+me.pv/10);
 			var c = other.charac.coups.get(other.mov);
 			if(other.charac.coups.has(other.mov) && other.movlag<=c.slag+c.fdur+c.elag-reaction_time && Math.abs(me.x-other.x)<=c.hitboxxe+mywidth/2 && other.movlag>=c.elag-1){
 				limiteup = other.movlag-2-other.charac.coups.get(other.mov).fdur - other.charac.coups.get(other.mov).elag;
@@ -1012,13 +1017,15 @@ function main(){
 
 			else if(me.perso=="subzero" && me.y==0 && other.y==0 && other.gettingup && other.gettingup<=other.charac.getupfdur-28 && Math.abs(me.x-other.x)<=100 && movpriority.get(me.mov)<70 && !this.thereisaprojo())
 				{this.begincoup("iceflask");}
+			else if(me.perso=="subzero" && me.y==0 && other.y==0 && Math.abs(-stage_size/2*other.orientation-other.x)<=200 && entre(Math.abs(me.x-other.x),100,150) && movpriority.get(me.mov)<70 && !this.thereisaprojo() && me.cooldowns[2]==0)
+				{this.begincoup("iceflask");this.attacking+=2;}
 
 			else if(me.perso=="subzero" && me.y==0 && other.y==0 && Math.abs(Math.abs(me.x-other.x)-this.idealrange)>=60 && Math.abs(me.x-other.x)<=120 && movpriority.get(me.mov)<70 && !this.thereisaprojo())
 				{this.begincoup("slide");}
 
 			else if(Math.abs(Math.abs(me.x-other.x)-this.idealrange)>=this.distancetowavedash && !this.thereisaprojo()){this.beginwavedash();}
 			
-			else if(this.attacking*this.rangescaling+Math.abs(me.x-other.x)>=this.idealrange){this.pressforward();}
+			else if(this.attacking*this.rangescaling+Math.abs(me.x-other.x) + Math.max(0,200-Math.abs(-stage_size/2*me.orientation-me.x))>=this.idealrange){this.pressforward();}
 			else{this.pressbackward();}
 		}
 	}
@@ -1117,6 +1124,7 @@ function main(){
 		miseajour(other){
 			if(this.perso=="shao_kahn"){this.crouching=0;}
 			if(this.movlag===undefined){this.movlag=0;}
+			if(this.crouching===undefined){this.crouching=0;}
 			if(this.perfectblock>1){this.perfectblock--;}
 			else if(this.perfectblock==1){if(this.back==0){this.perfectblock=0;}}
 			else if(this.back){this.perfectblock = framesforperfectblock + perfectblockcd}
@@ -1222,7 +1230,7 @@ function main(){
 				if(this.y<=0){
 					if(this.y<0){
 						this.reoriente(other);
-						if(this.mov == "air_dodge"){this.y=0;this.tb=0;this.movlag = c.landinglag;this.mov = "landing_lag";this.crouching=1;console.log(this.movlag);}
+						if(this.mov == "air_dodge"){this.y=0;this.tb=0;this.movlag = c.landinglag;this.mov = "landing_lag";this.crouching=1;}
 						else if(this.mov == "free_fall"){this.y=0;this.tb=0;this.movlag = c.landinglag;this.mov = "landing_lag";this.xspeed /=2;}
 						else if(this.charac.coups.has(this.mov)){
 							this.y=0;this.tb=0;this.movlag = this.charac.coups.get(this.mov).landinglag;this.mov = "landing_lag";
@@ -1678,7 +1686,6 @@ function main(){
 					this.crouching=0;
 				}
 				else if(this.perfectblock>perfectblockcd && !(this.n==1 && !secondplayerishuman && Math.random()>this.ai.parryrate)){
-					console.log("perfectblock");
 					this.blocking = Math.ceil(stats.blockstun/3);
 					play_sound_eff("parry");
 					parrywasdone = true;
