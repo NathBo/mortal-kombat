@@ -2945,7 +2945,7 @@ function main(){
 
 	characteristics.set("mileena",{png : milskins,coordinates : milcoordinates, sex : "f", standnframes : 10, rollspeed : 3, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : kitanaiconpng, namewav : document.querySelector('#kitanawav'),
 	width : 34, height : 97,vitesse : 3,jumpxspeed : 3.3,backmovnerf : 0.9, gravity : 0.42, jumpforce : 8.8,jumpsquat : 3, shorthop : 5.8, friction:0.22, hurtcontrol : 0.2, grabtype : "poser",
-	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.85, airdodgefdur : 13, landinglag : 9,coups : kitana_coups, pv : 100, getupfdur : 32, grabfdur : 35, grabdeg : 12, vicposframes : 12, vicposfdur : 50, cds : [70,120,240,240], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,squarepunchiconpng], voiceactor : "female"});
+	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.85, airdodgefdur : 13, landinglag : 9,coups : mileena_coups, pv : 100, getupfdur : 32, grabfdur : 35, grabdeg : 12, vicposframes : 12, vicposfdur : 50, cds : [70,120,240,240], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,squarepunchiconpng], voiceactor : "female"});
 	
 
 	characteristics.set("raiden",{png : raiskins,coordinates : raicoordinates, sex : "m", standnframes : 8, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 3, kicknframe : 5,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 8, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
@@ -3000,7 +3000,7 @@ function main(){
 	var decalage = 0; var wdecalagey = 0;
 	var bufferwindow = 5; var minimumcomboscaling = 0.5;
 	var framesforperfectblock = 9; var perfectblockcd = 9;
-	var arcadelevel = -1; var arcadeorder = [...liste_persos]; arcadeorder.shuffle(); var arcadestagesorder = [1,0,3,2,4,5];
+	var arcadelevel = -1; var arcadeorder = [...liste_persos]; arcadeorder.shuffle(); var arcadestagesorder = [1,0,3,2,0,4,5];
 	var youareintutorial = false; var tutorialscenenumber = 0; var currentuto = null; var currenttutoline = tutospecial;
 
 
