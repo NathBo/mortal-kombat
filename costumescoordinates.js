@@ -255,7 +255,12 @@ function getmilcoordinates(){
     milcoordinates.set("stunned4",{offx:805,width:36,offy:1276,height:101,decx:0,decy:0});
     milcoordinates.set("stunned5",{offx:846,width:35,offy:1276,height:101,decx:2,decy:0});
 
+	milcoordinates.set("knifethrow1",{offx:17,width:50,offy:1382,height:121,decx:-4,decy:0});
+	milcoordinates.set("knifethrow2",{offx:73,width:44,offy:1382,height:121,decx:0,decy:0});
+	milcoordinates.set("knifethrow3",{offx:126,width:43,offy:1382,height:121,decx:0,decy:0});
+
 	milcoordinates.set("head",{offx:852,width:18,offy:1799,height:25,decx:0,decy:0});
+	milcoordinates.set("knife",{offx:265,width:49,offy:1483,height:23,decx:0,decy:0});
 	
 
     return milcoordinates;

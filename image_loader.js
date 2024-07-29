@@ -51,6 +51,7 @@ var lifebarpng=new Image();lifebarpng.src = 'ressource/ui/barlife.png';
 	var fireballiconpng=new Image();fireballiconpng.src = 'ressource/icons/fireball_icon.png';
 	var bicycleiconpng=new Image();bicycleiconpng.src = 'ressource/icons/bicycle_icon.png';
 	var cycleiconpng=new Image();cycleiconpng.src = 'ressource/icons/cycle_icon.png';
+	var knifeiconpng=new Image();knifeiconpng.src = 'ressource/icons/knife_icon.png';
 
 	var bloodpng = new Image();bloodpng.src = 'ressource/visual_effects/blood.png';
 

@@ -240,6 +240,53 @@ function main(){
 		}
 	}
 
+	class Knife{
+		constructor(x,y,orientation,other,stats, vitesse = 6){
+			this.x = x; this.y = y; this.orientation = orientation;
+			this.other = other;
+			this.width=40;
+			this.height=17;
+			this.totdur = 40;this.vitesse=vitesse;
+			this.costcpt = 0;
+			this.framepercost = 3;
+			this.stats = stats;
+			this.dur = this.totdur;
+			this.num = cpt;
+			this.dangerous = true;
+			
+		}
+
+		loop(){
+			this.x += this.orientation*this.vitesse;
+			knife_stats.hurty = this.vitesse-2; var other = this.other;
+			if(other.invincibilite==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
+				if(other.y==0){
+					if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,knife_stats);this.dur=1;}
+				}
+				else{
+					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){other.hurt(this,knife_stats);this.dur=1;}
+				}
+			}
+		}
+
+		afficher(){
+			this.costcpt = (this.costcpt+1)%(4*this.framepercost);
+			this.costume = "knife"
+			this.rotation = (this.rotation+this.rotationspeed)%360;
+			ctx.scale(2*this.orientation,2);
+			var coords = milcoordinates.get(this.costume);
+			ctx.drawImage(milpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			if(gamefreeze==0){this.dur--;}
+			if(this.dur==0){this.delete();return;}
+		}
+
+		delete(){
+			objects_to_loop.delete(this.num);
+		}
+	}
+
 
 	class Iceball{
 		constructor(x,y,orientation,other,stats){
@@ -1058,7 +1105,7 @@ function main(){
 			this.movlag = 0;
 			this.mov = "";
 			this.tb = 0; this.xspeed = 0; this.crouching = 0;
-			this.memoryslot = 0; this.perfectblock = 0; this.parrying = 0;
+			this.memoryslot = 0; this.perfectblock = 0; this.parrying = 0; this.ressource = 3; this.max_ressource = 3;
 			this.hurted = 0; this.hurtx = 0; this.invincibilite = 0; this.freeze = 0; this.canthurt = false;
 			this.pv = this.charac.pv; this.pvmax = this.charac.pv; this.pvaff = this.charac.pv;
 			this.pushed = 0;this.pushx = 0;
@@ -1085,10 +1132,15 @@ function main(){
 			if(s == "icebody"){this.crouching = 0;}
 			if(s == "flying_kick" && this.y==0){this.y=20;}
 			if(s == "bicycle" && this.y==0){this.y=40;}
+			if(s == "knifethrow"){this.memoryslot=0;}
 			if(s == "cycle" && this.y==0){this.invincibilite=23;}
 			if(movpriority.get(s)==70 && movpriority.get(this.mov)>=70){return;}
 			play_sound_eff(this.charac.voiceactor+stats.voiceline);
 			if(stats.coupwav != ""){play_sound_eff(stats.coupwav);}
+			if(s == "knifethrow"){
+				if(this.ressource){this.ressource--;console.log(this.ressource)}
+				else{return;}
+			}
 			this.cooldowns[cd] = this.charac.cds[cd];
 			this.mov = s;
 			this.xspeed += stats.movx*this.orientation;
@@ -1165,6 +1217,10 @@ function main(){
 			var c = this.charac;
 			for(var i=0;i<this.cooldowns.length;i++){
 				if(this.cooldowns[i]>0){this.cooldowns[i]--;}
+			}
+			if(this.perso=="mileena"){
+				if(this.cooldowns[0]==1){this.ressource++;}
+				else if(this.cooldowns[0]==0 && this.ressource<this.max_ressource){this.cooldowns[0] = this.charac.cds[0];}
 			}
 			if(this.vicpose){return;}
 			if(this.grabbing&&this.hurted==0&&this.grabbed==0){
@@ -1421,6 +1477,9 @@ function main(){
 					else if(this.perso == "shao_kahn" && this.forward>=1 && this.crouching==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("charge",other);
 					}
+					else if(this.perso == "mileena" && this.back==0 && this.crouching==0 && this.bas==0 && this.forward==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+						this.begincoup("knifethrow",other);
+					}
 					else if(this.forward>=1&&movpriority.get(this.mov)<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
 						this.x+=this.charac.vitesse*this.orientation;this.xspeed = 0;
 						let d = (this.charac.width+other.charac.width)/3;
@@ -1468,6 +1527,9 @@ function main(){
 					}
 					else if(this.perso == "liukang" && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("flying_kick",other);
+					}
+					else if(this.perso == "mileena" && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+						this.begincoup("knifethrow",other);
 					}
 					this.y+=this.tb;
 					if(this.droite&&this.xspeed<c.airmaxspeed){this.xspeed+=c.airdrift}else if(this.gauche && this.xspeed>-c.airmaxspeed){this.xspeed-=c.airdrift}
@@ -1599,6 +1661,16 @@ function main(){
 						var stats = this.charac.coups.get(this.mov);
 						this.x -= 4.5*this.orientation;this.xspeed=0;
 						break;
+					case "knifethrow":
+						var stats = this.charac.coups.get(this.mov);
+						this.crouching=0;
+						if(this.movlag==stats.elag){
+							add_to_objects_set(new Knife(this.x+20*this.orientation,this.y+60,this.orientation,other,stats, 6+this.memoryslot*0.2));
+						}
+						else if(this.movlag==stats.elag+6){
+							if(this.special && this.memoryslot<20){this.memoryslot++;this.movlag++;}
+						}
+						break;
 					}
 				this.movlag--;
 				if(this.movlag == 0){
@@ -1689,7 +1761,7 @@ function main(){
 			}
 			if(this.n==1 && !secondplayerishuman && (stats.hiteffect=="projectile" || stats.hiteffect=="spear")){this.ai.ugothitorblockedaprojectile();}
 			if(this.blocking && this.bas && this.back){this.crouching=6;}
-			if(this.movlag==0&&this.hurted==0&&this.back>=1&&this.y==0 && stats.hiteffect != "iceflask" && this.freeze==0 &&stats.hiteffect != "grab" && this.pv>0 && ((this.crouching<=3 && (other.y>0 || stats.hitboxys>=0) || (this.crouching>3 && other.y==0)) || stats.hiteffect=="projectile") && !(youareintutorial && !this.allowedmoves.includes("block"))){
+			if(this.movlag==0&&this.hurted==0&&this.back>=1&&this.y==0 && stats.hiteffect != "iceflask" && this.freeze==0 &&stats.hiteffect != "grab" && this.pv>0 && ((this.crouching<=3 && (other.y>0 || stats.hitboxys>=0) || (this.crouching>3 && other.y==0)) || stats.hiteffect=="projectile" || stats.hiteffect == "projectile_fall") && !(youareintutorial && !this.allowedmoves.includes("block"))){
 				if(stats.hiteffect=="guard_break"){
 					this.hurted = stats.blockstun;
 					this.crouching=0;
@@ -1709,7 +1781,7 @@ function main(){
 				this.xspeed = -stats.blockx*this.orientation;
 				if(parrywasdone){lag_game(11);}
 				else{lag_game(Math.floor(stats.hitlag/0.8));}
-				if(this.n==0 && !secondplayerishuman && stats.hiteffect!="projectile" && stats.hiteffect != "spear" && stats.hiteffect != "freeze"  && stats.hiteffect != "iceflask"){
+				if(this.n==0 && !secondplayerishuman && stats.hiteffect!="projectile" && stats.hiteffect != "spear" && stats.hiteffect != "freeze"  && stats.hiteffect != "iceflask" && stats.hiteffect != "projectile_fall"){
 					other.ai.ugotblocked();
 				}
 			}
@@ -1731,14 +1803,19 @@ function main(){
 					case "projectile" :
 						slow_game(stats.hitlag*2,1.5);
 						break;
+					case "projectile_fall" :
+						slow_game(stats.hitlag*2,1.5);
+						if(this.falling==0){this.falling = 1;}
+						this.crouching = 0;
+						break;
 					case "spear" :
 						this.falling=0;
 						this.y=0;
 				}
-				if(this.n==1 && !secondplayerishuman && stats.hiteffect != "projectile" && stats.hiteffect != "spear"&& stats.hiteffect != "freeze" && stats.hiteffect != "iceflask"){
+				if(this.n==1 && !secondplayerishuman && stats.hiteffect != "projectile" && stats.hiteffect != "spear"&& stats.hiteffect != "freeze" && stats.hiteffect != "iceflask" && stats.hiteffect != "projectile_fall"){
 					this.ai.ugothit();
 				}
-				if(this.n==0 && !secondplayerishuman && stats.hiteffect != "projectile" && stats.hiteffect != "spear" && stats.hiteffect != "freeze" && stats.hiteffect != "iceflask"){
+				if(this.n==0 && !secondplayerishuman && stats.hiteffect != "projectile" && stats.hiteffect != "spear" && stats.hiteffect != "freeze" && stats.hiteffect != "iceflask" && stats.hiteffect != "projectile_fall"){
 					other.ai.ugotahit();
 				}
 					this.hurted = stats.hitstun;
@@ -1749,7 +1826,7 @@ function main(){
 				if(stats.hiteffect=="spear" || stats.hiteffect=="freeze"){this.comboscaling-=0.2;}
 				else{this.comboscaling -= 0.05;}
 				if(this.comboscaling<=minimumcomboscaling){this.comboscaling=minimumcomboscaling;}
-				if(stats.hiteffect != "projectile"){lag_game(stats.hitlag);}
+				if(stats.hiteffect != "projectile"  && stats.hiteffect != "projectile_fall"){lag_game(stats.hitlag);}
 				play_sound_eff(stats.hitsound);
 				shake_screen(stats.hitlag+2,stats.degats/4);
 				if(stats.hiteffect=="freeze"){this.hurted=0;this.freeze=stats.hitstun;}
@@ -1759,7 +1836,7 @@ function main(){
 				else if(this.y>0 && other.y>0){add_to_objects_set(new Blood(this.x+10*this.orientation,this.y+this.charac.height/2+(other.y-this.y)/4,-this.orientation,stats.blood));}
 				else if(this.y>0 && other.y==0){add_to_objects_set(new Blood(this.x+5*this.orientation,stats.hitboxye,-this.orientation,stats.blood));}
 			}
-			if(this.y>0 && other.y>0 && stats.hiteffect != "projectile" && stats.hiteffect != "freeze"){this.xspeed+=other.xspeed*2/3;this.hurted+=4;}
+			if(this.y>0 && other.y>0 && stats.hiteffect != "projectile" && stats.hiteffect != "freeze" && stats.hiteffect != "projectile_fall"){this.xspeed+=other.xspeed*2/3;this.hurted+=4;}
 			if(Math.abs(this.x+this.xspeed*Math.abs(this.xspeed)/2/this.charac.friction-camerax)>decalagex-this.charac.width/2){other.pushed = Math.min(20,Math.floor((8+stats.hitstun)/2));other.pushx = - this.xspeed * 1.2; if(signe(other.xspeed)==signe(other.orientation)){other.xspeed=0;}}
 			other.canthurt = true;
 			if(stats.hiteffect == "iceflask"){this.invincibilite=60;}
@@ -2052,6 +2129,14 @@ function main(){
 						else {this.costume = this.mov+"5"}
 						break;
 
+					case "knifethrow" :
+						var stats = this.charac.coups.get(this.mov);
+						if(this.movlag>=stats.elag+stats.fdur+stats.slag*3/4){this.costume = this.mov+"2"}
+						else if(this.movlag>=stats.elag+stats.fdur+stats.slag/2){this.costume = this.mov+"1"}
+						else if(this.movlag>=stats.elag+stats.fdur){this.costume = this.mov+"2"}
+						else {this.costume = this.mov+"3"}
+						break;
+
 					case "grab" :
 						var stats = this.charac.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag/2,stats.elag+stats.fdur)){this.costume = "lpunch2"}
@@ -2234,7 +2319,14 @@ function main(){
 			else{ctx.fillRect(120+475+288+6-this.pvaff/this.pvmax*288+shake_x,30+shake_y,this.pvaff/this.pvmax*288,30);}
 			ctx.drawImage(lifebarpng,120+this.n*475+shake_x,25+shake_y);
 			for(var i=0;i<4;i++){
-				if(this.cooldowns[i]>0){ctx.drawImage(this.charac.icons[i],0,0,50,50*this.cooldowns[i]/this.charac.cds[i],120+this.n*730+(60-120*this.n)*i,80,50,50*this.cooldowns[i]/this.charac.cds[i]);}
+				if(this.perso=="mileena" && i==0){
+					for(var j=0; j<this.ressource; j++){
+						ctx.fillStyle = "white";
+						ctx.fillRect(140+this.n*730+(60-120*this.n)*i, 120-20*j, 10, 10);
+					}
+					ctx.drawImage(this.charac.icons[i],120+this.n*730+(60-120*this.n)*i,88);
+				}
+				else if(this.cooldowns[i]>0){ctx.drawImage(this.charac.icons[i],0,0,50,50*this.cooldowns[i]/this.charac.cds[i],120+this.n*730+(60-120*this.n)*i,80,50,50*this.cooldowns[i]/this.charac.cds[i]);}
 			}
 			ctx.scale(2,2);
 			if(this.n==0){
@@ -2945,7 +3037,7 @@ function main(){
 
 	characteristics.set("mileena",{png : milskins,coordinates : milcoordinates, sex : "f", standnframes : 10, rollspeed : 3, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : kitanaiconpng, namewav : document.querySelector('#kitanawav'),
 	width : 34, height : 97,vitesse : 3,jumpxspeed : 3.3,backmovnerf : 0.9, gravity : 0.42, jumpforce : 8.8,jumpsquat : 3, shorthop : 5.8, friction:0.22, hurtcontrol : 0.2, grabtype : "poser",
-	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.85, airdodgefdur : 13, landinglag : 9,coups : mileena_coups, pv : 100, getupfdur : 32, grabfdur : 35, grabdeg : 12, vicposframes : 12, vicposfdur : 50, cds : [70,120,240,240], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,squarepunchiconpng], voiceactor : "female"});
+	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.85, airdodgefdur : 13, landinglag : 9,coups : mileena_coups, pv : 100, getupfdur : 32, grabfdur : 35, grabdeg : 12, vicposframes : 12, vicposfdur : 50, cds : [120,120,240,240], icons : [knifeiconpng,fanswipeiconpng,fanlifticonpng,squarepunchiconpng], voiceactor : "female"});
 	
 
 	characteristics.set("raiden",{png : raiskins,coordinates : raicoordinates, sex : "m", standnframes : 8, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 3, kicknframe : 5,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 8, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
