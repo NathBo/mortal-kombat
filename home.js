@@ -259,6 +259,7 @@ function main(){
 		loop(){
 			this.x += this.orientation*this.vitesse;
 			knife_stats.hurty = this.vitesse-2; var other = this.other;
+			knife_stats.degats = Math.floor(this.vitesse);
 			if(other.invincibilite==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
 				if(other.y==0){
 					if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,knife_stats);this.dur=1;}
@@ -286,6 +287,58 @@ function main(){
 			objects_to_loop.delete(this.num);
 		}
 	}
+
+	class HomingKnife{
+		constructor(x,y,orientation,other,stats, vitesse = 4){
+			this.x = x; this.y = y; this.orientation = orientation;
+			this.other = other;
+			this.width=40;
+			this.height=19;
+			this.totdur = 80;this.vitesse=vitesse; this.vitessey = 1;
+			this.costcpt = 0;
+			this.framepercost = 3;
+			this.stats = stats;
+			this.dur = this.totdur;
+			this.num = cpt;
+			this.dangerous = true;
+			
+		}
+
+		loop(){
+			this.x += this.orientation*this.vitesse;
+			var stats = this.stats; var other = this.other;
+			if(Math.abs(other.y-this.y)>10){
+				this.y+=this.vitessey*signe(other.y-this.y);
+			}
+			if(other.invincibilite==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
+				if(other.y==0){
+					if(entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3*(other.crouching<=3),this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
+				}
+				else{
+					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){other.hurt(this,stats);this.dur=1;}
+				}
+			}
+		}
+
+		afficher(){
+			this.costcpt = (this.costcpt+1)%(4*this.framepercost);
+			this.costume = "knife"
+			this.rotation = (this.rotation+this.rotationspeed)%360;
+			ctx.scale(2*this.orientation,2);
+			var coords = milcoordinates.get(this.costume);
+			ctx.drawImage(milpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			if(gamefreeze==0){this.dur--;}
+			if(this.dur==0){this.delete();return;}
+		}
+
+		delete(){
+			objects_to_loop.delete(this.num);
+		}
+	}
+
+
 
 
 	class Iceball{
@@ -1137,12 +1190,12 @@ function main(){
 			if(s == "cycle" && this.y==0){this.invincibilite=23;}
 			if(s == "teleport_drop"){this.invincibilite=12;}
 			if(s == "ball"){this.crouching=6;}
-			play_sound_eff(this.charac.voiceactor+stats.voiceline);
-			if(stats.coupwav != ""){play_sound_eff(stats.coupwav);}
-			if(s == "knifethrow"){
+			if(s == "knifethrow" || s == "homing_knife"){
 				if(this.ressource){this.ressource--;console.log(this.ressource)}
 				else{return;}
 			}
+			play_sound_eff(this.charac.voiceactor+stats.voiceline);
+			if(stats.coupwav != ""){play_sound_eff(stats.coupwav);}
 			this.cooldowns[cd] = this.charac.cds[cd];
 			this.mov = s;
 			this.xspeed += stats.movx*this.orientation;
@@ -1488,6 +1541,9 @@ function main(){
 					else if(this.perso == "mileena" && this.forward>=1 && this.crouching==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("ball",other);
 					}
+					else if(this.perso == "mileena" && this.back>=1 && this.crouching==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+						this.begincoup("homing_knife",other);
+					}
 					else if(this.forward>=1&&movpriority.get(this.mov)<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
 						this.x+=this.charac.vitesse*this.orientation;this.xspeed = 0;
 						let d = (this.charac.width+other.charac.width)/3;
@@ -1677,6 +1733,13 @@ function main(){
 						}
 						else if(this.movlag==stats.elag+6){
 							if(this.special && this.memoryslot<20){this.memoryslot++;this.movlag++;}
+						}
+						break;
+					case "homing_knife":
+						var stats = this.charac.coups.get(this.mov);
+						this.crouching=0;
+						if(this.movlag==stats.elag){
+							add_to_objects_set(new HomingKnife(this.x+20*this.orientation,this.y+60,this.orientation,other,stats));
 						}
 						break;
 					case "ball":
@@ -2153,11 +2216,12 @@ function main(){
 						break;
 
 					case "knifethrow" :
+					case "homing_knife" :
 						var stats = this.charac.coups.get(this.mov);
-						if(this.movlag>=stats.elag+stats.fdur+stats.slag*3/4){this.costume = this.mov+"2"}
-						else if(this.movlag>=stats.elag+stats.fdur+stats.slag/2){this.costume = this.mov+"1"}
-						else if(this.movlag>=stats.elag+stats.fdur){this.costume = this.mov+"2"}
-						else {this.costume = this.mov+"3"}
+						if(this.movlag>=stats.elag+stats.fdur+stats.slag*3/4){this.costume = "knifethrow"+"2"}
+						else if(this.movlag>=stats.elag+stats.fdur+stats.slag/2){this.costume = "knifethrow"+"1"}
+						else if(this.movlag>=stats.elag+stats.fdur){this.costume = "knifethrow"+"2"}
+						else {this.costume = "knifethrow"+"3"}
 						break;
 
 					case "grab" :
