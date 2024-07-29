@@ -1127,6 +1127,7 @@ function main(){
 			var cd = cd_dependance.get(s);
 			if(this.cooldowns[cd]){if(this.cooldowns[cd]>bufferwindow){this.special=2;}return;}
 			else if(cd != -1){this.special=2;}
+			if(movpriority.get(s)==70 && movpriority.get(this.mov)>=70){return;}
 			if(s == "hell_gates"){this.orientation*=-1;}
 			if(s == "squarepunch"){this.invincibilite=15;this.y=1;this.tb=9;}
 			if(s == "icebody"){this.crouching = 0;}
@@ -1134,7 +1135,7 @@ function main(){
 			if(s == "bicycle" && this.y==0){this.y=40;}
 			if(s == "knifethrow"){this.memoryslot=0;}
 			if(s == "cycle" && this.y==0){this.invincibilite=23;}
-			if(movpriority.get(s)==70 && movpriority.get(this.mov)>=70){return;}
+			if(s == "teleport_drop"){this.invincibilite=12;}
 			play_sound_eff(this.charac.voiceactor+stats.voiceline);
 			if(stats.coupwav != ""){play_sound_eff(stats.coupwav);}
 			if(s == "knifethrow"){
@@ -1477,6 +1478,9 @@ function main(){
 					else if(this.perso == "shao_kahn" && this.forward>=1 && this.crouching==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("charge",other);
 					}
+					else if(this.perso == "mileena" && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+						this.begincoup("teleport_drop",other);
+					}
 					else if(this.perso == "mileena" && this.back==0 && this.crouching==0 && this.bas==0 && this.forward==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("knifethrow",other);
 					}
@@ -1506,7 +1510,7 @@ function main(){
 						this.poing=2;
 						this.begincoup("jpunch",other);
 					}
-					else if(this.jambe==1&&movpriority.get(this.mov)<40&&this.xspeed == 0&&this.falling==0&&end_of_round_countdown==0){
+					else if(this.jambe==1&&movpriority.get(this.mov)<40&&this.xspeed == 0 && this.back+this.forward==0 &&this.falling==0&&end_of_round_countdown==0){
 						this.jambe=2;
 						this.begincoup("jskick",other);
 					}
@@ -1674,7 +1678,16 @@ function main(){
 					}
 				this.movlag--;
 				if(this.movlag == 0){
-					if(this.mov == "jumpsquat"){this.mov = "";if(this.haut>=1 && this.bas == 0){this.tb = c.jumpforce;this.y = c.jumpforce;}else{this.tb = c.shorthop;this.y = c.shorthop;}}
+					if(this.mov=="teleport_drop"){
+						this.mov = "";
+						var x = other.x+this.orientation*(this.charac.width/2+other.charac.width/2+10);
+						if(Math.abs(x-camerax)>decalagex-this.charac.width/2){x = other.x-this.orientation*(this.charac.width/2+other.charac.width/2+10);}
+						else{this.orientation*=-1;}
+						this.x = x;
+						this.y = 150; this.tb=-4; this.xspeed = 0;
+						if(this.jambe==1 && (this.back || this.forward)){this.mov= "jkick";this.movlag=29;}
+					}
+					else if(this.mov == "jumpsquat"){this.mov = "";if(this.haut>=1 && this.bas == 0){this.tb = c.jumpforce;this.y = c.jumpforce;}else{this.tb = c.shorthop;this.y = c.shorthop;}}
 					else if(this.mov == "air_dodge"){this.movlag = 100;this.mov = "free_fall";this.xspeed /=4;}
 					else if(this.mov == "fanthrow" && this.y>0){this.movlag = 100;this.mov = "free_fall";}
 					else if(this.mov == "squarepunch"){this.movlag = 100;this.mov = "free_fall";}
@@ -1721,7 +1734,7 @@ function main(){
 						var stats2 = other.charac.coups.get(other.mov)
 						if(entre(other.movlag,stats2.elag+1,stats2.elag+stats2.fdur)){hitboxxe+=stats2.hitboxxouv;}
 					}
-					if(entre((other.x-this.x)*this.orientation,stats.hitboxxs-other.charac.width/2,hitboxxe+other.charac.width/2+stats.hitboxxeyscaling*(other.y-(this.y+stats.hitboxys)))){
+					if(entre((other.x-this.x)*this.orientation,stats.hitboxxs-other.charac.width/2-10*(other.falling!=0),hitboxxe+other.charac.width/2+10*(other.falling!=0)+stats.hitboxxeyscaling*(other.y-(this.y+stats.hitboxys)))){
 						if(other.crouching>3){
 							if((stats.hitboxys<=0 || this.y>0)  && entre((other.y-this.y),stats.hitboxys,stats.hitboxxe+other.charac.height/3)){other.hurt(this,stats);}
 						}
@@ -1729,7 +1742,7 @@ function main(){
 							if(entre((other.y-this.y),stats.hitboxys-2,stats.hitboxye+other.charac.height/3)){other.hurt(this,stats);}
 						}
 						else{
-							if(entre((other.y-this.y),stats.hitboxys-other.charac.height/6,stats.hitboxye+other.charac.height/6)){other.hurt(this,stats);}
+							if(entre((other.y-this.y),stats.hitboxys-other.charac.height/6,stats.hitboxye+other.charac.height/6-10*(other.falling!=0))){other.hurt(this,stats);}
 						}
 					}
 				}
@@ -2106,6 +2119,7 @@ function main(){
 					case "icebody" :
 					case "charge" :
 					case "flying_kick" :
+					case "teleport_drop" :
 						var stats = this.charac.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.costume = this.mov+"2"}
 						else{this.costume = this.mov+"1";}
@@ -2281,6 +2295,8 @@ function main(){
 				ctx.scale(1,1);
 			}
 			else if(this.hide==0){
+				var y = this.y;
+				if(this.mov == "teleport_drop"){y = -8*(12-this.movlag)}
 				if(this.electrocuted){
 					this.electrocuted--;
 					ctx.filter = 'brightness(1.8)';
@@ -2293,7 +2309,7 @@ function main(){
 				}
 				ctx.scale(2*this.orientation,2);
 				var coords = this.coordinates.get(this.costume);
-				ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.charac.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+				ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.charac.width/2+shakex)*this.orientation,ground-y-coords.height-coords.decy+shakey,coords.width,coords.height);
 				ctx.setTransform(1, 0, 0, 1, 0, 0);
 				ctx.scale(1,1);
 
@@ -3037,7 +3053,7 @@ function main(){
 
 	characteristics.set("mileena",{png : milskins,coordinates : milcoordinates, sex : "f", standnframes : 10, rollspeed : 3, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : kitanaiconpng, namewav : document.querySelector('#kitanawav'),
 	width : 34, height : 97,vitesse : 3,jumpxspeed : 3.3,backmovnerf : 0.9, gravity : 0.42, jumpforce : 8.8,jumpsquat : 3, shorthop : 5.8, friction:0.22, hurtcontrol : 0.2, grabtype : "poser",
-	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.85, airdodgefdur : 13, landinglag : 9,coups : mileena_coups, pv : 100, getupfdur : 32, grabfdur : 35, grabdeg : 12, vicposframes : 12, vicposfdur : 50, cds : [120,120,240,240], icons : [knifeiconpng,fanswipeiconpng,fanlifticonpng,squarepunchiconpng], voiceactor : "female"});
+	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.85, airdodgefdur : 13, landinglag : 9,coups : mileena_coups, pv : 100, getupfdur : 32, grabfdur : 35, grabdeg : 12, vicposframes : 12, vicposfdur : 50, cds : [120,120,240,270], icons : [knifeiconpng,fanswipeiconpng,fanlifticonpng,teleport_dropiconpng], voiceactor : "female"});
 	
 
 	characteristics.set("raiden",{png : raiskins,coordinates : raicoordinates, sex : "m", standnframes : 8, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 3, kicknframe : 5,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 8, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),

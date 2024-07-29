@@ -35,6 +35,7 @@ mileena_coups.set("jpunch",{slag : 6, fdur : 10, elag : 10, degats : 8, hitstun 
 mileena_coups.set("grab",{slag : 5, fdur : 3, elag : 12, degats : 12, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 38,hitboxys : 0, hitboxye : -1, hitboxxouv : 15, blood_height : 0, blockstun : 12, blockx : 1.7, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : "coup"});
 mileena_coups.set("knifethrow",{slag : 11, fdur : 0, elag : 14, degats : 8, hitstun : 22, hurtx : 1.1, hurty : 4, hitboxxs : -12, hitboxxe : 12,hitboxys : -8, hitboxye : 8, hitboxxouv : 5, blood_height : 0, blockstun : 10, blockx : 1.5, hiteffect : "projectile_fall", hitboxxeyscaling : 0, hitlag : 7, hitsound : "fan", blood : "lblood", damageonblock : 2,landinglag : 12, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : ""});
 var knife_stats = {slag : 11, fdur : 0, elag : 14, degats : 8, hitstun : 22, hurtx : 1.1, hurty : 4, hitboxxs : -12, hitboxxe : 12,hitboxys : -8, hitboxye : 8, hitboxxouv : 5, blood_height : 0, blockstun : 10, blockx : 1.5, hiteffect : "projectile_fall", hitboxxeyscaling : 0, hitlag : 7, hitsound : "fan", blood : "lblood", damageonblock : 2,landinglag : 12, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : ""};
+mileena_coups.set("teleport_drop",{slag : 12, fdur : 0, elag : 0, degats : 0, hitstun : 0, hurtx : 0.9, hurty : 0, hitboxxs : 0, hitboxxe : 0,hitboxys : 0, hitboxye : -1, hitboxxouv : 15, blood_height : 0, blockstun : 12, blockx : 1.7, hiteffect : "", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : "teleport"});
 
 
 
@@ -43,7 +44,7 @@ raiden_coups.set("lpunch",{slag : 6, fdur : 6, elag : 12, degats : 5, hitstun : 
 raiden_coups.set("hpunch",{slag : 14, fdur : 10, elag : 16, degats : 10, hitstun : 28, hurtx : 1.3, hurty : 0, hitboxxs : 11, hitboxxe : 49, hitboxys : 0, hitboxye : 82, hitboxxouv : 21, blood_height : 0, blockstun : 14, blockx : 2.5, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : "coup"});
 raiden_coups.set("lkick",{slag : 8, fdur : 8, elag : 14, degats : 6, hitstun : 20, hurtx : 1.1, hurty : 0, hitboxxs : 18, hitboxxe : 54, hitboxys : 0, hitboxye : 40, hitboxxouv : 12, blood_height : -5, blockstun : 12, blockx : 1.7, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : "coup"});
 raiden_coups.set("mkick",{slag : 16, fdur : 12, elag : 16, degats : 10, hitstun : 26, hurtx : 1.5, hurty : 0, hitboxxs : 18, hitboxxe : 51, hitboxys : 1, hitboxye : 98, hitboxxouv : 24, blood_height : 5, blockstun : 14, blockx : 2.5, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : "coup"});
-raiden_coups.set("hkick",{slag : 14, fdur : 8, elag : 24, degats : 16, hitstun : 38, hurtx : 3.5, hurty : 7, hitboxxs : 20, hitboxxe : 48, hitboxys : 1, hitboxye : 106, hitboxxouv : 30, blood_height : 8, blockstun : 16, blockx : 3.3, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 10, hitsound : "hhit", blood : "mblood", damageonblock : 1, disponibility : "stand", voiceline : "hmov", movx : 2, coupwav : "coup"});
+raiden_coups.set("hkick",{slag : 14, fdur : 8, elag : 24, degats : 16, hitstun : 38, hurtx : 3.5, hurty : 7, hitboxxs : 20, hitboxxe : 48, hitboxys : 1, hitboxye : 106, hitboxxouv : 30, blood_height : 8, blockstun : 16, blockx : 3.3, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 10, hitsound : "hhit", blood : "mblood", damageonblock : 1, disponibility : "stand", voiceline : "hmov", movx : 1.8, coupwav : "coup"});
 raiden_coups.set("clpunch",{slag : 7, fdur : 6, elag : 8, degats : 4, hitstun : 20, hurtx : 1, hurty : 0, hitboxxs : 10, hitboxxe : 42,hitboxys : -1, hitboxye : -1, hitboxxouv : 14, blood_height : 0, blockstun : 10, blockx : 1.3, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "crouch", voiceline : "lmov", movx : 0, coupwav : "coup"});
 raiden_coups.set("huppercut",{slag : 12, fdur : 10, elag : 28, degats : 19, hitstun : 60, hurtx : 3.1, hurty : 11, hitboxxs : 20, hitboxxe : 46, hitboxys : 1, hitboxye : 100, hitboxxouv : 15, blood_height : 0, blockstun : 16, blockx : 2.5, hiteffect : "fall", hitboxxeyscaling : 0.05, hitlag : 12, hitsound : "hhit", blood : "mblood", damageonblock : 1, disponibility : "crouch", voiceline : "hmov", movx : 0, coupwav : "coup"});
 raiden_coups.set("clkick",{slag : 6, fdur : 6, elag : 8, degats : 6, hitstun : 20, hurtx : 1, hurty : 0, hitboxxs : 10, hitboxxe : 45,hitboxys : -45, hitboxye : -20, hitboxxouv : 14, blood_height : 0, blockstun : 10, blockx : 0.8, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "crouch", voiceline : "lmov", movx : 0, coupwav : "coup"});
@@ -161,6 +162,8 @@ movpriority.set("flying_kick",70);
 movpriority.set("fireball",70);
 movpriority.set("bicycle",70);
 movpriority.set("cycle",70);
+movpriority.set("knife_throw",70);
+movpriority.set("teleport_drop",70);
 movpriority.set("air_dodge",100);
 movpriority.set("landing_lag",100);
 movpriority.set("jumpsquat",100);
@@ -209,3 +212,4 @@ cd_dependance.set("flying_kick",1);
 cd_dependance.set("fireball",0);
 cd_dependance.set("bicycle",2);
 cd_dependance.set("cycle",3);
+cd_dependance.set("teleport_drop",3);
