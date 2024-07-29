@@ -1136,6 +1136,7 @@ function main(){
 			if(s == "knifethrow"){this.memoryslot=0;}
 			if(s == "cycle" && this.y==0){this.invincibilite=23;}
 			if(s == "teleport_drop"){this.invincibilite=12;}
+			if(s == "ball"){this.crouching=6;}
 			play_sound_eff(this.charac.voiceactor+stats.voiceline);
 			if(stats.coupwav != ""){play_sound_eff(stats.coupwav);}
 			if(s == "knifethrow"){
@@ -1484,6 +1485,9 @@ function main(){
 					else if(this.perso == "mileena" && this.back==0 && this.crouching==0 && this.bas==0 && this.forward==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("knifethrow",other);
 					}
+					else if(this.perso == "mileena" && this.forward>=1 && this.crouching==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+						this.begincoup("ball",other);
+					}
 					else if(this.forward>=1&&movpriority.get(this.mov)<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
 						this.x+=this.charac.vitesse*this.orientation;this.xspeed = 0;
 						let d = (this.charac.width+other.charac.width)/3;
@@ -1675,6 +1679,10 @@ function main(){
 							if(this.special && this.memoryslot<20){this.memoryslot++;this.movlag++;}
 						}
 						break;
+					case "ball":
+						var stats = this.charac.coups.get(this.mov);
+						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.xspeed=6*this.orientation;}
+						break;
 					}
 				this.movlag--;
 				if(this.movlag == 0){
@@ -1727,7 +1735,7 @@ function main(){
 			if(this.canthurt){return;}
 			if(this.charac.coups.has(this.mov)){
 				var stats = this.charac.coups.get(this.mov);
-				if(this.y==0 && other.y>0 && stats.hitboxye<0 && this.mov != "slide"){return;}
+				if(this.y==0 && other.y>0 && stats.hitboxys<0 && this.mov != "slide" && this.mov != "ball"){return;}
 				if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){
 					var hitboxxe = stats.hitboxxe;
 					if(other.charac.coups.has(other.mov)){
@@ -1794,6 +1802,7 @@ function main(){
 				this.xspeed = -stats.blockx*this.orientation;
 				if(parrywasdone){lag_game(11);}
 				else{lag_game(Math.floor(stats.hitlag/0.8));}
+				if(other.mov=="ball"){other.movlag=1;other.tb=6;other.xspeed = -1;other.y=0.1;other.falling=1;other.hurted=20;gamefreeze=0;}
 				if(this.n==0 && !secondplayerishuman && stats.hiteffect!="projectile" && stats.hiteffect != "spear" && stats.hiteffect != "freeze"  && stats.hiteffect != "iceflask" && stats.hiteffect != "projectile_fall"){
 					other.ai.ugotblocked();
 				}
@@ -2219,6 +2228,12 @@ function main(){
 						var stats = this.charac.coups.get(this.mov);
 						var a = 7-Math.floor(this.movlag/stats.slag*(7));
 						this.costume = "iceflask" + a.toString();
+						break;
+
+					case "ball" :
+						var stats = this.charac.coups.get(this.mov);
+						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.costume = "roll"+(Math.floor((this.movlag-6)/this.charac.rollspeed)+1).toString()}
+						else{this.costume = "crouching2";}
 						break;
 
 				}
@@ -3053,7 +3068,7 @@ function main(){
 
 	characteristics.set("mileena",{png : milskins,coordinates : milcoordinates, sex : "f", standnframes : 10, rollspeed : 3, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : kitanaiconpng, namewav : document.querySelector('#kitanawav'),
 	width : 34, height : 97,vitesse : 3,jumpxspeed : 3.3,backmovnerf : 0.9, gravity : 0.42, jumpforce : 8.8,jumpsquat : 3, shorthop : 5.8, friction:0.22, hurtcontrol : 0.2, grabtype : "poser",
-	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.85, airdodgefdur : 13, landinglag : 9,coups : mileena_coups, pv : 100, getupfdur : 32, grabfdur : 35, grabdeg : 12, vicposframes : 12, vicposfdur : 50, cds : [120,120,240,270], icons : [knifeiconpng,fanswipeiconpng,fanlifticonpng,teleport_dropiconpng], voiceactor : "female"});
+	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.85, airdodgefdur : 13, landinglag : 9,coups : mileena_coups, pv : 100, getupfdur : 32, grabfdur : 35, grabdeg : 12, vicposframes : 12, vicposfdur : 50, cds : [120,120,240,270], icons : [knifeiconpng,balliconpng,fanlifticonpng,teleport_dropiconpng], voiceactor : "female"});
 	
 
 	characteristics.set("raiden",{png : raiskins,coordinates : raicoordinates, sex : "m", standnframes : 8, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 3, kicknframe : 5,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 8, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
