@@ -231,24 +231,22 @@ function getmilcoordinates(){
 	milcoordinates.set("grabbed2",{offx:59,width:56,offy:1282,height:95,decx:0,decy:0});
 	milcoordinates.set("grabbed3",{offx:124,width:72,offy:1282,height:95,decx:0,decy:0});
 	milcoordinates.set("grabbed4",{offx:205,width:41,offy:1282,height:95,decx:0,decy:0});
-	milcoordinates.set("victory1",{offx:15,width:22,offy:249,height:126,decx:3,decy:0});
-	milcoordinates.set("victory2",{offx:47,width:44,offy:249,height:126,decx:-9,decy:0});
-	milcoordinates.set("victory3",{offx:101,width:46,offy:249,height:126,decx:-9,decy:0});
-	milcoordinates.set("victory4",{offx:157,width:51,offy:249,height:126,decx:-12,decy:0});
-	milcoordinates.set("victory5",{offx:219,width:81,offy:249,height:126,decx:-28,decy:0});
-	milcoordinates.set("victory6",{offx:219,width:81,offy:249,height:126,decx:-28,decy:0});
-	milcoordinates.set("victory7",{offx:310,width:90,offy:249,height:126,decx:-34,decy:0});
-	milcoordinates.set("victory8",{offx:409,width:86,offy:249,height:126,decx:-30,decy:0});
-	milcoordinates.set("victory9",{offx:504,width:69,offy:249,height:126,decx:-14,decy:0});
-	milcoordinates.set("victory10",{offx:584,width:37,offy:249,height:126,decx:2,decy:0});
-	milcoordinates.set("victory11",{offx:631,width:33,offy:249,height:126,decx:2,decy:0});
-	milcoordinates.set("victory12",{offx:677,width:30,offy:249,height:126,decx:2,decy:0});
-    milcoordinates.set("decapitated1",{offx:530,width:20,offy:1732,height:90,decx:0,decy:0});
-    milcoordinates.set("decapitated2",{offx:558,width:26,offy:1732,height:90,decx:0,decy:0});
-    milcoordinates.set("decapitated3",{offx:589,width:31,offy:1732,height:90,decx:0,decy:0});
-    milcoordinates.set("decapitated4",{offx:626,width:47,offy:1732,height:90,decx:0,decy:0});
-    milcoordinates.set("decapitated5",{offx:678,width:56,offy:1732,height:90,decx:0,decy:0});
-    milcoordinates.set("decapitated6",{offx:741,width:75,offy:1732,height:90,decx:0,decy:0});
+	milcoordinates.set("victory1",{offx:14,width:25,offy:268,height:108,decx:0,decy:0});
+	milcoordinates.set("victory2",{offx:45,width:69,offy:268,height:108,decx:-21,decy:0});
+	milcoordinates.set("victory3",{offx:119,width:58,offy:268,height:108,decx:-16,decy:0});
+	milcoordinates.set("victory4",{offx:184,width:69,offy:268,height:108,decx:-22,decy:0});
+	milcoordinates.set("victory5",{offx:260,width:55,offy:268,height:108,decx:-15,decy:0});
+	milcoordinates.set("victory6",{offx:322,width:52,offy:268,height:108,decx:-13,decy:0});
+	milcoordinates.set("victory7",{offx:382,width:49,offy:268,height:108,decx:-12,decy:0});
+	milcoordinates.set("victory8",{offx:438,width:54,offy:268,height:108,decx:-15,decy:0});
+	milcoordinates.set("victory9",{offx:500,width:36,offy:268,height:108,decx:-6,decy:0});
+	milcoordinates.set("victory10",{offx:546,width:21,offy:253,height:123,decx:2,decy:0});
+    milcoordinates.set("decapitated1",{offx:530,width:20,offy:1758,height:90,decx:0,decy:0});
+    milcoordinates.set("decapitated2",{offx:558,width:26,offy:1758,height:90,decx:0,decy:0});
+    milcoordinates.set("decapitated3",{offx:589,width:31,offy:1758,height:90,decx:0,decy:0});
+    milcoordinates.set("decapitated4",{offx:626,width:47,offy:1758,height:90,decx:0,decy:0});
+    milcoordinates.set("decapitated5",{offx:678,width:56,offy:1758,height:90,decx:0,decy:0});
+    milcoordinates.set("decapitated6",{offx:741,width:75,offy:1758,height:90,decx:0,decy:0});
     milcoordinates.set("stunned1",{offx:670,width:38,offy:1276,height:101,decx:0,decy:0});
     milcoordinates.set("stunned2",{offx:714,width:36,offy:1276,height:101,decx:-2,decy:0});
     milcoordinates.set("stunned3",{offx:760,width:40,offy:1276,height:101,decx:-4,decy:0});
@@ -260,7 +258,7 @@ function getmilcoordinates(){
 	milcoordinates.set("knifethrow3",{offx:126,width:43,offy:1382,height:121,decx:0,decy:0});
 	milcoordinates.set("teleport_drop1",{offx:628,width:35,offy:1397,height:109,decx:0,decy:0});
 
-	milcoordinates.set("head",{offx:852,width:18,offy:1799,height:25,decx:0,decy:0});
+	milcoordinates.set("head",{offx:852,width:18,offy:1822,height:29,decx:0,decy:0});
 	milcoordinates.set("knife",{offx:265,width:49,offy:1483,height:23,decx:0,decy:0});
 	
 

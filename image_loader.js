@@ -80,6 +80,7 @@ var lifebarpng=new Image();lifebarpng.src = 'ressource/ui/barlife.png';
 	var characterscreenpng = new Image();characterscreenpng.src = 'ressource/stages/character_screen.png';
 	var raideniconpng=new Image();raideniconpng.src = 'ressource/icons/raiden.png';
 	var kitanaiconpng=new Image();kitanaiconpng.src = 'ressource/icons/kitana.png';
+	var mileenaiconpng=new Image();mileenaiconpng.src = 'ressource/icons/mileena.png';
 	var scorpioniconpng=new Image();scorpioniconpng.src = 'ressource/icons/scorpion.png';
 	var subzeroiconpng=new Image();subzeroiconpng.src = 'ressource/icons/subzero.png';
 	var liukangiconpng=new Image();liukangiconpng.src = 'ressource/icons/liukang.png';
