@@ -1157,7 +1157,7 @@ function main(){
 			this.charac = characteristics.get(perso);
 			this.x = x; this.y = y; this.perso = perso; this.n = n; this.skin = this.charac.png[skin]; this.coordinates = this.charac.coordinates;
 			this.allowedmoves = allowedmoves; this.xinit = x; this.other = other;
-			this.droite=0;this.gauche=0;this.haut=0;this.bas=0;this.poing=0;this.jambe=0;this.special=0;this.dodge=0;
+			this.droite=0;this.gauche=0;this.haut=0;this.bas=0;this.poing=0;this.jambe=0;this.special=0;this.dodge=0; this.jump=0;
 			this.forward = 0;this.back = 0;
 			if (this.n == 0){this.orientation = 1}else{this.orientation = -1}
 			this.costume = "stand1";
@@ -1336,9 +1336,9 @@ function main(){
 				this.end_of_combo();
 				this.xspeed = signe(this.xspeed)*Math.max(0,Math.abs(this.xspeed) -c.friction);
 				this.gettingup++;
-				if(this.gettingup == this.charac.getupfdur || (this.gettingup>=this.charac.getupfdur*5/6 && this.haut)){
+				if(this.gettingup == this.charac.getupfdur || (this.gettingup>=this.charac.getupfdur*5/6 && (this.haut || this.jump))){
 					this.gettingup = 0; this.invincibilite = 1;
-					if(this.haut==0 && this.bas){this.crouching = 6;}
+					if(this.haut==0 && this.jump==0 && this.bas){this.crouching = 6;}
 				}
 			}
 			else if(finishhim && this.pv<=0 && this.falling==0){}
@@ -1367,11 +1367,11 @@ function main(){
 					}
 					if (this.bas&&this.movlag == 0 &&!(youareintutorial && !this.allowedmoves.includes("crouch"))){this.crouching = Math.min(this.crouching+1,6);}
 					else if(this.bas==0&&this.crouching>0&&this.movlag==0){this.crouching--;}
-					if(this.haut==1&&movpriority.get(this.mov)<20&&end_of_round_countdown==0 &&!(youareintutorial && !this.allowedmoves.includes("jump"))){
+					if((this.haut==1 || this.jump==1)&&movpriority.get(this.mov)<20&&end_of_round_countdown==0 &&!(youareintutorial && !this.allowedmoves.includes("jump"))){
 						this.mov = "jumpsquat";this.movlag = c.jumpsquat;
 						play_sound_eff(this.charac.voiceactor+"lmov");
 						this.crouching = 0;
-						this.haut = 2;
+						if(this.haut==1){this.haut = 2;}else{this.jump=2;}
 						if(this.xspeed==0){
 							if(this.droite >= 1){this.xspeed = c.jumpxspeed;}
 							else if(this.gauche>=1){this.xspeed = - c.jumpxspeed*c.backmovnerf}
@@ -1765,7 +1765,7 @@ function main(){
 						this.y = 150; this.tb=-4; this.xspeed = 0;
 						if(this.jambe==1 && (this.back || this.forward)){this.mov= "jkick";this.movlag=29;}
 					}
-					else if(this.mov == "jumpsquat"){this.mov = "";if(this.haut>=1 && this.bas == 0){this.tb = c.jumpforce;this.y = c.jumpforce;}else{this.tb = c.shorthop;this.y = c.shorthop;}}
+					else if(this.mov == "jumpsquat"){this.mov = "";if((this.haut || this.jump) && this.bas == 0){this.tb = c.jumpforce;this.y = c.jumpforce;}else{this.tb = c.shorthop;this.y = c.shorthop;}}
 					else if(this.mov == "air_dodge"){this.movlag = 100;this.mov = "free_fall";this.xspeed /=4;}
 					else if(this.mov == "fanthrow" && this.y>0){this.movlag = 100;this.mov = "free_fall";}
 					else if(this.mov == "squarepunch"){this.movlag = 100;this.mov = "free_fall";}
@@ -3275,49 +3275,53 @@ function main(){
 	}
 
 	
-	var controls=["ArrowRight","ArrowLeft","KeyJ","ArrowDown","KeyB","KeyN","KeyM","KeyH","KeyF","KeyS","KeyE","KeyD","KeyQ","KeyA","KeyZ","KeyW"];
+	var controls=[["ArrowRight","ArrowLeft","ArrowUp","ArrowDown","KeyB","KeyN","KeyM","KeyH","KeyJ"],["KeyF","KeyS","KeyE","KeyD","KeyQ","KeyA","KeyZ","KeyW","KeyE"]];
 	var controlspause = "Enter";
 	var pausepressed = 0; var gamepaused = false;
 
 	function logKey(e) {
-		if(e.code==controls[0]){j1.droite=1}
-		if(e.code==controls[1]){j1.gauche=1}
-		if(e.code==controls[2]&&j1.haut==0){j1.haut=1}
-		if(e.code==controls[3]){j1.bas=1}
-		if(e.code==controls[4]&&j1.poing==0){j1.poing=1}
-		if(e.code==controls[5]&&j1.jambe==0){j1.jambe=1}
-		if(e.code==controls[6]&&j1.special==0){j1.special=1}
-		if(e.code==controls[7]&&j1.dodge==0){j1.dodge=1;}
+		if(e.code==controls[0][0]){j1.droite=1}
+		if(e.code==controls[0][1]){j1.gauche=1}
+		if(e.code==controls[0][2]&&j1.haut==0){j1.haut=1}
+		if(e.code==controls[0][3]){j1.bas=1}
+		if(e.code==controls[0][4]&&j1.poing==0){j1.poing=1}
+		if(e.code==controls[0][5]&&j1.jambe==0){j1.jambe=1}
+		if(e.code==controls[0][6]&&j1.special==0){j1.special=1}
+		if(e.code==controls[0][7]&&j1.dodge==0){j1.dodge=1;}
+		if(e.code==controls[0][8]&&j1.jump==0){j1.jump=1;}
 		if(secondplayerishuman){
-			if(e.code==controls[8]){j2.droite=1}
-			if(e.code==controls[9]){j2.gauche=1}
-			if(e.code==controls[10]&&j2.haut==0){j2.haut=1}
-			if(e.code==controls[11]){j2.bas=1}
-			if(e.code==controls[12]&&j2.poing==0){j2.poing=1}
-			if(e.code==controls[13]&&j2.jambe==0){j2.jambe=1}
-			if(e.code==controls[14]&&j2.special==0){j2.special=1}
-			if(e.code==controls[15]&&j2.dodge==0){j2.dodge=1}
+			if(e.code==controls[1][0]){j2.droite=1}
+			if(e.code==controls[1][1]){j2.gauche=1}
+			if(e.code==controls[1][2]&&j2.haut==0){j2.haut=1}
+			if(e.code==controls[1][3]){j2.bas=1}
+			if(e.code==controls[1][4]&&j2.poing==0){j2.poing=1}
+			if(e.code==controls[1][5]&&j2.jambe==0){j2.jambe=1}
+			if(e.code==controls[1][6]&&j2.special==0){j2.special=1}
+			if(e.code==controls[1][7]&&j2.dodge==0){j2.dodge=1}
+			if(e.code==controls[1][8]&&j2.jump==0){j2.jump=1;}
 		}
 		if(e.code==controlspause&&pausepressed==0){pausepressed=1;}
 		key=e.code;
 	}
 	function unlogKey(e){
-		if(e.code==controls[0]){j1.droite=0}
-		if(e.code==controls[1]){j1.gauche=0}
-		if(e.code==controls[2]){j1.haut=0}
-		if(e.code==controls[3]){j1.bas=0}
-		if(e.code==controls[4]){j1.poing=0}
-		if(e.code==controls[5]){j1.jambe=0}
-		if(e.code==controls[6]){j1.special=0}
-		if(e.code==controls[7]){j1.dodge=0;}
-		if(e.code==controls[8]){j2.droite=0}
-		if(e.code==controls[9]){j2.gauche=0}
-		if(e.code==controls[10]){j2.haut=0}
-		if(e.code==controls[11]){j2.bas=0}
-		if(e.code==controls[12]){j2.poing=0}
-		if(e.code==controls[13]){j2.jambe=0}
-		if(e.code==controls[14]){j2.special=0}
-		if(e.code==controls[15]){j2.dodge=0}
+		if(e.code==controls[0][0]){j1.droite=0}
+		if(e.code==controls[0][1]){j1.gauche=0}
+		if(e.code==controls[0][2]){j1.haut=0}
+		if(e.code==controls[0][3]){j1.bas=0}
+		if(e.code==controls[0][4]){j1.poing=0}
+		if(e.code==controls[0][5]){j1.jambe=0}
+		if(e.code==controls[0][6]){j1.special=0}
+		if(e.code==controls[0][7]){j1.dodge=0;}
+		if(e.code==controls[0][8]){j1.jump=0;}
+		if(e.code==controls[1][0]){j2.droite=0}
+		if(e.code==controls[1][1]){j2.gauche=0}
+		if(e.code==controls[1][2]){j2.haut=0}
+		if(e.code==controls[1][3]){j2.bas=0}
+		if(e.code==controls[1][4]){j2.poing=0}
+		if(e.code==controls[1][5]){j2.jambe=0}
+		if(e.code==controls[1][6]){j2.special=0}
+		if(e.code==controls[1][7]){j2.dodge=0}
+		if(e.code==controls[1][8]){j2.jump=0;}
 		if(e.code==controlspause){pausepressed=0;}
 	}
 	function clickEvent(e){
