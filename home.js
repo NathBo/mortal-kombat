@@ -979,8 +979,8 @@ function main(){
 			var me = this.me;
 			for(let value of objects_to_loop.values()){
 				if(value.dangerous && value.other===me){
-					if(Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))<=value.stats.hitboxxe+60+this.me.charac.width/2 && this.me.y==0 && this.me.mov!="jumpsquat"){return true;}
-					if((this.me.y==0 && (signe(this.me.x-value.x)==signe(value.vitesse)) && Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))>=value.stats.hitboxxe+90+this.me.charac.width/2-this.wanttojump*6 && value.y+value.stats.hitboxye<=70) || this.me.mov=="jumpsquat"){return true;}
+					if(Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))<=value.stats.hitboxxe+90+this.me.charac.width/2 && this.me.y==0 && this.me.mov!="jumpsquat"){return true;}
+					if((this.me.y==0 && (signe(this.me.x-value.x)==signe(value.vitesse)) && Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))>=value.stats.hitboxxe+120+this.me.charac.width/2-this.wanttojump*6 && value.y+value.stats.hitboxye<=70) || this.me.mov=="jumpsquat"){return true;}
 				}
 			}
 			return false;
@@ -1121,10 +1121,10 @@ function main(){
 			else if(me.perso=="subzero" && me.y==0 && other.y==0 && Math.abs(-stage_size/2*other.orientation-other.x)<=200 && entre(Math.abs(me.x-other.x),100,150) && movpriority.get(me.mov)<70 && !this.thereisaprojo() && me.cooldowns[2]==0)
 				{this.begincoup("iceflask");this.attacking+=2;}
 
-			else if(me.perso=="subzero" && me.y==0 && other.y==0 && Math.abs(Math.abs(me.x-other.x)-this.idealrange)>=60 && Math.abs(me.x-other.x)<=120 && movpriority.get(me.mov)<70 && !this.thereisaprojo())
+			else if(me.perso=="subzero" && me.y==0 && other.y==0 && other.crouching==0 && Math.abs(Math.abs(me.x-other.x)-this.idealrange)>=60 && Math.abs(me.x-other.x)<=120 && movpriority.get(me.mov)<70 && !this.thereisaprojo())
 				{this.begincoup("slide");}
 
-			else if(me.perso=="mileena" && me.y==0 && other.y==0 && Math.abs(Math.abs(me.x-other.x)-this.idealrange)>=40 && Math.abs(me.x-other.x)<=80 && movpriority.get(me.mov)<70 && !this.thereisaprojo())
+			else if(me.perso=="mileena" && me.y==0 && other.y<=20 && other.crouching==0 && Math.abs(Math.abs(me.x-other.x)-this.idealrange)>=40 && Math.abs(me.x-other.x)<=80 && movpriority.get(me.mov)<70 && !this.thereisaprojo())
 				{this.begincoup("ball");}
 
 			else if(me.perso=="scorpion" && Math.abs(me.x-other.x)>=60 && Math.abs(-stage_size/2*me.orientation-me.x)<=180 && me.y==0 && me.crouching==0 && movpriority.get(me.mov)<70 && Math.abs(me.x-me.orientation*180-camerax)>=decalagex && me.cooldowns[2]<=10)
@@ -1872,7 +1872,7 @@ function main(){
 				this.xspeed = -stats.blockx*this.orientation;
 				if(parrywasdone){lag_game(11);}
 				else{lag_game(Math.floor(stats.hitlag/0.8));}
-				if(other.mov=="ball"){other.movlag=1;other.tb=6;other.xspeed = -1;other.y=0.1;other.falling=1;other.hurted=20;gamefreeze=0;}
+				if(other.mov=="ball"){other.movlag=1;other.tb=6.5;other.xspeed = -1;other.y=0.1;other.falling=1;other.hurted=30;gamefreeze=0;}
 				if(this.n==0 && !secondplayerishuman && stats.hiteffect!="projectile" && stats.hiteffect != "spear" && stats.hiteffect != "freeze"  && stats.hiteffect != "iceflask" && stats.hiteffect != "projectile_fall"){
 					other.ai.ugotblocked();
 				}
