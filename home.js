@@ -2790,13 +2790,13 @@ function main(){
 		chartimer = (chartimer+1)%(chartimercycle*2);
 		ctx.fillStyle = "black";
 		ctx.fillRect(0,0,1024,576);
-		var leftside = 112;
+		var leftside = 134; var topside = 40;
 		//ctx.scale(2.32,2.32);
 		//ctx.drawImage(characterscreenpng,92,0);
 		//ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.scale(3,3);
 		for(var i=0;i<liste_persos.length;i++){
-			ctx.drawImage(characteristics.get(liste_persos[i]).icon,leftside+24*i,57);
+			ctx.drawImage(characteristics.get(liste_persos[i]).icon,leftside+24*(i%3),topside+40*Math.floor(i/3));
 		}
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.scale(2,2);
@@ -2822,11 +2822,11 @@ function main(){
 		ctx.scale(1,1);
 		if(chartimer<chartimercycle || persolocked[0]){
 			ctx.strokeStyle = "red";
-			ctx.strokeRect(leftside*3+72*persosovered[0],171,63,96);
+			ctx.strokeRect(leftside*3+72*(persosovered[0]%3),topside*3+120*Math.floor(persosovered[0]/3),63,96);
 		}
 		if(secondplayerchosescharac && ((chartimer>=chartimercycle && persosovered[0]==persosovered[1]) || (chartimer<chartimercycle && persosovered[0]!=persosovered[1]) || persolocked[1])){
 			ctx.strokeStyle = "green";
-			ctx.strokeRect(leftside*3+72*persosovered[1],171,63,96);
+			ctx.strokeRect(leftside*3+72*(persosovered[1]%3),topside*3+120*Math.floor(persosovered[1]/3),63,96);
 		}
 
 		
@@ -2836,43 +2836,109 @@ function main(){
 		if(j1.droite==1){
 			j1.droite=2;
 			if(!persolocked[0]){
-				persosovered[0]=Math.min(liste_persos.length-1,persosovered[0]+1);
-				reset_for_charac_screen(0);
-				play_sound_eff("cursor_move");
+				if(persosovered[0]%3<2){
+					persosovered[0]=Math.min(liste_persos.length-1,persosovered[0]+1);
+					reset_for_charac_screen(0);
+					play_sound_eff("cursor_move");
+				}
 			}
 			else if(!secondplayerishuman && !persolocked[1] && secondplayerchosescharac){
-				persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]+1);
-				reset_for_charac_screen(1);
-				play_sound_eff("cursor_move");
+				if(persosovered[1]%3<2){
+					persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]+1);
+					reset_for_charac_screen(1);
+					play_sound_eff("cursor_move");
+				}
 			}
 		}
 		if(j1.gauche==1){
 			j1.gauche=2;
 			if(!persolocked[0]){
-				persosovered[0]=Math.max(0,persosovered[0]-1);
-				reset_for_charac_screen(0);
-				play_sound_eff("cursor_move");
+				if(persosovered[0]%3>0){
+					persosovered[0]=Math.max(0,persosovered[0]-1);
+					reset_for_charac_screen(0);
+					play_sound_eff("cursor_move");
+				}
 			}
 			else if(!secondplayerishuman && !persolocked[1] && secondplayerchosescharac){
-				persosovered[1]=Math.max(0,persosovered[1]-1);
-				reset_for_charac_screen(1);
-				play_sound_eff("cursor_move");
+				if(persosovered[1]%3>0){
+					persosovered[1]=Math.max(0,persosovered[1]-1);
+					reset_for_charac_screen(1);
+					play_sound_eff("cursor_move");
+				}
+			}
+		}
+		if(j1.haut==1){
+			j1.haut=2;
+			if(!persolocked[0]){
+				if(persosovered[0]>2){
+					persosovered[0]=Math.min(liste_persos.length-1,persosovered[0]-3);
+					reset_for_charac_screen(0);
+					play_sound_eff("cursor_move");
+				}
+			}
+			else if(!secondplayerishuman && !persolocked[1] && secondplayerchosescharac){
+				if(persosovered[1]>2){
+					persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]-3);
+					reset_for_charac_screen(1);
+					play_sound_eff("cursor_move");
+				}
+			}
+		}
+		if(j1.bas==1){
+			j1.bas=2;
+			if(!persolocked[0]){
+				if(persosovered[0]<=2){
+					persosovered[0]=Math.min(liste_persos.length-1,persosovered[0]+3);
+					reset_for_charac_screen(0);
+					play_sound_eff("cursor_move");
+				}
+			}
+			else if(!secondplayerishuman && !persolocked[1] && secondplayerchosescharac){
+				if(persosovered[1]<=2){
+					persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]+3);
+					reset_for_charac_screen(1);
+					play_sound_eff("cursor_move");
+				}
 			}
 		}
 		if(j2.droite==1){
 			j2.droite=2;
 			if(!persolocked[1]){
-				persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]+1);
-				reset_for_charac_screen(1);
-				play_sound_eff("cursor_move");
+				if(persosovered[1]%3<2){
+					persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]+1);
+					reset_for_charac_screen(1);
+					play_sound_eff("cursor_move");
+				}
 			}
 		}
 		if(j2.gauche==1){
 			j2.gauche=2;
 			if(!persolocked[1]){
-				persosovered[1]=Math.max(0,persosovered[1]-1);
-				reset_for_charac_screen(1);
-				play_sound_eff("cursor_move");
+				if(persosovered[1]%3>0){
+					persosovered[1]=Math.max(0,persosovered[1]-1);
+					reset_for_charac_screen(1);
+					play_sound_eff("cursor_move");
+				}
+			}
+		}
+		if(j2.haut==1){
+			j2.haut=2;
+			if(!persolocked[1]){
+				if(persosovered[1]>2){
+					persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]-3);
+					reset_for_charac_screen(1);
+					play_sound_eff("cursor_move");
+				}
+			}
+		}
+		if(j2.bas==1){
+			j2.bas=2;
+			if(!persolocked[1]){
+				if(persosovered[1]<=2){
+					persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]+3);
+					reset_for_charac_screen(1);
+					play_sound_eff("cursor_move");
+				}
 			}
 		}
 		if((j2.poing==1 || j2.jambe==1) && secondplayerishuman && !persolocked[1]){
