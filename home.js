@@ -3050,35 +3050,37 @@ function main(){
 		ctx.fillText("Player1:",0,25);
 		ctx.fillText("Right",120,25);
 		ctx.fillText("Left",220,25);
-		ctx.fillText("Jump",320,25);
+		ctx.fillText("Up",320,25);
 		ctx.fillText("Down",420,25);
 		ctx.fillText("Punch",520,25);
 		ctx.fillText("Kick",620,25);
 		ctx.fillText("Special",720,25);
 		ctx.fillText("Grab",820,25);
+		ctx.fillText("Jump",920,25);
 		ctx.fillText("Player2:",0,125);
 		ctx.fillText("Right",120,125);
 		ctx.fillText("Left",220,125);
-		ctx.fillText("Jump",320,125);
+		ctx.fillText("Up",320,125);
 		ctx.fillText("Down",420,125);
 		ctx.fillText("Punch",520,125);
 		ctx.fillText("Kick",620,125);
 		ctx.fillText("Special",720,125);
 		ctx.fillText("Grab",820,125);
+		ctx.fillText("Jump",920,125);
 		if(controlafaire!=-1){
 			if(key!=""){
 				ctx.fillText(key,120+(controlafaire%8)*100,55+100*(controlafaire>=8));
-				controls[controlafaire]=key;key="";
+				controls[Math.floor(controlafaire/9)][controlafaire%9]=key;key="";
 			}
 			else{
-				ctx.fillText(controls[controlafaire],120+(controlafaire%8)*100,55+100*(controlafaire>=8));
+				ctx.fillText(controls[Math.floor(controlafaire/9)][controlafaire%9],120+(controlafaire%9)*100,55+100*(controlafaire>=9));
 			}
 		}
 		if(click==1){
 			click=2;
 			if(entre(clickx,400/1024,610/1024) && entre(clicky,450/500,480/500)){functiontoexecute = titlescreen; skinschoisis = [0,0];}
-			else if(entre(clickx,120/1024,920/1024)&&entre(clicky,10/500,40/500)){controlafaire=Math.floor((clickx-120/1024)/(100/1024));}
-			else if(entre(clickx,120/1024,920/1024)&&entre(clicky,110/500,140/500)){controlafaire=8+Math.floor((clickx-120/1024)/(100/1024));}
+			else if(entre(clickx,120/1024,1020/1024)&&entre(clicky,10/500,40/500)){controlafaire=Math.floor((clickx-120/1024)/(100/1024));}
+			else if(entre(clickx,120/1024,1020/1024)&&entre(clicky,110/500,140/500)){controlafaire=9+Math.floor((clickx-120/1024)/(100/1024));}
 		}
 	}
 
