@@ -3045,6 +3045,7 @@ function main(){
 		ctx.fillText("Scorpion",400,130);
 		ctx.fillText("Subzero",400,180);
 		ctx.fillText("Liu Kang",400,230);
+		ctx.fillText("Mileena",400,280);
 		ctx.font = "30px serif";
 		ctx.fillText("Go to title screen",400,470);
 		if(click==1){

@@ -445,8 +445,52 @@ var tutoliukang = [
     },
 ]
 
+var tutomileena = [
+    {
+        char : ["mileena","mileena"], ai : -1, pv : [20,20], moves : [["knifethrow", "jump"],["block"]], aimoves : [],
+        jumper : 0,  regenerate : false,
+        msg : "Mileena is an active zoner. Her main move is the knife throw, her neutral special. It can also be done in the air. However, there is an ammo system."
+    },
+    {
+        char : ["mileena","mileena"], ai : -1, pv : [20,10], moves : [["knifethrow", "jump"],["block"]], aimoves : [],
+        jumper : 0,  regenerate : true,
+        msg : "You can charge this move by holding the special button, which makes it go faster, do more damage, and can even lead to a combo."
+    },
+    {
+        char : ["mileena","mileena"], ai : -1, pv : [18,20], moves : [["homing_knife", "jump"],["block"]], aimoves : [],
+        jumper : 0,  regenerate : false,
+        msg : "Her back special is a slow homing knife. It uses the same ammo as her neutral special. Having 2 special moves on the same ammo makes Mileena pretty weak without any ammo."
+    },
+    {
+        char : ["mileena","mileena"], ai : -1, pv : [20,25], moves : [["ball", "crouch", "huppercut", "jump"],["block"]], aimoves : [],
+        jumper : 0,  regenerate : true,
+        msg : "Mileena's forward special is the ball. You can combo it very easily into an huppercut."
+    },
+    {
+        char : ["mileena","mileena"], ai : -1, pv : [20,15], moves : [["teleport_drop", "jkick", "jskick","jpunch"],["block"]], aimoves : [],
+        jumper : 0,  regenerate : false,
+        msg : "Mileena's down special is a teleport both horizontally and vertically. Use it and kick your opponent as you fall"
+    },
+    {
+        char : ["mileena","mileena"], ai : -1, pv : [20,31], moves : [["ball", "crouch", "huppercut", "jump", "knifethrow"],["block"]], aimoves : [],
+        jumper : 0,  regenerate : true,
+        msg : "You can extend the ball into huppercut combo into a knife throw"
+    },
+    {
+        char : ["mileena","mileena"], ai : -1, pv : [20,49], moves : [["ball", "crouch", "huppercut", "jump", "knifethrow", "teleport_drop", "hkick"],["block"]], aimoves : [],
+        jumper : 0,  regenerate : true,
+        msg : "For a pretty cool combo, you can even extend this into a teleport into an other knife throw into a roundhouse"
+    },
+    {
+        char : ["mileena","mileena"], ai : 1, pv : [100,100], moves : [["ball", "knifethrow", "homing_knife", "teleport_drop", "crouch", "block", "jump", "lpunch", "lkick", "hpunch", "hkick", "mkick", "jpunch", "jkick", "jskick", "clpunch", "clkick", "cmkick", "huppercut"],
+        ["ball", "knifethrow", "homing_knife", "teleport_drop", "crouch", "block", "jump", "lpunch", "lkick", "hpunch", "hkick", "mkick", "jpunch", "jkick", "jskick", "clpunch", "clkick", "cmkick", "huppercut"]], aimoves : [],
+        jumper : 2, regenerate : false,
+        msg : "You now know the basics of Mileena, here is your final challenge! Consider beating the arcade mode in normal with Mileena after this!"
+    },
+]
+
 
 
 
 var tutolineslist = [tutobasics, tutocrouch, tutojump, tutospecial, tutocombo];
-var tutopersoslist = [tutoraiden, tutokitana, tutoscorpion, tutosubzero, tutoliukang]
+var tutopersoslist = [tutoraiden, tutokitana, tutoscorpion, tutosubzero, tutoliukang, tutomileena]
