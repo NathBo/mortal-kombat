@@ -538,6 +538,7 @@ function getscocoordinates(){
 	scocoordinates.set("flame_explosion8",{offx:840,width:59,offy:1364,height:96,decx:0,decy:0});
 
 	scocoordinates.set("head",{offx:296,width:14,offy:1791,height:17,decx:0,decy:0});
+	scocoordinates.set("plane",{offx:873,width:221,offy:494,height:66,decx:-80,decy:0});
 	
 
     return scocoordinates;

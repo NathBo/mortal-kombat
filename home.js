@@ -1174,7 +1174,7 @@ function main(){
 			this.comboscaling = 1;
 			this.vicpose = 0;
 			this.cooldowns = [0,0,0,0];
-			this.fatality = 0; this.decapitated = 0; this.electrocuted = 0; this.hide = 0; this.burning = 0;
+			this.fatality = 0; this.decapitated = 0; this.electrocuted = 0; this.hide = 0; this.burning = 0; this.fatalitytype = 0;
 			if(!secondplayerishuman && this.n==1 && reset_ai){this.ai = new AI(this,other,difficulte);}
 		}
 
@@ -1686,10 +1686,23 @@ function main(){
 						if(this.movlag==stats.elag+stats.fdur){this.tb=6;this.y+=1;fixcamera=30;}
 						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.xspeed=9*this.orientation;}
 						if(Math.abs(this.x+this.xspeed-camerax)>decalagex-this.charac.width/2){
-							this.x += (2*decalagex+60)*signe(camerax-this.x);
-							this.mov = "";this.movlag=0;
-							if(this.jambe==1){this.mov= "jkick";this.movlag=29;}
-							this.xspeed = 6*this.orientation;
+							if(finishhim && other.falling==0 && other.gettingup==0){
+								this.fatality=90;
+								play_sound_eff("fatal1");
+								finishhim = 0;
+								other.invincibilite=1000;
+								fatalitywasdone = true;
+								this.fatalitytype = 1;
+								this.mov = ""; this.movlag=0; 
+								fixcamera = 90;
+								if(this.x<other.x){this.orientation = 1;}else{this.orientation = -1;}
+							}
+							else{
+								this.x += (2*decalagex+60)*signe(camerax-this.x);
+								this.mov = "";this.movlag=0;
+								if(this.jambe==1){this.mov= "jkick";this.movlag=29;}
+								this.xspeed = 6*this.orientation;
+							}
 						}
 						break;
 					case "spear_throw" :
@@ -1977,7 +1990,7 @@ function main(){
 				return;
 			}
 			if(this.freeze){}
-			else if(this.fatality){
+			else if(this.fatality && this.fatalitytype==0){
 				if(this.perso=="kitana"){
 					if(this.fatality>=70){this.costume = "fanswipe1"}
 					else if(this.fatality>=65){this.costume = "fanswipe2"}
@@ -2073,6 +2086,14 @@ function main(){
 					}
 					if(this.fatality==99){play_sound_eff("liummov");}
 					if(this.fatality==58){play_sound_eff("liuhmov");}
+				}
+			}
+			else if(this.fatality && this.fatalitytype==1){
+				if(this.perso=="scorpion"){
+					this.costume = "plane";
+					this.y=20;
+					this.x+=12*this.orientation;
+					if(Math.abs(this.x+this.orientation*80-other.x)<6){other.explode();}
 				}
 			}
 			else if(this.decapitated){
