@@ -2640,6 +2640,10 @@ function main(){
 		fatalitywasdone = false; fatalitysreen = 0;
 	}
 
+	function begin_minigame(){
+		
+	}
+
 	function gobacktotitlescreen(){
 		persolocked = [0,0]; skinschoisis = [0,0];arcadelevel=-1;functiontoexecute = titlescreen;
 		roundwonsj1 = 0; roundwonsj2 = 0; camerax = 0; choserandomstage();
