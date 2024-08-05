@@ -1239,7 +1239,7 @@ function main(){
 
 		end_of_combo(){
 			this.comboscaling=1;
-				if(this.n==1 && (secondplayerisdummy || (youareintutorial && currentuto.regenerate && this.pv>0))){
+				if((secondplayerisdummy || (this.n==1 && youareintutorial && currentuto.regenerate && this.pv>0))){
 					this.pv = this.pvmax; this.pvaff = this.pvmax;
 					if(difficulte==-1){this.x=this.xinit;}
 				}
@@ -3341,9 +3341,9 @@ function main(){
 	var difficulte = 1;
 	var roundwonsj1 = 0; var roundwonsj2 = 0;
 	var finishhim = 0; var fatalitywasdone = false; var fatalitysreen = 0;
-	var persoschoisis = ["kitana","raiden"]; var skinschoisis = [0,0]; var persolocked = [0,0]; var persosovered = [5,0];
+	var persoschoisis = ["kitana","raiden"]; var skinschoisis = [0,0]; var persolocked = [0,0]; var persosovered = [0,2];
 	var musiqueon = true; var soundeffon = true; var introon = true; var timer = 0; var timer_init = 99*60;
-	var liste_persos = ["raiden","kitana","scorpion","subzero", "liukang", "mileena"];
+	var liste_persos = ["raiden","mileena","scorpion","liukang", "kitana", "subzero"];
 	var chartimer = 0; var chartimercycle = 3; var difficultynames = ["Easy","Normal","Hard","Insane","Terminator"];
 	var is_in_charc_screen = true; var lockincountdown = 0; var lockincountdownfdur = 40; var controlafaire = -1; var key = "";
 	var Width= window.innerWidth; var Height=window.innerHeight;

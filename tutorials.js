@@ -108,7 +108,7 @@ var tutojump = [
     {
         char : ["scorpion","scorpion"], ai : -1, pv : [20,20], moves : [["jkick", "jskick", "jump"],["clpunch"]], aimoves : [],
         jumper : 0, regenerate : false,
-        msg : "You can jump by pressing the jump button (by default J), once in the air, press kick to do your jump kick (or jkick). Pressing the jump button very briefly or pressing jump and down will perform a short hop"
+        msg : "You can jump by pressing the jump button (by default J or up), once in the air, press kick to do your jump kick (or jkick). Pressing the jump button very briefly or pressing jump and down will perform a short hop"
     },
     {
         char : ["scorpion","scorpion"], ai : 0, pv : [20,20], moves : [["jpunch", "jump"],["lkick", "lpunch"]], aimoves : [],
@@ -493,4 +493,4 @@ var tutomileena = [
 
 
 var tutolineslist = [tutobasics, tutocrouch, tutojump, tutospecial, tutocombo];
-var tutopersoslist = [tutoraiden, tutokitana, tutoscorpion, tutosubzero, tutoliukang, tutomileena]
+var tutopersoslist = [tutoraiden, tutomileena, tutoscorpion, tutoliukang, tutokitana, tutosubzero]
