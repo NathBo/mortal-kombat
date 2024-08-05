@@ -2788,8 +2788,8 @@ function main(){
 	}
 
 	function reset_for_charac_screen(n){
-		if(n==0){j1.reinit(-210,60,liste_persos[persosovered[0]],0,skinschoisis[0],j2,true);}
-		else{j2.reinit(210,60,liste_persos[persosovered[1]],1,skinschoisis[1],j1,true);}
+		if(n==0){j1.reinit(-120,0,liste_persos[persosovered[0]],0,skinschoisis[0],j2,true);}
+		else{j2.reinit(120,0,liste_persos[persosovered[1]],1,skinschoisis[1],j1,true);}
 	}
 
 
@@ -2810,9 +2810,13 @@ function main(){
 
 	function menupersos(){
 		resizecanvas();
+		let m = stage_size/2-256;
+		ctx.scale(2,2);
+		if(stagesbackground[chosenstage] != null){ctx.drawImage(stagesbackground[chosenstage],-90*backgroundscroll[chosenstage]-camerax*backgroundscroll[chosenstage],0);}
+		if(stagesstruct[chosenstage] != null){ctx.drawImage(stagesstruct[chosenstage],-camerax+238-stage_size/2+shakex,shakey);}
+		if(stagesground[chosenstage] != null){ctx.drawImage(stagesground[chosenstage],-camerax+256-stage_size/2+shakex,178+shakey);}
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		chartimer = (chartimer+1)%(chartimercycle*2);
-		ctx.fillStyle = "black";
-		ctx.fillRect(0,0,1024,576);
 		var leftside = 134; var topside = 40;
 		//ctx.scale(2.32,2.32);
 		//ctx.drawImage(characterscreenpng,92,0);
