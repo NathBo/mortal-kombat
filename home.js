@@ -1249,6 +1249,7 @@ function main(){
 			if(this.perso=="shao_kahn"){this.crouching=0;}
 			if(this.movlag===undefined){this.movlag=0;}
 			if(this.crouching===undefined){this.crouching=0;}
+			if(this.perso=="raiden" && finishhim && this.bas==1){this.bas=2;this.memoryslot++;}
 			if(this.perfectblock>1){this.perfectblock--;}
 			else if(this.perfectblock==1){if(this.back==0){this.perfectblock=0;}}
 			else if(this.back){this.perfectblock = framesforperfectblock + perfectblockcd}
@@ -1433,7 +1434,7 @@ function main(){
 						this.mov = ""; this.movlag=0;
 						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
 					}
-					else if(this.perso == "raiden" && this.forward+this.back==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=60 && other.gettingup==0 && other.y<=30){
+					else if(this.perso == "raiden" && this.forward+this.back==0 && this.bas==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=60 && other.gettingup==0 && other.y<=30){
 						this.fatality = 110;
 						other.falling=0;
 						other.y=0;
@@ -1445,6 +1446,19 @@ function main(){
 						fatalitywasdone = true;
 						this.mov = ""; this.movlag=0;
 						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
+					}
+					else if(this.perso == "raiden" && this.forward+this.back==0 && this.bas && this.special==1 && finishhim && Math.abs(this.x-other.x)<=60 && other.gettingup==0 && other.y<=30 && this.memoryslot>=4){
+						this.fatality = 60;
+						this.fatalitytype=1;
+						other.falling=0;
+						other.y=0;
+						play_sound_eff("fatal1");
+						this.special=2;
+						finishhim = 0;
+						other.invincibilite=1000;
+						fatalitywasdone = true;
+						this.mov = ""; this.movlag=0;
+						if(this.x<other.x){this.orientation = -1;}else{this.orientation = 1;}
 					}
 					else if(this.perso == "scorpion" && this.forward && this.special==1 && finishhim && entre(Math.abs(this.x-other.x),75,125) && other.gettingup==0 && other.y<=30){
 						this.fatality = 180;
@@ -2094,6 +2108,11 @@ function main(){
 					this.y=20;
 					this.x+=12*this.orientation;
 					if(Math.abs(this.x+this.orientation*80-other.x)<6){other.explode();}
+				}
+				if(this.perso=="raiden"){
+					this.costume = "crouching1";
+					if(this.fatality==40){play_sound_eff("fart");}
+					if(this.fatality==20){other.burn();}
 				}
 			}
 			else if(this.decapitated){
@@ -3291,6 +3310,7 @@ function main(){
 	sounds_eff.set("coup",[document.querySelector('#coup1wav'),document.querySelector('#coup2wav'),document.querySelector('#coup3wav'),document.querySelector('#coup4wav'),document.querySelector('#coup5wav')]);
 	sounds_eff.set("grapple",[document.querySelector('#grapplewav')]);
 	sounds_eff.set("teleport",[document.querySelector('#teleportwav')]);
+	sounds_eff.set("fart",[document.querySelector('#fartwav')]);
 
 	
 
