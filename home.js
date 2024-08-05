@@ -3384,7 +3384,7 @@ function main(){
 		click=0;
 	}
 	document.addEventListener('mousemove', e => {
-		clickx=(e.pageX-decalage)/Width;clicky=e.pageY/Height;
+		clickx=(e.pageX-decalage)/Width;clicky=(e.pageY-wdecalagey)/Height;
 	  });
 
 	
