@@ -2642,7 +2642,7 @@ function main(){
 
 	function gobacktotitlescreen(){
 		persolocked = [0,0]; skinschoisis = [0,0];arcadelevel=-1;functiontoexecute = titlescreen;
-		roundwonsj1 = 0; roundwonsj2 = 0; camerax = 0;
+		roundwonsj1 = 0; roundwonsj2 = 0; camerax = 0; choserandomstage();
 		if(difficulte<0){difficulte=0;}
 		is_in_charc_screen = true; secondplayerchosescharac=true; secondplayerisdummy=false; youareintutorial = false;
 		reset_game(true);
@@ -3109,35 +3109,63 @@ function main(){
 
 	function titlescreen(){
 		resizecanvas();
-		ctx.fillStyle = "black";
-		ctx.fillRect(0,0,1024,576);
+		var a = -1;
+		let m = stage_size/2-256;
+		if(entre(clicky,340/500,380/500)){
+			if(entre(clickx,80/1024,260/1024)){a=0;}
+			else if(entre(clickx,380/1024,590/1024)){a=1;}
+			else if(entre(clickx,740/1024,920/1024)){a=2;}
+		}
+		else if(entre(clicky,400/500,440/500)){
+			if(entre(clickx,80/1024,260/1024)){a=3;}
+			else if(entre(clickx,380/1024,590/1024)){a=4;}
+			else if(entre(clickx,740/1024,920/1024)){a=5;}
+		}
+		camerax+=menudirectionx*0.2;
+		if(camerax<-m+10){menudirectionx+=1;}
+		else if(camerax>m-10){menudirectionx=-1;}
 		ctx.scale(2,2);
+		if(stagesbackground[chosenstage] != null){ctx.drawImage(stagesbackground[chosenstage],-90*backgroundscroll[chosenstage]-camerax*backgroundscroll[chosenstage],0);}
+		if(stagesstruct[chosenstage] != null){ctx.drawImage(stagesstruct[chosenstage],-camerax+238-stage_size/2+shakex,shakey);}
+		if(stagesground[chosenstage] != null){ctx.drawImage(stagesground[chosenstage],-camerax+256-stage_size/2+shakex,178+shakey);}
 		ctx.drawImage(logopng,150,20);
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
-		ctx.fillStyle = "yellow";
+		ctx.scale(1,1);
+		ctx.drawImage(cadrepng,360,250);
+		ctx.drawImage(cadrepng,35,250);
+		ctx.drawImage(cadrepng,695,250);
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		var color = "red";
+		ctx.fillStyle = "white";
+		if(a==0){ctx.fillStyle = color}
 		ctx.font = "40px serif";
 		ctx.fillText("Fight CPU",80,370);
-		ctx.fillStyle = "red";
+		ctx.fillStyle = "white";
+		if(a==1){ctx.fillStyle = color}
 		ctx.fillText("Versus mode",380,370);
 		ctx.fillStyle = "white";
+		if(a==2){ctx.fillStyle = color}
 		ctx.fillText("Parameters",740,370);
-		ctx.fillStyle = "blue";
+		ctx.fillStyle = "white";
+		if(a==4){ctx.fillStyle = color}
 		ctx.fillText("Arcade mode",380,430);
-		ctx.fillStyle = "gray";
+		ctx.fillStyle = "white";
+		if(a==3){ctx.fillStyle = color}
 		ctx.fillText("Training",80,430);
-		ctx.fillStyle = "green";
+		ctx.fillStyle = "white";
+		if(a==5){ctx.fillStyle = color}
 		ctx.fillText("Tutorials",740,430);
 		if(click==1){
 			click=2;
 			if(entre(clicky,340/500,380/500)){
-				if(entre(clickx,80/1024,260/1024)){functiontoexecute = menupersos;secondplayerishuman=false;}
-				else if(entre(clickx,380/1024,590/1024)){functiontoexecute = menupersos;secondplayerishuman=true;}
+				if(entre(clickx,80/1024,260/1024)){functiontoexecute = menupersos;secondplayerishuman=false;camerax=0;}
+				else if(entre(clickx,380/1024,590/1024)){functiontoexecute = menupersos;secondplayerishuman=true;camerax=0;}
 				else if(entre(clickx,740/1024,920/1024)){functiontoexecute = parameters_screen;}
 			}
 			else if(entre(clicky,400/500,440/500)){
-				if(entre(clickx,80/1024,260/1024)){functiontoexecute = menupersos;secondplayerishuman=true;secondplayerisdummy=true;}
-				else if(entre(clickx,380/1024,590/1024)){functiontoexecute = menupersos;secondplayerishuman=false;arcadelevel=0;arcadeorder.shuffle();secondplayerchosescharac=false;}
-				else if(entre(clickx,740/1024,920/1024)){youareintutorial=true; secondplayerishuman = false; tutorialscenenumber = 0; functiontoexecute = menututo;}
+				if(entre(clickx,80/1024,260/1024)){functiontoexecute = menupersos;secondplayerishuman=true;secondplayerisdummy=true;camerax=0;}
+				else if(entre(clickx,380/1024,590/1024)){functiontoexecute = menupersos;secondplayerishuman=false;arcadelevel=0;arcadeorder.shuffle();secondplayerchosescharac=false;camerax=0;}
+				else if(entre(clickx,740/1024,920/1024)){youareintutorial=true; secondplayerishuman = false; tutorialscenenumber = 0; functiontoexecute = menututo;camerax=0;}
 			}
 		}
 	}
@@ -3266,7 +3294,7 @@ function main(){
 	var decalagex = 256;
 	var ground = 240;
 	var stage_size = 720;
-	var camerax = 0;
+	var camerax = 0; var menudirectionx = -1;
 	var gamefreeze = 0; var still_draw = false; var fixcamera = 0;
 	var shakex = 0; var shakey = 0; var shakeforce = 0; var shakeframe = 0;
 	var end_of_round_countdown = 0; var fightstartcountdown = 80;
@@ -3355,6 +3383,11 @@ function main(){
 	function unclickEvent(_){
 		click=0;
 	}
+	document.addEventListener('mousemove', e => {
+		clickx=(e.pageX-decalage)/Width;clicky=e.pageY/Height;
+	  });
+
+	
 	document.addEventListener('keydown', logKey);
 	document.addEventListener('keyup', unlogKey);
 	document.addEventListener("mousedown", clickEvent);
