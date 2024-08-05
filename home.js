@@ -1482,6 +1482,20 @@ function main(){
 						this.mov = ""; this.movlag=0;
 						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
 					}
+					else if(this.perso == "mileena" && this.bas && this.special==1 && finishhim &&  other.gettingup==0 && other.y<=30){
+						this.fatality = 60;
+						other.falling=0;
+						other.y=0;
+						this.canthurt=false;
+						play_sound_eff("fatal1");
+						this.special=2;
+						other.x = this.x + 160*this.orientation;
+						finishhim = 0;
+						other.invincibilite=1000;
+						fatalitywasdone = true;
+						this.mov = ""; this.movlag=0;
+						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
+					}
 					else if(this.perso == "kitana" && this.forward>=1 && this.special==1 && this.bas==0 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.crouching==0){
 						this.begincoup("fanswipe",other);
 					}
@@ -1979,6 +1993,14 @@ function main(){
 						if(this.fatality%20==0){play_sound_eff("electrocute");shake_screen(20,4);}
 					}
 					if(this.fatality==40){other.explode();}
+				}
+				else if(this.perso=="mileena"){
+					this.costume = "teleport_drop1";
+					if(entre(this.fatality,25,40)){this.y-=10;}
+					else if(this.fatality==24){this.x = other.x;}
+					else if(this.fatality<=18){this.y+=10;}
+					if(this.fatality==7){other.explode();}
+					if(this.fatality==40){play_sound_eff("teleport");}
 				}
 				else if(this.perso=="scorpion"){
 					var n = 1;
