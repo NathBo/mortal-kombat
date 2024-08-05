@@ -3033,32 +3033,58 @@ function main(){
 
 
 	function menututo(){
-		ctx.fillStyle = "black";
-		ctx.fillRect(0,0,1024,576);
+		resizecanvas();
+		let m = stage_size/2-256;
+		camerax+=menudirectionx*0.2;
+		if(camerax<-m+10){menudirectionx+=1;}
+		else if(camerax>m-10){menudirectionx=-1;}
+		ctx.scale(2,2);
+		if(stagesbackground[chosenstage] != null){ctx.drawImage(stagesbackground[chosenstage],-90*backgroundscroll[chosenstage]-camerax*backgroundscroll[chosenstage],0);}
+		if(stagesstruct[chosenstage] != null){ctx.drawImage(stagesstruct[chosenstage],-camerax+238-stage_size/2+shakex,shakey);}
+		if(stagesground[chosenstage] != null){ctx.drawImage(stagesground[chosenstage],-camerax+256-stage_size/2+shakex,178+shakey);}
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		var a = -1; var b = -1; var color = "red";
+		if(entre(clickx,130/1024, 330/1024) && entre(clicky,0.26,0.26+0.1*tutolineslist.length)){
+			a = Math.floor((clicky-0.26)*10);
+		}
+		else if(entre(clickx,175*3/1024, (175*3+22*9)/1024) && entre(clicky,40*3/500,106*3/500)){
+			b = Math.floor((clickx-175*3/1024)/(22*3/1024))+3*(clicky>219/500);
+		}
 		ctx.fillStyle = "white";
 		ctx.font = "40px serif";
-		ctx.fillText("Basics",80,30);
-		ctx.fillText("Crouching",80,80);
-		ctx.fillText("Jumping",80,130);
-		ctx.fillText("Specials",80,180);
-		ctx.fillText("Combos",80,230);
-		ctx.fillText("Raiden",400,30);
-		ctx.fillText("Kitana",400,80);
-		ctx.fillText("Scorpion",400,130);
-		ctx.fillText("Subzero",400,180);
-		ctx.fillText("Liu Kang",400,230);
-		ctx.fillText("Mileena",400,280);
+		ctx.fillText("Basic tutorials",100,80);
+		ctx.font = "40px serif";
+		if(a==0){ctx.fillStyle = color;}else{ctx.fillStyle = "white";}
+		ctx.fillText("Basics",130,160);
+		if(a==1){ctx.fillStyle = color;}else{ctx.fillStyle = "white";}
+		ctx.fillText("Crouching",130,210);
+		if(a==2){ctx.fillStyle = color;}else{ctx.fillStyle = "white";}
+		ctx.fillText("Jumping",130,260);
+		if(a==3){ctx.fillStyle = color;}else{ctx.fillStyle = "white";}
+		ctx.fillText("Specials",130,310);
+		if(a==4){ctx.fillStyle = color;}else{ctx.fillStyle = "white";}
+		ctx.fillText("Combos",130,360);
+		var leftside = 175; var topside = 40;
+		ctx.fillStyle = "white";
+		ctx.fillText("Character tutorials",480,80);
+		ctx.scale(3,3);
+		for(var i=0;i<liste_persos.length;i++){
+			if(b==i){ctx.filter = "brightness(0.8)";}else{ctx.filter = "none";}
+			ctx.drawImage(characteristics.get(liste_persos[i]).icon,leftside+22*(i%3),topside+33*Math.floor(i/3));
+		}
+		ctx.filter = "none";
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.font = "30px serif";
 		ctx.fillText("Go to title screen",400,470);
 		if(click==1){
 			click=2;
 			if(entre(clickx,400/1024,610/1024) && entre(clicky,450/500,480/500)){persolocked = [0,0]; skinschoisis = [0,0];gobacktotitlescreen();return;}
-			else if(entre(clickx,80/1024, 280/1024) && entre(clicky,0,0.1*tutolineslist.length)){
-				currenttutoline = tutolineslist[Math.floor(clicky*10)];
+			else if(entre(clickx,130/1024, 330/1024) && entre(clicky,0.26,0.26+0.1*tutolineslist.length)){
+				currenttutoline = tutolineslist[Math.floor((clicky-0.26)*10)];
 				launchtutorial(currenttutoline[0]);
 			}
-			else if(entre(clickx,400/1024, 600/1024) && entre(clicky,0,0.1*tutopersoslist.length)){
-				currenttutoline = tutopersoslist[Math.floor(clicky*10)];
+			else if(entre(clickx,175*3/1024, (175*3+22*9)/1024) && entre(clicky,40*3/500,106*3/500)){
+				currenttutoline = tutopersoslist[Math.floor((clickx-175*3/1024)/(22*3/1024))+3*(clicky>219/500)];
 				launchtutorial(currenttutoline[0]);
 			}
 		}
@@ -3167,7 +3193,7 @@ function main(){
 			else if(entre(clicky,400/500,440/500)){
 				if(entre(clickx,80/1024,260/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=true;secondplayerisdummy=true;camerax=0;}
 				else if(entre(clickx,380/1024,590/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=false;arcadelevel=0;arcadeorder.shuffle();secondplayerchosescharac=false;camerax=0;}
-				else if(entre(clickx,740/1024,920/1024)){youareintutorial=true; secondplayerishuman = false; tutorialscenenumber = 0; functiontoexecute = menututo;camerax=0;}
+				else if(entre(clickx,740/1024,920/1024)){youareintutorial=true; secondplayerishuman = false; tutorialscenenumber = 0; functiontoexecute = menututo;}
 			}
 		}
 	}
