@@ -1250,6 +1250,7 @@ function main(){
 			if(this.movlag===undefined){this.movlag=0;}
 			if(this.crouching===undefined){this.crouching=0;}
 			if(this.perso=="raiden" && finishhim && this.bas==1){this.bas=2;this.memoryslot++;}
+			if(this.perso=="scorpion" && finishhim && this.mov=="hell_gates" && this.special==1){this.special=2;this.memoryslot++;}
 			if(this.perfectblock>1){this.perfectblock--;}
 			else if(this.perfectblock==1){if(this.back==0){this.perfectblock=0;}}
 			else if(this.back){this.perfectblock = framesforperfectblock + perfectblockcd}
@@ -1700,8 +1701,8 @@ function main(){
 						if(this.movlag==stats.elag+stats.fdur){this.tb=6;this.y+=1;fixcamera=30;}
 						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.xspeed=9*this.orientation;}
 						if(Math.abs(this.x+this.xspeed-camerax)>decalagex-this.charac.width/2){
-							if(finishhim && other.falling==0 && other.gettingup==0){
-								this.fatality=90;
+							if(finishhim && other.falling==0 && other.gettingup==0 && this.memoryslot>=2){
+								this.fatality=110;
 								play_sound_eff("fatal1");
 								finishhim = 0;
 								other.invincibilite=1000;
