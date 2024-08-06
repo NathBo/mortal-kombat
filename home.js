@@ -2630,7 +2630,7 @@ function main(){
 		drawStage();
 		if(fightstartcountdown>=60){
 			if(fightstartcountdown==129){roundswav[roundwonsj1+roundwonsj2].play();}
-			ctx.fillStyle = "yellow";
+			ctx.fillStyle = "red";
 			ctx.font = "50px Luminari";
 			ctx.fillText("Round "+((roundwonsj1+roundwonsj2+1).toString()),425,220);
 		}
