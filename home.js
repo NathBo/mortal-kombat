@@ -1249,7 +1249,7 @@ function main(){
 			if(this.perso=="shao_kahn"){this.crouching=0;}
 			if(this.movlag===undefined){this.movlag=0;}
 			if(this.crouching===undefined){this.crouching=0;}
-			if(this.perso=="raiden" && finishhim && this.bas==1){this.bas=2;this.memoryslot++;}
+			if((this.perso=="raiden" || this.perso=="subzero") && finishhim && this.bas==1){this.bas=2;this.memoryslot++;}
 			if(this.perso=="scorpion" && finishhim && this.mov=="hell_gates" && this.special==1){this.special=2;this.memoryslot++;}
 			if(this.perfectblock>1){this.perfectblock--;}
 			else if(this.perfectblock==1){if(this.back==0){this.perfectblock=0;}}
@@ -1483,6 +1483,19 @@ function main(){
 						fatalitywasdone = true;
 						this.mov = ""; this.movlag=0;
 						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
+					}
+					else if(this.perso == "subzero" && this.forward+this.back==0 && this.bas && this.special==1 && finishhim && Math.abs(this.x-other.x)<=60 && other.gettingup==0 && other.y<=30 && this.memoryslot>=4){
+						this.fatality = 170;
+						this.fatalitytype=1;
+						other.falling=0;
+						other.y=0;
+						play_sound_eff("fatal1");
+						this.special=2;
+						finishhim = 0;
+						other.invincibilite=1000;
+						fatalitywasdone = true;
+						this.mov = ""; this.movlag=0;
+						if(this.x<other.x){this.orientation = 1;}else{this.orientation = -1;}
 					}
 					else if(this.perso == "liukang" && this.bas && this.special==1 && finishhim && entre(Math.abs(this.x-other.x),130,190) && other.gettingup==0 && other.y<=30){
 						this.fatality = 99;
@@ -2110,10 +2123,41 @@ function main(){
 					this.x+=12*this.orientation;
 					if(Math.abs(this.x+this.orientation*80-other.x)<6){other.explode();}
 				}
-				if(this.perso=="raiden"){
+				else if(this.perso=="raiden"){
 					this.costume = "crouching1";
 					if(this.fatality==40){play_sound_eff("fart");}
 					if(this.fatality==20){other.burn();}
+				}
+				else if(this.perso=="subzero"){
+					if(this.fatality>=167){this.costume="iceball1";}
+					else if(this.fatality>=164){this.costume="iceball2";}
+					else if(this.fatality>=164){this.costume="iceball3";}
+					else if(this.fatality>=141){this.costume="iceball2";}
+					else if(this.fatality>=138){this.costume="iceball1";}
+					else if(this.fatality>=126){this.costume="huppercut1";}
+					else if(this.fatality>=123){this.costume="huppercut2";}
+					else if(this.fatality>=120){this.costume="huppercut3";}
+					else if(this.fatality>=110){this.costume="huppercut4";}
+					else if(this.fatality>=107){this.costume="huppercut5";}
+					else if(this.fatality>=100){this.costume="huppercut1";}
+					else if(this.fatality>=97){this.costume="huppercut2";}
+					else if(this.fatality>=94){this.costume="huppercut3";}
+					else if(this.fatality>=84){this.costume="huppercut4";}
+					else if(this.fatality>=81){this.costume="huppercut5";}
+					else if(this.fatality>=71){this.costume="huppercut1";}
+					else if(this.fatality>=68){this.costume="huppercut2";}
+					else if(this.fatality>=65){this.costume="huppercut3";}
+					else if(this.fatality>=55){this.costume="huppercut4";}
+					else if(this.fatality>=50){this.costume="huppercut5";}
+					else if(this.fatality>=40){this.costume="huppercut1";}
+					else if(this.fatality>=30){this.costume="huppercut2";}
+					else if(this.fatality>=20){this.costume="huppercut3";}
+					else if(this.fatality>=10){this.costume="huppercut4";}
+					else if(this.fatality>=0){this.costume="huppercut5";}
+					if(this.fatality==158){other.freeze=200;play_sound_eff("freeze");}
+					if(this.fatality==119 || this.fatality==93 || this.fatality==64){other.decapitate();other.costume="decapitated1";play_sound_eff("hhit");shake_screen(10,8);}
+					if(this.fatality==19){other.explode();}
+					else if(this.fatality<=50 && this.fatality%10==9){shake_screen(6,6);}
 				}
 			}
 			else if(this.decapitated){
