@@ -2836,6 +2836,17 @@ function main(){
 				if(end_of_round_countdown==100){play_sound_eff("shaowinquote");}
 			}
 			else{
+				if(j2.perso=="shao_kahn" && j1.pv>0 && roundwonsj1==2){
+					ctx.fillStyle = "gray";
+					ctx.fillRect(312,100,400,300);
+					ctx.fillStyle = "white";
+					ctx.font = "20px serif";
+					printAtWordWrap(ctx,j1.charac.winmsg, 332, 140, 22, 360);
+					if(end_of_round_countdown==1){
+						if(j1.poing==1){j1.poing=2;}
+						else{end_of_round_countdown++;}
+					}
+				}
 				if(end_of_round_countdown==110 && j1.pv>0){characteristics.get(persoschoisis[0]).namewav.play();}
 				if(end_of_round_countdown==110 && j2.pv>0){characteristics.get(persoschoisis[1]).namewav.play();}
 				if(end_of_round_countdown==60 && (j1.pv>0 || j2.pv>0)){play_sound_eff("wins");}
@@ -3377,33 +3388,40 @@ function main(){
 
 	characteristics.set("kitana",{png : kitskins,coordinates : kitcoordinates, sex : "f", standnframes : 5, rollspeed : 3, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : kitanaiconpng, namewav : document.querySelector('#kitanawav'),
 	width : 34, height : 97,vitesse : 3.2,jumpxspeed : 3.6,backmovnerf : 0.85, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2, hurtcontrol : 0.2, grabtype : "poser",
-	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 32, grabfdur : 35, grabdeg : 13, vicposframes : 12, vicposfdur : 50, cds : [70,120,240,240], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,squarepunchiconpng], voiceactor : "female"});
+	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 32, grabfdur : 35, grabdeg : 13, vicposframes : 12, vicposfdur : 50, cds : [70,120,240,240], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,squarepunchiconpng], voiceactor : "female",
+	winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Kitana takes control of the outworld and forcibly converts all its peasants to blueberry farming in order to have access to an unlimited supply of blueberries for the rest of her life."});
 
 	characteristics.set("mileena",{png : milskins,coordinates : milcoordinates, sex : "f", standnframes : 10, rollspeed : 3, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : mileenaiconpng, namewav : document.querySelector('#mileenawav'),
 	width : 34, height : 97,vitesse : 3,jumpxspeed : 3.3,backmovnerf : 0.9, gravity : 0.42, jumpforce : 8.8,jumpsquat : 3, shorthop : 5.8, friction:0.22, hurtcontrol : 0.2, grabtype : "poser",
-	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.85, airdodgefdur : 13, landinglag : 9,coups : mileena_coups, pv : 95, getupfdur : 32, grabfdur : 35, grabdeg : 12, vicposframes : 10, vicposfdur : 40, cds : [150,150,240,270], icons : [knifeiconpng,balliconpng,fanlifticonpng,teleport_dropiconpng], voiceactor : "female"});
+	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.85, airdodgefdur : 13, landinglag : 9,coups : mileena_coups, pv : 95, getupfdur : 32, grabfdur : 35, grabdeg : 12, vicposframes : 10, vicposfdur : 40, cds : [150,150,240,270], icons : [knifeiconpng,balliconpng,fanlifticonpng,teleport_dropiconpng], voiceactor : "female",
+	winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Mileena attends fashion week and finally buys shampoo for her hair, because, and I quote, 'You're a girl, you don't have shampoo, it's like you're a girl, you don't have hair'."});
 	
 
 	characteristics.set("raiden",{png : raiskins,coordinates : raicoordinates, sex : "m", standnframes : 8, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 3, kicknframe : 5,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 8, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
 	width : 36, height : 107,vitesse : 3,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.42, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.2, grabtype : "poser",
-	airdrift : 0.14, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : raiden_coups, pv : 95, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 6, vicposfdur : 36, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male"});
+	airdrift : 0.14, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : raiden_coups, pv : 95, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 6, vicposfdur : 36, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male",
+	winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Raiden obtains a state monopoly on electricity production and becomes a multi-billionaire."});
 
 
 	characteristics.set("scorpion",{png : scoskins,coordinates : scocoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : scorpioniconpng, namewav : document.querySelector('#scorpionwav'),
 	width : 40, height : 103,vitesse : 2.75,jumpxspeed : 3.4,backmovnerf : 0.92, gravity : 0.41, jumpforce : 9,jumpsquat : 4, shorthop : 5.2, friction:0.21, hurtcontrol : 0.2,grabtype : "launch",
-	airdrift : 0.15, airmaxspeed : 1.8, airdodgespeed : 5.6, airdodgefdur : 14, landinglag : 6,coups : scorpion_coups, pv : 95, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 12, cds : [180,100,210,120], icons : [spearthrowiconpng,airgrabiconpng,hellgatesiconpng,legtakedowniconpng], voiceactor : "male"});
+	airdrift : 0.15, airmaxspeed : 1.8, airdodgespeed : 5.6, airdodgefdur : 14, landinglag : 6,coups : scorpion_coups, pv : 95, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 12, cds : [180,100,210,120], icons : [spearthrowiconpng,airgrabiconpng,hellgatesiconpng,legtakedowniconpng], voiceactor : "male",
+	winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Scorpion becomes a camp counsellor and concentrates on his true passion: marshmallow toasting."});
 
 	characteristics.set("subzero",{png : subskins,coordinates : subcoordinates, sex : "m", standnframes : 10, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : subzeroiconpng, namewav : document.querySelector('#subzerowav'),
 	width : 39, height : 103,vitesse : 3,jumpxspeed : 3.4,backmovnerf : 0.9, gravity : 0.41, jumpforce : 9.1,jumpsquat : 3, shorthop : 6.3, friction:0.17, hurtcontrol : 0.18,grabtype : "launch",
-	airdrift : 0.13, airmaxspeed : 1.8, airdodgespeed : 5.7, airdodgefdur : 15, landinglag : 9, coups : subzero_coups, pv : 95, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 14, cds : [210,150,240,270], icons : [iceballiconpng,slideiconpng,iceflaskiconpng,icebodyiconpng], voiceactor : "male"});
+	airdrift : 0.13, airmaxspeed : 1.8, airdodgespeed : 5.7, airdodgefdur : 15, landinglag : 9, coups : subzero_coups, pv : 95, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 14, cds : [210,150,240,270], icons : [iceballiconpng,slideiconpng,iceflaskiconpng,icebodyiconpng], voiceactor : "male",
+	winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Subzero becomes best friends with Yeti and builds the best professional snowball fight team with him."});
 	
 	characteristics.set("shao_kahn",{png : shaoskins,coordinates : shaocoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 5,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 8, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
 	width : 40, height : 114,vitesse : 3.1,jumpxspeed : 3.4,backmovnerf : 0.92, gravity : 0.44, jumpforce : 6.5,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.1,grabtype : "launch",
-	airdrift : 0.1, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : shao_coups, pv : 140, getupfdur : 24, grabfdur : 35, grabdeg : 12, vicposframes : 6, vicposfdur : 42, cds : [150,240,150,360], icons : [elecgrabiconpng,chargeiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male"});
+	airdrift : 0.1, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : shao_coups, pv : 140, getupfdur : 24, grabfdur : 35, grabdeg : 12, vicposframes : 6, vicposfdur : 42, cds : [150,240,150,360], icons : [elecgrabiconpng,chargeiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male",
+	winmsg : "Bro thought they could modify the code without consequences"});
 	
 	characteristics.set("liukang",{png : liuskins,coordinates : liucoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 2, hkickendnframe : 2, kicknframe : 4,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 9, icon : liukangiconpng, namewav : document.querySelector('#liukangwav'),
 	width : 36, height : 98,vitesse : 3.4,jumpxspeed : 3.5,backmovnerf : 0.9, gravity : 0.42, jumpforce : 9.2,jumpsquat : 2, shorthop : 6.1, friction:0.21, hurtcontrol : 0.2, grabtype : "launch",
-	airdrift : 0.14, airmaxspeed : 2.1, airdodgespeed : 6, airdodgefdur : 13, landinglag : 8,coups : liukang_coups, pv : 95, getupfdur : 36, grabfdur : 15, grabdeg : 11, vicposframes : 6, vicposfdur : 30, cds : [150,70,90,180], icons : [fireballiconpng,flying_kickiconpng,bicycleiconpng,cycleiconpng], voiceactor : "liu"});
+	airdrift : 0.14, airmaxspeed : 2.1, airdodgespeed : 6, airdodgefdur : 13, landinglag : 8,coups : liukang_coups, pv : 95, getupfdur : 36, grabfdur : 15, grabdeg : 11, vicposframes : 6, vicposfdur : 30, cds : [150,70,90,180], icons : [fireballiconpng,flying_kickiconpng,bicycleiconpng,cycleiconpng], voiceactor : "liu",
+	winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Liu Kang retires to Larzac with a Buddhist monk to raise goats."});
 	
 
 
