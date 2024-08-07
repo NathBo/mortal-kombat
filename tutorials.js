@@ -271,7 +271,7 @@ var tutokitana = [
         msg : "It can also be performed in the air"
     },
     {
-        char : ["kitana","kitana"], ai : 1, pv : [50,35], moves : [["fanswipe", "block"],["hkick", "block"]], aimoves : [],
+        char : ["kitana","kitana"], ai : 0, pv : [50,35], moves : [["fanswipe", "block"],["hkick"]], aimoves : [],
         jumper : 0,  regenerate : false,
         msg : "Kitana's forward special is a sweep that outranges most other moves, making her difficult to approach from the ground"
     },

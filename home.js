@@ -1240,8 +1240,15 @@ function main(){
 		end_of_combo(){
 			this.comboscaling=1;
 				if((secondplayerisdummy || (this.n==1 && youareintutorial && currentuto.regenerate && this.pv>0))){
+					if(difficulte==-1){
+						this.x=this.xinit;
+						if(this.pv<this.pvmax){
+							for(var i=0;i<4;i++){
+								if(j1.perso != "mileena" || i!=0){j1.cooldowns[i] = 0;}
+							}
+						}
+					}
 					this.pv = this.pvmax; this.pvaff = this.pvmax;
-					if(difficulte==-1){this.x=this.xinit;}
 				}
 		}
 
