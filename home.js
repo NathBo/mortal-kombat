@@ -760,7 +760,7 @@ function main(){
 			this.currisking = 0;
 			this.enviedegrab = Math.floor(Math.random()*5);
 			this.hascommited = 0;
-			this.wanttojump = 0-2*(other.perso=="raiden"); this.enviedantiair = 0;
+			this.wanttojump = 0-1*(other.perso=="raiden"); this.enviedantiair = 0;
 			this.optionssonoki = [1.25,0.2,0.35,0.5]; //crouch, stand block, crouch block, jump
 			this.chosenoptiononoki = 0;
 			this.eviterprochainprojo = true;
@@ -795,7 +795,7 @@ function main(){
 				
 				case 1:
 					this.donothingchance = 0.5;
-					this.dontattackchance = 0.9;
+					this.dontattackchance = 0.92;
 					this.agressivite = 0.0005;
 					this.baserisk = 70+Math.floor(Math.random()*10);
 					this.inconsistency = 8;
@@ -805,14 +805,14 @@ function main(){
 					this.optionssonoki[Math.floor(Math.random()*4)]+=1;
 					this.fduroptiononoki = 0;
 					this.reaction_time = 16;
-					this.chanceeviterprojo = 0.9;
+					this.chanceeviterprojo = 0.8;
 					this.distancetowavedash = 500;
 					this.parryrate = 0.25;
 					break;
 
 				case 2:
 					this.donothingchance = 0;
-					this.dontattackchance = 0.4;
+					this.dontattackchance = 0.5;
 					this.agressivite = 0.002;
 					this.baserisk = 60+Math.floor(Math.random()*10);
 					this.inconsistency = 8;
@@ -822,9 +822,9 @@ function main(){
 					this.optionssonoki[Math.floor(Math.random()*4)]+=0.8;
 					this.fduroptiononoki = 0;
 					this.reaction_time = 13;
-					this.chanceeviterprojo = 0.95;
+					this.chanceeviterprojo = 0.9;
 					this.distancetowavedash = 200;
-					this.parryrate = 0.5;
+					this.parryrate = 0.4;
 					break;
 
 				case 3:
@@ -969,7 +969,7 @@ function main(){
 		}
 
 		ugothitorblockedaprojectile(){
-			this.agressivite+=0.005;
+			this.agressivite+=0.0005;
 		}
 
 		beginwavedash(){
@@ -1970,7 +1970,7 @@ function main(){
 						this.falling=0;
 						this.y=0;
 				}
-				if(this.n==1 && !secondplayerishuman && stats.hiteffect != "projectile" && stats.hiteffect != "spear"&& stats.hiteffect != "freeze" && stats.hiteffect != "iceflask" && stats.hiteffect != "projectile_fall"){
+				if(this.n==1 && !secondplayerishuman){
 					this.ai.ugothit();
 				}
 				if(this.n==0 && !secondplayerishuman && stats.hiteffect != "projectile" && stats.hiteffect != "spear" && stats.hiteffect != "freeze" && stats.hiteffect != "iceflask" && stats.hiteffect != "projectile_fall"){
@@ -2742,6 +2742,7 @@ function main(){
 		roundwonsj1 = 0; roundwonsj2 = 0; camerax = 0; choserandomstage();
 		if(difficulte<0){difficulte=0;}
 		rounds_lost = 0; damage_taken = 0; time = 0; moves_used = 0;
+		haschangedchar = false; initchar = "";
 		saveStats();
 		is_in_charc_screen = true; secondplayerchosescharac=true; secondplayerisdummy=false; youareintutorial = false;
 		reset_game(true);
@@ -2860,7 +2861,7 @@ function main(){
 						if(j1.poing==1){j1.poing=2;}
 						else{end_of_round_countdown++;}
 					}
-					if(end_of_round_countdown==5){
+					if(end_of_round_countdown==5 && !haschangedchar){
 						var a = statistics.get(j1.perso)[difficulte];
 						if(a.beaten){
 							a.best_time = Math.min(time,a.best_time); a.rounds_lost = Math.min(rounds_lost,a.rounds_lost);
@@ -3147,6 +3148,8 @@ function main(){
 				reset_game();
 				is_in_charc_screen = false;
 				choserandomstage();
+				if(arcadelevel>=0 && initchar==""){initchar=persoschoisis[0];}
+				else if(arcadelevel>=0 && initchar!=persoschoisis[0]){haschangedchar=true;}
 				functiontoexecute = loop;
 				menupersoswav.pause();menupersoswav.currentTime=0;
 				return;
@@ -3172,6 +3175,11 @@ function main(){
 				ctx.fillStyle = "red";
 				ctx.font = "30px serif";
 				ctx.fillText("Not yet beaten",820,400);
+			}
+			if(!haschangedchar && initchar!="" && liste_persos[persosovered[0]]!=initchar){
+				ctx.fillStyle = "red";
+				ctx.font = "20px serif";
+				ctx.fillText("Changing character will make the records unavailable for this run", 260,80);
 			}
 		}
 	}
@@ -3504,6 +3512,7 @@ function main(){
 	var framesforperfectblock = 9; var perfectblockcd = 9;
 	var arcadelevel = -1; var arcadeorder = [...liste_persos]; arcadeorder.shuffle(); var arcadestagesorder = [1,0,3,2,0,4,5];
 	var youareintutorial = false; var tutorialscenenumber = 0; var currentuto = null; var currenttutoline = tutospecial;
+	var haschangedchar = false; var initchar = "";
 	
 	
 	function saveStats(){
