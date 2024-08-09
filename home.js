@@ -1198,8 +1198,9 @@ function main(){
 			if(s == "cycle" && this.y==0){this.invincibilite=23;}
 			if(s == "teleport_drop"){this.invincibilite=12;}
 			if(s == "ball"){this.crouching=6;}
+			if(arcadelevel>=0 && this.n==0){moves_used++;}
 			if(s == "knifethrow" || s == "homing_knife"){
-				if(this.ressource){this.ressource--;console.log(this.ressource)}
+				if(this.ressource){this.ressource--;}
 				else{return;}
 			}
 			play_sound_eff(this.charac.voiceactor+stats.voiceline);
@@ -1892,12 +1893,14 @@ function main(){
 
 		losepv(n){
 			this.pv-=n;
+			if(arcadelevel>=0 && this.n==0){damage_taken+=n;}
 			if(this.pv<=0){
 				this.killanim();
 			}
 		}
 
 		hurt(other,stats){
+			var initpv = this.pv;
 			if(stats.hiteffect==""){return;}
 			if(this.perso=="shao_kahn" && stats.hiteffect=="grab"){return;}
 			if(this.mov=="jumpsquat" && stats.hiteffect=="grab"){return;}
@@ -1998,6 +2001,7 @@ function main(){
 				this.killanim();
 			}
 			if(other.mov=="thundergod"){other.y=0.1;}
+			if(arcadelevel>=0 && this.n==0){damage_taken+=initpv-this.pv;}
 		}
 
 		killanim(){
@@ -2736,6 +2740,7 @@ function main(){
 		persolocked = [0,0]; skinschoisis = [0,0];arcadelevel=-1;functiontoexecute = titlescreen;
 		roundwonsj1 = 0; roundwonsj2 = 0; camerax = 0; choserandomstage();
 		if(difficulte<0){difficulte=0;}
+		rounds_lost = 0; damage_taken = 0; time = 0; moves_used = 0;
 		is_in_charc_screen = true; secondplayerchosescharac=true; secondplayerisdummy=false; youareintutorial = false;
 		reset_game(true);
 		reset_for_charac_screen(0);
@@ -2853,10 +2858,25 @@ function main(){
 						if(j1.poing==1){j1.poing=2;}
 						else{end_of_round_countdown++;}
 					}
+					if(end_of_round_countdown==5){
+						var a = statistics.get(j1.perso)[difficulte];
+						if(a.beaten){
+							a.best_time = Math.min(time,a.time); a.rounds_lost = Math.min(rounds_lost,a.rounds_lost);
+							a.damage_taken = Math.min(damage_taken,a.damage_taken); a.moves_used = Math.min(moves_used,a.moves_used);
+						}
+						else{
+							a.beaten = true;
+							a.best_time = time; a.rounds_lost = rounds_lost; a.damage_taken = damage_taken; a.moves_used = moves_used;
+						}
+					}
 				}
 				if(end_of_round_countdown==110 && j1.pv>0){characteristics.get(persoschoisis[0]).namewav.play();}
 				if(end_of_round_countdown==110 && j2.pv>0){characteristics.get(persoschoisis[1]).namewav.play();}
 				if(end_of_round_countdown==60 && (j1.pv>0 || j2.pv>0)){play_sound_eff("wins");}
+			}
+			if(end_of_round_countdown==110 && arcadelevel>=0){
+				time += timer_init-timer; console.log(time);
+				if(j1.pv<=0 && j2.pv>0){rounds_lost++;}
 			}
 			j1.declencher_vicpose();
 			j2.declencher_vicpose();
@@ -3136,6 +3156,22 @@ function main(){
 		ctx.fillStyle = "white";
 		ctx.font = "30px serif";
 		ctx.fillText("Go to title screen",400,470);
+		if(arcadelevel>=0){
+			var a = statistics.get(liste_persos[persosovered[0]])[difficulte];
+			if (a.beaten){
+				ctx.fillStyle = "white";
+				ctx.font = "30px serif";
+				ctx.fillText("Time: "+(Math.round(a.best_time/60*100)/100).toString(),700, 180);
+				ctx.fillText("Lost Rounds: "+a.rounds_lost.toString(),700, 220);
+				ctx.fillText("Damage Taken: "+a.least_damage.toString(),700, 260);
+				ctx.fillText("Moves used: "+a.moves_used.toString(),700, 300);
+			}
+			else{
+				ctx.fillStyle = "red";
+				ctx.font = "30px serif";
+				ctx.fillText("Not yet beaten",820,400);
+			}
+		}
 	}
 
 
@@ -3299,7 +3335,7 @@ function main(){
 			}
 			else if(entre(clicky,400/500,440/500)){
 				if(entre(clickx,80/1024,260/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=true;secondplayerisdummy=true;camerax=0;}
-				else if(entre(clickx,380/1024,590/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=false;arcadelevel=0;arcadeorder.shuffle();secondplayerchosescharac=false;camerax=0;}
+				else if(entre(clickx,380/1024,590/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=false;arcadelevel=6;arcadeorder.shuffle();secondplayerchosescharac=false;camerax=0;}
 				else if(entre(clickx,740/1024,920/1024)){youareintutorial=true; secondplayerishuman = false; tutorialscenenumber = 0; functiontoexecute = menututo;}
 			}
 		}
@@ -3463,6 +3499,36 @@ function main(){
 	var framesforperfectblock = 9; var perfectblockcd = 9;
 	var arcadelevel = -1; var arcadeorder = [...liste_persos]; arcadeorder.shuffle(); var arcadestagesorder = [1,0,3,2,0,4,5];
 	var youareintutorial = false; var tutorialscenenumber = 0; var currentuto = null; var currenttutoline = tutospecial;
+	
+	
+	function newStats(){
+		return {beaten : false, best_time : 0, least_damage : 0, rounds_lost : 0, moves_used : 0}
+	}
+
+	function newCharacStats(){
+		var rep = [];
+		for (i=0;i<difficultynames.length;i++){
+			rep.push(newStats());
+		}
+		return rep;
+	}
+
+	function newArcadeStats(){
+		var statistics = new Map();
+
+		for (var i=0; i<liste_persos.length; i++){
+			statistics.set(liste_persos[i], newCharacStats());
+		}
+
+		return statistics;
+	}
+	
+	var statistics = newArcadeStats();
+
+	console.log(JSON.stringify(Object.fromEntries(statistics)));
+
+	var rounds_lost = 0; var damage_taken = 0; var time = 0; var moves_used = 0;
+	
 
 
 	function shake_screen(frames,force){
