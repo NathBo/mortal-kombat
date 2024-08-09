@@ -96,6 +96,7 @@ function printAtWordWrap( context , text, x, y, lineHeight, fitWidth)
 
 
 function main(){
+	const VERSION = 1;
 	function resizecanvas(){
 		Width= window.innerWidth;
 		Height=window.innerHeight;
@@ -2741,6 +2742,7 @@ function main(){
 		roundwonsj1 = 0; roundwonsj2 = 0; camerax = 0; choserandomstage();
 		if(difficulte<0){difficulte=0;}
 		rounds_lost = 0; damage_taken = 0; time = 0; moves_used = 0;
+		saveStats();
 		is_in_charc_screen = true; secondplayerchosescharac=true; secondplayerisdummy=false; youareintutorial = false;
 		reset_game(true);
 		reset_for_charac_screen(0);
@@ -2861,12 +2863,12 @@ function main(){
 					if(end_of_round_countdown==5){
 						var a = statistics.get(j1.perso)[difficulte];
 						if(a.beaten){
-							a.best_time = Math.min(time,a.time); a.rounds_lost = Math.min(rounds_lost,a.rounds_lost);
-							a.damage_taken = Math.min(damage_taken,a.damage_taken); a.moves_used = Math.min(moves_used,a.moves_used);
+							a.best_time = Math.min(time,a.best_time); a.rounds_lost = Math.min(rounds_lost,a.rounds_lost);
+							a.least_damage = Math.min(damage_taken,a.least_damage); a.moves_used = Math.min(moves_used,a.moves_used);
 						}
 						else{
 							a.beaten = true;
-							a.best_time = time; a.rounds_lost = rounds_lost; a.damage_taken = damage_taken; a.moves_used = moves_used;
+							a.best_time = time; a.rounds_lost = rounds_lost; a.least_damage = damage_taken; a.moves_used = moves_used;
 						}
 					}
 				}
@@ -3261,6 +3263,8 @@ function main(){
 		ctx.fillText("Special",720,125);
 		ctx.fillText("Grab",820,125);
 		ctx.fillText("Jump",920,125);
+		if(entre(clickx, 0, 180/1024) && entre(clicky, 180/500, 210/500)){ctx.fillStyle = "red";}
+		ctx.fillText("Reset memory",0,200);
 		if(controlafaire!=-1){
 			if(key!=""){
 				ctx.fillText(key,120+(controlafaire%8)*100,55+100*(controlafaire>=8));
@@ -3275,6 +3279,7 @@ function main(){
 			if(entre(clickx,400/1024,610/1024) && entre(clicky,450/500,480/500)){functiontoexecute = titlescreen; skinschoisis = [0,0];}
 			else if(entre(clickx,120/1024,1020/1024)&&entre(clicky,10/500,40/500)){controlafaire=Math.floor((clickx-120/1024)/(100/1024));}
 			else if(entre(clickx,120/1024,1020/1024)&&entre(clicky,110/500,140/500)){controlafaire=9+Math.floor((clickx-120/1024)/(100/1024));}
+			else if(entre(clickx, 0, 180/1024) && entre(clicky, 180/500, 210/500)){statistics = newArcadeStats();gobacktotitlescreen();}
 		}
 	}
 
@@ -3335,7 +3340,7 @@ function main(){
 			}
 			else if(entre(clicky,400/500,440/500)){
 				if(entre(clickx,80/1024,260/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=true;secondplayerisdummy=true;camerax=0;}
-				else if(entre(clickx,380/1024,590/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=false;arcadelevel=6;arcadeorder.shuffle();secondplayerchosescharac=false;camerax=0;}
+				else if(entre(clickx,380/1024,590/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=false;arcadelevel=0;arcadeorder.shuffle();secondplayerchosescharac=false;camerax=0;}
 				else if(entre(clickx,740/1024,920/1024)){youareintutorial=true; secondplayerishuman = false; tutorialscenenumber = 0; functiontoexecute = menututo;}
 			}
 		}
@@ -3501,6 +3506,22 @@ function main(){
 	var youareintutorial = false; var tutorialscenenumber = 0; var currentuto = null; var currenttutoline = tutospecial;
 	
 	
+	function saveStats(){
+		localStorage.setItem("statistics",JSON.stringify(Object.fromEntries(statistics)));
+		localStorage.setItem("version",VERSION);
+	}
+
+	function loadStats(){
+		var a = localStorage.getItem("statistics");
+		if(a===null){
+			statistics = newArcadeStats();
+		}
+		else{
+			statistics = new Map(Object.entries(JSON.parse(a)));
+		}
+	}
+
+
 	function newStats(){
 		return {beaten : false, best_time : 0, least_damage : 0, rounds_lost : 0, moves_used : 0}
 	}
@@ -3523,7 +3544,9 @@ function main(){
 		return statistics;
 	}
 	
-	var statistics = newArcadeStats();
+	var statistics = new Map();
+
+	loadStats();
 
 	console.log(JSON.stringify(Object.fromEntries(statistics)));
 
