@@ -1153,13 +1153,13 @@ function main(){
 	{
 		constructor()
 		{
-			
+			this.droite=0;this.gauche=0;this.haut=0;this.bas=0;
 		}
 		reinit(x,y,perso,n,skin,other,reset_ai=true, allowedmoves = []){
 			this.charac = characteristics.get(perso);
 			this.x = x; this.y = y; this.perso = perso; this.n = n; this.skin = this.charac.png[skin]; this.coordinates = this.charac.coordinates;
 			this.allowedmoves = allowedmoves; this.xinit = x; this.other = other;
-			this.droite=0;this.gauche=0;this.haut=0;this.bas=0;this.poing=0;this.jambe=0;this.special=0;this.dodge=0; this.jump=0;
+			this.poing=0;this.jambe=0;this.special=0;this.dodge=0; this.jump=0;
 			this.forward = 0;this.back = 0;
 			if (this.n == 0){this.orientation = 1}else{this.orientation = -1}
 			this.costume = "stand1";
@@ -3392,6 +3392,7 @@ function main(){
 
 	function globalloop(){
 		setTimeout(globalloop,frame_delay);
+		gameLoop();
 		functiontoexecute();
 	}
 
@@ -3741,53 +3742,50 @@ window.addEventListener(
 		if (!gamepads)
 			return;
 		
-		var gp = gamepads[0];
 
-		var i=0;
-		if(gp==null){return;}
-		for (r=0;r<gp.buttons.length;r++){
-			if(controls[0]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.droite=0}else {if(j1.droite==0){j1.droite=1}}}
-			if(controls[1]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.gauche=0}else {if(j1.gauche==0){j1.gauche=1}}}
-			if(controls[2]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.haut=0}else {if(j1.haut==0){j1.haut=1}}}
-			if(controls[3]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.bas=0}else {if(j1.bas==0){j1.bas=1}}}
-			if(controls[4]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.poing=0}else {if(j1.poing==0){j1.poing=1}}}
-			if(controls[5]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.jambe=0}else {if(j1.jambe==0){j1.jambe=1}}}
-			if(controls[6]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.special=0}else {if(j1.special==0){j1.special=1}}}
-			if(controls[7]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.dodge=0}else {if(j1.dodge==0){j1.dodge=1}}}
-			if(controls[8]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.droite=0}else {if(j2.droite==0){j2.droite=1}}}
-			if(controls[9]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.gauche=0}else {if(j2.gauche==0){j2.gauche=1}}}
-			if(controls[10]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.haut=0}else {if(j2.haut==0){j2.haut=1}}}
-			if(controls[11]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.bas=0}else {if(j2.bas==0){j2.bas=1}}}
-			if(controls[12]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.poing=0}else {if(j2.poing==0){j2.poing=1}}}
-			if(controls[13]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.jambe=0}else {if(j2.jambe==0){j2.jambe=1}}}
-			if(controls[14]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.special=0}else {if(j2.special==0){j2.special=1}}}
-			if(controls[15]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.dodge=0}else {if(j2.dodge==0){j2.dodge=1}}}
-			if(buttonPressed(gp.buttons[r])){key=i.toString()+r.toString(20);}
-		}
+		for(var i=0;i<gamepads.length;i++){
+			var gp = gamepads[i];
+			if(gp==null){return;}
+			for (r=0;r<gp.buttons.length;r++){
+				if(controls[0][0]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.droite=0;}else {if(j1.droite==0){j1.droite=1}}}
+				if(controls[0][1]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.gauche=0}else {if(j1.gauche==0){j1.gauche=1}}}
+				if(controls[0][2]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.haut=0}else {if(j1.haut==0){j1.haut=1}}}
+				if(controls[0][3]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.bas=0}else {if(j1.bas==0){j1.bas=1}}}
+				if(controls[0][4]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.poing=0}else {if(j1.poing==0){j1.poing=1}}}
+				if(controls[0][5]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.jambe=0}else {if(j1.jambe==0){j1.jambe=1}}}
+				if(controls[0][6]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.special=0}else {if(j1.special==0){j1.special=1}}}
+				if(controls[0][7]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.dodge=0}else {if(j1.dodge==0){j1.dodge=1}}}
+				if(controls[0][8]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.jump=0}else {if(j1.jump==0){j1.jump=1}}}
+				if(secondplayerishuman){
+					if(controls[1][0]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.droite=0}else {if(j2.droite==0){j2.droite=1}}}
+					if(controls[1][1]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.gauche=0}else {if(j2.gauche==0){j2.gauche=1}}}
+					if(controls[1][2]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.haut=0}else {if(j2.haut==0){j2.haut=1}}}
+					if(controls[1][3]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.bas=0}else {if(j2.bas==0){j2.bas=1}}}
+					if(controls[1][4]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.poing=0}else {if(j2.poing==0){j2.poing=1}}}
+					if(controls[1][5]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.jambe=0}else {if(j2.jambe==0){j2.jambe=1}}}
+					if(controls[1][6]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.special=0}else {if(j2.special==0){j2.special=1}}}
+					if(controls[1][7]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.dodge=0}else {if(j2.dodge==0){j2.dodge=1}}}
+					if(controls[1][8]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.jump=0}else {if(j2.jump==0){j2.jump=1}}}
+				}
+				if(buttonPressed(gp.buttons[r])){key=i.toString()+r.toString(20);}
+			}
 
-		for (r=0;r<gp.axes.length;r++){
-			var s=gp.axes[r];
-			if(distance(s,0)>0.5 && distance(s,0)<1.5){key="stick"+i.toString()+r.toString(20)+(s>=0.5).toString()}
-			if(bonstick(controls[0],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5||(s>0.5)!=(controls[0].substr(7,1)=="t")){j1.droite=0;}else {if(j1.droite==0&&(s>0.5)==(controls[0].substr(7,1)=="t")){j1.droite=1}}}
-			if(bonstick(controls[1],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5||(s>0.5)==(controls[0].substr(7,1)=="t")){j1.gauche=0}else {if(j1.gauche==0&&(s>0.5)==(controls[1].substr(7,1)=="t")){j1.gauche=1}}}
-			if(bonstick(controls[2],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5){j1.haut=0}else {if(j1.haut==0&&(s>0.5)==(controls[2].substr(7,1)=="t")){j1.haut=1}}}
-			if(bonstick(controls[3],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5){j1.bas=0}else {if(j1.bas==0&&(s>0.5)==(controls[3].substr(7,1)=="t")){j1.bas=1}}}
-			if(bonstick(controls[4],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5){j1.poing=0}else {if(j1.poing==0&&(s>0.5)==(controls[4].substr(7,1)=="t")){j1.poing=1}}}
-			if(bonstick(controls[5],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5){j1.jambe=0}else {if(j1.jambe==0&&(s>0.5)==(controls[5].substr(7,1)=="t")){j1.jambe=1}}}
-			if(bonstick(controls[6],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5){j1.special=0}else {if(j1.special==0&&(s>0.5)==(controls[6].substr(7,1)=="t")){j1.special=1}}}
-			if(bonstick(controls[7],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5||(s>0.5)!=(controls[0].substr(7,1)=="t")){j1.dodge=0}else {if(j1.dodge==0&&(s>0.5)==(controls[7].substr(7,1)=="t")){j1.dodge=1;}}}
-			if(bonstick(controls[8],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5||(s>0.5)!=(controls[8].substr(7,1)=="t")){j2.droite=0;}else {if(j2.droite==0&&(s>0.5)==(controls[8].substr(7,1)=="t")){j2.droite=1}}}
-			if(bonstick(controls[9],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5||(s>0.5)==(controls[8].substr(7,1)=="t")){j2.gauche=0}else {if(j2.gauche==0&&(s>0.5)==(controls[9].substr(7,1)=="t")){j2.gauche=1}}}
-			if(bonstick(controls[10],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5){j2.haut=0}else {if(j2.haut==0&&(s>0.5)==(controls[10].substr(7,1)=="t")){j2.haut=1}}}
-			if(bonstick(controls[11],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5){j2.bas=0}else {if(j2.bas==0&&(s>0.5)==(controls[11].substr(7,1)=="t")){j2.bas=1}}}
-			if(bonstick(controls[12],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5){j2.poing=0}else {if(j2.poing==0&&(s>0.5)==(controls[12].substr(7,1)=="t")){j2.poing=1}}}
-			if(bonstick(controls[13],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5){j2.jambe=0}else {if(j2.jambe==0&&(s>0.5)==(controls[13].substr(7,1)=="t")){j2.jambe=1}}}
-			if(bonstick(controls[14],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5){j2.special=0}else {if(j2.special==0&&(s>0.5)==(controls[14].substr(7,1)=="t")){j2.special=1}}}
-			if(bonstick(controls[15],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5||(s>0.5)!=(controls[0].substr(7,1)=="t")){j2.dodge=0}else {if(j2.dodge==0&&(s>0.5)==(controls[15].substr(7,1)=="t")){j2.dodge=1;}}}
-
+			for (r=0;r<gp.axes.length;r++){
+				var s=gp.axes[r];
+				if(distance(s,0)>0.5 && distance(s,0)<1.5){key="stick"+i.toString()+r.toString(20)+(s>=0.5).toString()}
+				if(bonstick(controls[0][0],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5||(s>0.5)!=(controls[0][0].substr(7,1)=="t")){j1.droite=0;}else {if(j1.droite==0&&(s>0.5)==(controls[0][0].substr(7,1)=="t")){j1.droite=1;}}}
+				if(bonstick(controls[0][1],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5||(s>0.5)!=(controls[0][1].substr(7,1)=="t")){j1.gauche=0;}else {if(j1.gauche==0&&(s>0.5)==(controls[0][1].substr(7,1)=="t")){j1.gauche=1}}}
+				if(bonstick(controls[0][2],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5||(s>0.5)!=(controls[0][2].substr(7,1)=="t")){j1.haut=0;}else {if(j1.haut==0&&(s>0.5)==(controls[0][2].substr(7,1)=="t")){j1.haut=1;}}}
+				if(bonstick(controls[0][3],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5||(s>0.5)!=(controls[0][3].substr(7,1)=="t")){j1.bas=0;}else {if(j1.bas==0&&(s>0.5)==(controls[0][3].substr(7,1)=="t")){j1.bas=1;}}}
+				if(secondplayerishuman){
+					if(bonstick(controls[1][0],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5||(s>0.5)!=(controls[1][0].substr(7,1)=="t")){j2.droite=0;}else {if(j2.droite==0&&(s>0.5)==(controls[1][0].substr(7,1)=="t")){j2.droite=1;}}}
+					if(bonstick(controls[1][1],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5||(s>0.5)!=(controls[1][1].substr(7,1)=="t")){j2.gauche=0;}else {if(j2.gauche==0&&(s>0.5)==(controls[1][1].substr(7,1)=="t")){j2.gauche=1}}}
+					if(bonstick(controls[1][2],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5||(s>0.5)!=(controls[1][2].substr(7,1)=="t")){j2.haut=0;}else {if(j2.haut==0&&(s>0.5)==(controls[1][2].substr(7,1)=="t")){j2.haut=1;}}}
+					if(bonstick(controls[1][3],"stick"+i.toString()+r.toString(20))){if(distance(s,0)<=0.5||(s>0.5)!=(controls[1][3].substr(7,1)=="t")){j2.bas=0;}else {if(j2.bas==0&&(s>0.5)==(controls[1][3].substr(7,1)=="t")){j2.bas=1;}}}
+				}
+			}
 			
 		
 		}
 	}
-	var manetteshandleur=setInterval(gameLoop,16);
 }
