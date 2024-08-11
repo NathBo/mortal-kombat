@@ -63,42 +63,42 @@ var tutobasics = [
 
 var tutocrouch = [
     {
-        char : ["kitana","kitana"], ai : -1, pv : [20,15], moves : [["clpunch", "crouch"],["clpunch"]], aimoves : [],
+        char : ["mileena","mileena"], ai : -1, pv : [20,15], moves : [["clpunch", "crouch"],["clpunch"]], aimoves : [],
         jumper : 0, regenerate : false,
         msg : "Pressing punch and down with no direction will do a light punch (or clpunch), try to hit the ennemy with it"
     },
     {
-        char : ["kitana","kitana"], ai : 0, pv : [20,15], moves : [["clpunch", "crouch", "block"],["hkick"]], aimoves : [],
+        char : ["mileena","mileena"], ai : 0, pv : [20,15], moves : [["clpunch", "crouch", "block"],["hkick"]], aimoves : [],
         jumper : 0, regenerate : false,
-        msg : "By crouching, you will also not get hit by high moves, use this to beat your ennemy. (Examples of high moves are light punches, heavy punches, roundhouses and huppercuts)"
+        msg : "By crouching, you will also not get hit by high moves, use this to beat your ennemy. (Examples of high moves are light punches, heavy kicks, roundhouses and huppercuts)"
     },
     {
-        char : ["kitana","kitana"], ai : 2, pv : [20,15], moves : [["clpunch", "crouch","hkick", "block"],["block"]], aimoves : [],
+        char : ["mileena","mileena"], ai : 2, pv : [20,15], moves : [["clpunch", "crouch","hkick", "block"],["block"]], aimoves : [],
         jumper : 0, regenerate : false,
         msg : "Moreover, crouching moves can't be blocked high, they have to be blocked low! Be aware though that jump attacks can't be blocked low"
     },
     {
-        char : ["kitana","kitana"], ai : 0, pv : [20,15], moves : [["clkick", "crouch", "block"],["clpunch","crouch"]], aimoves : [],
+        char : ["mileena","mileena"], ai : 0, pv : [20,15], moves : [["clkick", "crouch", "block"],["clpunch","crouch"]], aimoves : [],
         jumper : 0, regenerate : false,
         msg : "Pressing kick and down with no direction will do a crouching light kick (or clkick), which has similar properties to a standing light kick"
     },
     {
-        char : ["kitana","kitana"], ai : 0, pv : [20,15], moves : [["cmkick", "crouch", "block"],["clpunch","crouch"]], aimoves : [],
+        char : ["mileena","mileena"], ai : 0, pv : [20,15], moves : [["cmkick", "crouch", "block"],["clpunch","crouch"]], aimoves : [],
         jumper : 0, regenerate : false,
         msg : "Pressing kick and down and either back or forward will do a crouching heavy kick (or chkick), which is a stronger but slower crouching light kick"
     },
     {
-        char : ["kitana","kitana"], ai : -1, pv : [20,22], moves : [["huppercut", "crouch", "block"],["clpunch","crouch"]], aimoves : [],
+        char : ["mileena","mileena"], ai : -1, pv : [20,22], moves : [["huppercut", "crouch", "block"],["clpunch","crouch"]], aimoves : [],
         jumper : 0, regenerate : false,
         msg : "Pressing punch and down and either back or forward will do an huppercut, which is every characters's most powerful move!"
     },
     {
-        char : ["kitana","kitana"], ai : 0, pv : [20,22], moves : [["huppercut", "crouch", "block"],["jump","jkick"]], aimoves : [],
+        char : ["mileena","mileena"], ai : 0, pv : [20,22], moves : [["huppercut", "crouch", "block"],["jump","jkick"]], aimoves : [],
         jumper : 60, regenerate : false,
         msg : "Huppercuts are an amazing anti air"
     },
     {
-        char : ["kitana","kitana"], ai : 0, pv : [80,70], moves : [["huppercut", "crouch", "block", "clpunch", "clkick", "cmkick"],["jump","jkick", "crouch", "block", "clpunch", "clkick", "cmkick", "hkick"]], aimoves : [],
+        char : ["mileena","mileena"], ai : 0, pv : [80,70], moves : [["huppercut", "crouch", "block", "clpunch", "clkick", "cmkick"],["jump","jkick", "crouch", "block", "clpunch", "clkick", "cmkick", "hkick"]], aimoves : [],
         jumper : 5, regenerate : false,
         msg : "You now know the basics of crouching, here is you final challenge!"
     },
