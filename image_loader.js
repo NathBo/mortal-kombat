@@ -85,6 +85,7 @@ var mileenaiconpng=new Image();mileenaiconpng.src = 'ressource/icons/mileena.png
 var scorpioniconpng=new Image();scorpioniconpng.src = 'ressource/icons/scorpion.png';
 var subzeroiconpng=new Image();subzeroiconpng.src = 'ressource/icons/subzero.png';
 var liukangiconpng=new Image();liukangiconpng.src = 'ressource/icons/liukang.png';
+var lockediconpng=new Image();lockediconpng.src = 'ressource/icons/locked.png';
 var boticonpng=new Image();boticonpng.src = 'ressource/icons/bot.png';
 var playericonpng=new Image();playericonpng.src = 'ressource/icons/player.png';
 var logopng=new Image();logopng.src = 'ressource/ui/logo.png';
