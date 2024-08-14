@@ -3624,6 +3624,9 @@ function main(){
 	var pausepressed = 0; var gamepaused = false;
 
 	function logKey(e) {
+		if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
+			e.preventDefault();
+		}
 		if(e.code==controls[0][0]){j1.droite=1}
 		if(e.code==controls[0][1]){j1.gauche=1}
 		if(e.code==controls[0][2]&&j1.haut==0){j1.haut=1}
