@@ -163,7 +163,7 @@ function getmilcoordinates(){
 	milcoordinates.set("roll3",{offx:633,width:36,offy:194,height:52,decx:0,decy:20});
 	milcoordinates.set("roll4",{offx:678,width:36,offy:194,height:52,decx:0,decy:20});
 	milcoordinates.set("roll5",{offx:721,width:36,offy:194,height:52,decx:0,decy:20});
-	milcoordinates.set("roll6",{offx:663,width:36,offy:194,height:52,decx:0,decy:20});
+	milcoordinates.set("roll6",{offx:759,width:41,offy:194,height:52,decx:0,decy:20});
 	milcoordinates.set("roll7",{offx:807,width:41,offy:194,height:52,decx:0,decy:20});
 	milcoordinates.set("lpunch1",{offx:16,width:39,offy:388,height:97,decx:0,decy:0});
 	milcoordinates.set("lpunch2",{offx:65,width:51,offy:388,height:97,decx:0,decy:0});

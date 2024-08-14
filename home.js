@@ -981,8 +981,8 @@ function main(){
 			var me = this.me;
 			for(let value of objects_to_loop.values()){
 				if(value.dangerous && value.other===me){
-					if(Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))<=value.stats.hitboxxe+90+this.me.charac.width/2 && this.me.y==0 && this.me.mov!="jumpsquat"){return true;}
-					if((this.me.y==0 && (signe(this.me.x-value.x)==signe(value.vitesse)) && Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))>=value.stats.hitboxxe+120+this.me.charac.width/2-this.wanttojump*6 && value.y+value.stats.hitboxye<=70) || this.me.mov=="jumpsquat"){return true;}
+					if(Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))<=value.stats.hitboxxe+150+this.me.charac.width/2 && this.me.y==0 && this.me.mov!="jumpsquat"){return true;}
+					if((this.me.y==0 && (signe(this.me.x-value.x)==signe(value.vitesse)) && Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))>=value.stats.hitboxxe+150+this.me.charac.width/2-this.wanttojump*6 && value.y+value.stats.hitboxye<=70) || this.me.mov=="jumpsquat"){return true;}
 				}
 			}
 			return false;
