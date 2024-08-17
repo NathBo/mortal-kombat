@@ -3428,7 +3428,12 @@ function main(){
 	sounds_eff.set("freeze",[document.querySelector('#freezewav')]);
 	sounds_eff.set("electrocute",[document.querySelector('#electrocutewav')]);
 	sounds_eff.set("explosion",[document.querySelector('#explosion1wav'),document.querySelector('#explosion2wav')]);
-	sounds_eff.set("femalelmov",[document.querySelector('#femalelmov1wav'),document.querySelector('#femalelmov2wav')]);
+	sounds_eff.set("clementlmov",[document.querySelector('#clementlmov1wav'),document.querySelector('#clementlmov2wav')]);
+	sounds_eff.set("clementmmov",[document.querySelector('#clementmmov1wav'),document.querySelector('#clementmmov2wav')]);
+	sounds_eff.set("clementhmov",[document.querySelector('#clementhmov1wav'),document.querySelector('#clementhmov2wav')]);
+	sounds_eff.set("clementhurted",[document.querySelector('#clementhurted1wav'),document.querySelector('#clementhurted2wav')]);
+	sounds_eff.set("clementbighurted",[document.querySelector('#clementbighurtedwav')]);
+	sounds_eff.set("femalelmov",[document.querySelector('#clementlmov1wav'),document.querySelector('#femalelmov2wav')]);
 	sounds_eff.set("femalemmov",[document.querySelector('#femalemmov1wav'),document.querySelector('#femalemmov2wav')]);
 	sounds_eff.set("femalehmov",[document.querySelector('#femalehmov1wav'),document.querySelector('#femalehmov2wav')]);
 	sounds_eff.set("femalehurted",[document.querySelector('#femalehurted1wav'),document.querySelector('#femalehurted2wav')]);
@@ -3481,7 +3486,7 @@ function main(){
 
 	characteristics.set("kitana",{png : kitskins,coordinates : kitcoordinates, sex : "f", standnframes : 5, rollspeed : 3, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : kitanaiconpng, namewav : document.querySelector('#kitanawav'),
 	width : 34, height : 97,vitesse : 3.2,jumpxspeed : 3.6,backmovnerf : 0.85, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2, hurtcontrol : 0.2, grabtype : "poser",
-	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 32, grabfdur : 35, grabdeg : 13, vicposframes : 12, vicposfdur : 50, cds : [70,120,240,240], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,squarepunchiconpng], voiceactor : "female",
+	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 32, grabfdur : 35, grabdeg : 13, vicposframes : 12, vicposfdur : 50, cds : [70,120,240,240], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,squarepunchiconpng], voiceactor : "clement",
 	winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Kitana takes control of the outworld and forcibly converts all its peasants to blueberry farming in order to have access to an unlimited supply of blueberries for the rest of her life."});
 
 	characteristics.set("mileena",{png : milskins,coordinates : milcoordinates, sex : "f", standnframes : 10, rollspeed : 3, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : mileenaiconpng, namewav : document.querySelector('#mileenawav'),
