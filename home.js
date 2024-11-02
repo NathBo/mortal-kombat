@@ -3309,6 +3309,9 @@ function main(){
 		ctx.fillText("Jump",920,125);
 		if(entre(clickx, 0, 180/1024) && entre(clicky, 180/500, 210/500)){ctx.fillStyle = "red";}
 		ctx.fillText("Reset memory",0,200);
+		ctx.fillStyle = "white";
+		if(entre(clickx, 250/1024, 480/1024) && entre(clicky, 180/500, 210/500)){ctx.fillStyle = "red";}
+		ctx.fillText("Unlock characters",250,200);
 		if(controlafaire!=-1){
 			if(key!=""){
 				ctx.fillText(key,120+(controlafaire%8)*100,55+100*(controlafaire>=8));
@@ -3324,6 +3327,11 @@ function main(){
 			else if(entre(clickx,120/1024,1020/1024)&&entre(clicky,10/500,40/500)){controlafaire=Math.floor((clickx-120/1024)/(100/1024));}
 			else if(entre(clickx,120/1024,1020/1024)&&entre(clicky,110/500,140/500)){controlafaire=9+Math.floor((clickx-120/1024)/(100/1024));}
 			else if(entre(clickx, 0, 180/1024) && entre(clicky, 180/500, 210/500)){statistics = newArcadeStats();gobacktotitlescreen();}
+			else if(entre(clickx, 250/1024, 480/1024) && entre(clicky, 180/500, 210/500)){
+				persosunlocked.set("liukang",true);
+				persosunlocked.set("kitana",true);
+				persosunlocked.set("subzero",true);
+			}
 		}
 	}
 
@@ -3491,7 +3499,7 @@ function main(){
 
 	characteristics.set("mileena",{png : milskins,coordinates : milcoordinates, sex : "f", standnframes : 10, rollspeed : 3, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : mileenaiconpng, namewav : document.querySelector('#mileenawav'),
 	width : 34, height : 97,vitesse : 3,jumpxspeed : 3.3,backmovnerf : 0.9, gravity : 0.42, jumpforce : 8.8,jumpsquat : 3, shorthop : 5.8, friction:0.22, hurtcontrol : 0.2, grabtype : "poser",
-	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.85, airdodgefdur : 13, landinglag : 9,coups : mileena_coups, pv : 95, getupfdur : 32, grabfdur : 35, grabdeg : 12, vicposframes : 10, vicposfdur : 40, cds : [150,150,240,270], icons : [knifeiconpng,balliconpng,fanlifticonpng,teleport_dropiconpng], voiceactor : "female",
+	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.85, airdodgefdur : 13, landinglag : 9,coups : mileena_coups, pv : 92, getupfdur : 32, grabfdur : 35, grabdeg : 12, vicposframes : 10, vicposfdur : 40, cds : [150,150,240,270], icons : [knifeiconpng,balliconpng,fanlifticonpng,teleport_dropiconpng], voiceactor : "female",
 	winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Mileena attends fashion week and finally buys shampoo for her hair, because, and I quote, 'You're a girl, you don't have shampoo, it's like you're a girl, you don't have hair'."});
 	
 
