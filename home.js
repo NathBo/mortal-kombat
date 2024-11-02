@@ -2137,7 +2137,7 @@ function main(){
 				}
 				else if(this.perso=="raiden"){
 					this.costume = "crouching1";
-					if(this.fatality==40){play_sound_eff("fart");}
+					if(this.fatality==55){play_sound_eff("fart");}
 					if(this.fatality==20){other.burn();}
 				}
 				else if(this.perso=="subzero"){
