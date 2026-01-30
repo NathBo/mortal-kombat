@@ -2619,8 +2619,8 @@ function main(){
 		if(fatalitywasdone || fatalitysreen){ctx.filter = 'brightness(0.5)';}
 		ctx.scale(2,2);
 		if(stagesbackground[chosenstage] != null){ctx.drawImage(stagesbackground[chosenstage],backgrounddecal[chosenstage]-90*backgroundscroll[chosenstage]-camerax*backgroundscroll[chosenstage],0);}
-		if(stagesstruct[chosenstage] != null){ctx.drawImage(stagesstruct[chosenstage],-camerax+decalagex-18-stage_size/2+shakex,shakey);}
-		if(stagesground[chosenstage] != null){ctx.drawImage(stagesground[chosenstage],-camerax+decalagex-stage_size/2+shakex,178+shakey);}
+		if(stagesstruct[chosenstage] != null){ctx.drawImage(stagesstruct[chosenstage],structdecal[chosenstage]-camerax+decalagex-18-stage_size/2+shakex,shakey);}
+		if(stagesground[chosenstage] != null){ctx.drawImage(stagesground[chosenstage],structdecal[chosenstage]-camerax+decalagex-stage_size/2+shakex,178+shakey);}
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.scale(1,1);
 		ctx.filter = 'none';
@@ -2645,14 +2645,14 @@ function main(){
 			if(fightstartcountdown==129){roundswav[roundwonsj1+roundwonsj2].play();}
 			ctx.fillStyle = "red";
 			ctx.font = "50px Luminari";
-			ctx.fillText("Round "+((roundwonsj1+roundwonsj2+1).toString()),425*0.86,220);
+			ctx.fillText("Round "+((roundwonsj1+roundwonsj2+1).toString()),423*0.86,220);
 		}
 		else if(fightstartcountdown){
 			if(fightstartcountdown==50){fightwav.play();}
 			else if(fightstartcountdown==1 && musiqueon){musiques[chosenstage].currentTime=0;musiques[chosenstage].play();}
 			ctx.scale(3,3);
-			if(fightstartcountdown%6>=3){ctx.drawImage(fightrediconpng,122*0.86,50);}
-			else{ctx.drawImage(fightyellowiconpng,122*0.86,50);}
+			if(fightstartcountdown%6>=3){ctx.drawImage(fightrediconpng,117*0.86,50);}
+			else{ctx.drawImage(fightyellowiconpng,117*0.86,50);}
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
 		}
@@ -2672,12 +2672,12 @@ function main(){
 			if((j1.pv==0 && j1.charac.sex == "f") || (j2.pv==0 && j2.charac.sex == "f")){s = "f";}
 			ctx.scale(3,3);
 			if(finishhim%6>=3){
-				if(s=="f"){ctx.drawImage(finishherredpng,85*0.86,50);}
-				else{ctx.drawImage(finishhimredpng,85*0.86,50);}
+				if(s=="f"){ctx.drawImage(finishherredpng,80*0.86,50);}
+				else{ctx.drawImage(finishhimredpng,80*0.86,50);}
 			}
 			else{
-				if(s=="f"){ctx.drawImage(finishheryellowpng,85*0.86,50);}
-				else{ctx.drawImage(finishhimyellowpng,85*0.86,50);}
+				if(s=="f"){ctx.drawImage(finishheryellowpng,80*0.86,50);}
+				else{ctx.drawImage(finishhimyellowpng,80*0.86,50);}
 			}
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
@@ -2688,7 +2688,7 @@ function main(){
 		}
 		if(fatalitysreen){
 			ctx.scale(4,4);
-			ctx.drawImage(fatalitypng,75*0.86,40);
+			ctx.drawImage(fatalitypng,71*0.86,40);
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
 			if(fatalitysreen==40){play_sound_eff("fatal2");}
@@ -2765,8 +2765,8 @@ function main(){
 		if(gamepaused){
 			if(pausepressed==1){pausepressed=2;gamepaused=false;musiques[chosenstage].play();}
 			ctx.fillStyle = "gray";
-			ctx.fillRect(412*0.86,150,200,60);
-			ctx.fillRect(412*0.86,250,200,60);
+			ctx.fillRect(412*0.86,150,200*0.86,60);
+			ctx.fillRect(412*0.86,250,200*0.86,60);
 			ctx.font = "40px serif";
 			ctx.fillStyle = "white";
 			ctx.fillText("Reset",465*0.86,190);
@@ -3361,7 +3361,7 @@ function main(){
 		if(stagesbackground[chosenstage] != null){ctx.drawImage(stagesbackground[chosenstage],-90*backgroundscroll[chosenstage]-camerax*backgroundscroll[chosenstage],0);}
 		if(stagesstruct[chosenstage] != null){ctx.drawImage(stagesstruct[chosenstage],-camerax+238-stage_size/2+shakex,shakey);}
 		if(stagesground[chosenstage] != null){ctx.drawImage(stagesground[chosenstage],-camerax+256-stage_size/2+shakex,178+shakey);}
-		ctx.drawImage(logopng,150*0.86,20);
+		ctx.drawImage(logopng,146*0.86,20);
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.scale(1,1);
 		ctx.drawImage(cadrepng,360*0.86,250);
