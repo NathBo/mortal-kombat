@@ -100,8 +100,8 @@ function main(){
 	function resizecanvas(){
 		Width= window.innerWidth;
 		Height=window.innerHeight;
-		  if(Height>Width*500/1024){Height=Width*500/1024;canvas.style.left = "0px";canvas.style.top = (window.innerHeight-Height)/2+"px";decalage=0;wdecalagey=(window.innerHeight-Height)/2;}
-		  else if(Width*500/1024>Height){Width=Height/500*1024;canvas.style.left = (window.innerWidth-Width)/2+"px";decalage=(window.innerWidth-Width)/2; canvas.style.top = "0px";wdecalagey=0;}
+		  if(Height>Width*500/dim_x){Height=Width*500/dim_x;canvas.style.left = "0px";canvas.style.top = (window.innerHeight-Height)/2+"px";decalage=0;wdecalagey=(window.innerHeight-Height)/2;}
+		  else if(Width*500/dim_x>Height){Width=Height/500*dim_x;canvas.style.left = (window.innerWidth-Width)/2+"px";decalage=(window.innerWidth-Width)/2; canvas.style.top = "0px";wdecalagey=0;}
 		  canvas.style.width  = Width+'px';
 		  canvas.style.height  = Height+'px';
 	}
@@ -2536,35 +2536,36 @@ function main(){
 				let sh_f = (this.pvaff-this.pv)*0.8;
 				shake_x = Math.random()*2*sh_f-sh_f;shake_y = Math.random()*2*sh_f-sh_f;
 			}
-			ctx.fillStyle='rgb(148,16,16)';ctx.fillRect(126+this.n*475+shake_x,30+shake_y,288,30);
+			var a = 96*0.86;var b = 498*0.86;
+			ctx.fillStyle='rgb(148,16,16)';ctx.fillRect(a+this.n*b+shake_x,30+shake_y,288,30);
 			ctx.fillStyle='rgb(107,189,33)';
-			if(this.n==0){ctx.fillRect(126+shake_x,30+shake_y,this.pvaff/this.pvmax*288,30);}
-			else{ctx.fillRect(120+475+288+6-this.pvaff/this.pvmax*288+shake_x,30+shake_y,this.pvaff/this.pvmax*288,30);}
-			ctx.drawImage(lifebarpng,120+this.n*475+shake_x,25+shake_y);
+			if(this.n==0){ctx.fillRect(a+shake_x,30+shake_y,this.pvaff/this.pvmax*288,30);}
+			else{ctx.fillRect(a+b+288-this.pvaff/this.pvmax*288+shake_x,30+shake_y,this.pvaff/this.pvmax*288,30);}
+			ctx.drawImage(lifebarpng,a-6+this.n*b+shake_x,25+shake_y);
 			for(var i=0;i<4;i++){
 				if(this.perso=="mileena" && i==0){
 					for(var j=0; j<this.ressource; j++){
 						ctx.fillStyle = "white";
-						ctx.fillRect(140+this.n*730+(60-120*this.n)*i, 120-20*j, 10, 10);
+						ctx.fillRect(140*0.86+this.n*730*0.86+(60-120*this.n)*i, 120-20*j, 10, 10);
 					}
-					ctx.drawImage(this.charac.icons[i],120+this.n*730+(60-120*this.n)*i,88);
+					ctx.drawImage(this.charac.icons[i],120*0.86+this.n*730*0.86+(60-120*this.n)*i,88);
 				}
-				else if(this.cooldowns[i]>0){ctx.drawImage(this.charac.icons[i],0,0,50,50*this.cooldowns[i]/this.charac.cds[i],120+this.n*730+(60-120*this.n)*i,80,50,50*this.cooldowns[i]/this.charac.cds[i]);}
+				else if(this.cooldowns[i]>0){ctx.drawImage(this.charac.icons[i],0,0,50,50*this.cooldowns[i]/this.charac.cds[i],120*0.86+this.n*730*0.86+(60-120*this.n)*i,80,50,50*this.cooldowns[i]/this.charac.cds[i]);}
 			}
 			ctx.scale(2,2);
 			if(this.n==0){
-				if(roundwonsj1>=1){ctx.drawImage(roundwoniconpng,7,13);}
-				if(roundwonsj1>=2){ctx.drawImage(roundwoniconpng,24,13);}
+				if(roundwonsj1>=1){ctx.drawImage(roundwoniconpng,5*0.86,13);}
+				if(roundwonsj1>=2){ctx.drawImage(roundwoniconpng,24*0.86,13);}
 			}
 			else{
-				if(roundwonsj2>=1){ctx.drawImage(roundwoniconpng,490,13);}
-				if(roundwonsj2>=2){ctx.drawImage(roundwoniconpng,473,13);}
+				if(roundwonsj2>=1){ctx.drawImage(roundwoniconpng,492*0.86,13);}
+				if(roundwonsj2>=2){ctx.drawImage(roundwoniconpng,473*0.86,13);}
 			}
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
 			ctx.fillStyle = "red";
 			ctx.font = "50px Luminari";
-			ctx.fillText(Math.max(Math.round(timer/60),0).toString(),485,60);
+			ctx.fillText(Math.max(Math.round(timer/60),0).toString(),485*0.86,60);
 			
 		}
 
@@ -2617,9 +2618,9 @@ function main(){
 	function drawStage(){
 		if(fatalitywasdone || fatalitysreen){ctx.filter = 'brightness(0.5)';}
 		ctx.scale(2,2);
-		if(stagesbackground[chosenstage] != null){ctx.drawImage(stagesbackground[chosenstage],-90*backgroundscroll[chosenstage]-camerax*backgroundscroll[chosenstage],0);}
-		if(stagesstruct[chosenstage] != null){ctx.drawImage(stagesstruct[chosenstage],-camerax+238-stage_size/2+shakex,shakey);}
-		if(stagesground[chosenstage] != null){ctx.drawImage(stagesground[chosenstage],-camerax+256-stage_size/2+shakex,178+shakey);}
+		if(stagesbackground[chosenstage] != null){ctx.drawImage(stagesbackground[chosenstage],backgrounddecal[chosenstage]-90*backgroundscroll[chosenstage]-camerax*backgroundscroll[chosenstage],0);}
+		if(stagesstruct[chosenstage] != null){ctx.drawImage(stagesstruct[chosenstage],-camerax+decalagex-18-stage_size/2+shakex,shakey);}
+		if(stagesground[chosenstage] != null){ctx.drawImage(stagesground[chosenstage],-camerax+decalagex-stage_size/2+shakex,178+shakey);}
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.scale(1,1);
 		ctx.filter = 'none';
@@ -2629,14 +2630,14 @@ function main(){
 	function affichtt(){
 		shake_loop();
 		ctx.fillStyle = "black";
-		ctx.fillRect(0,0,1024,576);
+		ctx.fillRect(0,0,dim_x,576);
 		var idealcamerax = (j1.x+j2.x)/2;
 		if(fixcamera){fixcamera--;}
 		else{
 			if(Math.abs(camerax-idealcamerax)<=vitcamera){camerax = idealcamerax;}
 			else{camerax+=signe(idealcamerax-camerax)*vitcamera;}
 		}
-		let m = stage_size/2-256;
+		let m = stage_size/2-decalagex;
 		if(camerax<-m){camerax=-m}
 		if(camerax>m){camerax=m}
 		drawStage();
@@ -2644,14 +2645,14 @@ function main(){
 			if(fightstartcountdown==129){roundswav[roundwonsj1+roundwonsj2].play();}
 			ctx.fillStyle = "red";
 			ctx.font = "50px Luminari";
-			ctx.fillText("Round "+((roundwonsj1+roundwonsj2+1).toString()),425,220);
+			ctx.fillText("Round "+((roundwonsj1+roundwonsj2+1).toString()),425*0.86,220);
 		}
 		else if(fightstartcountdown){
 			if(fightstartcountdown==50){fightwav.play();}
 			else if(fightstartcountdown==1 && musiqueon){musiques[chosenstage].currentTime=0;musiques[chosenstage].play();}
 			ctx.scale(3,3);
-			if(fightstartcountdown%6>=3){ctx.drawImage(fightrediconpng,122,50);}
-			else{ctx.drawImage(fightyellowiconpng,122,50);}
+			if(fightstartcountdown%6>=3){ctx.drawImage(fightrediconpng,122*0.86,50);}
+			else{ctx.drawImage(fightyellowiconpng,122*0.86,50);}
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
 		}
@@ -2671,12 +2672,12 @@ function main(){
 			if((j1.pv==0 && j1.charac.sex == "f") || (j2.pv==0 && j2.charac.sex == "f")){s = "f";}
 			ctx.scale(3,3);
 			if(finishhim%6>=3){
-				if(s=="f"){ctx.drawImage(finishherredpng,85,50);}
-				else{ctx.drawImage(finishhimredpng,85,50);}
+				if(s=="f"){ctx.drawImage(finishherredpng,85*0.86,50);}
+				else{ctx.drawImage(finishhimredpng,85*0.86,50);}
 			}
 			else{
-				if(s=="f"){ctx.drawImage(finishheryellowpng,85,50);}
-				else{ctx.drawImage(finishhimyellowpng,85,50);}
+				if(s=="f"){ctx.drawImage(finishheryellowpng,85*0.86,50);}
+				else{ctx.drawImage(finishhimyellowpng,85*0.86,50);}
 			}
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
@@ -2687,7 +2688,7 @@ function main(){
 		}
 		if(fatalitysreen){
 			ctx.scale(4,4);
-			ctx.drawImage(fatalitypng,75,40);
+			ctx.drawImage(fatalitypng,75*0.86,40);
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
 			if(fatalitysreen==40){play_sound_eff("fatal2");}
@@ -2764,13 +2765,13 @@ function main(){
 		if(gamepaused){
 			if(pausepressed==1){pausepressed=2;gamepaused=false;musiques[chosenstage].play();}
 			ctx.fillStyle = "gray";
-			ctx.fillRect(412,150,200,60);
-			ctx.fillRect(412,250,200,60);
+			ctx.fillRect(412*0.86,150,200,60);
+			ctx.fillRect(412*0.86,250,200,60);
 			ctx.font = "40px serif";
 			ctx.fillStyle = "white";
-			ctx.fillText("Reset",465,190);
-			ctx.fillText("Quit",475,290);
-			if(click==1 && entre(clickx,412/1024,612/1024) && entre(clicky,150/500,210/500)){
+			ctx.fillText("Reset",465*0.86,190);
+			ctx.fillText("Quit",475*0.86,290);
+			if(click==1 && entre(clickx,412/1024,612/1034) && entre(clicky,150/500,210/500)){
 				click=2;if(youareintutorial){launchtutorial(currentuto);}else{reset_game(true);}
 			}
 			else if(click==1 && entre(clickx,412/1024,612/1024) && entre(clicky,250/500,310/500)){click=2;reset_game(true);gobacktotitlescreen();}
@@ -2853,10 +2854,10 @@ function main(){
 			else{
 				if(j2.perso=="shao_kahn" && j1.pv>0 && roundwonsj1==2 && end_of_round_countdown>=4){
 					ctx.fillStyle = "gray";
-					ctx.fillRect(312,100,400,300);
+					ctx.fillRect(312*0.86,100,400,300);
 					ctx.fillStyle = "white";
 					ctx.font = "20px serif";
-					printAtWordWrap(ctx,j1.charac.winmsg, 332, 140, 22, 360);
+					printAtWordWrap(ctx,j1.charac.winmsg, 332*0.86, 140, 22, 360);
 					if(end_of_round_countdown==4){
 						if(j1.poing==1){j1.poing=2;}
 						else{end_of_round_countdown++;}
@@ -2887,7 +2888,7 @@ function main(){
 						if(a=="liukang"){b = "Liukang";}
 						if(a=="kitana"){b = "Kitana";}
 						if(a=="subzero"){b = "Subzero";}
-						printAtWordWrap(ctx,b+" unlocked!", 332, 140, 22, 360);
+						printAtWordWrap(ctx,b+" unlocked!", 332*0.86, 140, 22, 360);
 						ctx.scale(3,3);
 						ctx.drawImage(characteristics.get(a).icon,160,70);
 						ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -2966,7 +2967,7 @@ function main(){
 		if(stagesground[chosenstage] != null){ctx.drawImage(stagesground[chosenstage],-camerax+256-stage_size/2+shakex,178+shakey);}
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		chartimer = (chartimer+1)%(chartimercycle*2);
-		var leftside = 134; var topside = 40;
+		var leftside = 134*0.86; var topside = 40;
 		//ctx.scale(2.32,2.32);
 		//ctx.drawImage(characterscreenpng,92,0);
 		//ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -2983,14 +2984,14 @@ function main(){
 		ctx.scale(2,2);
 		ctx.drawImage(playericonpng,8,210);
 		if(secondplayerishuman){
-			ctx.drawImage(playericonpng,482,210);
+			ctx.drawImage(playericonpng,482*0.86,210);
 		}
 		else{
-			ctx.drawImage(boticonpng,482,210);
+			ctx.drawImage(boticonpng,482*0.86,210);
 			ctx.fillStyle = "white";
 			ctx.font = "18px serif";
-			ctx.fillText(difficultynames[difficulte],410,220);
-			ctx.fillText(" -   +",420,240);
+			ctx.fillText(difficultynames[difficulte],410*0.86,220);
+			ctx.fillText(" -   +",420*0.86,240);
 		}
 		if(click==1){
 			click=2;
@@ -3194,26 +3195,26 @@ function main(){
 		if(secondplayerchosescharac){j2.afficher(j1);}
 		ctx.fillStyle = "white";
 		ctx.font = "30px serif";
-		ctx.fillText("Go to title screen",400,470);
+		ctx.fillText("Go to title screen",400*0.86,470);
 		if(arcadelevel>=0){
 			var a = statistics.get(liste_persos[persosovered[0]])[difficulte];
 			if (a.beaten){
 				ctx.fillStyle = "white";
 				ctx.font = "30px serif";
-				ctx.fillText("Time: "+(Math.round(a.best_time/60*100)/100).toString(),700, 180);
-				ctx.fillText("Lost Rounds: "+a.rounds_lost.toString(),700, 220);
-				ctx.fillText("Damage Taken: "+a.least_damage.toString(),700, 260);
-				ctx.fillText("Moves used: "+a.moves_used.toString(),700, 300);
+				ctx.fillText("Time: "+(Math.round(a.best_time/60*100)/100).toString(),700*0.86, 180);
+				ctx.fillText("Lost Rounds: "+a.rounds_lost.toString(),700*0.86, 220);
+				ctx.fillText("Damage Taken: "+a.least_damage.toString(),700*0.86, 260);
+				ctx.fillText("Moves used: "+a.moves_used.toString(),700*0.86, 300);
 			}
 			else{
 				ctx.fillStyle = "red";
 				ctx.font = "30px serif";
-				ctx.fillText("Not yet beaten",820,400);
+				ctx.fillText("Not yet beaten",820*0.86,400);
 			}
 			if(!haschangedchar && initchar!="" && liste_persos[persosovered[0]]!=initchar){
 				ctx.fillStyle = "red";
 				ctx.font = "20px serif";
-				ctx.fillText("Changing character will make the records unavailable for this run", 260,80);
+				ctx.fillText("Changing character will make the records unavailable for this run", 260*0.86,80);
 			}
 		}
 	}
@@ -3231,11 +3232,11 @@ function main(){
 		if(stagesground[chosenstage] != null){ctx.drawImage(stagesground[chosenstage],-camerax+256-stage_size/2+shakex,178+shakey);}
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		var a = -1; var b = -1; var color = "red";
-		if(entre(clickx,130/1024, 330/1024) && entre(clicky,0.26,0.26+0.1*tutolineslist.length)){
+		if(entre(clickx,130/dim_x, 330/dim_x) && entre(clicky,0.26,0.26+0.1*tutolineslist.length)){
 			a = Math.floor((clicky-0.26)*10);
 		}
-		else if(entre(clickx,175*3/1024, (175*3+22*9)/1024) && entre(clicky,40*3/500,106*3/500)){
-			b = Math.floor((clickx-175*3/1024)/(22*3/1024))+3*(clicky>219/500);
+		else if(entre(clickx,175*3/dim_x, (175*3+22*9)/dim_x) && entre(clicky,40*3/500,106*3/500)){
+			b = Math.floor((clickx-175*3/dim_x)/(22*3/dim_x))+3*(clicky>219/500);
 		}
 		ctx.fillStyle = "white";
 		ctx.font = "40px serif";
@@ -3267,13 +3268,13 @@ function main(){
 		ctx.fillText("Go to title screen",400,470);
 		if(click==1){
 			click=2;
-			if(entre(clickx,400/1024,610/1024) && entre(clicky,450/500,480/500)){persolocked = [0,0]; skinschoisis = [0,0];gobacktotitlescreen();return;}
-			else if(entre(clickx,130/1024, 330/1024) && entre(clicky,0.26,0.26+0.1*tutolineslist.length)){
+			if(entre(clickx,400/dim_x,610/dim_x) && entre(clicky,450/500,480/500)){persolocked = [0,0]; skinschoisis = [0,0];gobacktotitlescreen();return;}
+			else if(entre(clickx,130/dim_x, 330/dim_x) && entre(clicky,0.26,0.26+0.1*tutolineslist.length)){
 				currenttutoline = tutolineslist[Math.floor((clicky-0.26)*10)];
 				launchtutorial(currenttutoline[0]);
 			}
-			else if(entre(clickx,175*3/1024, (175*3+22*9)/1024) && entre(clicky,40*3/500,106*3/500) && persosunlocked.get(liste_persos[Math.floor((clickx-175*3/1024)/(22*3/1024))+3*(clicky>219/500)])){
-				currenttutoline = tutopersoslist[Math.floor((clickx-175*3/1024)/(22*3/1024))+3*(clicky>219/500)];
+			else if(entre(clickx,175*3/dim_x, (175*3+22*9)/dim_x) && entre(clicky,40*3/500,106*3/500) && persosunlocked.get(liste_persos[Math.floor((clickx-175*3/dim_x)/(22*3/dim_x))+3*(clicky>219/500)])){
+				currenttutoline = tutopersoslist[Math.floor((clickx-175*3/dim_x)/(22*3/dim_x))+3*(clicky>219/500)];
 				launchtutorial(currenttutoline[0]);
 			}
 		}
@@ -3283,7 +3284,7 @@ function main(){
 	function parameters_screen(){
 		resizecanvas();
 		ctx.fillStyle = "black";
-		ctx.fillRect(0,0,1024,576);
+		ctx.fillRect(0,0,dim_x,576);
 		ctx.fillStyle = "white";
 		ctx.font = "30px serif";
 		ctx.fillText("Go to title screen",400,470);
@@ -3307,10 +3308,10 @@ function main(){
 		ctx.fillText("Special",720,125);
 		ctx.fillText("Grab",820,125);
 		ctx.fillText("Jump",920,125);
-		if(entre(clickx, 0, 180/1024) && entre(clicky, 180/500, 210/500)){ctx.fillStyle = "red";}
+		if(entre(clickx, 0, 180/dim_x) && entre(clicky, 180/500, 210/500)){ctx.fillStyle = "red";}
 		ctx.fillText("Reset memory",0,200);
 		ctx.fillStyle = "white";
-		if(entre(clickx, 250/1024, 480/1024) && entre(clicky, 180/500, 210/500)){ctx.fillStyle = "red";}
+		if(entre(clickx, 250/dim_x, 480/dim_x) && entre(clicky, 180/500, 210/500)){ctx.fillStyle = "red";}
 		ctx.fillText("Unlock characters",250,200);
 		if(controlafaire!=-1){
 			if(key!=""){
@@ -3323,11 +3324,11 @@ function main(){
 		}
 		if(click==1){
 			click=2;
-			if(entre(clickx,400/1024,610/1024) && entre(clicky,450/500,480/500)){functiontoexecute = titlescreen; skinschoisis = [0,0];}
-			else if(entre(clickx,120/1024,1020/1024)&&entre(clicky,10/500,40/500)){controlafaire=Math.floor((clickx-120/1024)/(100/1024));}
-			else if(entre(clickx,120/1024,1020/1024)&&entre(clicky,110/500,140/500)){controlafaire=9+Math.floor((clickx-120/1024)/(100/1024));}
-			else if(entre(clickx, 0, 180/1024) && entre(clicky, 180/500, 210/500)){statistics = newArcadeStats();gobacktotitlescreen();}
-			else if(entre(clickx, 250/1024, 480/1024) && entre(clicky, 180/500, 210/500)){
+			if(entre(clickx,400/dim_x,610/dim_x) && entre(clicky,450/500,480/500)){functiontoexecute = titlescreen; skinschoisis = [0,0];}
+			else if(entre(clickx,120/dim_x,1020/dim_x)&&entre(clicky,10/500,40/500)){controlafaire=Math.floor((clickx-120/dim_x)/(100/dim_x));}
+			else if(entre(clickx,120/dim_x,1020/dim_x)&&entre(clicky,110/500,140/500)){controlafaire=9+Math.floor((clickx-120/dim_x)/(100/dim_x));}
+			else if(entre(clickx, 0, 180/dim_x) && entre(clicky, 180/500, 210/500)){statistics = newArcadeStats();gobacktotitlescreen();}
+			else if(entre(clickx, 250/dim_x, 480/dim_x) && entre(clicky, 180/500, 210/500)){
 				persosunlocked.set("liukang",true);
 				persosunlocked.set("kitana",true);
 				persosunlocked.set("subzero",true);
@@ -3340,14 +3341,14 @@ function main(){
 		var a = -1;
 		let m = stage_size/2-256;
 		if(entre(clicky,340/500,380/500)){
-			if(entre(clickx,80/1024,260/1024)){a=0;}
-			else if(entre(clickx,380/1024,590/1024)){a=1;}
-			else if(entre(clickx,740/1024,920/1024)){a=2;}
+			if(entre(clickx,80/1024,280/1024)){a=0;}
+			else if(entre(clickx,380/1024,610/1024)){a=1;}
+			else if(entre(clickx,740/1024,930/1024)){a=2;}
 		}
 		else if(entre(clicky,400/500,440/500)){
 			if(entre(clickx,80/1024,260/1024)){a=3;}
-			else if(entre(clickx,380/1024,590/1024)){a=4;}
-			else if(entre(clickx,740/1024,920/1024)){a=5;}
+			else if(entre(clickx,380/1024,620/1024)){a=4;}
+			else if(entre(clickx,740/1024,910/1024)){a=5;}
 		}
 		camerax+=menudirectionx*0.2;
 		if(camerax<-m+10){menudirectionx+=1;}
@@ -3356,44 +3357,44 @@ function main(){
 		if(stagesbackground[chosenstage] != null){ctx.drawImage(stagesbackground[chosenstage],-90*backgroundscroll[chosenstage]-camerax*backgroundscroll[chosenstage],0);}
 		if(stagesstruct[chosenstage] != null){ctx.drawImage(stagesstruct[chosenstage],-camerax+238-stage_size/2+shakex,shakey);}
 		if(stagesground[chosenstage] != null){ctx.drawImage(stagesground[chosenstage],-camerax+256-stage_size/2+shakex,178+shakey);}
-		ctx.drawImage(logopng,150,20);
+		ctx.drawImage(logopng,150*0.86,20);
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.scale(1,1);
-		ctx.drawImage(cadrepng,360,250);
-		ctx.drawImage(cadrepng,35,250);
-		ctx.drawImage(cadrepng,695,250);
+		ctx.drawImage(cadrepng,360*0.86,250);
+		ctx.drawImage(cadrepng,35*0.86,250);
+		ctx.drawImage(cadrepng,695*0.86,250);
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		var color = "red";
 		ctx.fillStyle = "white";
 		if(a==0){ctx.fillStyle = color}
 		ctx.font = "40px serif";
-		ctx.fillText("Fight CPU",80,370);
+		ctx.fillText("Fight CPU",80*0.86,370);
 		ctx.fillStyle = "white";
 		if(a==1){ctx.fillStyle = color}
-		ctx.fillText("Versus mode",380,370);
+		ctx.fillText("Versus mode",380*0.86,370);
 		ctx.fillStyle = "white";
 		if(a==2){ctx.fillStyle = color}
-		ctx.fillText("Parameters",740,370);
+		ctx.fillText("Parameters",740*0.86,370);
 		ctx.fillStyle = "white";
 		if(a==4){ctx.fillStyle = color}
-		ctx.fillText("Arcade mode",380,430);
+		ctx.fillText("Arcade mode",380*0.86,430);
 		ctx.fillStyle = "white";
 		if(a==3){ctx.fillStyle = color}
-		ctx.fillText("Training",80,430);
+		ctx.fillText("Training",80*0.86,430);
 		ctx.fillStyle = "white";
 		if(a==5){ctx.fillStyle = color}
-		ctx.fillText("Tutorials",740,430);
+		ctx.fillText("Tutorials",740*0.86,430);
 		if(click==1){
 			click=2;
 			if(entre(clicky,340/500,380/500)){
-				if(entre(clickx,80/1024,260/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=false;camerax=0;}
-				else if(entre(clickx,380/1024,590/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=true;camerax=0;}
-				else if(entre(clickx,740/1024,920/1024)){functiontoexecute = parameters_screen;}
+				if(entre(clickx,80/1024,280/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=false;camerax=0;}
+				else if(entre(clickx,380/1024,610/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=true;camerax=0;}
+				else if(entre(clickx,740/1024,930/1024)){functiontoexecute = parameters_screen;}
 			}
 			else if(entre(clicky,400/500,440/500)){
 				if(entre(clickx,80/1024,260/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=true;secondplayerisdummy=true;camerax=0;}
-				else if(entre(clickx,380/1024,590/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=false;arcadelevel=0;arcadeorder.shuffle();secondplayerchosescharac=false;camerax=0;}
-				else if(entre(clickx,740/1024,920/1024)){youareintutorial=true; secondplayerishuman = false; tutorialscenenumber = 0; functiontoexecute = menututo;}
+				else if(entre(clickx,380/1024,620/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=false;arcadelevel=0;arcadeorder.shuffle();secondplayerchosescharac=false;camerax=0;}
+				else if(entre(clickx,740/1024,910/1024)){youareintutorial=true; secondplayerishuman = false; tutorialscenenumber = 0; functiontoexecute = menututo;}
 			}
 		}
 	}
@@ -3414,6 +3415,9 @@ function main(){
 	ctx.webkitImageSmoothingEnabled = false;
 	ctx.mozImageSmoothingEnabled = false;
 	ctx.imageSmoothingEnabled = false;
+
+	const dim_x = 890;
+	const dim_y = 500;
 
 	
 	
@@ -3536,7 +3540,7 @@ function main(){
 	j1 = new Joueur();
 	j2 = new Joueur();
 
-	var decalagex = 256;
+	var decalagex = 256*0.86;
 	var ground = 240;
 	var stage_size = 720;
 	var camerax = 0; var menudirectionx = -1;
