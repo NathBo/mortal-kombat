@@ -2874,14 +2874,18 @@ function main(){
 						}
 					}
 				}
-				if(j2.perso=="shao_kahn" && j1.pv>0 && roundwonsj1==2 && end_of_round_countdown==3){
+				if(((j1.pv>0 && roundwonsj1==2) || (j2.pv>0 && secondplayerishuman && roundwonsj2==2)) && end_of_round_countdown==3){
 					var a = "";
-					if(j1.perso=="raiden"){a = "liukang";}
-					if(j1.perso=="mileena"){a = "kitana";}
-					if(j1.perso=="scorpion"){a = "subzero";}
+					var perso = j1.perso;
+					if (j2.pv>0){
+						perso = j2.perso;
+					}
+					if(perso=="raiden"){a = "liukang";}
+					if(perso=="mileena"){a = "kitana";}
+					if(perso=="scorpion"){a = "subzero";}
 					if(!(a=="" || persosunlocked.get(a))){
 						ctx.fillStyle = "gray";
-						ctx.fillRect(312,100,400,300);
+						ctx.fillRect(312*0.86,100,400*0.86,300);
 						ctx.fillStyle = "white";
 						ctx.font = "20px serif";
 						var b = "";
@@ -2890,7 +2894,7 @@ function main(){
 						if(a=="subzero"){b = "Subzero";}
 						printAtWordWrap(ctx,b+" unlocked!", 332*0.86, 140, 22, 360);
 						ctx.scale(3,3);
-						ctx.drawImage(characteristics.get(a).icon,160,70);
+						ctx.drawImage(characteristics.get(a).icon,160*0.86,70);
 						ctx.setTransform(1, 0, 0, 1, 0, 0);
 						ctx.scale(1,1);
 						if(j1.poing==1){j1.poing=2;persosunlocked.set(a,true);}
