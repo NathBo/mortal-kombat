@@ -2860,10 +2860,10 @@ function main(){
 			ctx.fillRect(412*0.86,250,200*0.86,60);
 			ctx.font = "40px serif";
 			ctx.fillStyle = "white";
-			ctx.fillText("Reset",460*0.86,190);
+			ctx.fillText("Cancel",450*0.86,190);
 			ctx.fillText("Quit",470*0.86,290);
 			if(click==1 && entre(clickx,412/1024,612/1034) && entre(clicky,150/500,210/500)){
-				click=2;if(youareintutorial){launchtutorial(currentuto);}else{reset_game(true);}
+				click=2;if(youareintutorial){launchtutorial(currentuto);}else{gamepaused=false;musiques[chosenstage].play();}
 			}
 			else if(click==1 && entre(clickx,412/1024,612/1024) && entre(clicky,250/500,310/500)){click=2;reset_game(true);gobacktotitlescreen();}
 			return;
