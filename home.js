@@ -37,6 +37,10 @@ function randomInt(mini, maxi)
      return Math.floor(nb);
 }
 
+function round_of(number,precis){
+	return precis*Math.round(number/precis);
+}
+
 Array.prototype.shuffle = function(n)
 {
      if(!n)
@@ -858,6 +862,9 @@ function main(){
 					this.parryrate = 1;
 					break;
 			}
+			if(arcadelevel==0 && this.difficulty<4){
+				this.donothingchance+=0.2;this.dontattackchance+=0.05;this.reaction_time+=4;
+			}
 			if(difficulte>=1 && me.perso=="scorpion"){this.agressivite+=0.002}
 			if(me.perso=="shao_kahn"){this.wanttojump-=20;}
 			if(me.perso=="kitana"){this.idealrange=150;}
@@ -1177,6 +1184,7 @@ function main(){
 			this.cooldowns = [0,0,0,0];
 			this.fatality = 0; this.decapitated = 0; this.electrocuted = 0; this.hide = 0; this.burning = 0; this.fatalitytype = 0;
 			if(!secondplayerishuman && this.n==1 && reset_ai){this.ai = new AI(this,other,difficulte);}
+			this.combo_deg = 0; this.combo_hits = 0; this.combo_affich_cpt = 0; this.combo_affich_hits = 0; this.combo_affich_percent = 0; this.combo_affich_score = 0;
 		}
 
 		begincoup(s,other){
@@ -1252,6 +1260,41 @@ function main(){
 					}
 					this.pv = this.pvmax; this.pvaff = this.pvmax;
 				}
+		}
+
+		affich_combo(percent_deg,hits){
+			this.combo_affich_cpt = 45;
+			this.combo_affich_hits = hits;
+			this.combo_affich_percent = percent_deg;
+			if(arcadelevel>=0 && this.n==0){
+				var score_to_add = (this.combo_affich_hits+5)*this.combo_affich_percent*5;
+				if(this.other.pv<=0){score_to_add*=2;}
+				if (score_to_add<=200){
+					score_to_add = round_of(score_to_add,50);
+				}
+				else if(score_to_add<=1000){
+					score_to_add = round_of(score_to_add,100);
+				}
+				else if(score_to_add<=10000){
+					score_to_add = round_of(score_to_add,500);
+				}
+				else{
+					score_to_add = round_of(score_to_add,1000);
+				}
+				score+=score_to_add;
+				this.combo_affich_score = score_to_add;
+			}
+			else{
+				this.combo_affich_score = 0;
+			}
+		}
+
+		end_of_official_combo(){
+			if (this.combo_hits>1){
+				this.other.affich_combo(Math.round(this.combo_deg/this.pvmax*100),this.combo_hits);
+			}
+			this.combo_deg = 0;
+			this.combo_hits = 0;
 		}
 
 		miseajour(other){
@@ -1346,6 +1389,7 @@ function main(){
 			if(this.invincibilite>0){this.invincibilite--;}
 			if(this.gettingup){
 				this.end_of_combo();
+				this.end_of_official_combo();
 				this.xspeed = signe(this.xspeed)*Math.max(0,Math.abs(this.xspeed) -c.friction);
 				this.gettingup++;
 				if(this.gettingup == this.charac.getupfdur || (this.gettingup>=this.charac.getupfdur*5/6 && (this.haut || this.jump))){
@@ -1364,6 +1408,9 @@ function main(){
 				if(this.falling==0){
 					this.reoriente(other);
 					this.end_of_combo();
+					if(this.y==0){
+						this.end_of_official_combo();
+					}
 				}
 			
 				if(this.y<=0){
@@ -1976,10 +2023,26 @@ function main(){
 				if(this.n==0 && !secondplayerishuman && stats.hiteffect != "projectile" && stats.hiteffect != "spear" && stats.hiteffect != "freeze" && stats.hiteffect != "iceflask" && stats.hiteffect != "projectile_fall"){
 					other.ai.ugotahit();
 				}
+				if(this.n==1 && arcadelevel>=0){
+					switch (other.mov){
+						case "huppercut":
+							score+=100;
+							break;
+						case "hkick":
+							score += 50;
+							break;
+						default:
+							score += 20;
+							break;
+					}
+				}
 					this.hurted = stats.hitstun;
 				this.xspeed = stats.hurtx*other.orientation;
 				this.tb = stats.hurty;
-				this.pv -= Math.ceil(stats.degats*this.comboscaling);
+				var degs = Math.ceil(stats.degats*this.comboscaling)
+				this.pv -= degs;
+				this.combo_deg += degs;
+				this.combo_hits += 1;
 				if(this.n==1 && secondplayerisdummy && this.pv<=0){this.pv=1;}
 				if(stats.hiteffect=="spear" || stats.hiteffect=="freeze"){this.comboscaling-=0.2;}
 				else{this.comboscaling -= 0.05;}
@@ -2000,6 +2063,7 @@ function main(){
 			if(stats.hiteffect == "iceflask"){this.invincibilite=60;}
 			if(this.pv<=0){
 				this.killanim();
+				this.end_of_official_combo()
 			}
 			if(other.mov=="thundergod"){other.y=0.1;}
 			if(arcadelevel>=0 && this.n==0){damage_taken+=initpv-this.pv;}
@@ -2565,7 +2629,29 @@ function main(){
 			ctx.scale(1,1);
 			ctx.fillStyle = "red";
 			ctx.font = "50px Luminari";
-			ctx.fillText(Math.max(Math.round(timer/60),0).toString(),485*0.86,60);
+			var timer_print = Math.max(Math.round(timer/60),0);
+			if (timer_print>=10){ctx.fillText(Math.max(Math.round(timer/60),0).toString(),485*0.86,60);}
+			else{ctx.fillText(Math.max(Math.round(timer/60),0).toString(),500*0.86,60);}
+			
+			if (this.combo_affich_cpt>0){
+				this.combo_affich_cpt--;
+				ctx.fillStyle = "yellow";
+				ctx.font = "30px Luminari";
+				if (this.combo_affich_cpt<=5){
+					ctx.globalAlpha = this.combo_affich_cpt*0.2;
+				}
+				var a = 46*0.86;var b = 700*0.86;
+				var dec = 0;
+				if (this.combo_affich_cpt>=40){
+					dec = (this.combo_affich_cpt-40)*10;
+					if (this.n==0){dec*=-1;}
+				}
+				ctx.fillText(this.combo_affich_hits.toString() + " hits combo\n"+this.combo_affich_percent.toString()+"%",a-6+this.n*b+shake_x+dec,155+shake_y);
+				if(this.combo_affich_score>0){
+					ctx.fillText("+"+this.combo_affich_score.toString(),a-6+this.n*b+shake_x+dec,185+shake_y);
+				}
+				ctx.globalAlpha = 1.0;
+			}
 			
 		}
 
@@ -2696,6 +2782,11 @@ function main(){
 		for(let value of objects_to_loop.values()){
 			if(value.vitesse!=0){value.afficher();}
 		}
+		if (arcadelevel>=0){
+			ctx.fillStyle = "white";
+			ctx.font = "25px Luminari";
+			ctx.fillText("Score: "+score.toString(),80,22);
+		}
 
 		still_draw = false;
 	}
@@ -2739,7 +2830,7 @@ function main(){
 	}
 
 	function gobacktotitlescreen(){
-		persolocked = [0,0]; skinschoisis = [0,0];arcadelevel=-1;functiontoexecute = titlescreen;
+		persolocked = [0,0]; skinschoisis = [0,0];arcadelevel=-1;functiontoexecute = titlescreen;score = 0;var matchscore = 0; var roundscore = 0;
 		roundwonsj1 = 0; roundwonsj2 = 0; camerax = 0; choserandomstage();
 		if(difficulte<0){difficulte=0;}
 		rounds_lost = 0; damage_taken = 0; time = 0; moves_used = 0;
@@ -2769,8 +2860,8 @@ function main(){
 			ctx.fillRect(412*0.86,250,200*0.86,60);
 			ctx.font = "40px serif";
 			ctx.fillStyle = "white";
-			ctx.fillText("Reset",465*0.86,190);
-			ctx.fillText("Quit",475*0.86,290);
+			ctx.fillText("Reset",460*0.86,190);
+			ctx.fillText("Quit",470*0.86,290);
 			if(click==1 && entre(clickx,412/1024,612/1034) && entre(clicky,150/500,210/500)){
 				click=2;if(youareintutorial){launchtutorial(currentuto);}else{reset_game(true);}
 			}
@@ -2813,6 +2904,11 @@ function main(){
 				fatalitysreen--;
 			}
 			else {
+				if(j1.pv>0){roundscore = score;}
+				else{score = Math.max(roundscore-1000,Math.max(round_of(matchscore*0.9,100),0));roundscore = score;}
+				if(roundwonsj1>=2){matchscore = score;}
+				else if(roundwonsj2>=2){score = Math.max(matchscore-5000,Math.max(round_of(matchscore*0.8,100),0));matchscore = score;}
+				roundscore = score;
 				if(roundwonsj1>=2 || roundwonsj2>=2){
 					if(roundwonsj1>=2 && arcadelevel>=0){
 						arcadelevel+=1;
@@ -2874,6 +2970,33 @@ function main(){
 						}
 					}
 				}
+				if (arcadelevel>=0 && j1.pv>0 && end_of_round_countdown == 6){
+					timer-=180;
+					score+=30;
+					if(timer>0){
+						end_of_round_countdown++;
+					}
+					else{
+						timer=0;
+					}
+				}
+				if(arcadelevel>=0 && j1.pv>0 && entre(end_of_round_countdown,20,80)){
+					var score_to_add = round_of(j1.pv/j1.pvmax*1000,50);
+					if(j1.pv==j1.pvmax){score_to_add = 2000;}
+					if(end_of_round_countdown==80){score+=score_to_add}
+					ctx.fillStyle = "yellow";
+					ctx.font = "30px serif";
+					if (end_of_round_countdown<=25){
+						ctx.globalAlpha = (end_of_round_countdown-20)*0.2;
+					}
+					var a = 46*0.86;
+					var dec = 0;
+					if (end_of_round_countdown>=75){
+						dec = -(end_of_round_countdown-75)*10;
+					}
+					ctx.fillText("Vitals +"+score_to_add.toString(),a-6+dec,155);
+					ctx.globalAlpha = 1.0;
+				}
 				if(((j1.pv>0 && roundwonsj1==2) || (j2.pv>0 && secondplayerishuman && roundwonsj2==2)) && end_of_round_countdown==3){
 					var a = "";
 					var perso = j1.perso;
@@ -2906,7 +3029,7 @@ function main(){
 				if(end_of_round_countdown==60 && (j1.pv>0 || j2.pv>0)){play_sound_eff("wins");}
 			}
 			if(end_of_round_countdown==110 && arcadelevel>=0){
-				time += timer_init-timer; console.log(time);
+				time += timer_init-timer;
 				if(j1.pv<=0 && j2.pv>0){rounds_lost++;}
 			}
 			j1.declencher_vicpose();
@@ -3187,7 +3310,7 @@ function main(){
 				reset_game();
 				is_in_charc_screen = false;
 				choserandomstage();
-				if(arcadelevel>=0 && initchar==""){initchar=persoschoisis[0];}
+				if(arcadelevel>=0 && initchar==""){initchar=persoschoisis[0];score=0;}
 				else if(arcadelevel>=0 && initchar!=persoschoisis[0]){haschangedchar=true;}
 				functiontoexecute = loop;
 				menupersoswav.pause();menupersoswav.currentTime=0;
@@ -3560,7 +3683,7 @@ function main(){
 	var roundwonsj1 = 0; var roundwonsj2 = 0;
 	var finishhim = 0; var fatalitywasdone = false; var fatalitysreen = 0;
 	var persoschoisis = ["kitana","raiden"]; var skinschoisis = [0,0]; var persolocked = [0,0]; var persosovered = [0,2];
-	var musiqueon = true; var soundeffon = true; var introon = true; var timer = 0; var timer_init = 99*60;
+	var musiqueon = true; var soundeffon = true; var introon = true; var timer = 0; var timer_init = 60*60;
 	var liste_persos = ["raiden","mileena","scorpion","liukang", "kitana", "subzero"];
 	var chartimer = 0; var chartimercycle = 3; var difficultynames = ["Easy","Normal","Hard","Insane","Terminator"];
 	var is_in_charc_screen = true; var lockincountdown = 0; var lockincountdownfdur = 40; var controlafaire = -1; var key = "";
@@ -3571,6 +3694,7 @@ function main(){
 	var arcadelevel = -1; var arcadeorder = [...liste_persos]; arcadeorder.shuffle(); var arcadestagesorder = [1,0,3,2,0,4,5];
 	var youareintutorial = false; var tutorialscenenumber = 0; var currentuto = null; var currenttutoline = tutospecial;
 	var haschangedchar = false; var initchar = "";
+	var score = 0; var matchscore = 0; var roundscore = 0;
 	
 	
 	function saveStats(){
