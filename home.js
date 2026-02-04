@@ -100,7 +100,7 @@ function printAtWordWrap( context , text, x, y, lineHeight, fitWidth)
 
 
 function main(){
-	const VERSION = 1;
+	const VERSION = 2;
 	function resizecanvas(){
 		Width= window.innerWidth;
 		Height=window.innerHeight;
@@ -2914,7 +2914,11 @@ function main(){
 						arcadelevel+=1;
 						if(arcadelevel>liste_persos.length){
 							reset_game(true);
-							gobacktotitlescreen();
+							if(haschangedchar){gobacktotitlescreen();}
+							else{
+								functiontoexecute = highscore_screen;
+								highscore_screen_cpt = 200;
+							}
 							return;
 						}
 						roundwonsj1 = 0; roundwonsj2 = 0; camerax = 0;
@@ -2958,19 +2962,23 @@ function main(){
 						if(j1.poing==1){j1.poing=2;}
 						else{end_of_round_countdown++;}
 					}
-					if(end_of_round_countdown==5 && !haschangedchar){
+					if(end_of_round_countdown==6 && !haschangedchar){
 						var a = statistics.get(j1.perso)[difficulte];
+						old_stats = JSON.parse(JSON.stringify(a));
 						if(a.beaten){
 							a.best_time = Math.min(time,a.best_time); a.rounds_lost = Math.min(rounds_lost,a.rounds_lost);
 							a.least_damage = Math.min(damage_taken,a.least_damage); a.moves_used = Math.min(moves_used,a.moves_used);
+							a.best_score = Math.max(a.best_score,score)
 						}
 						else{
 							a.beaten = true;
 							a.best_time = time; a.rounds_lost = rounds_lost; a.least_damage = damage_taken; a.moves_used = moves_used;
+							a.best_score = score;
 						}
+						new_stats = {beaten : true, best_time : time, least_damage : damage_taken, rounds_lost : rounds_lost, moves_used : moves_used, best_score : score};
 					}
 				}
-				if (arcadelevel>=0 && j1.pv>0 && end_of_round_countdown == 6){
+				if (arcadelevel>=0 && j1.pv>0 && end_of_round_countdown == 7){
 					timer-=180;
 					score+=30;
 					if(timer>0){
@@ -3020,7 +3028,7 @@ function main(){
 						ctx.drawImage(characteristics.get(a).icon,160*0.86,70);
 						ctx.setTransform(1, 0, 0, 1, 0, 0);
 						ctx.scale(1,1);
-						if(j1.poing==1){j1.poing=2;persosunlocked.set(a,true);}
+						if(j1.poing==1){j1.poing=2;persosunlocked.set(a,true);saveStats()}
 						else{end_of_round_countdown++;}
 					}
 				}
@@ -3123,8 +3131,8 @@ function main(){
 		if(click==1){
 			click=2;
 			if(entre(clickx,482/512,505/512) && entre(clicky,210/250,241/250) && secondplayerchosescharac){secondplayerishuman = !secondplayerishuman}
-			if(!secondplayerishuman && entre(clickx,425/512,435/512) && entre(clicky,230/250,240/250) && arcadelevel<=0){difficulte = Math.max(difficulte-1,0)}
-			if(!secondplayerishuman && entre(clickx,444/512,454/512) && entre(clicky,230/250,240/250) && arcadelevel<=0){difficulte = Math.min(difficulte+1,difficultynames.length-1)}
+			if(!secondplayerishuman && entre(clickx,415/512,435/512) && entre(clicky,230/250,240/250) && arcadelevel<=0){difficulte = Math.max(difficulte-1,0)}
+			if(!secondplayerishuman && entre(clickx,440/512,454/512) && entre(clicky,230/250,240/250) && arcadelevel<=0){difficulte = Math.min(difficulte+1,difficultynames.length-1)}
 			if(entre(clickx,400/1024,610/1024) && entre(clicky,450/500,480/500)){persolocked = [0,0]; skinschoisis = [0,0];gobacktotitlescreen();menupersoswav.pause();menupersoswav.currentTime=0;return;}
 		}
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -3328,10 +3336,18 @@ function main(){
 			if (a.beaten){
 				ctx.fillStyle = "white";
 				ctx.font = "30px serif";
-				ctx.fillText("Time: "+(Math.round(a.best_time/60*100)/100).toString(),700*0.86, 180);
-				ctx.fillText("Lost Rounds: "+a.rounds_lost.toString(),700*0.86, 220);
-				ctx.fillText("Damage Taken: "+a.least_damage.toString(),700*0.86, 260);
-				ctx.fillText("Moves used: "+a.moves_used.toString(),700*0.86, 300);
+				var time = Math.round(a.best_time/60*100)/100;
+				var minutes = Math.floor(time/60);
+				var seconds = time%60;
+				var centiemes = Math.floor((seconds%1)*100);
+				seconds = Math.floor(seconds);
+				if(seconds<10){seconds = "0"+seconds.toString()}
+				else{seconds = seconds.toString()}
+				if(centiemes<10){centiemes = "0"+centiemes.toString()}
+				else{centiemes = centiemes.toString()}
+				ctx.fillText("HighScore: "+a.best_score.toString(),700*0.86, 180);
+				ctx.fillText("Time: "+minutes.toString()+":"+seconds+":"+centiemes,700*0.86, 220);
+				ctx.fillText("Lost Rounds: "+a.rounds_lost.toString(),700*0.86, 260);
 			}
 			else{
 				ctx.fillStyle = "red";
@@ -3341,7 +3357,7 @@ function main(){
 			if(!haschangedchar && initchar!="" && liste_persos[persosovered[0]]!=initchar){
 				ctx.fillStyle = "red";
 				ctx.font = "20px serif";
-				ctx.fillText("Changing character will make the records unavailable for this run", 260*0.86,80);
+				ctx.fillText("Changing character will make the records unavailable for this run", 250*0.86,80);
 			}
 		}
 	}
@@ -3526,6 +3542,68 @@ function main(){
 		}
 	}
 
+	function fillTextWithDots(texte1,texte2,x,y,place,dotplace=1){
+		var n = Math.max(place - texte1.length - texte2.length,0)*dotplace;
+		var s = texte1 + ".".repeat(n) + texte2;
+		ctx.fillText(s,x,y);
+	}
+
+	function highscore_screen(){
+		resizecanvas();
+		if(highscore_screen_cpt>0){
+			highscore_screen_cpt--;
+		}
+		ctx.fillStyle = "black";
+		ctx.fillRect(0,0,890,500);
+		ctx.fillStyle = "white";
+		ctx.font = "40px serif";
+		if(old_stats.beaten){
+			if(highscore_screen_cpt<=190){ctx.fillText("Best performances",500,50);}
+			if(highscore_screen_cpt<=180)fillTextWithDots("Score",old_stats.best_score.toString(),500,180,15,2);
+			var time = Math.round(old_stats.best_time/60*100)/100;
+			var minutes = Math.floor(time/60);
+			var seconds = time%60;
+			var centiemes = Math.floor((seconds%1)*100);
+			seconds = Math.floor(seconds);
+			if(seconds<10){seconds = "0"+seconds.toString()}
+			else{seconds = seconds.toString()}
+			if(centiemes<10){centiemes = "0"+centiemes.toString()}
+			else{centiemes = centiemes.toString()}
+			if(highscore_screen_cpt<=170)fillTextWithDots("Time",minutes.toString()+":"+seconds+":"+centiemes,500,230,15,2);
+			if(highscore_screen_cpt<=160){fillTextWithDots("Lost Rounds",old_stats.rounds_lost.toString(),500,280,15,2);}
+		}
+		else if(highscore_screen_cpt>160){highscore_screen_cpt=160;}
+		ctx.fillStyle = "white";
+		if(highscore_screen_cpt<=150)ctx.fillText("Your stats",130,50);
+		ctx.fillStyle = "white";
+		if(old_stats.beaten && new_stats.best_score>=old_stats.best_score){ctx.fillStyle = "yellow";}
+		if(highscore_screen_cpt<=140)fillTextWithDots("Score",new_stats.best_score.toString(),80,180,15,2);
+		var time = Math.round(new_stats.best_time/60*100)/100;
+		var minutes = Math.floor(time/60);
+		var seconds = time%60;
+		var centiemes = Math.floor((seconds%1)*100);
+		seconds = Math.floor(seconds);
+		if(seconds<10){seconds = "0"+seconds.toString()}
+		else{seconds = seconds.toString()}
+		if(centiemes<10){centiemes = "0"+centiemes.toString()}
+		else{centiemes = centiemes.toString()}
+		ctx.fillStyle = "white";
+		if(old_stats.beaten && new_stats.best_time<=old_stats.best_time){ctx.fillStyle = "yellow";}
+		if(highscore_screen_cpt<=130)fillTextWithDots("Time",minutes.toString()+":"+seconds+":"+centiemes,80,230,15,2);
+		ctx.fillStyle = "white";
+		if(old_stats.beaten && new_stats.rounds_lost<=old_stats.rounds_lost){ctx.fillStyle = "yellow";}
+		if(highscore_screen_cpt<=120)fillTextWithDots("Lost Rounds",new_stats.rounds_lost.toString(),80,280,15,2);
+		if(highscore_screen_cpt==0){
+			ctx.fillStyle = "white";
+			ctx.fillText("Go to title screen",380*0.86,470);
+		}
+		if(click==1){
+			click=2;
+			if(entre(clickx,380/dim_x,600/dim_x) && entre(clicky,450/500,480/500) && highscore_screen_cpt==0){gobacktotitlescreen();return;}
+		}
+	}
+
+
 	function globalloop(){
 		setTimeout(globalloop,frame_delay);
 		gameLoop();
@@ -3679,7 +3757,7 @@ function main(){
 	var pause_after_vicpose = 30;
 	var cpt = 0; var objects_to_loop = new Map();
 	var click = 0;var clickx=0; var clicky = 0;
-	var difficulte = 1;
+	var difficulte = 0;
 	var roundwonsj1 = 0; var roundwonsj2 = 0;
 	var finishhim = 0; var fatalitywasdone = false; var fatalitysreen = 0;
 	var persoschoisis = ["kitana","raiden"]; var skinschoisis = [0,0]; var persolocked = [0,0]; var persosovered = [0,2];
@@ -3695,29 +3773,37 @@ function main(){
 	var youareintutorial = false; var tutorialscenenumber = 0; var currentuto = null; var currenttutoline = tutospecial;
 	var haschangedchar = false; var initchar = "";
 	var score = 0; var matchscore = 0; var roundscore = 0;
+	var old_stats = null; var new_stats = null; var highscore_screen_cpt = 0;
 	
 	
 	function saveStats(){
 		localStorage.setItem("statistics",JSON.stringify(Object.fromEntries(statistics)));
 		localStorage.setItem("persosunlocked",JSON.stringify(Object.fromEntries(persosunlocked)));
 		localStorage.setItem("version",VERSION);
+		localStorage.setItem("difficulte",difficulte)
 	}
 
 	function loadStats(){
+		var local_version = localStorage.getItem("version");
+		console.log(local_version);
 		var a = localStorage.getItem("statistics");
 		var b = localStorage.getItem("persosunlocked");
-		if(a===null || b===null){
+		var c = localStorage.getItem("difficulte");
+		if(a===null || b===null || local_version != VERSION){
+			console.log("Reset saves");
 			statistics = newArcadeStats();
+			saveStats();
 		}
 		else{
 			statistics = new Map(Object.entries(JSON.parse(a)));
 			persosunlocked = new Map(Object.entries(JSON.parse(b)));
+			if(c != null){difficulte = parseInt(c);}
 		}
 	}
 
 
 	function newStats(){
-		return {beaten : false, best_time : 0, least_damage : 0, rounds_lost : 0, moves_used : 0}
+		return {beaten : false, best_time : 0, least_damage : 0, rounds_lost : 0, moves_used : 0, best_score : 0}
 	}
 
 	function newCharacStats(){
