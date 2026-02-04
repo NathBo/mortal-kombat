@@ -1985,7 +1985,7 @@ function main(){
 				this.xspeed = -stats.blockx*this.orientation;
 				if(parrywasdone){lag_game(11);}
 				else{lag_game(Math.floor(stats.hitlag/0.8));}
-				if(other.mov=="ball"){other.movlag=1;other.tb=6.5;other.xspeed = -1;other.y=0.1;other.falling=1;other.hurted=30;gamefreeze=0;}
+				if(other.mov=="ball"){other.movlag=2;other.tb=6.5;other.xspeed = -1;other.y=0.1;other.falling=1;other.hurted=30;other.crouching=0;gamefreeze=5;}
 				if(this.n==0 && !secondplayerishuman && stats.hiteffect!="projectile" && stats.hiteffect != "spear" && stats.hiteffect != "freeze"  && stats.hiteffect != "iceflask" && stats.hiteffect != "projectile_fall"){
 					other.ai.ugotblocked();
 				}
@@ -2044,7 +2044,7 @@ function main(){
 				this.combo_deg += degs;
 				this.combo_hits += 1;
 				if(this.n==1 && secondplayerisdummy && this.pv<=0){this.pv=1;}
-				if(stats.hiteffect=="spear" || stats.hiteffect=="freeze"){this.comboscaling-=0.2;}
+				if(stats.comboscaling!==undefined){this.comboscaling-=stats.comboscaling;}
 				else{this.comboscaling -= 0.05;}
 				if(this.comboscaling<=minimumcomboscaling){this.comboscaling=minimumcomboscaling;}
 				if(stats.hiteffect != "projectile"  && stats.hiteffect != "projectile_fall"){lag_game(stats.hitlag);}
