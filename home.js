@@ -862,7 +862,7 @@ function main(){
 					this.fduroptiononoki = 0;
 					this.reaction_time = 8;
 					this.chanceeviterprojo = 1;
-					this.distancetowavedash = 90;
+					this.distancetowavedash = 150;
 					this.parryrate = 1;
 					break;
 				default:
@@ -877,7 +877,7 @@ function main(){
 					this.fduroptiononoki = 0;
 					this.reaction_time = 4;
 					this.chanceeviterprojo = 1;
-					this.distancetowavedash = 60;
+					this.distancetowavedash = 150;
 					this.parryrate = 1;
 					break;
 			}
@@ -1003,12 +1003,13 @@ function main(){
 			this.wanttowavedash=true;
 		}
 
-		thereisaprojo(){
+		thereisaprojo(careful=false){
 			var me = this.me;
 			for(let value of objects_to_loop.values()){
 				if(value.dangerous && value.other===me){
-					if(Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))<=value.stats.hitboxxe+150+this.me.charac.width/2 && this.me.y==0 && this.me.mov!="jumpsquat"){return true;}
-					if((this.me.y==0 && (signe(this.me.x-value.x)==signe(value.vitesse)) && Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))>=value.stats.hitboxxe+150+this.me.charac.width/2-this.wanttojump*6 && value.y+value.stats.hitboxye<=70) || this.me.mov=="jumpsquat"){return true;}
+					if(Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))<=value.stats.hitboxxe+150+this.me.charac.width/2 && this.me.y==0){return true;}
+					if((this.me.y==0 && (signe(this.me.x-value.x)==signe(value.vitesse)) && Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))>=value.stats.hitboxxe+150+this.me.charac.width/2-this.wanttojump*6 && value.y+value.stats.hitboxye<=70)){return true;}
+					if(careful){return true;}
 				}
 			}
 			return false;
@@ -1180,7 +1181,7 @@ function main(){
 			else if(me.perso=="mileena" && me.y==0 && Math.abs(me.x-other.x)>=60 && Math.abs(-stage_size/2*me.orientation-me.x)-other.y/2<=130 && me.cooldowns[3]<=5 && movpriority.get(me.mov)<70)
 				{this.begincoup("teleport_drop");}
 
-			else if(Math.abs(Math.abs(me.x-other.x)-this.idealrange)>=this.distancetowavedash && !this.thereisaprojo()){this.beginwavedash();}
+			else if(Math.abs(Math.abs(me.x-other.x)-this.idealrange)>=this.distancetowavedash && !this.thereisaprojo(true)){this.beginwavedash();}
 			
 			else if(this.attacking*this.rangescaling+Math.abs(me.x-other.x) + Math.max(0,200-Math.abs(-stage_size/2*me.orientation-me.x))>=this.idealrange){this.pressforward();}
 			else{this.pressbackward();}
