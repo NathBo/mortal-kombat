@@ -765,7 +765,8 @@ function main(){
 			this.enviedegrab = Math.floor(Math.random()*5);
 			this.hascommited = 0;
 			this.wanttojump = 0-1*(other.perso=="raiden"); this.enviedantiair = 0;
-			this.optionssonoki = [1.25,0.2,0.35,0.5]; //crouch, stand block, crouch block, jump
+			this.optionssonoki = [0.25,0.2,0.5,0.4,0.15]; //reversal, stand block, crouch block, jump, grab
+			this.reversalmove = "clkick"; this.reversaldist = 80;
 			this.chosenoptiononoki = 0;
 			this.eviterprochainprojo = true;
 			this.foptiononoki = 0;
@@ -779,7 +780,25 @@ function main(){
 			}
 			me.charac.coups.forEach(aux);
 			this.grade=grade;
+			if(this.difficulty<4 && arcadelevel>=0 && arcadelevel<=2){this.difficulty-=1;}
+			else if(this.difficulty<3 && arcadelevel==5){this.difficulty+=1;}
 			switch(this.difficulty){
+				case -1:
+					this.donothingchance = 0.9;
+					this.dontattackchance = 0.97;
+					this.agressivite = -Math.random()*0.05;
+					this.baserisk = 80+Math.floor(Math.random()*15);
+					this.inconsistency = 20;
+					this.cancelcombodelay = 15;
+					this.cancelnormaldelay = 20;
+					this.commitmentonwalk = 7;
+					this.optionssonoki[Math.floor(Math.random()*4)]+=1;
+					this.fduroptiononoki = 15;
+					this.reaction_time = 25;
+					this.chanceeviterprojo = 0.5;
+					this.distancetowavedash = 500;
+					this.parryrate = 0.01;
+					break;
 				case 0:
 					this.donothingchance = 0.7;
 					this.dontattackchance = 0.9;
@@ -863,14 +882,14 @@ function main(){
 					break;
 			}
 			if(arcadelevel==0 && this.difficulty<4){
-				this.donothingchance+=0.2;this.dontattackchance+=0.05;this.reaction_time+=4;
+				this.donothingchance = 1-(1-this.donothingchance)/2;this.dontattackchance=1-(1-this.dontattackchance)/2;this.reaction_time+=4;
 			}
 			if(difficulte>=1 && me.perso=="scorpion"){this.agressivite+=0.002}
-			if(me.perso=="shao_kahn"){this.wanttojump-=20;}
-			if(me.perso=="kitana"){this.idealrange=150;}
-			if(me.perso=="raiden"){this.enviedantiair+=2;}
-			if(me.perso=="liukang"){this.idealrange=90;}
-			if(me.perso=="mileena"){this.rangescaling=11;}
+			if(me.perso=="shao_kahn"){this.wanttojump-=20;this.reversalmove="charge";}
+			if(me.perso=="kitana"){this.idealrange=150;this.reversalmove="squarepunch";this.optionssonoki[0]+=0.2;}
+			if(me.perso=="raiden"){this.enviedantiair+=2;this.reversalmove="teleport";}
+			if(me.perso=="liukang"){this.idealrange=90;this.reversalmove="cycle";}
+			if(me.perso=="mileena"){this.rangescaling=11;this.reversalmove="teleport_drop";this.optionssonoki[0]+=0.4;this.reversaldist=200;}
 			//if(youareintutorial && !me.allowedmoves.includes("block")){this.agressivite+=0.01;}	//pour l'instant ca ferait ca tout le temps
 		}
 
@@ -938,7 +957,7 @@ function main(){
 		}
 
 		begincoup(m){
-			this.me.begincoup(m,this.other);
+			this.me.begincoup(m,this.other,true);
 			//this.me.movlag+=1;
 		}
 
@@ -1037,13 +1056,20 @@ function main(){
 
 		decide(){
 			var me = this.me;
+			var other = this.other;
 			if(end_of_round_countdown || me.pv<=0){me.droite = 0;me.gauche = 0;me.bas = 0;return;}
 			if(this.hascommited){this.hascommited--;}
 			else{me.droite = 0;me.gauche = 0;}
 			if(this.eviterprochainprojo){if(this.eviterprojectiles()){return;}}
 			if(me.gettingup){
 				this.timesinceoki=5;
-				if(me.gettingup==1){this.chosenoptiononoki = getrandomwithcoeff(this.optionssonoki);this.foptiononoki = this.fduroptiononoki;}
+				if(me.gettingup==1){
+					var optlist = JSON.parse(JSON.stringify(this.optionssonoki))
+					if(me.cooldowns[cd_dependance.get(this.reversalmove)]){optlist[0]=0.}
+					if(Math.abs(-stage_size/2*me.orientation-me.x)<=80){optlist[3]*=0.3;}
+					if(Math.abs(other.x-me.x)>140){optlist[4]=0.;}
+					this.chosenoptiononoki = getrandomwithcoeff(optlist);this.foptiononoki = this.fduroptiononoki;
+				}
 			}
 			else if(this.timesinceoki){
 				this.timesinceoki--;
@@ -1052,7 +1078,9 @@ function main(){
 				me.bas = 0; me.haut = 0; me.poing = 0; me.jambe = 0; me.dodge = 0; me.special = 0;
 				switch (this.chosenoptiononoki){
 					case 0:
-						me.bas=1;
+						if(me.movlag==0 && Math.abs(other.x-me.x)<=this.reversaldist){
+							this.begincoup(this.reversalmove);
+						}
 						break;
 					case 1:
 						this.pressbackward();
@@ -1063,14 +1091,18 @@ function main(){
 						break;
 					case 3:
 						me.haut=1;
-						if(this.attacking>=0){this.pressforward();}
+						if(this.attacking>=0 || Math.abs(-stage_size/2*me.orientation-me.x)<=100){this.pressforward();}
 						else{this.pressbackward();}
-						if(Math.random()<=0.5){this.bas = 1;}
+						if(Math.random()<=0.5){this.bas = 1;};
+						break;
+					case 4:
+						if(me.movlag==0){
+							this.begincoup("grab");
+						}
 				}
 				if(me.gettingup==0){this.foptiononoki--;}
 				return;
 			}
-			var other = this.other;
 			var c = other.charac.coups.get(other.mov);
 			if(this.wanttowavedash && me.y>0){
 				if(Math.abs(me.x-other.x)-this.idealrange>0){this.pressforward();}
@@ -1187,10 +1219,12 @@ function main(){
 			this.combo_deg = 0; this.combo_hits = 0; this.combo_affich_cpt = 0; this.combo_affich_hits = 0; this.combo_affich_percent = 0; this.combo_affich_score = 0;
 		}
 
-		begincoup(s,other){
+		begincoup(s,other,ai_pass=false){
 			var stats = this.charac.coups.get(s);
 			this.reoriente(other);
-			if(this.hurted || this.falling || this.gettingup || this.blocking){return;}
+			if(this.hurted || this.falling || this.blocking){return;}
+			if(entre(this.gettingup,1,this.charac.getupfdur-1) || (this.gettingup && !ai_pass)){return;}
+			if(this.gettingup){this.gettingup=0;}
 			if(youareintutorial && !this.allowedmoves.includes(s)){return;}
 			if(["clpunch","clkick","cmkick"].includes(s)){this.crouching = Math.max(this.crouching,4);}
 			if(s == "jkick"){if(this.x<other.x){this.orientation = 1;}else{this.orientation = -1;}}
@@ -1393,7 +1427,7 @@ function main(){
 				this.xspeed = signe(this.xspeed)*Math.max(0,Math.abs(this.xspeed) -c.friction);
 				this.gettingup++;
 				if(this.gettingup == this.charac.getupfdur || (this.gettingup>=this.charac.getupfdur*5/6 && (this.haut || this.jump))){
-					this.gettingup = 0; this.invincibilite = 1;
+					this.gettingup = 0; this.invincibilite = this.charac.jumpsquat+1;
 					if(this.haut==0 && this.jump==0 && this.bas){this.crouching = 6;}
 				}
 			}
@@ -1958,6 +1992,13 @@ function main(){
 			if(other.mov=="thundergod"){other.y=0;}
 			if(other.mov=="charge"){other.movlag=8;other.xspeed=0;}
 			if(other.mov=="flying_kick"){other.movlag=13;other.xspeed=0;}
+			if(stats.hiteffect=="grab" && this.mov=="grab" && this.movlag>=this.charac.coups.get("grab").elag){
+				this.pushed = 5;this.pushx = -4*this.orientation;
+				other.pushed = 5;other.pushx = -4*other.orientation;
+				this.movlag=0;this.mov="";
+				other.movlag=0;other.mov="";
+				return;
+			}
 			var parrywasdone = false;
 			if(this.mov == "icebody"){
 				var s = this.charac.coups.get("icebody");
