@@ -199,8 +199,8 @@ function main(){
 
 
 	class Bolt{
-		constructor(x,y,orientation,other,stats){
-			this.x = x; this.y = y; this.orientation = orientation;
+		constructor(x,y,orientation,other,stats,skin=raipng){
+			this.x = x; this.y = y; this.orientation = orientation; this.skin = skin;
 			this.other = other;
 			this.width=40;
 			this.height=17;
@@ -233,11 +233,67 @@ function main(){
 			this.rotation = (this.rotation+this.rotationspeed)%360;
 			ctx.scale(2*this.orientation,2);
 			var coords = raicoordinates.get(this.costume);
-			ctx.drawImage(raipng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
 			if(gamefreeze==0){this.dur--;}
 			if(this.dur==0){this.delete();return;}
+		}
+
+		delete(){
+			objects_to_loop.delete(this.num);
+		}
+	}
+
+	class SpitProj{
+		constructor(x,y,orientation,other,stats,skin=reppng){
+			this.x = x; this.y = y; this.orientation = orientation;
+			this.other = other; this.skin = skin;
+			this.width=40;
+			this.height=17;
+			this.totdur = 40;this.vitesse=10;
+			this.costcpt = 0;
+			this.framepercost = 3;
+			this.stats = stats;
+			this.dur = this.totdur;
+			this.num = cpt;
+			this.dangerous = true;
+			this.dying = 0;
+		}
+
+		loop(){
+			if(this.dying==0){
+				this.x += this.orientation*this.vitesse;
+				var stats = this.stats; var other = this.other;
+				if(other.invincibilite==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
+					if(other.y==0){
+						if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
+					}
+					else{
+						if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){other.hurt(this,stats);this.dur=1;}
+					}
+				}
+			}
+			else{
+				this.dying--;
+				this.x -= this.orientation;
+				if(this.dying==1){this.delete();}
+			}
+		}
+
+		afficher(){
+			this.costcpt = (this.costcpt+1)%(4*this.framepercost);
+			if(this.dying==0){this.costume = "spitproj";}
+			else if(this.dying>=3){this.costume = "spitproj_cont1";}
+			else{this.costume = "spitproj_cont2";}
+			this.rotation = (this.rotation+this.rotationspeed)%360;
+			ctx.scale(2*this.orientation,2);
+			var coords = repcoordinates.get(this.costume);
+			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			if(gamefreeze==0){this.dur--;}
+			if(this.dur==0){this.dying=5;return;}
 		}
 
 		delete(){
@@ -1684,6 +1740,9 @@ function main(){
 					else if(this.perso == "mileena" && this.back>=1 && this.crouching==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("homing_knife",other);
 					}
+					else if(this.perso == "reptile" && this.back>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+						this.begincoup("spit",other);
+					}
 					else if(this.forward>=1&&movpriority.get(this.mov)<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
 						this.x+=this.charac.vitesse*this.orientation;this.xspeed = 0;
 						let d = (this.charac.width+other.charac.width)/3;
@@ -1792,7 +1851,7 @@ function main(){
 						var stats = this.charac.coups.get(this.mov);
 						this.crouching=0;
 						if(this.movlag==stats.elag){
-							add_to_objects_set(new Bolt(this.x+20*this.orientation,this.y+60,this.orientation,other,stats));
+							add_to_objects_set(new Bolt(this.x+20*this.orientation,this.y+60,this.orientation,other,stats,this.skin));
 						}
 						break;
 					case "thundergod":
@@ -1898,6 +1957,13 @@ function main(){
 					case "ball":
 						var stats = this.charac.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.xspeed=6*this.orientation;}
+						break;
+					case "spit":
+						var stats = this.charac.coups.get(this.mov);
+						this.crouching=0;
+						if(this.movlag==stats.elag){
+							add_to_objects_set(new SpitProj(this.x+30*this.orientation,this.y+60,this.orientation,other,stats,this.skin));
+						}
 						break;
 					}
 				this.movlag--;
@@ -2531,6 +2597,12 @@ function main(){
 						var stats = this.charac.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.costume = "roll"+(Math.floor((this.movlag-6)/this.charac.rollspeed)+1).toString()}
 						else{this.costume = "crouching2";}
+						break;
+					case "spit":
+						var stats = this.charac.coups.get(this.mov);
+						if(entre(this.movlag,stats.elag*2/3,stats.elag+stats.fdur)){this.costume = this.mov+"3"}
+						else if(entre(this.movlag,0,stats.elag/3)||entre(this.movlag,stats.elag+stats.fdur+stats.slag/2,stats.elag+stats.fdur+stats.slag)){this.costume = this.mov+"1"}
+						else{this.costume = this.mov+"2";}
 						break;
 
 				}
@@ -3723,6 +3795,7 @@ function main(){
 	sounds_eff.set("grapple",[document.querySelector('#grapplewav')]);
 	sounds_eff.set("teleport",[document.querySelector('#teleportwav')]);
 	sounds_eff.set("fart",[document.querySelector('#fartwav')]);
+	sounds_eff.set("spithit",[document.querySelector('#spithitwav')]);
 
 	
 
@@ -3771,7 +3844,7 @@ function main(){
 	
 	characteristics.set("reptile",{png : repskins,coordinates : repcoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : reptileiconpng, namewav : document.querySelector('#reptilewav'),
 	width : 39, height : 103,vitesse : 2.9,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.405, jumpforce : 9.05,jumpsquat : 4, shorthop : 6.0, friction:0.22, hurtcontrol : 0.22,grabtype : "launch",
-	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : reptile_coups, pv : 100, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 14, cds : [210,150,240,270], icons : [iceballiconpng,slideiconpng,iceflaskiconpng,icebodyiconpng], voiceactor : "male",
+	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : reptile_coups, pv : 100, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 14, cds : [210,160,150,270], icons : [iceballiconpng,sliderepiconpng,spiticonpng,icebodyiconpng], voiceactor : "male",
 	winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Subzero becomes best friends with Yeti and builds the best professional snowball fight team with him."});
 	
 
