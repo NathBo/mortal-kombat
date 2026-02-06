@@ -799,8 +799,8 @@ function getrepcoordinates(){
     repcoordinates.set("stunned3",{offx:227,width:32,offy:1136,height:99,decx:0,decy:0});
     repcoordinates.set("stunned4",{offx:269,width:33,offy:1134,height:101,decx:1,decy:0});
     repcoordinates.set("stunned5",{offx:310,width:44,offy:1134,height:101,decx:0,decy:0});
-	repcoordinates.set("slide1",{offx:876,width:58,offy:1364,height:95,decx:0,decy:0});
-	repcoordinates.set("slide2",{offx:944,width:58,offy:1364,height:95,decx:0,decy:0});
+	repcoordinates.set("slide1",{offx:311,width:58,offy:1384,height:95,decx:0,decy:0});
+	repcoordinates.set("slide2",{offx:379,width:58,offy:1384,height:95,decx:0,decy:0});
 
 	repcoordinates.set("head",{offx:296,width:14,offy:1791,height:17,decx:0,decy:0});
 	
