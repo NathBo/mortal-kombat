@@ -301,6 +301,56 @@ function main(){
 		}
 	}
 
+	class ChargeBall_Ball{
+		constructor(x,y,orientation,other,stats,skin=reppng){
+			this.x = x; this.y = y; this.orientation = orientation; this.skin = skin;
+			this.other = other;
+			this.width=40;
+			this.height=17;
+			this.totdur = 40;this.vitesse=6;
+			this.costcpt = 0;
+			this.framepercost = 3;
+			this.stats = stats;
+			this.dur = this.totdur;
+			this.num = cpt;
+			this.dangerous = true;
+			this.vitesseincr = 0.2;
+			
+		}
+
+		loop(){
+			this.x += this.orientation*this.vitesse;
+			this.vitesse+=this.vitesseincr;
+			var stats = this.stats; var other = this.other;
+			if(other.invincibilite==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
+				if(other.y==0){
+					if(entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
+				}
+				else{
+					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){other.hurt(this,stats);this.dur=1;}
+				}
+			}
+			if(this.dur%10==0){add_to_objects_set(new Ring(this.x,this.y,this.orientation,this.skin,this.vitesse,this.vitesseincr));}
+		}
+
+		afficher(){
+			this.costcpt = (this.costcpt+1)%(2*this.framepercost);
+			this.costume = "chargeball_ball"+(Math.floor(this.costcpt/this.framepercost)+1);
+			this.rotation = (this.rotation+this.rotationspeed)%360;
+			ctx.scale(2*this.orientation,2);
+			var coords = repcoordinates.get(this.costume);
+			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			if(gamefreeze==0){this.dur--;}
+			if(this.dur==0){this.delete();return;}
+		}
+
+		delete(){
+			objects_to_loop.delete(this.num);
+		}
+	}
+
 	class Knife{
 		constructor(x,y,orientation,other,stats, vitesse = 6){
 			this.x = x; this.y = y; this.orientation = orientation;
@@ -760,6 +810,39 @@ function main(){
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
 			ctx.restore();
+		}
+
+	}
+
+	class Ring{
+		constructor(x,y,orientation,skin,vitesse,vitesseincr){
+			this.x = x; this.y = y; this.orientation = orientation; this.skin = skin;
+			this.num = cpt;
+			this.framepercost = 2;
+			this.dur = this.framepercost*6
+			this.vitesse = vitesse;this.vitesseincr = vitesseincr;
+			this.dangerous = false;
+		}
+
+		loop(){
+			this.x+=this.orientation*this.vitesse;
+			this.vitesse+=this.vitesseincr;
+		}
+
+		afficher(){
+			this.dur--;
+			this.costume = "ring"+(6-Math.floor(this.dur/this.framepercost)).toString();
+			console.log(this.x,this.y);
+			ctx.scale(2*this.orientation,2);
+			var coords = repcoordinates.get(this.costume);
+			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*coords.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			if(this.dur==0){this.delete();}
+		}
+
+		delete(){
+			objects_to_loop.delete(this.num);
 		}
 
 	}
@@ -1263,7 +1346,9 @@ function main(){
 			this.movlag = 0;
 			this.mov = "";
 			this.tb = 0; this.xspeed = 0; this.crouching = 0;
-			this.memoryslot = 0; this.perfectblock = 0; this.parrying = 0; this.ressource = 3; this.max_ressource = 3;
+			this.memoryslot = 0; this.perfectblock = 0; this.parrying = 0; 
+			if(this.perso=="mileena"){this.ressource = 3; this.max_ressource = 3;}
+			else{this.ressource=0;this.max_ressource=60;}
 			this.hurted = 0; this.hurtx = 0; this.invincibilite = 0; this.freeze = 0; this.canthurt = false;
 			this.pv = this.charac.pv; this.pvmax = this.charac.pv; this.pvaff = this.charac.pv;
 			this.pushed = 0;this.pushx = 0;
@@ -1743,6 +1828,10 @@ function main(){
 					else if(this.perso == "reptile" && this.back>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("spit",other);
 					}
+					else if(this.perso == "reptile" && this.back==0 && this.crouching==0 && this.bas==0 && this.forward==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+						if(this.ressource==this.max_ressource){this.begincoup("chargeball",other);this.ressource=0;}
+						else{this.begincoup("charge_chargeball",other);}
+					}
 					else if(this.forward>=1&&movpriority.get(this.mov)<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
 						this.x+=this.charac.vitesse*this.orientation;this.xspeed = 0;
 						let d = (this.charac.width+other.charac.width)/3;
@@ -1964,6 +2053,27 @@ function main(){
 						if(this.movlag==stats.elag){
 							add_to_objects_set(new SpitProj(this.x+30*this.orientation,this.y+60,this.orientation,other,stats,this.skin));
 						}
+						break;
+					case "chargeball":
+						var stats = this.charac.coups.get(this.mov);
+						this.crouching=0;
+						if(this.movlag==stats.elag){
+							add_to_objects_set(new ChargeBall_Ball(this.x+30*this.orientation,this.y+60,this.orientation,other,stats,this.skin));
+						}
+						break;
+					case "charge_chargeball":
+						var stats = this.charac.coups.get(this.mov);
+						if(this.movlag==stats.elag){
+							if(this.ressource<this.max_ressource){
+								if(this.special==1){this.special=2;}
+								else{
+									this.ressource++;
+									this.movlag++;
+								}
+								if(this.ressource%11==0){add_to_objects_set(new Ring(this.x+30*this.orientation,this.y+65,this.orientation,this.skin,0,0));}
+							}
+						}
+						if(this.movlag==stats.elag+2){add_to_objects_set(new Ring(this.x+30*this.orientatio,this.y+65,this.orientation,this.skin,0,0));}
 						break;
 					}
 				this.movlag--;
@@ -2604,6 +2714,22 @@ function main(){
 						else if(entre(this.movlag,0,stats.elag/3)||entre(this.movlag,stats.elag+stats.fdur+stats.slag/2,stats.elag+stats.fdur+stats.slag)){this.costume = this.mov+"1"}
 						else{this.costume = this.mov+"2";}
 						break;
+					case "charge_chargeball":
+						var stats = this.charac.coups.get(this.mov);
+						if(this.movlag==stats.elag){this.costume = "chargeball2";}
+						else if(this.movlag<stats.elag){this.costume = "chargeball7";}
+						else{this.costume = "chargeball1";}
+						break;
+					case "chargeball" :
+						var stats = this.charac.coups.get(this.mov);
+						if(this.movlag>=stats.elag+stats.fdur+stats.slag*4/5){this.costume = this.mov+"1"}
+						else if(this.movlag>=stats.elag+stats.fdur+stats.slag*3/5){this.costume = this.mov+"2"}
+						else if(this.movlag>=stats.elag+stats.fdur+stats.slag*2/5){this.costume = this.mov+"3"}
+						else if(this.movlag>=stats.elag+stats.fdur+stats.slag*1/5){this.costume = this.mov+"4"}
+						else if(this.movlag>=stats.elag+stats.fdur){this.costume = this.mov+"5"}
+						else if(this.movlag>=stats.elag/2){this.costume = this.mov+"6"}
+						else {this.costume = this.mov+"7"}
+						break;
 
 				}
 			}
@@ -2725,6 +2851,15 @@ function main(){
 						ctx.fillRect(140*0.86+this.n*730*0.86+(60-120*this.n)*i, 120-20*j, 10, 10);
 					}
 					ctx.drawImage(this.charac.icons[i],120*0.86+this.n*730*0.86+(60-120*this.n)*i,88);
+				}
+				else if(this.perso=="reptile" && i==0){
+					if(this.ressource==this.max_ressource){
+						ctx.fillStyle='rgb(107,189,33)';
+					}
+					else{
+						ctx.fillStyle='rgb(110, 121, 100)';
+					}
+					ctx.fillRect(140*0.86+this.n*730*0.86+(60-120*this.n)*i,110-this.ressource/this.max_ressource*40,10,this.ressource/this.max_ressource*40);
 				}
 				else if(this.cooldowns[i]>0){ctx.drawImage(this.charac.icons[i],0,0,50,50*this.cooldowns[i]/this.charac.cds[i],120*0.86+this.n*730*0.86+(60-120*this.n)*i,80,50,50*this.cooldowns[i]/this.charac.cds[i]);}
 			}

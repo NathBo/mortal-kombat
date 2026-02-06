@@ -807,6 +807,21 @@ function getrepcoordinates(){
 	repcoordinates.set("spitproj",{offx:193,width:37,offy:1280,height:7,decx:0,decy:26});
 	repcoordinates.set("spitproj_cont1",{offx:168,width:32,offy:1326,height:23,decx:10,decy:26});
 	repcoordinates.set("spitproj_cont2",{offx:205,width:20,offy:1310,height:40,decx:22,decy:26});
+	repcoordinates.set("chargeball1",{offx:411,width:58,offy:1239,height:111,decx:0,decy:0});
+	repcoordinates.set("chargeball2",{offx:477,width:58,offy:1239,height:111,decx:0,decy:0});
+	repcoordinates.set("chargeball3",{offx:543,width:59,offy:1239,height:111,decx:0,decy:0});
+	repcoordinates.set("chargeball4",{offx:611,width:61,offy:1239,height:111,decx:0,decy:0});
+	repcoordinates.set("chargeball5",{offx:681,width:61,offy:1239,height:111,decx:0,decy:0});
+	repcoordinates.set("chargeball6",{offx:751,width:55,offy:1239,height:111,decx:0,decy:0});
+	repcoordinates.set("chargeball7",{offx:856,width:56,offy:1239,height:111,decx:0,decy:0});
+	repcoordinates.set("chargeball_ball1",{offx:814,width:13,offy:1332,height:17,decx:20,decy:0});
+	repcoordinates.set("chargeball_ball2",{offx:836,width:11,offy:1334,height:15,decx:20,decy:0});
+	repcoordinates.set("ring1",{offx:15,width:29,offy:1434,height:45,decx:0,decy:-12});
+	repcoordinates.set("ring2",{offx:51,width:36,offy:1422,height:57,decx:0,decy:-18});
+	repcoordinates.set("ring3",{offx:95,width:44,offy:1409,height:70,decx:0,decy:-25});
+	repcoordinates.set("ring4",{offx:146,width:45,offy:1409,height:70,decx:0,decy:-25});
+	repcoordinates.set("ring5",{offx:199,width:44,offy:1409,height:70,decx:0,decy:-25});
+	repcoordinates.set("ring6",{offx:251,width:44,offy:1409,height:70,decx:0,decy:-25});
 
 
 	repcoordinates.set("head",{offx:296,width:14,offy:1791,height:17,decx:0,decy:0});
