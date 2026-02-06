@@ -781,7 +781,7 @@ function main(){
 			me.charac.coups.forEach(aux);
 			this.grade=grade;
 			if(this.difficulty<4 && arcadelevel>=0 && arcadelevel<=2){this.difficulty-=1;}
-			else if(this.difficulty<3 && arcadelevel==5){this.difficulty+=1;}
+			else if(this.difficulty<3 && arcadelevel==6){this.difficulty+=1;}
 			switch(this.difficulty){
 				case -1:
 					this.donothingchance = 0.9;
@@ -2556,7 +2556,6 @@ function main(){
 				let a = Math.floor(this.standing/5)+1
 				this.costume = "stand"+a;
 				this.walking=0;
-				//alert(this.costume);
 			}
 			else{this.standing=0;
 				if(this.forward>=1 || this.back>=1){
@@ -2571,7 +2570,6 @@ function main(){
 					else if(this.walking<35){this.costume="walk7"}
 					else if(this.walking<40){this.costume="walk8"}
 					else {this.costume="walk9"}
-					//alert(this.costume);
 				}
 			}
 
@@ -3144,17 +3142,18 @@ function main(){
 		if(stagesground[chosenstage] != null){ctx.drawImage(stagesground[chosenstage],-camerax+256-stage_size/2+shakex,178+shakey);}
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		chartimer = (chartimer+1)%(chartimercycle*2);
-		var leftside = 134*0.86; var topside = 40;
+		var leftside = 120*0.86; var topside = 40;
 		//ctx.scale(2.32,2.32);
 		//ctx.drawImage(characterscreenpng,92,0);
 		//ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.scale(3,3);
+		var persos_per_line = 4;
 		for(var i=0;i<liste_persos.length;i++){
 			if(persosunlocked.get(liste_persos[i])){
-				ctx.drawImage(characteristics.get(liste_persos[i]).icon,leftside+24*(i%3),topside+40*Math.floor(i/3));
+				ctx.drawImage(characteristics.get(liste_persos[i]).icon,leftside+24*(i%persos_per_line),topside+40*Math.floor(i/persos_per_line));
 			}
 			else{
-				ctx.drawImage(lockediconpng,leftside+24*(i%3),topside+40*Math.floor(i/3));
+				ctx.drawImage(lockediconpng,leftside+24*(i%persos_per_line),topside+40*Math.floor(i/persos_per_line));
 			}
 		}
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -3181,11 +3180,11 @@ function main(){
 		ctx.scale(1,1);
 		if(chartimer<chartimercycle || persolocked[0]){
 			ctx.strokeStyle = "red";
-			ctx.strokeRect(leftside*3+72*(persosovered[0]%3),topside*3+120*Math.floor(persosovered[0]/3),63,96);
+			ctx.strokeRect(leftside*3+72*(persosovered[0]%persos_per_line),topside*3+120*Math.floor(persosovered[0]/persos_per_line),63,96);
 		}
 		if(secondplayerchosescharac && ((chartimer>=chartimercycle && persosovered[0]==persosovered[1]) || (chartimer<chartimercycle && persosovered[0]!=persosovered[1]) || persolocked[1])){
 			ctx.strokeStyle = "green";
-			ctx.strokeRect(leftside*3+72*(persosovered[1]%3),topside*3+120*Math.floor(persosovered[1]/3),63,96);
+			ctx.strokeRect(leftside*3+72*(persosovered[1]%persos_per_line),topside*3+120*Math.floor(persosovered[1]/persos_per_line),63,96);
 		}
 
 		
@@ -3195,14 +3194,14 @@ function main(){
 		if(j1.droite==1){
 			j1.droite=2;
 			if(!persolocked[0]){
-				if(persosovered[0]%3<2){
+				if(persosovered[0]%persos_per_line<persos_per_line-1 && persosovered[0]<liste_persos.length-1){
 					persosovered[0]=Math.min(liste_persos.length-1,persosovered[0]+1);
 					reset_for_charac_screen(0);
 					play_sound_eff("cursor_move");
 				}
 			}
 			else if(!secondplayerishuman && !persolocked[1] && secondplayerchosescharac){
-				if(persosovered[1]%3<2){
+				if(persosovered[1]%persos_per_line<persos_per_line-1){
 					persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]+1);
 					reset_for_charac_screen(1);
 					play_sound_eff("cursor_move");
@@ -3212,14 +3211,14 @@ function main(){
 		if(j1.gauche==1){
 			j1.gauche=2;
 			if(!persolocked[0]){
-				if(persosovered[0]%3>0){
+				if(persosovered[0]%persos_per_line>0){
 					persosovered[0]=Math.max(0,persosovered[0]-1);
 					reset_for_charac_screen(0);
 					play_sound_eff("cursor_move");
 				}
 			}
 			else if(!secondplayerishuman && !persolocked[1] && secondplayerchosescharac){
-				if(persosovered[1]%3>0){
+				if(persosovered[1]%persos_per_line>0){
 					persosovered[1]=Math.max(0,persosovered[1]-1);
 					reset_for_charac_screen(1);
 					play_sound_eff("cursor_move");
@@ -3229,15 +3228,15 @@ function main(){
 		if(j1.haut==1){
 			j1.haut=2;
 			if(!persolocked[0]){
-				if(persosovered[0]>2){
-					persosovered[0]=Math.min(liste_persos.length-1,persosovered[0]-3);
+				if(persosovered[0]>persos_per_line-1){
+					persosovered[0]=Math.min(liste_persos.length-1,persosovered[0]-persos_per_line);
 					reset_for_charac_screen(0);
 					play_sound_eff("cursor_move");
 				}
 			}
 			else if(!secondplayerishuman && !persolocked[1] && secondplayerchosescharac){
-				if(persosovered[1]>2){
-					persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]-3);
+				if(persosovered[1]>persos_per_line-1){
+					persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]-persos_per_line);
 					reset_for_charac_screen(1);
 					play_sound_eff("cursor_move");
 				}
@@ -3247,14 +3246,14 @@ function main(){
 			j1.bas=2;
 			if(!persolocked[0]){
 				if(persosovered[0]<=2){
-					persosovered[0]=Math.min(liste_persos.length-1,persosovered[0]+3);
+					persosovered[0]=Math.min(liste_persos.length-1,persosovered[0]+persos_per_line);
 					reset_for_charac_screen(0);
 					play_sound_eff("cursor_move");
 				}
 			}
 			else if(!secondplayerishuman && !persolocked[1] && secondplayerchosescharac){
 				if(persosovered[1]<=2){
-					persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]+3);
+					persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]+persos_per_line);
 					reset_for_charac_screen(1);
 					play_sound_eff("cursor_move");
 				}
@@ -3263,7 +3262,7 @@ function main(){
 		if(j2.droite==1){
 			j2.droite=2;
 			if(!persolocked[1]){
-				if(persosovered[1]%3<2){
+				if(persosovered[1]%persos_per_line<persos_per_line-1){
 					persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]+1);
 					reset_for_charac_screen(1);
 					play_sound_eff("cursor_move");
@@ -3273,7 +3272,7 @@ function main(){
 		if(j2.gauche==1){
 			j2.gauche=2;
 			if(!persolocked[1]){
-				if(persosovered[1]%3>0){
+				if(persosovered[1]%persos_per_line>0){
 					persosovered[1]=Math.max(0,persosovered[1]-1);
 					reset_for_charac_screen(1);
 					play_sound_eff("cursor_move");
@@ -3283,8 +3282,8 @@ function main(){
 		if(j2.haut==1){
 			j2.haut=2;
 			if(!persolocked[1]){
-				if(persosovered[1]>2){
-					persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]-3);
+				if(persosovered[1]>persos_per_line-1){
+					persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]-persos_per_line);
 					reset_for_charac_screen(1);
 					play_sound_eff("cursor_move");
 				}
@@ -3293,8 +3292,8 @@ function main(){
 		if(j2.bas==1){
 			j2.bas=2;
 			if(!persolocked[1]){
-				if(persosovered[1]<=2){
-					persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]+3);
+				if(persosovered[1]<persos_per_line-1){
+					persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]+persos_per_line);
 					reset_for_charac_screen(1);
 					play_sound_eff("cursor_move");
 				}
@@ -3770,6 +3769,13 @@ function main(){
 	airdrift : 0.13, airmaxspeed : 1.8, airdodgespeed : 5.7, airdodgefdur : 15, landinglag : 9, coups : subzero_coups, pv : 95, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 14, cds : [210,150,240,270], icons : [iceballiconpng,slideiconpng,iceflaskiconpng,icebodyiconpng], voiceactor : "male",
 	winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Subzero becomes best friends with Yeti and builds the best professional snowball fight team with him."});
 	
+	characteristics.set("reptile",{png : repskins,coordinates : repcoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : reptileiconpng, namewav : document.querySelector('#reptilewav'),
+	width : 39, height : 103,vitesse : 3,jumpxspeed : 3.4,backmovnerf : 0.9, gravity : 0.41, jumpforce : 9.1,jumpsquat : 3, shorthop : 6.3, friction:0.17, hurtcontrol : 0.18,grabtype : "launch",
+	airdrift : 0.13, airmaxspeed : 1.8, airdodgespeed : 5.7, airdodgefdur : 15, landinglag : 9, coups : reptile_coups, pv : 95, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 14, cds : [210,150,240,270], icons : [iceballiconpng,slideiconpng,iceflaskiconpng,icebodyiconpng], voiceactor : "male",
+	winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Subzero becomes best friends with Yeti and builds the best professional snowball fight team with him."});
+	
+
+
 	characteristics.set("shao_kahn",{png : shaoskins,coordinates : shaocoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 5,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 8, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
 	width : 40, height : 114,vitesse : 3.1,jumpxspeed : 3.4,backmovnerf : 0.92, gravity : 0.44, jumpforce : 6.5,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.1,grabtype : "launch",
 	airdrift : 0.1, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : shao_coups, pv : 140, getupfdur : 24, grabfdur : 35, grabdeg : 12, vicposframes : 6, vicposfdur : 42, cds : [150,240,150,360], icons : [elecgrabiconpng,chargeiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male",
@@ -3804,14 +3810,14 @@ function main(){
 	var finishhim = 0; var fatalitywasdone = false; var fatalitysreen = 0;
 	var persoschoisis = ["kitana","raiden"]; var skinschoisis = [0,0]; var persolocked = [0,0]; var persosovered = [0,2];
 	var musiqueon = true; var soundeffon = true; var introon = true; var timer = 0; var timer_init = 60*60;
-	var liste_persos = ["raiden","mileena","scorpion","liukang", "kitana", "subzero"];
+	var liste_persos = ["raiden","mileena","scorpion","reptile","liukang", "kitana", "subzero"];
 	var chartimer = 0; var chartimercycle = 3; var difficultynames = ["Easy","Normal","Hard","Insane","Terminator"];
 	var is_in_charc_screen = true; var lockincountdown = 0; var lockincountdownfdur = 40; var controlafaire = -1; var key = "";
 	var Width= window.innerWidth; var Height=window.innerHeight;
 	var decalage = 0; var wdecalagey = 0;
 	var bufferwindow = 5; var minimumcomboscaling = 0.5;
 	var framesforperfectblock = 9; var perfectblockcd = 9;
-	var arcadelevel = -1; var arcadeorder = [...liste_persos]; arcadeorder.shuffle(); var arcadestagesorder = [1,0,3,2,0,4,5];
+	var arcadelevel = -1; var arcadeorder = [...liste_persos]; arcadeorder.shuffle(); var arcadestagesorder = [1,0,3,2,0,3,4,5];
 	var youareintutorial = false; var tutorialscenenumber = 0; var currentuto = null; var currenttutoline = tutospecial;
 	var haschangedchar = false; var initchar = "";
 	var score = 0; var matchscore = 0; var roundscore = 0;
@@ -3839,6 +3845,7 @@ function main(){
 		else{
 			statistics = new Map(Object.entries(JSON.parse(a)));
 			persosunlocked = new Map(Object.entries(JSON.parse(b)));
+			persosunlocked.set("reptile",true);
 			if(c != null){difficulte = parseInt(c);}
 		}
 	}

@@ -19,6 +19,9 @@ var subskins = [subpng,sub2png];
 var liupng = new Image();liupng.src = 'ressource/characters/liukang.png';
 var liu2png = new Image();liu2png.src = 'ressource/characters/liukang3.png';
 var liuskins = [liupng,liu2png];
+var reppng = new Image();reppng.src = 'ressource/characters/reptile.png';
+var rep2png = new Image();rep2png.src = 'ressource/characters/reptile2.png';
+var repskins = [reppng,rep2png];
 var shaopng = new Image();shaopng.src = 'ressource/characters/shaokahn.png';
 var shaoskins = [shaopng,shaopng];
 
@@ -86,6 +89,7 @@ var kitanaiconpng=new Image();kitanaiconpng.src = 'ressource/icons/kitana.png';
 var mileenaiconpng=new Image();mileenaiconpng.src = 'ressource/icons/mileena.png';
 var scorpioniconpng=new Image();scorpioniconpng.src = 'ressource/icons/scorpion.png';
 var subzeroiconpng=new Image();subzeroiconpng.src = 'ressource/icons/subzero.png';
+var reptileiconpng=new Image();reptileiconpng.src = 'ressource/icons/reptile.png';
 var liukangiconpng=new Image();liukangiconpng.src = 'ressource/icons/liukang.png';
 var lockediconpng=new Image();lockediconpng.src = 'ressource/icons/locked.png';
 var boticonpng=new Image();boticonpng.src = 'ressource/icons/bot.png';
@@ -98,6 +102,7 @@ var milcoordinates = getmilcoordinates();
 var raicoordinates = getraicoordinates();
 var scocoordinates = getscocoordinates();
 var subcoordinates = getsubcoordinates();
+var repcoordinates = getrepcoordinates();
 var liucoordinates = getliucoordinates();
 var shaocoordinates = getshaocoordinates();
 
