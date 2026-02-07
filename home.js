@@ -333,7 +333,6 @@ function main(){
 
 		afficher(){
 			this.costume = "expl"+(13-Math.floor(this.dur/this.framepercost)).toString();
-			console.log(this.costume);
 			ctx.scale(2*this.orientation,2);
 			var coords = repcoordinates.get(this.costume);
 			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
@@ -1562,6 +1561,9 @@ function main(){
 			if(fightstartcountdown){return;}
 			if(this.mov == ""){this.movlag = 0;}
 			if(!secondplayerishuman && this.n==1 && difficulte>=0){this.ai.decide();}
+			if(!this.gettingup && !this.blocking && !(finishhim && this.pv<=0 && this.falling==0) && this.hurted==0 && this.falling==0){
+				this.reoriente(other);
+			}
 			if(this.orientation==1){
 				this.forward=this.droite;if(this.forward==0){this.back=this.gauche;}else{this.back=0;}
 			}
@@ -1643,7 +1645,6 @@ function main(){
 			}
 			else if(this.hurted==0){
 				if(this.falling==0){
-					this.reoriente(other);
 					this.end_of_combo();
 					if(this.y==0){
 						this.end_of_official_combo();
