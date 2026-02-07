@@ -117,6 +117,7 @@ reptile_coups.set("slide",{slag : 10, fdur : 20, elag : 7, degats : 10, hitstun 
 reptile_coups.set("spit",{slag : 12, fdur : 0, elag : 28, degats : 8, hitstun : 22, hurtx : 1.3, hurty : 4., hitboxxs : -12, hitboxxe : 12,hitboxys : -6, hitboxye : 15, hitboxxouv : 5, blood_height : 0, blockstun : 10, blockx : 1.5, hiteffect : "projectile_fall", hitboxxeyscaling : 0, hitlag : 7, hitsound : "spithit", blood : "lblood", damageonblock : 2,landinglag : 12, disponibility : "stand", voiceline : "", movx : 0, coupwav : ""});
 reptile_coups.set("charge_chargeball",{slag : 5, fdur : 0, elag : 5, degats : 8, hitstun : 22, hurtx : 1.3, hurty : 4., hitboxxs : -12, hitboxxe : 12,hitboxys : -6, hitboxye : 15, hitboxxouv : 5, blood_height : 0, blockstun : 10, blockx : 1.5, hiteffect : "projectile_fall", hitboxxeyscaling : 0, hitlag : 7, hitsound : "spithit", blood : "lblood", damageonblock : 2,landinglag : 12, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : ""});
 reptile_coups.set("chargeball",{slag : 15, fdur : 0, elag : 13, degats : 15, hitstun : 60, hurtx : -2., hurty : 8., hitboxxs : -15, hitboxxe : 15,hitboxys : -15, hitboxye : 20, hitboxxouv : 5, blood_height : 0, blockstun : 16, blockx : 1., hiteffect : "unblockable_projectile_fall", hitboxxeyscaling : 0, hitlag : 7, hitsound : "explcrunch", blood : "lblood", damageonblock : 3,landinglag : 12, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : ""});
+reptile_coups.set("bomb",{slag : 15, fdur : 0, elag : 15, degats : 8, hitstun : 22, hurtx : 1.3, hurty : 9.5, hitboxxs : -12, hitboxxe : 12,hitboxys : -6, hitboxye : 15, hitboxxouv : 5, blood_height : 0, blockstun : 10, blockx : 1.5, hiteffect : "projectile_fall", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit", blood : "lblood", damageonblock : 2,landinglag : 12, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : ""});
 
 
 var liukang_coups = new Map();
@@ -189,6 +190,7 @@ movpriority.set("teleport_drop",70);
 movpriority.set("spit",70);
 movpriority.set("chargeball",70);
 movpriority.set("charge_chargeball",70);
+movpriority.set("bomb",70);
 movpriority.set("air_dodge",100);
 movpriority.set("landing_lag",100);
 movpriority.set("jumpsquat",100);
@@ -240,3 +242,4 @@ cd_dependance.set("cycle",3);
 cd_dependance.set("teleport_drop",3);
 cd_dependance.set("ball",1);
 cd_dependance.set("spit",2);
+cd_dependance.set("bomb",3);

@@ -814,6 +814,8 @@ function getrepcoordinates(){
 	repcoordinates.set("chargeball5",{offx:681,width:61,offy:1239,height:111,decx:0,decy:0});
 	repcoordinates.set("chargeball6",{offx:751,width:55,offy:1239,height:111,decx:0,decy:0});
 	repcoordinates.set("chargeball7",{offx:856,width:56,offy:1239,height:111,decx:0,decy:0});
+	repcoordinates.set("bomb1",{offx:453,width:36,offy:1382,height:97,decx:0,decy:0});
+	repcoordinates.set("bomb2",{offx:499,width:34,offy:1382,height:97,decx:0,decy:0});
 	repcoordinates.set("chargeball_ball1",{offx:814,width:13,offy:1332,height:17,decx:20,decy:0});
 	repcoordinates.set("chargeball_ball2",{offx:836,width:11,offy:1334,height:15,decx:20,decy:0});
 	repcoordinates.set("ring1",{offx:15,width:29,offy:1434,height:45,decx:0,decy:-12});
@@ -822,6 +824,20 @@ function getrepcoordinates(){
 	repcoordinates.set("ring4",{offx:146,width:45,offy:1409,height:70,decx:0,decy:-25});
 	repcoordinates.set("ring5",{offx:199,width:44,offy:1409,height:70,decx:0,decy:-25});
 	repcoordinates.set("ring6",{offx:251,width:44,offy:1409,height:70,decx:0,decy:-25});
+	var a = 0; var b = -60;
+	repcoordinates.set("expl1",{offx:540,width:26,offy:1361,height:118,decx:a,decy:b});
+	repcoordinates.set("expl2",{offx:574,width:31,offy:1361,height:118,decx:a,decy:b});
+	repcoordinates.set("expl3",{offx:613,width:36,offy:1361,height:118,decx:a,decy:b});
+	repcoordinates.set("expl4",{offx:657,width:40,offy:1361,height:118,decx:a,decy:b});
+	repcoordinates.set("expl5",{offx:705,width:33,offy:1361,height:118,decx:a,decy:b});
+	repcoordinates.set("expl6",{offx:746,width:30,offy:1361,height:118,decx:a,decy:b});
+	repcoordinates.set("expl7",{offx:783,width:30,offy:1361,height:118,decx:a,decy:b});
+	repcoordinates.set("expl8",{offx:746,width:30,offy:1361,height:118,decx:a,decy:b});
+	repcoordinates.set("expl9",{offx:820,width:29,offy:1361,height:118,decx:a,decy:b});
+	repcoordinates.set("expl10",{offx:857,width:26,offy:1361,height:118,decx:a,decy:b});
+	repcoordinates.set("expl11",{offx:889,width:20,offy:1361,height:118,decx:a,decy:b});
+	repcoordinates.set("expl12",{offx:916,width:17,offy:1361,height:118,decx:a,decy:b});
+	repcoordinates.set("expl13",{offx:941,width:10,offy:1361,height:118,decx:a,decy:b});
 
 
 	repcoordinates.set("head",{offx:296,width:14,offy:1791,height:17,decx:0,decy:0});

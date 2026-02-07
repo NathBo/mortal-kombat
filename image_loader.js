@@ -60,6 +60,7 @@ var teleport_dropiconpng=new Image();teleport_dropiconpng.src = 'ressource/icons
 var balliconpng=new Image();balliconpng.src = 'ressource/icons/ball_icon.png';
 var spiticonpng=new Image();spiticonpng.src = 'ressource/icons/spit_icon.png';
 var sliderepiconpng=new Image();sliderepiconpng.src = 'ressource/icons/sliderep_icon.png';
+var bombiconpng=new Image();bombiconpng.src = 'ressource/icons/bomb_icon.png';
 
 var bloodpng = new Image();bloodpng.src = 'ressource/visual_effects/blood.png';
 
