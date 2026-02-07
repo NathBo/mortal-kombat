@@ -114,9 +114,9 @@ reptile_coups.set("jskick",{slag : 11, fdur : 15, elag : 7, degats : 11, hitstun
 reptile_coups.set("jpunch",{slag : 8, fdur : 10, elag : 10, degats : 8, hitstun : 25, hurtx : 1.2, hurty : 0, hitboxxs : 40, hitboxxe : 59,hitboxys : -50, hitboxye : 10, hitboxxouv : 32, blood_height : 0, landinglag : 6, blockstun : 12, blockx : 2.3, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "air", voiceline : "mmov", movx : 0, coupwav : "coup"});
 reptile_coups.set("grab",{slag : 6, fdur : 3, elag : 12, degats : 16, hitstun : 60, hurtx : 3, hurty : 6, hitboxxs : 5, hitboxxe : 38,hitboxys : 0, hitboxye : -1, hitboxxouv : 15, blood_height : 0, blockstun : 12, blockx : 1.7, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : "coup"});
 reptile_coups.set("slide",{slag : 10, fdur : 20, elag : 7, degats : 10, hitstun : 60, hurtx : 5, hurty : 8, hitboxxs : 20, hitboxxe : 46,hitboxys : -20, hitboxye : -1, hitboxxouv : 40, blood_height : -5, blockstun : 10, blockx : 1.7, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 9, hitsound : "mhit", blood : "mblood", damageonblock : 2, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : ""});
-reptile_coups.set("spit",{slag : 12, fdur : 0, elag : 28, degats : 8, hitstun : 22, hurtx : 1.3, hurty : 4., hitboxxs : -12, hitboxxe : 12,hitboxys : -6, hitboxye : 15, hitboxxouv : 5, blood_height : 0, blockstun : 10, blockx : 1.5, hiteffect : "projectile_fall", hitboxxeyscaling : 0, hitlag : 7, hitsound : "spithit", blood : "lblood", damageonblock : 2,landinglag : 12, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : ""});
-reptile_coups.set("charge_chargeball",{slag : 5, fdur : 0, elag : 5, degats : 8, hitstun : 22, hurtx : 1.3, hurty : 4., hitboxxs : -12, hitboxxe : 12,hitboxys : -6, hitboxye : 15, hitboxxouv : 5, blood_height : 0, blockstun : 10, blockx : 1.5, hiteffect : "projectile_fall", hitboxxeyscaling : 0, hitlag : 7, hitsound : "spithit", blood : "lblood", damageonblock : 2,landinglag : 12, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : ""});
-reptile_coups.set("chargeball",{slag : 13, fdur : 0, elag : 13, degats : 15, hitstun : 60, hurtx : -2., hurty : 8., hitboxxs : -15, hitboxxe : 15,hitboxys : -15, hitboxye : 20, hitboxxouv : 5, blood_height : 0, blockstun : 16, blockx : 1., hiteffect : "projectile_fall", hitboxxeyscaling : 0, hitlag : 7, hitsound : "spithit", blood : "lblood", damageonblock : 3,landinglag : 12, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : ""});
+reptile_coups.set("spit",{slag : 12, fdur : 0, elag : 28, degats : 8, hitstun : 22, hurtx : 1.3, hurty : 4., hitboxxs : -12, hitboxxe : 12,hitboxys : -6, hitboxye : 15, hitboxxouv : 5, blood_height : 0, blockstun : 10, blockx : 1.5, hiteffect : "projectile_fall", hitboxxeyscaling : 0, hitlag : 7, hitsound : "spithit", blood : "lblood", damageonblock : 2,landinglag : 12, disponibility : "stand", voiceline : "", movx : 0, coupwav : ""});
+reptile_coups.set("charge_chargeball",{slag : 5, fdur : 0, elag : 5, degats : 8, hitstun : 22, hurtx : 1.3, hurty : 4., hitboxxs : -12, hitboxxe : 12,hitboxys : -6, hitboxye : 15, hitboxxouv : 5, blood_height : 0, blockstun : 10, blockx : 1.5, hiteffect : "projectile_fall", hitboxxeyscaling : 0, hitlag : 7, hitsound : "spithit", blood : "lblood", damageonblock : 2,landinglag : 12, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : ""});
+reptile_coups.set("chargeball",{slag : 15, fdur : 0, elag : 13, degats : 15, hitstun : 60, hurtx : -2., hurty : 8., hitboxxs : -15, hitboxxe : 15,hitboxys : -15, hitboxye : 20, hitboxxouv : 5, blood_height : 0, blockstun : 16, blockx : 1., hiteffect : "unblockable_projectile_fall", hitboxxeyscaling : 0, hitlag : 7, hitsound : "explcrunch", blood : "lblood", damageonblock : 3,landinglag : 12, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : ""});
 
 
 var liukang_coups = new Map();
@@ -186,6 +186,9 @@ movpriority.set("bicycle",70);
 movpriority.set("cycle",70);
 movpriority.set("knifethrow",70);
 movpriority.set("teleport_drop",70);
+movpriority.set("spit",70);
+movpriority.set("chargeball",70);
+movpriority.set("charge_chargeball",70);
 movpriority.set("air_dodge",100);
 movpriority.set("landing_lag",100);
 movpriority.set("jumpsquat",100);
