@@ -1303,13 +1303,16 @@ function main(){
 			}
 			if(Math.random()<this.donothingchance){return;}
 			me.bas = 0; me.haut = 0; me.poing = 0; me.jambe = 0; me.dodge = 0; me.special = 0;
-			this.attacking = minvalabs(this.attacking-1+Math.random()*2+this.agressivite+(other.hurted>0)*0.2+(other.freeze>0)*0.5-(me.hurted>0)*0.2+(other.mov=="charge_chargeball")*0.5,10);
+			this.attacking = minvalabs(this.attacking-1+Math.random()*2+this.agressivite+(other.hurted>0)*0.2+(other.freeze>0)*0.5-(me.hurted>0)*0.2+(other.mov=="charge_chargeball")*0.005,10);
 			this.currisking = minvalabs(this.currisking-1+Math.random()*2,10);
 			if(Math.random()>this.dontattackchance){
 				var moves = this.movesinrange(me.orientation*(other.x-me.x));
 				this.attack(moves);
 			}
 			var reaction_time = this.reaction_time;
+			var idealrange = this.idealrange;
+			if(other.mov == "charge_chargeball"){idealrange=60;}
+			if(me.perso=="reptile" && me.ressource<me.max_ressource){idealrange+=50;}
 			if(other.mov == this.lastmovehitby){reaction_time=0;}
 			if(this.timesinceoki && other.mov == this.lastmovehitonoki){reaction_time=0;}
 			if(!me.charac.coups.has(me.mov)){
@@ -1318,7 +1321,7 @@ function main(){
 					if(me.perso=="liukang" && other.movlag>c.elag+c.fdur+1 && me.y==0){this.begincoup("cycle");}
 					this.pressbackward();
 					if(other.charac.coups.get(other.mov).hitboxys<0 && other.y==0){me.bas = 1;}
-					if(other.charac.coups.get(other.mov).hiteffect=="grab" && me.perso!="shao_kahn"){me.haut=1;}
+					if(["grab","unblockable_projectile_fall"].includes(other.charac.coups.get(other.mov).hiteffect) && me.perso!="shao_kahn"){me.haut=1;}
 					return;
 				}
 				
@@ -1329,7 +1332,7 @@ function main(){
 			}
 
 			if(me.perso=="kitana" && me.y==0 && other.y>0 && me.crouching==0 && entre(Math.abs(me.x-other.x),100,150) && me.orientation*other.xspeed<=-2.5 && other.tb>0){this.begincoup("fanlift");}
-			if(Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-this.idealrange)<=me.charac.vitesse*2+other.movlag*3 && me.y==0 && movpriority.get(me.mov)<70 && Math.random()>this.dontattackchance && !(other.mov == "thundergod" || other.mov == "boltthrow" || other.mov == "fanthrow" || other.mov=="hell_gates" || other.mov == "spear_throw" || other.mov == "slide" || other.mov == "iceball" || other.mov == "fireball" || other.mov == "flying_kick" || other.mov == "knife_throw" || other.mov == "teleport_drop")){
+			if(Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-idealrange)<=me.charac.vitesse*2+other.movlag*3 && me.y==0 && movpriority.get(me.mov)<70 && Math.random()>this.dontattackchance && !(other.mov == "thundergod" || other.mov == "boltthrow" || other.mov == "fanthrow" || other.mov=="hell_gates" || other.mov == "spear_throw" || other.mov == "slide" || other.mov == "iceball" || other.mov == "fireball" || other.mov == "flying_kick" || other.mov == "knife_throw" || other.mov == "teleport_drop" || other.mov == "bomb")){
 				if(me.perso=="kitana"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("fanthrow");}}
 				if(me.perso=="mileena"){if(Math.abs(me.x-other.x)>200&&me.y==0){this.begincoup("homing_knife");}else if(Math.abs(me.x-other.x)>70&&me.y==0 && other.crouching==0){this.begincoup("knifethrow");}}
 				if(me.perso=="raiden"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("boltthrow");}}
@@ -1353,10 +1356,10 @@ function main(){
 			else if(me.perso=="subzero" && me.y==0 && other.y==0 && Math.abs(-stage_size/2*other.orientation-other.x)<=200 && entre(Math.abs(me.x-other.x),100,150) && movpriority.get(me.mov)<70 && !this.thereisaprojo() && me.cooldowns[2]==0)
 				{this.begincoup("iceflask");this.attacking+=2;}
 
-			else if((me.perso=="subzero" || me.perso=="reptile") && me.y==0 && other.y==0 && other.crouching==0 && Math.abs(Math.abs(me.x-other.x)-this.idealrange)>=60 && Math.abs(me.x-other.x)<=120 && movpriority.get(me.mov)<70 && !this.thereisaprojo())
+			else if((me.perso=="subzero" || me.perso=="reptile") && me.y==0 && other.y==0 && other.crouching==0 && Math.abs(Math.abs(me.x-other.x)-idealrange)>=60 && Math.abs(me.x-other.x)<=120 && movpriority.get(me.mov)<70 && !this.thereisaprojo())
 				{this.begincoup("slide");}
 
-			else if(me.perso=="mileena" && me.y==0 && other.y<=20 && other.crouching==0 && Math.abs(Math.abs(me.x-other.x)-this.idealrange)>=40 && Math.abs(me.x-other.x)<=80 && movpriority.get(me.mov)<70 && !this.thereisaprojo())
+			else if(me.perso=="mileena" && me.y==0 && other.y<=20 && other.crouching==0 && Math.abs(Math.abs(me.x-other.x)-idealrange)>=40 && Math.abs(me.x-other.x)<=80 && movpriority.get(me.mov)<70 && !this.thereisaprojo())
 				{this.begincoup("ball");}
 
 			else if(me.perso=="scorpion" && Math.abs(me.x-other.x)>=60 && Math.abs(-stage_size/2*me.orientation-me.x)<=180 && me.y==0 && me.crouching==0 && movpriority.get(me.mov)<70 && Math.abs(me.x-me.orientation*180-camerax)>=decalagex && me.cooldowns[2]<=10)
@@ -1371,15 +1374,21 @@ function main(){
 			else if(me.perso=="mileena" && me.y==0 && Math.abs(me.x-other.x)>=60 && Math.abs(-stage_size/2*me.orientation-me.x)-other.y/2<=130 && me.cooldowns[3]<=5 && movpriority.get(me.mov)<70)
 				{this.begincoup("teleport_drop");}
 
-			else if(me.perso == "reptile" && me.y==0 && me.ressource<me.max_ressource && Math.abs(me.x-other.x)>200)
+			else if(me.perso == "reptile" && me.mov=="charge_chargeball" && me.ressource<me.max_ressource-5 && (Math.abs(me.x-other.x)<=100) && me.movlag==5 && Math.random()<=2/this.reaction_time)
+				{me.movlag = 4;}
+
+			else if(me.perso == "reptile" && me.y==0 && me.ressource<me.max_ressource && Math.abs(me.x-other.x)>200 && timer<=timer_init-120)
 				{this.begincoup("charge_chargeball")}
 
 			else if(me.perso=="reptile" && entre(Math.abs(me.x-other.x),80,150)&&me.y==0 && other.tb<=0 && me.ressource==me.max_ressource && other.invincibilite<12)
 				{this.begincoup("chargeball");}
 
-			else if(Math.abs(Math.abs(me.x-other.x)-this.idealrange)>=this.distancetowavedash && !this.thereisaprojo(true)){this.beginwavedash();}
+			else if(me.perso=="reptile" && me.y==0 && entre(Math.abs(me.x-other.x),60,120) && Math.abs(-stage_size/2*me.orientation-me.x)<=130 && other.y>=40 && me.cooldowns[3]<=5 && movpriority.get(me.mov)<70 && !this.thereisaprojo())
+				{this.begincoup("bomb");}
+
+			else if(Math.abs(Math.abs(me.x-other.x)-idealrange)>=this.distancetowavedash && !this.thereisaprojo(true)){this.beginwavedash();}
 			
-			else if(this.attacking*this.rangescaling+Math.abs(me.x-other.x) + Math.max(0,200-Math.abs(-stage_size/2*me.orientation-me.x))>=this.idealrange){this.pressforward();}
+			else if(this.attacking*this.rangescaling+Math.abs(me.x-other.x) + Math.max(0,200-Math.abs(-stage_size/2*me.orientation-me.x))>=idealrange){this.pressforward();}
 			else{this.pressbackward();}
 		}
 	}
@@ -1457,8 +1466,8 @@ function main(){
 			this.canthurt = false;
 		}
 
-		reoriente(other){
-			if(this.movlag == 0&&this.y==0){if(this.x<other.x){this.orientation = 1;}else{this.orientation = -1;}}
+		reoriente(other,force=false){
+			if((this.movlag == 0&&this.y==0) || force){if(this.x<other.x){this.orientation = 1;}else{this.orientation = -1;}}
 			
 		}
 
@@ -2145,9 +2154,11 @@ function main(){
 						var stats = this.charac.coups.get(this.mov);
 						if(this.movlag==stats.elag+5){this.invincibilite=10;}
 						if(this.movlag==stats.elag){
-							var x = this.x + 200*this.orientation;
-							if(Math.abs(x-camerax)>decalagex-this.charac.width/2 && other.y==0){x = other.x-this.orientation*(this.charac.width/2+other.charac.width/2-10);}
+							var x = this.x + 170*this.orientation;
+							if(Math.abs(x-camerax)>decalagex && other.y==0){x = other.x-this.orientation*(this.charac.width/2+other.charac.width/2-10);}
 							this.x = x;
+							play_sound_eff("explosion");
+							this.reoriente(other,true);
 						}
 						if(this.movlag==stats.elag-1){add_to_objects_set(new ExploProj(this.x,this.y+60,this.orientation,other,stats,this.skin));}
 						break;

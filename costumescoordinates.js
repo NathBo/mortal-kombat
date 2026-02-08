@@ -805,8 +805,8 @@ function getrepcoordinates(){
 	repcoordinates.set("spit2",{offx:66,width:39,offy:1242,height:107,decx:0,decy:0});
 	repcoordinates.set("spit3",{offx:114,width:43,offy:1242,height:107,decx:0,decy:0});
 	repcoordinates.set("spitproj",{offx:193,width:37,offy:1280,height:7,decx:0,decy:26});
-	repcoordinates.set("spitproj_cont1",{offx:168,width:32,offy:1326,height:23,decx:10,decy:26});
-	repcoordinates.set("spitproj_cont2",{offx:205,width:20,offy:1310,height:40,decx:22,decy:26});
+	repcoordinates.set("spitproj_cont1",{offx:168,width:32,offy:1326,height:23,decx:10,decy:20});
+	repcoordinates.set("spitproj_cont2",{offx:205,width:20,offy:1310,height:40,decx:22,decy:14});
 	repcoordinates.set("chargeball1",{offx:411,width:58,offy:1239,height:111,decx:0,decy:0});
 	repcoordinates.set("chargeball2",{offx:477,width:58,offy:1239,height:111,decx:0,decy:0});
 	repcoordinates.set("chargeball3",{offx:543,width:59,offy:1239,height:111,decx:0,decy:0});
