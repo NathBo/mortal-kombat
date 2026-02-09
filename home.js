@@ -2154,7 +2154,10 @@ function main(){
 						var stats = this.charac.coups.get(this.mov);
 						if(this.movlag==stats.elag+5){this.invincibilite=10;}
 						if(this.movlag==stats.elag){
-							var x = this.x + 170*this.orientation;
+							var dist = 170;
+							if(this.forward){dist+=30;}
+							else if(this.back){dist-=30;}
+							var x = this.x + dist*this.orientation;
 							if(Math.abs(x-camerax)>decalagex && other.y==0){x = other.x-this.orientation*(this.charac.width/2+other.charac.width/2-10);}
 							this.x = x;
 							play_sound_eff("explosion");
