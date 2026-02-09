@@ -788,12 +788,12 @@ function getrepcoordinates(){
 	repcoordinates.set("grabbed4",{offx:513,width:46,offy:1025,height:99,decx:0,decy:0});
 	repcoordinates.set("victory1",{offx:981,width:38,offy:110,height:129,decx:0,decy:0});
 	repcoordinates.set("victory2",{offx:1029,width:33,offy:110,height:129,decx:0,decy:0});
-    repcoordinates.set("decapitated1",{offx:15,width:15,offy:1716,height:92,decx:0,decy:0});
-    repcoordinates.set("decapitated2",{offx:38,width:24,offy:1716,height:92,decx:0,decy:0});
-    repcoordinates.set("decapitated3",{offx:68,width:25,offy:1716,height:92,decx:0,decy:0});
-    repcoordinates.set("decapitated4",{offx:100,width:31,offy:1716,height:92,decx:0,decy:0});
-    repcoordinates.set("decapitated5",{offx:138,width:69,offy:1716,height:92,decx:0,decy:0});
-    repcoordinates.set("decapitated6",{offx:214,width:74,offy:1716,height:92,decx:0,decy:0});
+    repcoordinates.set("decapitated1",{offx:15,width:15,offy:1737,height:92,decx:0,decy:0});
+    repcoordinates.set("decapitated2",{offx:38,width:24,offy:1737,height:92,decx:0,decy:0});
+    repcoordinates.set("decapitated3",{offx:68,width:25,offy:17337,height:92,decx:0,decy:0});
+    repcoordinates.set("decapitated4",{offx:100,width:31,offy:1737,height:92,decx:0,decy:0});
+    repcoordinates.set("decapitated5",{offx:138,width:69,offy:1737,height:92,decx:0,decy:0});
+    repcoordinates.set("decapitated6",{offx:214,width:74,offy:1737,height:92,decx:0,decy:0});
     repcoordinates.set("stunned1",{offx:138,width:35,offy:1136,height:99,decx:-3,decy:0});
     repcoordinates.set("stunned2",{offx:183,width:36,offy:1136,height:99,decx:-3,decy:0});
     repcoordinates.set("stunned3",{offx:227,width:32,offy:1136,height:99,decx:0,decy:0});
@@ -818,6 +818,26 @@ function getrepcoordinates(){
 	repcoordinates.set("bomb2",{offx:499,width:34,offy:1382,height:97,decx:0,decy:0});
 	repcoordinates.set("chargeball_ball1",{offx:814,width:13,offy:1332,height:17,decx:20,decy:0});
 	repcoordinates.set("chargeball_ball2",{offx:836,width:11,offy:1334,height:15,decx:20,decy:0});
+
+	repcoordinates.set("eat1",{offx:15,width:34,offy:1490,height:105,decx:0,decy:0});
+	repcoordinates.set("eat2",{offx:58,width:35,offy:1490,height:105,decx:0,decy:0});
+	repcoordinates.set("eat3",{offx:103,width:43,offy:1490,height:105,decx:0,decy:0});
+	repcoordinates.set("eat4",{offx:156,width:34,offy:1490,height:105,decx:0,decy:0});
+	repcoordinates.set("eat5",{offx:201,width:34,offy:1490,height:105,decx:0,decy:0});
+	repcoordinates.set("eat6",{offx:246,width:37,offy:1490,height:105,decx:0,decy:0});
+	repcoordinates.set("eat7",{offx:292,width:37,offy:1490,height:105,decx:0,decy:0});
+	repcoordinates.set("eat8",{offx:338,width:37,offy:1490,height:105,decx:0,decy:0});
+	repcoordinates.set("eat9",{offx:384,width:37,offy:1490,height:105,decx:0,decy:0});
+	repcoordinates.set("eat10",{offx:431,width:46,offy:1490,height:105,decx:0,decy:0});
+	repcoordinates.set("eat11",{offx:486,width:73,offy:1490,height:105,decx:0,decy:0});
+	repcoordinates.set("eat12",{offx:570,width:97,offy:1490,height:105,decx:0,decy:0});
+	repcoordinates.set("eat13",{offx:676,width:137,offy:1490,height:105,decx:0,decy:0});
+	repcoordinates.set("eat14",{offx:822,width:143,offy:1490,height:105,decx:0,decy:0});
+	repcoordinates.set("eat15",{offx:1023,width:35,offy:1490,height:105,decx:0,decy:0});
+	repcoordinates.set("eat16",{offx:1067,width:34,offy:1490,height:105,decx:1,decy:0});
+	repcoordinates.set("eat17",{offx:1110,width:35,offy:1490,height:105,decx:0,decy:0});
+	repcoordinates.set("eat18",{offx:1153,width:35,offy:1490,height:105,decx:0,decy:0});
+
 	repcoordinates.set("ring1",{offx:15,width:29,offy:1434,height:45,decx:0,decy:-12});
 	repcoordinates.set("ring2",{offx:51,width:36,offy:1422,height:57,decx:0,decy:-18});
 	repcoordinates.set("ring3",{offx:95,width:44,offy:1409,height:70,decx:0,decy:-25});
@@ -840,7 +860,7 @@ function getrepcoordinates(){
 	repcoordinates.set("expl13",{offx:941,width:10,offy:1361,height:118,decx:a,decy:b});
 
 
-	repcoordinates.set("head",{offx:296,width:14,offy:1791,height:17,decx:0,decy:0});
+	repcoordinates.set("head",{offx:296,width:14,offy:1812,height:17,decx:0,decy:0});
 	
 
     return repcoordinates;

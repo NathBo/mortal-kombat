@@ -41,6 +41,13 @@ function round_of(number,precis){
 	return precis*Math.round(number/precis);
 }
 
+
+function clip(a,b,c){
+	if(a<b){return b;}
+	if(a>c){return c;}
+	return a;
+}
+
 Array.prototype.shuffle = function(n)
 {
      if(!n)
@@ -856,6 +863,38 @@ function main(){
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
 			ctx.restore();
+		}
+
+	}
+
+	class EatenHead{
+		constructor(x,y,orientation,skin,coords, dur, vitesse){
+			this.x = x; this.y = y; this.orientation = orientation; this.skin = skin; this.coords = coords;
+			this.width=18;this.height = 25;
+			this.num = cpt;
+			this.dur = dur;
+			this.gravity = 0.15;
+			this.vitesse = vitesse;
+			this.dangerous = false;
+			
+		}
+
+		loop(){
+			this.x+=this.orientation*this.vitesse;
+		}
+
+		afficher(){
+			this.dur--;
+			this.costume = "head";
+			ctx.scale(2*this.orientation,2);
+			var coords = this.coords.get(this.costume);
+			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*coords.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			if(this.dur==0){this.delete();}
+		}
+		delete(){
+			objects_to_loop.delete(this.num);
 		}
 
 	}
@@ -1770,7 +1809,7 @@ function main(){
 						other.y=0;
 						play_sound_eff("fatal1");
 						this.special=2;
-						other.x = this.x + 100*this.orientation;
+						clip(other.x,this.x + 90*this.orientation,this.x + 110*this.orientation);
 						finishhim = 0;
 						other.invincibilite=1000;
 						fatalitywasdone = true;
@@ -1807,7 +1846,7 @@ function main(){
 						this.canthurt=false;
 						play_sound_eff("fatal1");
 						this.special=2;
-						other.x = this.x + 160*this.orientation;
+						other.x = clip(other.x,this.x + 155*this.orientation,this.x + 165*this.orientation);
 						finishhim = 0;
 						other.invincibilite=1000;
 						fatalitywasdone = true;
@@ -1821,6 +1860,19 @@ function main(){
 						this.canthurt=false;
 						play_sound_eff("fatal1");
 						this.special=2;
+						finishhim = 0;
+						other.invincibilite=1000;
+						fatalitywasdone = true;
+						this.mov = ""; this.movlag=0;
+						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
+					}
+					else if(this.perso == "reptile" && this.back && this.special==1 && finishhim && entre(Math.abs(this.x-other.x),100,140) && other.gettingup==0 && other.y<=30){
+						this.fatality = 120;
+						other.falling=0;
+						other.y=0;
+						play_sound_eff("fatal1");
+						this.special=2;
+						other.x = clip(other.x,this.x + 120*this.orientation,this.x + 130*this.orientation);
 						finishhim = 0;
 						other.invincibilite=1000;
 						fatalitywasdone = true;
@@ -2500,6 +2552,30 @@ function main(){
 					if(this.fatality==99){play_sound_eff("liummov");}
 					if(this.fatality==58){play_sound_eff("liuhmov");}
 				}
+				else if(this.perso=="reptile"){
+					var n = 1;
+					var a=95; var b=5; var c = 120; //c beginning, b per frame in revealing, a beginning eat
+					var d = 45; var e = 3; //d beginning retract, e per frame in eat
+					var f = 20; var h = 7;
+					if(this.fatality>=c-3*b){n=Math.floor((c-this.fatality)/b)+1}
+					else if(this.fatality>=a){n=4;}
+					else if(this.fatality>a-10*e){n=Math.floor((a-this.fatality)/e)+4;}
+					else if(this.fatality>d){n=14;}
+					else if(this.fatality>d-10*e){n=Math.floor((this.fatality-(d-10*e))/e)+4;}
+					else if(this.fatality>f){n=4;}
+					else{
+						this.memoryslot++;
+						n=15+Math.floor(this.memoryslot/7)%4;
+					}
+
+					if(this.fatality==d+1){other.eat_head(4*e,125/(4*e));}
+					if(this.fatality==d+10){play_sound_eff("spithit");}
+					if(this.fatality==d-10*e+5){play_sound_eff("repdigest");}
+					if(this.fatality==a+1){play_sound_eff("repspit");}
+					if(this.fatality==1 && Math.random()<0.33){play_sound_eff("burp");}
+					
+					this.costume = "eat"+n.toString();
+				}
 			}
 			else if(this.fatality && this.fatalitytype==1){
 				if(this.perso=="scorpion"){
@@ -2888,6 +2964,12 @@ function main(){
 				other.drawLife();
 			}
 
+			if(this.perso=="reptile" && fatalitywasdone && this.fatality==0 && this.pv>0){
+					this.memoryslot++;
+					var n=15+Math.floor(this.memoryslot/7)%4;
+					this.costume="eat"+n.toString();
+			}
+
 			
 			if(this.burning && !this.hide){
 				this.costume = "burning"+(Math.floor(this.burning/4)+1).toString();
@@ -3005,6 +3087,12 @@ function main(){
 		decapitate(power = 2){
 			this.decapitated = 100;
 			add_to_objects_set(new Head(this.x,this.y+this.charac.height,this.orientation,this.skin,this.coordinates, power));
+			add_to_objects_set(new Blood(this.x,this.y+this.charac.height-5,this.orientation,"hblood"));
+		}
+
+		eat_head(dur,vitesse){
+			this.decapitated = 100;
+			add_to_objects_set(new EatenHead(this.x,80,this.orientation,this.skin,this.coordinates,dur,vitesse));
 			add_to_objects_set(new Blood(this.x,this.y+this.charac.height-5,this.orientation,"hblood"));
 		}
 
@@ -3238,8 +3326,8 @@ function main(){
 				if(tutorialscenenumber>=currenttutoline.length){gobacktotitlescreen();}
 				else{launchtutorial(currenttutoline[tutorialscenenumber]);}
 			}
-			else if(fatalitywasdone){
-				fatalitywasdone = 0;
+			else if(fatalitywasdone==1){
+				fatalitywasdone = 2;
 				fatalitysreen = 100;
 				play_sound_eff("fatality");
 			}
@@ -3282,11 +3370,12 @@ function main(){
 					reset_for_charac_screen(1);
 					lockincountdown=0;
 					functiontoexecute = menupersos;
-					menupersoswav.play()
+					menupersoswav.play();
+					reset_game(true);
 					return;
 				}
 			
-				else{reset_game(false);}
+			else{reset_game(false);}
 			}
 		}
 		else if(end_of_round_countdown){
@@ -4026,9 +4115,10 @@ function main(){
 	sounds_eff.set("grapple",[document.querySelector('#grapplewav')]);
 	sounds_eff.set("teleport",[document.querySelector('#teleportwav')]);
 	sounds_eff.set("fart",[document.querySelector('#fartwav')]);
-	sounds_eff.set("spithit",[document.querySelector('#spithitwav')]);
 	sounds_eff.set("repspit",[document.querySelector('#repspitwav'),document.querySelector('#repspit2wav')]);
 	sounds_eff.set("spithit",[document.querySelector('#spithitwav')]);
+	sounds_eff.set("repdigest",[document.querySelector('#repdigestwav')]);
+	sounds_eff.set("burp",[document.querySelector('#burpwav')]);
 	sounds_eff.set("repcharge",[document.querySelector('#repchargewav')]);
 	sounds_eff.set("chargeball",[document.querySelector('#chargeballwav')]);
 	sounds_eff.set("explcrunch",[document.querySelector('#explcrunchwav')]);
@@ -4081,7 +4171,7 @@ function main(){
 	characteristics.set("reptile",{png : repskins,coordinates : repcoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : reptileiconpng, namewav : document.querySelector('#reptilewav'),
 	width : 39, height : 103,vitesse : 2.9,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.405, jumpforce : 9.05,jumpsquat : 4, shorthop : 6.0, friction:0.22, hurtcontrol : 0.22,grabtype : "launch",
 	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : reptile_coups, pv : 100, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 14, cds : [210,160,150,300], icons : [iceballiconpng,sliderepiconpng,spiticonpng,bombiconpng], voiceactor : "male",
-	winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Subzero becomes best friends with Yeti and builds the best professional snowball fight team with him."});
+	winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Reptile resurrects the dinosaurs and imposes a reptilian dictatorship!"});
 	
 
 
