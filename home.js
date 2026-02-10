@@ -977,6 +977,10 @@ function main(){
 		cpt++;
 	}
 
+	function eligible_reptile_challenge(){
+		return chosenstage==3 && secondplayerishuman && !persosunlocked.get("reptile") && (roundwonsj1>=2 || roundwonsj2>=2);
+	}
+
 
 	class AI
 	{
@@ -1108,7 +1112,7 @@ function main(){
 				this.donothingchance = 1-(1-this.donothingchance)/2;this.dontattackchance=1-(1-this.dontattackchance)/2;this.reaction_time+=4;
 			}
 			if(difficulte>=1 && me.perso=="scorpion"){this.agressivite+=0.002}
-			if(me.perso=="shao_kahn"){this.wanttojump-=20;this.reversalmove="charge";}
+			if(me.perso=="shao_kahn"){this.wanttojump-=20;this.reversalmove="charge";this.optionssonoki[4]=0.}
 			if(me.perso=="kitana"){this.idealrange=150;this.reversalmove="squarepunch";this.optionssonoki[0]+=0.2;}
 			if(me.perso=="raiden"){this.enviedantiair+=2;this.reversalmove="teleport";}
 			if(me.perso=="liukang"){this.idealrange=90;this.reversalmove="cycle";}
@@ -1185,6 +1189,7 @@ function main(){
 		}
 
 		begincoup(m){
+			if(!this.me.charac.coups.has(m)){console.log("Non allowed AI behavior, wanted to use "+m+" but this character doesn't have this move"); return;}
 			this.me.begincoup(m,this.other,true);
 			//this.me.movlag+=1;
 		}
@@ -1609,7 +1614,7 @@ function main(){
 			if(fightstartcountdown){return;}
 			if(this.mov == ""){this.movlag = 0;}
 			if(!secondplayerishuman && this.n==1 && difficulte>=0){this.ai.decide();}
-			if(!this.gettingup && !this.blocking && !(finishhim && this.pv<=0 && this.falling==0) && this.hurted==0 && this.falling==0){
+			if(!this.gettingup && !this.blocking && !(finishhim && this.pv<=0 && this.falling==0) && this.hurted==0 && this.falling==0 && this.grabbed==0 && this.grabbing==0){
 				this.reoriente(other);
 			}
 			if(this.orientation==1){
@@ -3252,7 +3257,7 @@ function main(){
 	function reset_game(reset_ai=true){
 		timer = timer_init;
 		gamepaused = false;
-		if(reset_ai){roundwonsj1=0;roundwonsj2=0;}
+		if(reset_ai){roundwonsj1=0;roundwonsj2=0;is_challenge_match = false;}
 		j1.reinit(-150,0,persoschoisis[0],0,skinschoisis[0],j2,reset_ai);j2.reinit(150,0,persoschoisis[1],1,skinschoisis[1],j1,reset_ai);frame_delay = base_frame_delay;
 		cpt = 0; objects_to_loop.clear();
 		end_of_round_countdown=0;
@@ -3362,10 +3367,26 @@ function main(){
 						reset_game(true);
 						return;
 					}
+					
+					if(eligible_reptile_challenge()){
+						secondplayerishuman=false;
+						difficulte=0;
+						roundwonsj1 = 0; roundwonsj2 = 0; camerax = 0;
+						real_last_pers = persoschoisis[1];
+						persoschoisis[1]="reptile";
+						reset_game(true);
+						is_challenge_match = true;
+						return;
+					}
 					roundwonsj1 = 0; roundwonsj2 = 0; camerax = 0;
 					persolocked = [0,0];
 					skinschoisis = [0,0];
 					is_in_charc_screen = true;
+					if(is_challenge_match){
+						is_challenge_match=false;
+						secondplayerishuman=true;
+						persoschoisis[1] = real_last_pers;
+					}
 					reset_for_charac_screen(0);
 					reset_for_charac_screen(1);
 					lockincountdown=0;
@@ -3437,6 +3458,19 @@ function main(){
 					ctx.fillText("Vitals +"+score_to_add.toString(),a-6+dec,155);
 					ctx.globalAlpha = 1.0;
 				}
+				
+				if(end_of_round_countdown<=100 && eligible_reptile_challenge()){
+					ctx.font = "40px serif";
+					if((end_of_round_countdown/4)%2<1){
+						ctx.fillStyle = "white";
+					}
+					else{
+						ctx.fillStyle = "green";
+					}
+					if(end_of_round_countdown==100){play_sound_eff("secret_challenge");}
+					ctx.fillText("Fight Reptile!",340,150);
+				}
+
 				if(((j1.pv>0 && roundwonsj1==2) || (j2.pv>0 && secondplayerishuman && roundwonsj2==2)) && end_of_round_countdown==3){
 					var a = "";
 					var perso = j1.perso;
@@ -3446,6 +3480,7 @@ function main(){
 					if(perso=="raiden"){a = "liukang";}
 					if(perso=="mileena"){a = "kitana";}
 					if(perso=="scorpion"){a = "subzero";}
+					if(!secondplayerishuman && j2.perso=="reptile"){a="reptile";}
 					if(!(a=="" || persosunlocked.get(a))){
 						ctx.fillStyle = "gray";
 						ctx.fillRect(312*0.86,100,400*0.86,300);
@@ -3455,6 +3490,7 @@ function main(){
 						if(a=="liukang"){b = "Liukang";}
 						if(a=="kitana"){b = "Kitana";}
 						if(a=="subzero"){b = "Subzero";}
+						if(a=="reptile"){b = "Reptile";}
 						printAtWordWrap(ctx,b+" unlocked!", 332*0.86, 140, 22, 360);
 						ctx.scale(3,3);
 						ctx.drawImage(characteristics.get(a).icon,160*0.86,70);
@@ -3464,9 +3500,9 @@ function main(){
 						else{end_of_round_countdown++;}
 					}
 				}
-				if(end_of_round_countdown==110 && j1.pv>0){characteristics.get(persoschoisis[0]).namewav.play();}
-				if(end_of_round_countdown==110 && j2.pv>0){characteristics.get(persoschoisis[1]).namewav.play();}
-				if(end_of_round_countdown==60 && (j1.pv>0 || j2.pv>0)){play_sound_eff("wins");}
+				if(end_of_round_countdown==110 && j1.pv>0 && !eligible_reptile_challenge()){characteristics.get(persoschoisis[0]).namewav.play();}
+				if(end_of_round_countdown==110 && j2.pv>0 && !eligible_reptile_challenge()){characteristics.get(persoschoisis[1]).namewav.play();}
+				if(end_of_round_countdown==60 && (j1.pv>0 || j2.pv>0) && !eligible_reptile_challenge()){play_sound_eff("wins");}
 			}
 			if(end_of_round_countdown==110 && arcadelevel>=0){
 				time += timer_init-timer;
@@ -3793,6 +3829,17 @@ function main(){
 				ctx.fillText("Changing character will make the records unavailable for this run", 250*0.86,80);
 			}
 		}
+
+		if(!persosunlocked.get(liste_persos[persosovered[0]])){
+			ctx.fillStyle = "red";
+			ctx.font = "20px serif";
+			ctx.fillText(unlock_clues.get(liste_persos[persosovered[0]]),110,400);
+		}
+		if(!persosunlocked.get(liste_persos[persosovered[1]])){
+			ctx.fillStyle = "red";
+			ctx.font = "20px serif";
+			ctx.fillText(unlock_clues.get(liste_persos[persosovered[1]]),610,400);
+		}
 	}
 
 
@@ -3969,7 +4016,16 @@ function main(){
 			}
 			else if(entre(clicky,400/500,440/500)){
 				if(entre(clickx,80/1024,260/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=true;secondplayerisdummy=true;camerax=0;}
-				else if(entre(clickx,380/1024,620/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=false;arcadelevel=0;arcadeorder.shuffle();secondplayerchosescharac=false;camerax=0;}
+				else if(entre(clickx,380/1024,620/1024)){
+					functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=false;arcadelevel=0;
+					arcadeorder.shuffle();
+					if(!persosunlocked.get("reptile")){
+						var i = arcadeorder.indexOf("reptile");
+						arcadeorder[i]=arcadeorder[2];
+						arcadeorder[2]="reptile";
+					}
+					secondplayerchosescharac=false;camerax=0;
+				}
 				else if(entre(clickx,740/1024,910/1024)){youareintutorial=true; secondplayerishuman = false; tutorialscenenumber = 0; functiontoexecute = menututo;}
 			}
 		}
@@ -4101,9 +4157,12 @@ function main(){
 	sounds_eff.set("liuhurted",[document.querySelector('#liuhurted1wav'),document.querySelector('#liuhurted2wav')]);
 	sounds_eff.set("liubighurted",[document.querySelector('#liubighurted1wav'),document.querySelector('#liubighurted2wav')]);
 	sounds_eff.set("liubullshit",[document.querySelector('#liukangbullshit1wav'),document.querySelector('#liukangbullshit2wav')]);
+
 	sounds_eff.set("fatal1",[document.querySelector('#fatal1wav')]);
 	sounds_eff.set("fatal2",[document.querySelector('#fatal2wav')]);
 	sounds_eff.set("fatality",[document.querySelector('#fatalitywav')]);
+	sounds_eff.set("secret_challenge",[document.querySelector('#secretchallengewav')]);
+
 	sounds_eff.set("finishher",[document.querySelector('#finishherwav')]);
 	sounds_eff.set("finishhim",[document.querySelector('#finishhimwav')]);
 	sounds_eff.set("wins",[document.querySelector('#winswav')]);
@@ -4160,7 +4219,7 @@ function main(){
 
 	characteristics.set("scorpion",{png : scoskins,coordinates : scocoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : scorpioniconpng, namewav : document.querySelector('#scorpionwav'),
 	width : 40, height : 103,vitesse : 2.75,jumpxspeed : 3.4,backmovnerf : 0.92, gravity : 0.41, jumpforce : 9,jumpsquat : 4, shorthop : 5.2, friction:0.21, hurtcontrol : 0.2,grabtype : "launch",
-	airdrift : 0.15, airmaxspeed : 1.8, airdodgespeed : 5.6, airdodgefdur : 14, landinglag : 6,coups : scorpion_coups, pv : 98, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 12, cds : [180,100,210,120], icons : [spearthrowiconpng,airgrabiconpng,hellgatesiconpng,legtakedowniconpng], voiceactor : "male",
+	airdrift : 0.15, airmaxspeed : 1.8, airdodgespeed : 5.6, airdodgefdur : 14, landinglag : 6,coups : scorpion_coups, pv : 100, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 12, cds : [180,100,210,120], icons : [spearthrowiconpng,airgrabiconpng,hellgatesiconpng,legtakedowniconpng], voiceactor : "male",
 	winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Scorpion becomes a camp counsellor and concentrates on his true passion: marshmallow toasting."});
 
 	characteristics.set("subzero",{png : subskins,coordinates : subcoordinates, sex : "m", standnframes : 10, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : subzeroiconpng, namewav : document.querySelector('#subzerowav'),
@@ -4244,7 +4303,6 @@ function main(){
 		else{
 			statistics = new Map(Object.entries(JSON.parse(a)));
 			persosunlocked = new Map(Object.entries(JSON.parse(b)));
-			persosunlocked.set("reptile",true);
 			if(c != null){difficulte = parseInt(c);}
 		}
 	}
@@ -4275,12 +4333,18 @@ function main(){
 		persosunlocked.set("liukang",false);
 		persosunlocked.set("kitana",false);
 		persosunlocked.set("subzero",false);
+		persosunlocked.set("reptile",false);
 
 		return statistics;
 	}
 	
 	var statistics = new Map();
 	var persosunlocked = new Map();
+	var unlock_clues = new Map();
+	unlock_clues.set("liukang","Win as Raiden");
+	unlock_clues.set("kitana","Win as Mileena");
+	unlock_clues.set("subzero","Win as Scorpion");
+	unlock_clues.set("reptile","Find and defeat Reptile");
 
 	loadStats();
 
@@ -4300,7 +4364,7 @@ function main(){
 	
 	var controls=[["ArrowRight","ArrowLeft","ArrowUp","ArrowDown","KeyB","KeyN","KeyM","KeyH","KeyJ"],["KeyF","KeyS","KeyE","KeyD","KeyQ","KeyA","KeyZ","KeyW","KeyE"]];
 	var controlspause = "Enter";
-	var pausepressed = 0; var gamepaused = false;
+	var pausepressed = 0; var gamepaused = false; var is_challenge_match = false; var real_last_pers = "";
 
 	function logKey(e) {
 		if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
