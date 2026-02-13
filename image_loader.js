@@ -100,6 +100,9 @@ var playericonpng=new Image();playericonpng.src = 'ressource/icons/player.png';
 var logopng=new Image();logopng.src = 'ressource/ui/logo.png';
 
 
+var mountainpng = new Image();mountainpng.src = 'ressource/mini_games/mountain.png';
+
+
 var kitcoordinates = getkitcoordinates();
 var milcoordinates = getmilcoordinates();
 var raicoordinates = getraicoordinates();
