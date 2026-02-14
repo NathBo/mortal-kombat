@@ -1470,6 +1470,7 @@ function main(){
 			if(!secondplayerishuman && this.n==1 && reset_ai){this.ai = new AI(this,other,difficulte);}
 			this.combo_deg = 0; this.combo_hits = 0; this.combo_affich_cpt = 0; this.combo_affich_hits = 0; this.combo_affich_percent = 0; this.combo_affich_score = 0;
 			this.easy_wavedash = true; this.wanttowavedash = false; this.wavedashdir = 1;
+			this.running = 0; this.lastforward = 0; this.lastdir = 0;
 		}
 
 		begincoup(s,other,ai_pass=false){
@@ -1509,6 +1510,7 @@ function main(){
 			this.xspeed += stats.movx*this.orientation;
 			this.movlag = stats.slag+stats.fdur+stats.elag;
 			this.canthurt = false;
+			this.running=false;
 		}
 
 		reoriente(other,force=false){
@@ -1587,6 +1589,10 @@ function main(){
 			this.combo_hits = 0;
 		}
 
+		is_human(){
+			return this.n==0 || secondplayerishuman
+		}
+
 		miseajour(other){
 			if(this.perso=="shao_kahn"){this.crouching=0;}
 			if(this.movlag===undefined){this.movlag=0;}
@@ -1624,6 +1630,11 @@ function main(){
 			else{
 				this.orientation = -1;this.forward=this.gauche;if(this.forward==0){this.back=this.droite;}else{this.back = 0;}
 			}
+			
+			if(this.n==0){console.log(this.forward,this.lastforward);}
+			if(this.lastforward){this.lastforward--;}
+			if(this.droite==1 && this.lastforward==0){this.droite=2;if(this.orientation==1){this.lastforward=10;}}
+			if(this.gauche==1 && this.lastforward==0){this.gauche=2;if(this.orientation==-1){this.lastforward=10;}}
 			var c = this.charac;
 			for(var i=0;i<this.cooldowns.length;i++){
 				if(this.cooldowns[i]>0){this.cooldowns[i]--;}
@@ -1724,8 +1735,8 @@ function main(){
 						this.crouching = 0;
 						if(this.haut==1){this.haut = 2;}else{this.jump=2;}
 						if(this.xspeed==0){
-							if(this.droite >= 1){this.xspeed = c.jumpxspeed;}
-							else if(this.gauche>=1){this.xspeed = - c.jumpxspeed*c.backmovnerf}
+							if(this.forward >= 1){this.xspeed = c.jumpxspeed*this.orientation;}
+							else if(this.back>=1){this.xspeed = - c.jumpxspeed*c.backmovnerf*this.orientation}
 						}
 					}
 					else if(this.dodge==1 && this.easy_wavedash && (this.forward || this.back) && this.y==0 && movpriority.get(this.mov)<20 &&end_of_round_countdown==0){
@@ -1734,6 +1745,10 @@ function main(){
 						this.crouching = 0; this.dodge=2; this.wanttowavedash=true;
 						if(this.droite){this.wavedashdir=1;}
 						else{this.wavedashdir=-1;}
+					}
+					else if(this.crouching==0 && this.lastforward && this.is_human() && ((this.droite==1 && this.orientation==1) || (this.gauche==1 && this.orientation==-1)) &&movpriority.get(this.mov)<10){
+						this.forward=2;
+						this.mov = "run"; this.movlag = 12;
 					}
 					else if(this.poing==1&&this.forward+this.back==0&&movpriority.get(this.mov)<30&&this.crouching==0&&this.bas==0&&end_of_round_countdown==0){
 						this.begincoup("lpunch",other);
@@ -2044,6 +2059,13 @@ function main(){
 					case "back_dash":
 						if(entre(this.movlag,c.bdashelag,c.bdashelag + c.bdashfdur)){this.xspeed = -c.bdashspeed*this.orientation;}
 						else{this.xspeed = 0;}
+						break;
+
+					case "run":
+						this.x+=this.orientation*this.charac.run_speed;
+						if(this.movlag==1 && this.back==0){this.movlag++;}
+						let d = (this.charac.width+other.charac.width)/3;
+						if(Math.abs(this.x-other.x)<d && this.y==0 && other.y==0){this.x-=this.charac.run_speed*this.orientation;}
 						break;
 
 
@@ -2724,6 +2746,20 @@ function main(){
 						break;
 					case "landing_lag" :
 						this.costume = "crouching1";
+						break;
+					case "run":
+						var b =3;
+						var a = b*this.charac.walknframes;
+						this.walking=(this.walking+1)%a;
+						if(this.walking<b){this.costume="walk1"}
+						else if(this.walking<b*2){this.costume="walk2"}
+						else if(this.walking<b*3){this.costume="walk3"}
+						else if(this.walking<b*4){this.costume="walk4"}
+						else if(this.walking<b*5){this.costume="walk5"}
+						else if(this.walking<b*6){this.costume="walk6"}
+						else if(this.walking<b*7){this.costume="walk7"}
+						else if(this.walking<b*8){this.costume="walk8"}
+						else {this.costume="walk9"}
 						break;
 					case "lpunch" :
 					case "hpunch" :
@@ -4228,46 +4264,46 @@ function main(){
 	var roundswav = [document.querySelector('#round1wav'),document.querySelector('#round2wav'),document.querySelector('#round3wav')];
 
 	characteristics.set("kitana",{png : kitskins,coordinates : kitcoordinates, sex : "f", standnframes : 5, rollspeed : 3, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : kitanaiconpng, namewav : document.querySelector('#kitanawav'),
-	width : 34, height : 97,vitesse : 3.2,jumpxspeed : 3.6,backmovnerf : 0.85, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2, hurtcontrol : 0.2, grabtype : "poser",
+	width : 34, height : 97,vitesse : 3.2, run_speed : 5.9,jumpxspeed : 3.6,backmovnerf : 0.85, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2, hurtcontrol : 0.2, grabtype : "poser",
 	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 32, grabfdur : 35, grabdeg : 13, vicposframes : 12, vicposfdur : 50, cds : [70,120,240,240], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,squarepunchiconpng], voiceactor : "clement",
 	winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Kitana takes control of the outworld and forcibly converts all its peasants to blueberry farming in order to have access to an unlimited supply of blueberries for the rest of her life."});
 
 	characteristics.set("mileena",{png : milskins,coordinates : milcoordinates, sex : "f", standnframes : 10, rollspeed : 3, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : mileenaiconpng, namewav : document.querySelector('#mileenawav'),
-	width : 34, height : 97,vitesse : 3,jumpxspeed : 3.3,backmovnerf : 0.9, gravity : 0.42, jumpforce : 8.8,jumpsquat : 3, shorthop : 5.8, friction:0.22, hurtcontrol : 0.2, grabtype : "poser",
+	width : 34, height : 97,vitesse : 3, run_speed : 5.6,jumpxspeed : 3.3,backmovnerf : 0.9, gravity : 0.42, jumpforce : 8.8,jumpsquat : 3, shorthop : 5.8, friction:0.22, hurtcontrol : 0.2, grabtype : "poser",
 	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.85, airdodgefdur : 13, landinglag : 9,coups : mileena_coups, pv : 92, getupfdur : 32, grabfdur : 35, grabdeg : 12, vicposframes : 10, vicposfdur : 40, cds : [150,150,240,270], icons : [knifeiconpng,balliconpng,fanlifticonpng,teleport_dropiconpng], voiceactor : "female",
 	winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Mileena attends fashion week and finally buys shampoo for her hair, because, and I quote, 'You're a girl, you don't have shampoo, it's like you're a girl, you don't have hair'."});
 	
 
 	characteristics.set("raiden",{png : raiskins,coordinates : raicoordinates, sex : "m", standnframes : 8, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 3, kicknframe : 5,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 8, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
-	width : 36, height : 107,vitesse : 3,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.42, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.2, grabtype : "poser",
+	width : 36, height : 107,vitesse : 3, run_speed : 6.,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.42, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.2, grabtype : "poser",
 	airdrift : 0.14, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : raiden_coups, pv : 95, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 6, vicposfdur : 36, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male",
 	winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Raiden obtains a state monopoly on electricity production and becomes a multi-billionaire."});
 
 
 	characteristics.set("scorpion",{png : scoskins,coordinates : scocoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : scorpioniconpng, namewav : document.querySelector('#scorpionwav'),
-	width : 40, height : 103,vitesse : 2.75,jumpxspeed : 3.4,backmovnerf : 0.92, gravity : 0.41, jumpforce : 9,jumpsquat : 4, shorthop : 5.2, friction:0.21, hurtcontrol : 0.2,grabtype : "launch",
+	width : 40, height : 103,vitesse : 2.75, run_speed : 5.4,jumpxspeed : 3.4,backmovnerf : 0.92, gravity : 0.41, jumpforce : 9,jumpsquat : 4, shorthop : 5.2, friction:0.21, hurtcontrol : 0.2,grabtype : "launch",
 	airdrift : 0.15, airmaxspeed : 1.8, airdodgespeed : 5.6, airdodgefdur : 14, landinglag : 6,coups : scorpion_coups, pv : 100, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 12, cds : [180,100,210,120], icons : [spearthrowiconpng,airgrabiconpng,hellgatesiconpng,legtakedowniconpng], voiceactor : "male",
 	winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Scorpion becomes a camp counsellor and concentrates on his true passion: marshmallow toasting."});
 
 	characteristics.set("subzero",{png : subskins,coordinates : subcoordinates, sex : "m", standnframes : 10, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : subzeroiconpng, namewav : document.querySelector('#subzerowav'),
-	width : 39, height : 103,vitesse : 3,jumpxspeed : 3.4,backmovnerf : 0.9, gravity : 0.41, jumpforce : 9.1,jumpsquat : 3, shorthop : 6.3, friction:0.17, hurtcontrol : 0.18,grabtype : "launch",
+	width : 39, height : 103,vitesse : 3, run_speed : 5.8,jumpxspeed : 3.4,backmovnerf : 0.9, gravity : 0.41, jumpforce : 9.1,jumpsquat : 3, shorthop : 6.3, friction:0.17, hurtcontrol : 0.18,grabtype : "launch",
 	airdrift : 0.13, airmaxspeed : 1.8, airdodgespeed : 5.7, airdodgefdur : 15, landinglag : 9, coups : subzero_coups, pv : 100, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 14, cds : [210,150,240,270], icons : [iceballiconpng,slideiconpng,iceflaskiconpng,icebodyiconpng], voiceactor : "male",
 	winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Subzero becomes best friends with Yeti and builds the best professional snowball fight team with him."});
 	
 	characteristics.set("reptile",{png : repskins,coordinates : repcoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : reptileiconpng, namewav : document.querySelector('#reptilewav'),
-	width : 39, height : 103,vitesse : 2.9,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.405, jumpforce : 9.05,jumpsquat : 4, shorthop : 6.0, friction:0.22, hurtcontrol : 0.22,grabtype : "launch",
+	width : 39, height : 103,vitesse : 2.9, run_speed : 5.6,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.405, jumpforce : 9.05,jumpsquat : 4, shorthop : 6.0, friction:0.22, hurtcontrol : 0.22,grabtype : "launch",
 	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : reptile_coups, pv : 100, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 14, cds : [210,160,150,300], icons : [iceballiconpng,sliderepiconpng,spiticonpng,bombiconpng], voiceactor : "male",
 	winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Reptile resurrects the dinosaurs and imposes a reptilian dictatorship!"});
 	
 
 
 	characteristics.set("shao_kahn",{png : shaoskins,coordinates : shaocoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 5,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 8, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
-	width : 40, height : 114,vitesse : 3.1,jumpxspeed : 3.4,backmovnerf : 0.92, gravity : 0.44, jumpforce : 6.5,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.1,grabtype : "launch",
+	width : 40, height : 114,vitesse : 3.1, run_speed : 6.2,jumpxspeed : 3.4,backmovnerf : 0.92, gravity : 0.44, jumpforce : 6.5,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.1,grabtype : "launch",
 	airdrift : 0.1, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : shao_coups, pv : 140, getupfdur : 24, grabfdur : 35, grabdeg : 12, vicposframes : 6, vicposfdur : 42, cds : [150,240,150,360], icons : [elecgrabiconpng,chargeiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male",
 	winmsg : "Bro thought they could modify the code without consequences"});
 	
 	characteristics.set("liukang",{png : liuskins,coordinates : liucoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 2, hkickendnframe : 2, kicknframe : 4,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 9, icon : liukangiconpng, namewav : document.querySelector('#liukangwav'),
-	width : 36, height : 98,vitesse : 3.4,jumpxspeed : 3.5,backmovnerf : 0.9, gravity : 0.42, jumpforce : 9.2,jumpsquat : 2, shorthop : 6.1, friction:0.21, hurtcontrol : 0.2, grabtype : "launch",
+	width : 36, height : 98,vitesse : 3.4, run_speed : 6.6,jumpxspeed : 3.5,backmovnerf : 0.9, gravity : 0.42, jumpforce : 9.2,jumpsquat : 2, shorthop : 6.1, friction:0.21, hurtcontrol : 0.2, grabtype : "launch",
 	airdrift : 0.14, airmaxspeed : 2.1, airdodgespeed : 6, airdodgefdur : 13, landinglag : 8,coups : liukang_coups, pv : 95, getupfdur : 36, grabfdur : 15, grabdeg : 11, vicposframes : 6, vicposfdur : 30, cds : [150,70,90,180], icons : [fireballiconpng,flying_kickiconpng,bicycleiconpng,cycleiconpng], voiceactor : "liu",
 	winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Liu Kang retires to Larzac with a Buddhist monk to raise goats."});
 	
@@ -4398,20 +4434,20 @@ function main(){
 		if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
 			e.preventDefault();
 		}
-		if(e.code==controls[0][0]){j1.droite=1}
-		if(e.code==controls[0][1]){j1.gauche=1}
+		if(e.code==controls[0][0]&&j1.droite==0){j1.droite=1;}
+		if(e.code==controls[0][1]&&j1.gauche==0){j1.gauche=1}
 		if(e.code==controls[0][2]&&j1.haut==0){j1.haut=1}
-		if(e.code==controls[0][3]){j1.bas=1}
+		if(e.code==controls[0][3]&&j1.bas==0){j1.bas=1}
 		if(e.code==controls[0][4]&&j1.poing==0){j1.poing=1}
 		if(e.code==controls[0][5]&&j1.jambe==0){j1.jambe=1}
 		if(e.code==controls[0][6]&&j1.special==0){j1.special=1}
 		if(e.code==controls[0][7]&&j1.dodge==0){j1.dodge=1;}
 		if(e.code==controls[0][8]&&j1.jump==0){j1.jump=1;}
 		if(secondplayerishuman){
-			if(e.code==controls[1][0]){j2.droite=1}
-			if(e.code==controls[1][1]){j2.gauche=1}
+			if(e.code==controls[1][0]&&j2.droite==0){j2.droite=1}
+			if(e.code==controls[1][1]&&j2.gauche==0){j2.gauche=1}
 			if(e.code==controls[1][2]&&j2.haut==0){j2.haut=1}
-			if(e.code==controls[1][3]){j2.bas=1}
+			if(e.code==controls[1][3]&&j2.bas==0){j2.bas=1}
 			if(e.code==controls[1][4]&&j2.poing==0){j2.poing=1}
 			if(e.code==controls[1][5]&&j2.jambe==0){j2.jambe=1}
 			if(e.code==controls[1][6]&&j2.special==0){j2.special=1}

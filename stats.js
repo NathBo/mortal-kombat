@@ -154,6 +154,7 @@ var movpriority = new Map(); 	//you can cancel a mov by a mov of priority stritc
 movpriority.set("",0);
 movpriority.set("forward_dash",10);
 movpriority.set("back_dash",10);
+movpriority.set("run",10);
 movpriority.set("lpunch",30);
 movpriority.set("clpunch",30);
 movpriority.set("hpunch",40);
@@ -201,6 +202,7 @@ var cd_dependance = new Map();
 cd_dependance.set("",0);
 cd_dependance.set("forward_dash",-1);
 cd_dependance.set("back_dash",-1);
+cd_dependance.set("run",-1);
 cd_dependance.set("lpunch",-1);
 cd_dependance.set("clpunch",-1);
 cd_dependance.set("hpunch",-1);
