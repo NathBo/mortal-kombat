@@ -3357,6 +3357,7 @@ function main(){
 							}
 							return;
 						}
+						var persos = [j1.perso,j2.perso]; var skins = [skinschoisis[0],skinschoisis[1]];
 						roundwonsj1 = 0; roundwonsj2 = 0; camerax = 0;
 						persolocked = [0,0];
 						if(arcadelevel==liste_persos.length){persoschoisis[1] = "shao_kahn"}
@@ -3365,8 +3366,8 @@ function main(){
 						choserandomstage();
 						if(persoschoisis[1]==persoschoisis[0]){skinschoisis[1]=(skinschoisis[0]+1)%2;}
 						reset_game(true);
-						if(arcadelevel==1){
-							var minigame = new TestYourMight(ctx,j1,score,characteristics.get(persoschoisis[0]),characteristics.get(persoschoisis[1]));
+						if(arcadelevel==2 || arcadelevel==6){		//minigames handle
+							var minigame = new TestYourMight(ctx,j1,score,minigame_music,characteristics.get(persos[0]),characteristics.get(persos[1]),skins);
 							var test_your_might_fun = () => minigame.render();
 							functiontoexecute = test_your_might_fun;
 						}
@@ -4022,7 +4023,8 @@ function main(){
 			else if(entre(clicky,400/500,440/500)){
 				if(entre(clickx,80/1024,260/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=true;secondplayerisdummy=true;camerax=0;}
 				else if(entre(clickx,380/1024,620/1024)){
-					functiontoexecute = menupersos;secondplayerishuman=false;arcadelevel=0;menupersoswav.play();	//minigamesswitch
+					//var minigame = new TestYourMight(ctx,j1,0,minigame_music,characteristics.get("liukang"),characteristics.get("scorpion"));var test_your_might_fun = () => minigame.render();
+					functiontoexecute = menupersos;secondplayerishuman=false;arcadelevel=0;menupersoswav.play();	//minigamestest
 					arcadeorder.shuffle();
 					if(!persosunlocked.get("reptile")){
 						var i = arcadeorder.indexOf("reptile");
@@ -4176,6 +4178,8 @@ function main(){
 	sounds_eff.set("testyourmight",[document.querySelector('#test_your_mightwav')]);
 
 	sounds_eff.set("cursor_move",[document.querySelector('#cursorwav')]);
+	sounds_eff.set("ding",[document.querySelector('#dingwav')]);
+
 	sounds_eff.set("coup",[document.querySelector('#coup1wav'),document.querySelector('#coup2wav'),document.querySelector('#coup3wav'),document.querySelector('#coup4wav'),document.querySelector('#coup5wav')]);
 	sounds_eff.set("grapple",[document.querySelector('#grapplewav')]);
 	sounds_eff.set("teleport",[document.querySelector('#teleportwav')]);
@@ -4194,6 +4198,9 @@ function main(){
 
 	var menupersoswav = document.querySelector('#menupersoswav');
 	menupersoswav.loop = true;
+
+	var minigame_music = document.querySelector('#battleplanwav');
+	minigame_music.loop = true;
 
 	var musiques = [document.querySelector('#towerwav'), document.querySelector('#deadpoolwav'), document.querySelector("#wastewav"), document.querySelector("#forestwav"),  document.querySelector("#gorowav"), document.querySelector("#mkwav")];
 	var roundover_musiques = [document.querySelector('#towerroundoverwav'),document.querySelector('#deadpoolroundoverwav'),document.querySelector("#wasteroundoverwav"), document.querySelector("#forestroundoverwav"),document.querySelector("#forestroundoverwav"), document.querySelector("#forestroundoverwav")];
@@ -4287,8 +4294,6 @@ function main(){
 	var score = 0; var matchscore = 0; var roundscore = 0;
 	var old_stats = null; var new_stats = null; var highscore_screen_cpt = 0;
 
-	var minigame = new TestYourMight(ctx,j1,0,characteristics.get("liukang"),characteristics.get("scorpion"));
-	var test_your_might_fun = () => minigame.render()
 	
 	
 	function saveStats(){
