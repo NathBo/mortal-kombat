@@ -1776,7 +1776,7 @@ function main(){
 						this.begincoup("grab",other);
 						this.dodge = 2;
 					}
-					else if(this.perso == "kitana" && this.forward+this.back==0 && this.bas==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.crouching==0){
+					else if(this.perso == "kitana" && this.forward+this.back==0 && this.bas==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("fanthrow",other);
 					}
 					else if(this.perso == "kitana" && this.forward>=1 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=80 && other.falling==0 && other.gettingup==0){
@@ -1892,10 +1892,10 @@ function main(){
 						this.mov = ""; this.movlag=0;
 						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
 					}
-					else if(this.perso == "kitana" && this.forward>=1 && this.special==1 && this.bas==0 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.crouching==0){
+					else if(this.perso == "kitana" && this.forward>=1 && this.special==1 && this.bas==0 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("fanswipe",other);
 					}
-					else if(this.perso == "kitana" && this.back>=1 && this.special==1 && this.bas==0 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[2]==0 && this.crouching==0){
+					else if(this.perso == "kitana" && this.back>=1 && this.special==1 && this.bas==0 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.cooldowns[2]==0){
 						this.begincoup("fanlift",other);
 					}
 					else if(this.perso == "kitana" && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
@@ -1907,16 +1907,16 @@ function main(){
 					else if(this.perso == "raiden" && this.back>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("boltthrow",other);
 					}
-					else if(this.perso == "raiden" && this.forward>=1 && this.crouching==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+					else if(this.perso == "raiden" && this.forward>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("thundergod",other);
 					}
-					else if(this.perso == "raiden" && this.forward+this.back==0 && this.crouching==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+					else if(this.perso == "raiden" && this.forward+this.back==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("elecgrab",other);
 					}
-					else if(this.perso == "scorpion" && this.back>=1 && this.special==1 && this.bas==0 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.crouching==0){
+					else if(this.perso == "scorpion" && this.back>=1 && this.special==1 && this.bas==0 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("hell_gates",other);
 					}
-					else if(this.perso == "scorpion" && this.back==0 && this.forward==0 && this.special==1 && this.bas==0 && movpriority.get(this.mov)<70&&end_of_round_countdown==0 && this.crouching==0){
+					else if(this.perso == "scorpion" && this.back==0 && this.forward==0 && this.special==1 && this.bas==0 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("spear_throw",other);
 					}
 					else if(this.perso == "scorpion" && this.crouching>=4 && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
@@ -1925,10 +1925,10 @@ function main(){
 					else if(this.perso == "reptile" && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("bomb",other);
 					}
-					else if((this.perso == "subzero" || this.perso == "reptile") && this.forward>=1 && this.crouching==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+					else if((this.perso == "subzero" || this.perso == "reptile") && this.forward>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("slide",other);
 					}
-					else if(this.perso == "subzero" && this.back==0 && this.crouching==0 && this.bas==0 && this.forward==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+					else if(this.perso == "subzero" && this.back==0 && this.bas==0 && this.forward==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("iceball",other);
 					}
 					else if(this.perso == "subzero" && this.back>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
@@ -1940,34 +1940,34 @@ function main(){
 					else if(this.perso == "liukang" && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("cycle",other);
 					}
-					else if(this.perso == "liukang" && this.forward>=1 && this.crouching==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+					else if(this.perso == "liukang" && this.forward>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("flying_kick",other);
 					}
-					else if(this.perso == "liukang" && this.back==0 && this.crouching==0 && this.bas==0 && this.forward==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+					else if(this.perso == "liukang" && this.back==0 && this.bas==0 && this.forward==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("fireball",other);
 					}
-					else if(this.perso == "liukang" && this.back>=1 && this.crouching==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+					else if(this.perso == "liukang" && this.back>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("bicycle",other);
 					}
-					else if(this.perso == "shao_kahn" && this.forward>=1 && this.crouching==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+					else if(this.perso == "shao_kahn" && this.forward>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("charge",other);
 					}
 					else if(this.perso == "mileena" && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("teleport_drop",other);
 					}
-					else if(this.perso == "mileena" && this.back==0 && this.crouching==0 && this.bas==0 && this.forward==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+					else if(this.perso == "mileena" && this.back==0 && this.bas==0 && this.forward==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("knifethrow",other);
 					}
-					else if(this.perso == "mileena" && this.forward>=1 && this.crouching==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+					else if(this.perso == "mileena" && this.forward>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("ball",other);
 					}
-					else if(this.perso == "mileena" && this.back>=1 && this.crouching==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+					else if(this.perso == "mileena" && this.back>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("homing_knife",other);
 					}
 					else if(this.perso == "reptile" && this.back>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("spit",other);
 					}
-					else if(this.perso == "reptile" && this.back==0 && this.crouching==0 && this.bas==0 && this.forward==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+					else if(this.perso == "reptile" && this.back==0 && this.bas==0 && this.forward==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						if(this.ressource==this.max_ressource){this.begincoup("chargeball",other);this.ressource=0;}
 						else{this.begincoup("charge_chargeball",other);}
 					}
