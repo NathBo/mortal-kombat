@@ -2577,7 +2577,7 @@ function main(){
 					if(this.fatality==d+10){play_sound_eff("spithit");}
 					if(this.fatality==d-10*e+5){play_sound_eff("repdigest");}
 					if(this.fatality==a+1){play_sound_eff("repspit");}
-					if(this.fatality==1 && Math.random()<0.33){play_sound_eff("burp");}
+					if(this.fatality==1 && this.pv==this.pvmax){play_sound_eff("burp");}
 					
 					this.costume = "eat"+n.toString();
 				}
