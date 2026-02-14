@@ -1469,6 +1469,7 @@ function main(){
 			this.fatality = 0; this.decapitated = 0; this.electrocuted = 0; this.hide = 0; this.burning = 0; this.fatalitytype = 0;
 			if(!secondplayerishuman && this.n==1 && reset_ai){this.ai = new AI(this,other,difficulte);}
 			this.combo_deg = 0; this.combo_hits = 0; this.combo_affich_cpt = 0; this.combo_affich_hits = 0; this.combo_affich_percent = 0; this.combo_affich_score = 0;
+			this.easy_wavedash = true; this.wanttowavedash = false; this.wavedashdir = 1;
 		}
 
 		begincoup(s,other,ai_pass=false){
@@ -1727,6 +1728,13 @@ function main(){
 							else if(this.gauche>=1){this.xspeed = - c.jumpxspeed*c.backmovnerf}
 						}
 					}
+					else if(this.dodge==1 && this.easy_wavedash && (this.forward || this.back) && this.y==0 && movpriority.get(this.mov)<20 &&end_of_round_countdown==0){
+						this.mov = "jumpsquat";this.movlag = c.jumpsquat;
+						play_sound_eff(this.charac.voiceactor+"lmov");
+						this.crouching = 0; this.dodge=2; this.wanttowavedash=true;
+						if(this.droite){this.wavedashdir=1;}
+						else{this.wavedashdir=-1;}
+					}
 					else if(this.poing==1&&this.forward+this.back==0&&movpriority.get(this.mov)<30&&this.crouching==0&&this.bas==0&&end_of_round_countdown==0){
 						this.begincoup("lpunch",other);
 						this.poing = 2;
@@ -1984,6 +1992,12 @@ function main(){
 						if(this.droite>=1){this.xspeed = c.airdodgespeed;if(this.orientation==-1){this.xspeed*=(1+this.charac.backmovnerf)/2;}}
 						else if(this.gauche){this.xspeed = -c.airdodgespeed;if(this.orientation==1){this.xspeed*=(1+this.charac.backmovnerf)/2;}}
 						else{this.xspeed = 0;}
+					}
+					else if(this.wanttowavedash &&this.movlag==0 && end_of_round_countdown==0){
+						this.wanttowavedash = false; this.falling = 0;this.mov = "air_dodge";this.movlag = c.airdodgefdur;
+						this.tb = -c.airdodgespeed;
+						if(this.wavedashdir>0){this.xspeed = c.airdodgespeed;if(this.orientation==-1){this.xspeed*=(1+this.charac.backmovnerf)/2;}}
+						else{this.xspeed = -c.airdodgespeed;if(this.orientation==1){this.xspeed*=(1+this.charac.backmovnerf)/2;}}
 					}
 					else if(this.poing==1&&movpriority.get(this.mov)<40&&this.falling==0&&end_of_round_countdown==0){
 						this.poing=2;
