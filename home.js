@@ -161,24 +161,37 @@ function main(){
 			this.other = other;
 			this.width=22;
 			this.height=44;
-			this.totdur = 60;this.vitesse=6;
+			this.totdur = 60;this.vitesse=7; this.vitessey = 0;
 			this.stats = stats;
 			this.dur = this.totdur;
 			this.num = cpt;
-			this.rotation = 0; this.rotationspeed = 16;
-			this.dangerous = true;
+			this.rotation = 0; this.rotationspeed = 45;
+			this.dangerous = true; this.canthurt = 0;
 			
 		}
 
 		loop(){
 			this.x += this.orientation*this.vitesse;
+			this.y += this.vitessey;
 			var stats = this.stats; var other = this.other;
+			if(this.canthurt){this.canthurt--;return;}
+			if(!this.dangerous){return;}
 			if(other.invincibilite==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
 				if(other.y==0){
-					if(entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3*(other.crouching<=3),this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
+					if(entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3*(other.crouching<=3),this.height/2+other.charac.height/3)){
+						other.hurt(this,stats);
+						this.canthurt=3;
+						if(other.blocking){this.dangerous=false;this.vitesse*=-0.5;this.vitessey = 6;this.dur=35;}
+						else if(this.dur>20){this.dur=15;this.vitesse*=0.3;}
+					}
 				}
 				else{
-					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){other.hurt(this,stats);this.dur=1;}
+					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){
+						other.hurt(this,stats);
+						this.canthurt=3;
+						if(other.blocking){this.dangerous=false;this.vitesse*=-0.5;this.vitessey = 6;this.dur=35;}
+						else if(this.dur>20){this.dur=15;this.vitesse*=0.3;}
+					}
 				}
 			}
 		}
@@ -1134,7 +1147,7 @@ function main(){
 			if(me.perso=="mileena"){this.rangescaling=4;this.reversalmove="teleport_drop";this.optionssonoki[0]+=0.4;this.reversaldist=200;}
 			//if(youareintutorial && !me.allowedmoves.includes("block")){this.agressivite+=0.01;}	//pour l'instant ca ferait ca tout le temps
 			if(this.behavior=="zoner"){this.agressivite-=0.01;}
-			if(this.behavior=="masher"){this.wanttojump+=2;this.overshootchance=0.8;}
+			if(this.behavior=="masher"){this.wanttojump+=2;this.overshootchance=0.2;this.crazynessmaxcd-=60;}
 			if(this.behavior=="turtle"){this.wanttojump=-1;this.agressivite=-0.01;}
 			if(this.behavior=="rush"){this.agressivite+=0.02;this.crazynessmaxcd-=90;this.distancetorun-=30;}
 		}
@@ -1538,7 +1551,8 @@ function main(){
 			if(entre(this.gettingup,1,this.charac.getupfdur-1) || (this.gettingup && !ai_pass)){return;}
 			if(this.gettingup){this.gettingup=0;}
 			if(youareintutorial && !this.allowedmoves.includes(s)){return;}
-			if(["clpunch","clkick","cmkick"].includes(s)){this.crouching = Math.max(this.crouching,4);}
+			if(["clpunch","clkick","cmkick","leg_takedown"].includes(s)){this.crouching = Math.max(this.crouching,4);}
+			else{this.crouching=0;}
 			if(s == "jkick"){if(this.x<other.x){this.orientation = 1;}else{this.orientation = -1;}}
 			var cd = cd_dependance.get(s);
 			if(this.cooldowns[cd]){if(this.cooldowns[cd]>bufferwindow){this.special=2;}return;}
@@ -2122,7 +2136,7 @@ function main(){
 
 					case "run":
 						this.x+=this.orientation*this.charac.run_speed;
-						if(this.movlag==1 && this.back==0){this.movlag++;}
+						if(this.movlag==1 && this.back==0 && this.bas==0){this.movlag++;}
 						let d = (this.charac.width+other.charac.width)/3;
 						if(Math.abs(this.x-other.x)<d && this.y==0 && other.y==0){this.x-=this.charac.run_speed*this.orientation;}
 						break;
@@ -2132,7 +2146,6 @@ function main(){
 						var stats = this.charac.coups.get(this.mov);
 						if(this.movlag==stats.elag){
 							add_to_objects_set(new Fan(this.x+20*this.orientation,this.y+35,this.orientation,other,stats));
-							if(this.y>0){this.xspeed -= 2*this.orientation;}
 						}
 						else if(this.movlag==stats.elag+Math.floor(stats.slag/2)){
 							this.xspeed -= 2*this.orientation;
@@ -2149,7 +2162,7 @@ function main(){
 					case "squarepunch":
 						var stats = this.charac.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.tb=0;this.xspeed=8*this.orientation;}
-						if(this.movlag<=stats.elag){this.xspeed=0;}
+						if(this.movlag<=stats.elag){this.xspeed=0;this.tb=-3;}
 						break;
 
 					case "teleport":
@@ -2400,6 +2413,10 @@ function main(){
 			}
 		}
 
+		hiteffect_is_not_projo(s){
+			return s!="projectile" && s != "spear" && s != "freeze"  && s != "iceflask" && s != "projectile_fall" && s != "unblockable_projectile_fall"
+		}
+
 		hurt(other,stats){
 			var initpv = this.pv;
 			if(stats.hiteffect==""){return;}
@@ -2432,7 +2449,8 @@ function main(){
 				}
 				else if(this.perfectblock>perfectblockcd && !(this.n==1 && !secondplayerishuman && Math.random()>this.ai.parryrate)){
 					this.blocking = Math.ceil(stats.blockstun/3);
-					play_sound_eff("parry");
+					if(this.hiteffect_is_not_projo(stats.hiteffect)){play_sound_eff("parry");}
+					else{play_sound_eff("parry",.5);}
 					parrywasdone = true;
 					this.perfectblock=1;
 					this.parrying=1;
@@ -2443,7 +2461,10 @@ function main(){
 				if(!parrywasdone){this.pv-=stats.damageonblock;}
 				if(this.pv<=0){this.pv = 1;}
 				this.xspeed = -stats.blockx*this.orientation;
-				if(parrywasdone){lag_game(11);}
+				if(parrywasdone){
+					if(this.hiteffect_is_not_projo(stats.hiteffect)){lag_game(11);}
+					else{lag_game(5);}
+				}
 				else{lag_game(Math.floor(stats.hitlag/0.8));}
 				if(other.mov=="ball"){other.movlag=2;other.tb=6.5;other.xspeed = -1;other.y=0.1;other.falling=1;other.hurted=30;other.crouching=0;gamefreeze=5;}
 				if(this.n==0 && !secondplayerishuman && stats.hiteffect!="projectile" && stats.hiteffect != "spear" && stats.hiteffect != "freeze"  && stats.hiteffect != "iceflask" && stats.hiteffect != "projectile_fall" && stats.hiteffect != "unblockable_projectile_fall"){
@@ -2923,7 +2944,7 @@ function main(){
 					case "fanthrow" :
 						var stats = this.charac.coups.get(this.mov);
 						if(this.movlag<=stats.elag/4&&this.y==0){this.costume = "huppercut5";}
-						else if(this.movlag<=stats.elag){this.costume = "fanthrow4";}
+						else if(this.movlag<stats.elag*0.5){this.costume = "fanthrow4";}
 						else if(this.movlag<=stats.elag+stats.slag/4){this.costume = "fanthrow3";}
 						else if(this.movlag<=stats.elag+stats.slag*2/4){this.costume = "fanthrow2";}
 						else{this.costume = "fanthrow1";}
@@ -4323,8 +4344,8 @@ function main(){
 	var roundswav = [document.querySelector('#round1wav'),document.querySelector('#round2wav'),document.querySelector('#round3wav')];
 
 	characteristics.set("kitana",{png : kitskins,coordinates : kitcoordinates, sex : "f", standnframes : 5, rollspeed : 3, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : kitanaiconpng, namewav : document.querySelector('#kitanawav'),
-	width : 34, height : 97,vitesse : 3.2, run_speed : 5.9,jumpxspeed : 3.6,backmovnerf : 0.85, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2, hurtcontrol : 0.2, grabtype : "poser",
-	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 100, getupfdur : 32, grabfdur : 35, grabdeg : 13, vicposframes : 12, vicposfdur : 50, cds : [70,120,240,240], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,squarepunchiconpng], voiceactor : "clement",
+	width : 34, height : 97,vitesse : 3.1, run_speed : 5.7,jumpxspeed : 3.6,backmovnerf : 0.85, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2, hurtcontrol : 0.2, grabtype : "poser",
+	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 95, getupfdur : 32, grabfdur : 35, grabdeg : 13, vicposframes : 12, vicposfdur : 50, cds : [80,120,240,240], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,squarepunchiconpng], voiceactor : "clement",
 	default_behav : "zoner", winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Kitana takes control of the outworld and forcibly converts all its peasants to blueberry farming in order to have access to an unlimited supply of blueberries for the rest of her life."});
 
 	characteristics.set("mileena",{png : milskins,coordinates : milcoordinates, sex : "f", standnframes : 10, rollspeed : 3, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : mileenaiconpng, namewav : document.querySelector('#mileenawav'),
@@ -4335,7 +4356,7 @@ function main(){
 
 	characteristics.set("raiden",{png : raiskins,coordinates : raicoordinates, sex : "m", standnframes : 8, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 3, kicknframe : 5,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 8, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
 	width : 36, height : 107,vitesse : 3, run_speed : 6.,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.42, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.2, grabtype : "poser",
-	airdrift : 0.14, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : raiden_coups, pv : 95, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 6, vicposfdur : 36, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male",
+	airdrift : 0.14, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : raiden_coups, pv : 98, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 6, vicposfdur : 36, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male",
 	default_behav : "masher", winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Raiden obtains a state monopoly on electricity production and becomes a multi-billionaire."});
 
 
