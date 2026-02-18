@@ -1541,7 +1541,7 @@ function main(){
 			}
 			this.combo_deg = 0; this.combo_hits = 0; this.combo_affich_cpt = 0; this.combo_affich_hits = 0; this.combo_affich_percent = 0; this.combo_affich_score = 0;
 			this.easy_wavedash = true; this.wanttowavedash = false; this.wavedashdir = 1;
-			this.running = 0; this.lastforward = 0; this.lastdir = 0;
+			this.running = 0; this.lastforward = 0; this.lastdir = 0; this.run_buffer = 0;
 		}
 
 		begincoup(s,other,ai_pass=false){
@@ -1708,6 +1708,11 @@ function main(){
 			if(this.lastforward){this.lastforward--;}
 			if(this.droite==1 && this.lastforward==0){this.droite=2;if(this.orientation==1){this.lastforward=10;}}
 			if(this.gauche==1 && this.lastforward==0){this.gauche=2;if(this.orientation==-1){this.lastforward=10;}}
+			if(this.run_buffer){this.run_buffer--;console.log(this.run_buffer)}
+			if(this.lastforward && this.is_human() && ((this.droite==1 && this.orientation==1) || (this.gauche==1 && this.orientation==-1))){
+				this.run_buffer=10;
+				this.forward=2;
+			}
 			var c = this.charac;
 			for(var i=0;i<this.cooldowns.length;i++){
 				if(this.cooldowns[i]>0){this.cooldowns[i]--;}
@@ -1803,6 +1808,7 @@ function main(){
 					if (this.bas&&this.movlag == 0 &&!(youareintutorial && !this.allowedmoves.includes("crouch"))){this.crouching = Math.min(this.crouching+1,6);}
 					else if(this.bas==0&&this.crouching>0&&this.movlag==0){this.crouching--;}
 					if((this.haut==1 || this.jump==1)&&movpriority.get(this.mov)<20&&end_of_round_countdown==0 &&!(youareintutorial && !this.allowedmoves.includes("jump"))){
+						if(this.mov=="run"){this.xspeed=(c.jumpxspeed+c.run_speed)/2*this.orientation;}
 						this.mov = "jumpsquat";this.movlag = c.jumpsquat;
 						play_sound_eff(this.charac.voiceactor+"lmov");
 						this.crouching = 0;
@@ -1819,9 +1825,8 @@ function main(){
 						if(this.droite){this.wavedashdir=1;}
 						else{this.wavedashdir=-1;}
 					}
-					else if(this.crouching==0 && this.lastforward && this.is_human() && ((this.droite==1 && this.orientation==1) || (this.gauche==1 && this.orientation==-1)) &&movpriority.get(this.mov)<10){
-						this.forward=2;
-						this.mov = "run"; this.movlag = 12;
+					else if(this.crouching==0 && this.is_human() && this.run_buffer &&movpriority.get(this.mov)<10){
+						this.mov = "run"; this.movlag = 12; this.run_buffer=0;
 					}
 					else if(this.poing==1&&this.forward+this.back==0&&movpriority.get(this.mov)<30&&this.crouching==0&&this.bas==0&&end_of_round_countdown==0){
 						this.begincoup("lpunch",other);
@@ -2135,10 +2140,10 @@ function main(){
 						break;
 
 					case "run":
-						this.x+=this.orientation*this.charac.run_speed;
+						this.xspeed=this.orientation*this.charac.run_speed;
 						if(this.movlag==1 && this.back==0 && this.bas==0){this.movlag++;}
+						else if(this.movlag==1){this.xspeed=0;}
 						let d = (this.charac.width+other.charac.width)/3;
-						if(Math.abs(this.x-other.x)<d && this.y==0 && other.y==0){this.x-=this.charac.run_speed*this.orientation;}
 						break;
 
 
@@ -2353,7 +2358,7 @@ function main(){
 			if(this.pushed>0){this.pushed--;this.x+=this.pushx;}
 			let d = (this.charac.width+other.charac.width)/3;
 			if(Math.abs(this.x-other.x)<d && this.y==0 && other.y==0){
-				this.x=(this.x+other.x)/2+signe(this.x-other.x)*d;
+				this.x-=this.xspeed;
 				this.xspeed=0;
 			}
 			if(Math.abs(this.x-camerax)>decalagex-this.charac.width/2){this.x = signe(this.x-camerax)*(decalagex+signe(this.x-camerax)*camerax-this.charac.width/2);}
