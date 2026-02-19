@@ -176,7 +176,7 @@ function main(){
 			var stats = this.stats; var other = this.other;
 			if(this.canthurt){this.canthurt--;return;}
 			if(!this.dangerous){return;}
-			if(other.invincibilite==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
+			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
 				if(other.y==0){
 					if(entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3*(other.crouching<=3),this.height/2+other.charac.height/3)){
 						other.hurt(this,stats);
@@ -237,7 +237,7 @@ function main(){
 		loop(){
 			this.x += this.orientation*this.vitesse;
 			var stats = this.stats; var other = this.other;
-			if(other.invincibilite==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
+			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
 				if(other.y==0){
 					if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
 				}
@@ -285,7 +285,7 @@ function main(){
 			if(this.dying==0){
 				this.x += this.orientation*this.vitesse;
 				var stats = this.stats; var other = this.other;
-				if(other.invincibilite==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
+				if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
 					if(other.y==0){
 						if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
 					}
@@ -340,7 +340,7 @@ function main(){
 
 		loop(){
 			var stats = this.stats; var other = this.other;
-			if(other.invincibilite==0 && !this.hashit &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2) && (this.costume == "expl3" || this.costume == "expl4" || this.costume == "expl5")){
+			if(other.invincibilite==0 && other.projectile_invincibility==0 && !this.hashit &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2) && (this.costume == "expl3" || this.costume == "expl4" || this.costume == "expl5")){
 				if(other.y==0){
 					if(entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.hashit=true;}
 				}
@@ -388,7 +388,7 @@ function main(){
 			this.x += this.orientation*this.vitesse;
 			this.vitesse+=this.vitesseincr;
 			var stats = this.stats; var other = this.other;
-			if(other.invincibilite==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
+			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
 				if(other.y==0){
 					if(entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
 				}
@@ -437,7 +437,7 @@ function main(){
 			this.x += this.orientation*this.vitesse;
 			knife_stats.hurty = this.vitesse-2; var other = this.other;
 			knife_stats.degats = Math.floor(this.vitesse);
-			if(other.invincibilite==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
+			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
 				if(other.y==0){
 					if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,knife_stats);this.dur=1;}
 				}
@@ -487,7 +487,7 @@ function main(){
 			if(Math.abs(other.y-this.y)>10){
 				this.y+=this.vitessey*signe(other.y-this.y);
 			}
-			if(other.invincibilite==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
+			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
 				if(other.y==0){
 					if(entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3*(other.crouching<=3),this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
 				}
@@ -535,7 +535,7 @@ function main(){
 		loop(){
 			this.x += this.orientation*this.vitesse;
 			var stats = this.stats; var other = this.other;
-			if(other.invincibilite==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
+			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
 				if(other.y==0){
 					if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
 				}
@@ -578,7 +578,7 @@ function main(){
 		loop(){
 			this.x += this.orientation*this.vitesse;
 			var stats = this.stats; var other = this.other;
-			if(other.invincibilite==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
+			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
 				if(other.y==0){
 					if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
 				}
@@ -621,7 +621,7 @@ function main(){
 
 		loop(){
 			var stats = this.stats; var other = this.other;
-			if(other.invincibilite==0 && this.dangerous &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
+			if(other.invincibilite==0 && other.projectile_invincibility==0 && this.dangerous &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
 				if(other.y==0){
 					other.hurt(this,stats);this.dur=20;
 				}
@@ -719,7 +719,7 @@ function main(){
 			if(this.dangerous){this.x += this.orientation*this.vitesse;}
 			else{this.x -= this.orientation*this.vitesse;}
 			var stats = this.stats; var other = this.other;
-			if(other.invincibilite==0 && this.dangerous &&entre((other.x-this.x)*this.orientation,-other.charac.width/2,this.width/2+other.charac.width/2)){
+			if(other.invincibilite==0 && other.projectile_invincibility==0 && this.dangerous &&entre((other.x-this.x)*this.orientation,-other.charac.width/2,this.width/2+other.charac.width/2)){
 				if(other.y==0){
 					if(entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3*(other.crouching<=3),this.height/2+other.charac.height/3)){
 						if(this.owner.mov == "spear_throw"){spear_stats.hitstun = this.totdur-this.dur + 25;this.owner.movlag = stats.elag-40;other.hurt(this,spear_stats);this.dur=Math.max(this.totdur-10-this.dur,1);this.x=other.x-this.orientation*16;this.dangerous=false;}
@@ -906,6 +906,38 @@ function main(){
 			ctx.scale(1,1);
 			if(this.dur==0){this.delete();}
 		}
+		delete(){
+			objects_to_loop.delete(this.num);
+		}
+
+	}
+
+	class Double{
+		constructor(x,y,orientation,skin,vitesse,costume,coordinates,dur){
+			this.x = x; this.y = y; this.orientation = orientation; this.skin = skin;
+			this.costume = costume; this.coordinates = coordinates;
+			this.num = cpt;
+			this.dur = dur;
+			this.vitesse = vitesse;
+			this.dangerous = false;
+		}
+
+		loop(){
+			this.x+=this.orientation*this.vitesse;
+		}
+
+		afficher(){
+			this.dur--;
+			ctx.scale(2*this.orientation,2);
+			var coords = this.coordinates.get(this.costume);
+			ctx.globalAlpha = 0.3;
+			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*coords.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			ctx.globalAlpha = 1.;
+			if(this.dur==0){this.delete();}
+		}
+
 		delete(){
 			objects_to_loop.delete(this.num);
 		}
@@ -1200,7 +1232,7 @@ function main(){
 			var deepness = 0;
 			if(!other.hurted){deepness+=Math.random()*10;}
 			function aux(val,key,_){
-				var newd = d-other.orientation*(other.xspeed+Math.max(other.xspeed-other.charac.friction*val.slag,0))/2*val.slag;
+				var newd = d-other.orientation*(other.xspeed/5+Math.max(other.xspeed/5-other.charac.friction*val.slag,0))/2*val.slag;
 				newd -= val.movx**2/other.charac.friction/3;
 				if((other.y>0 || other.mov == "jumpsquat") && me.y==0){
 					newd = d-other.orientation*other.xspeed*val.slag;
@@ -1517,9 +1549,9 @@ function main(){
 			else if(me.perso=="reptile" && me.y==0 && entre(Math.abs(me.x-other.x),60,120) && Math.abs(-stage_size/2*me.orientation-me.x)<=130 && other.y>=40 && me.cooldowns[3]<=5 && movpriority.get(me.mov)<70 && !this.thereisaprojo())
 				{this.begincoup("bomb");}
 
-			if(me.mov == "" && me.y==0 && Math.abs(Math.abs(me.x-other.x))>=this.distancetorun && idealrange<=100 && this.behavior!="zoner" && !(this.behavior=="turtle" && this.attacking<=2) && !this.thereisaprojo(true) && Math.random()<=this.chancetorun){this.begin_run();}
+			//if(me.mov == "" && me.y==0 && Math.abs(Math.abs(me.x-other.x))>=this.distancetorun && idealrange<=100 && this.behavior!="zoner" && !(this.behavior=="turtle" && this.attacking<=2) && !this.thereisaprojo(true) && Math.random()<=this.chancetorun){this.begin_run();}
 
-			else if(Math.abs(Math.abs(me.x-other.x)-idealrange)>=this.distancetowavedash && !this.thereisaprojo(true)){this.beginwavedash();}
+			if(Math.abs(Math.abs(me.x-other.x)-idealrange)>=this.distancetowavedash && !this.thereisaprojo(true)){this.beginwavedash();}
 
 			else if(this.behavior=="turtle" && entre(Math.abs(me.x-other.x)-idealrange,-30 - 80*this.hascommiteddown,30+30*this.hascommiteddown) && this.attacking<4){this.pressbackward();me.bas=1;this.hascommiteddown=1;}
 			
@@ -1542,6 +1574,8 @@ function main(){
 			this.allowedmoves = allowedmoves; this.xinit = x; this.other = other;
 			this.poing=0;this.jambe=0;this.special=0;this.dodge=0; this.jump=0;
 			this.forward = 0;this.back = 0;
+			this.did_slowdown = false;
+			this.jaugemax = 50; if(reset_ai){this.jauge=0;}
 			if (this.n == 0){this.orientation = 1}else{this.orientation = -1}
 			this.costume = "stand1";
 			this.standing = 0;this.walking = 0;this.jumping=0;
@@ -1552,6 +1586,7 @@ function main(){
 			if(this.perso=="mileena"){this.ressource = 3; this.max_ressource = 3;}
 			else{this.ressource=0;this.max_ressource=60;}
 			this.hurted = 0; this.hurtx = 0; this.invincibilite = 0; this.freeze = 0; this.canthurt = false;
+			this.projectile_invincibility = 0;
 			this.pv = this.charac.pv; this.pvmax = this.charac.pv; this.pvaff = this.charac.pv;
 			this.pushed = 0;this.pushx = 0;
 			this.blocking = 0; this.falling = 0; this.gettingup = 0; this.grabbing = 0; this.grabbed = 0;
@@ -1602,8 +1637,8 @@ function main(){
 			if(s == "chargeball"){play_sound_eff("chargeball");}
 			if(stats.coupwav != ""){play_sound_eff(stats.coupwav);}
 			this.cooldowns[cd] = this.charac.cds[cd];
+			if(this.mov!="run")this.xspeed += stats.movx*this.orientation;
 			this.mov = s;
-			this.xspeed += stats.movx*this.orientation;
 			this.movlag = stats.slag+stats.fdur+stats.elag;
 			this.canthurt = false;
 			this.running=false;
@@ -1648,7 +1683,7 @@ function main(){
 							}
 						}
 					}
-					this.pv = this.pvmax; this.pvaff = this.pvmax;
+					this.pv = this.pvmax; this.pvaff = this.pvmax; this.jauge = this.jaugemax; this.other.jauge = this.other.jaugemax;
 				}
 		}
 
@@ -1793,6 +1828,7 @@ function main(){
 				return;
 			}
 			if(this.invincibilite>0){this.invincibilite--;}
+			if(this.projectile_invincibility>0){this.projectile_invincibility--;}
 			if(this.gettingup){
 				this.end_of_combo();
 				this.end_of_official_combo();
@@ -1831,7 +1867,7 @@ function main(){
 					}
 					if (this.bas&&this.movlag == 0 &&!(youareintutorial && !this.allowedmoves.includes("crouch"))){this.crouching = Math.min(this.crouching+1,6);}
 					else if(this.bas==0&&this.crouching>0&&this.movlag==0){this.crouching--;}
-					if((this.haut==1 || this.jump==1)&&movpriority.get(this.mov)<20&&end_of_round_countdown==0 &&!(youareintutorial && !this.allowedmoves.includes("jump"))){
+					if((this.haut==1 || this.jump==1)&&movpriority.get(this.mov)<10&&end_of_round_countdown==0 &&!(youareintutorial && !this.allowedmoves.includes("jump"))){
 						if(this.mov=="run"){this.xspeed=(c.jumpxspeed+c.run_speed)/2*this.orientation;}
 						this.mov = "jumpsquat";this.movlag = c.jumpsquat;
 						play_sound_eff(this.charac.voiceactor+"lmov");
@@ -1849,8 +1885,12 @@ function main(){
 						if(this.droite){this.wavedashdir=1;}
 						else{this.wavedashdir=-1;}
 					}
-					else if(this.crouching==0 && this.is_human() && this.run_buffer &&movpriority.get(this.mov)<10){
-						this.mov = "run"; this.movlag = 12; this.run_buffer=0;
+					else if(this.crouching==0 && this.is_human() && this.run_buffer &&movpriority.get(this.mov)<80){
+						if(this.jauge==this.jaugemax){
+							this.mov = "run"; this.movlag = 6;
+							this.jauge=0; this.projectile_invincibility = 3;
+						}
+						this.run_buffer=0;
 					}
 					else if(this.poing==1&&this.forward+this.back==0&&movpriority.get(this.mov)<30&&this.crouching==0&&this.bas==0&&end_of_round_countdown==0){
 						this.begincoup("lpunch",other);
@@ -2166,8 +2206,8 @@ function main(){
 					case "run":
 						this.xspeed=this.orientation*this.charac.run_speed;
 						if(this.movlag==1 && this.back==0 && this.bas==0){this.movlag++;}
-						else if(this.movlag==1){this.xspeed=0;}
-						let d = (this.charac.width+other.charac.width)/3;
+						else if(this.movlag==1 && this.back){this.xspeed=0;}
+						this.projectile_invincibility=3;
 						break;
 
 
@@ -2454,6 +2494,7 @@ function main(){
 			if(other.mov=="thundergod"){other.movlag=1;other.tb=8;other.xspeed = -1;other.y=0.1;}
 			if(other.mov=="squarepunch"){other.movlag=1;other.tb=0;other.xspeed = -1;}
 			if(this.invincibilite || end_of_round_countdown){return;}
+			if(this.projectile_invincibility && !this.hiteffect_is_not_projo(stats.hiteffect)){return;}
 			if(other.mov=="thundergod"){other.y=0;}
 			if(other.mov=="charge"){other.movlag=8;other.xspeed=0;}
 			if(other.mov=="flying_kick"){other.movlag=13;other.xspeed=0;}
@@ -2483,9 +2524,11 @@ function main(){
 					parrywasdone = true;
 					this.perfectblock=1;
 					this.parrying=1;
+					this.jauge = Math.min(this.jaugemax,this.jauge+8);
 				}
 				else{
 					this.blocking = stats.blockstun;
+					if(this.hiteffect_is_not_projo(stats.hiteffect)){other.jauge = Math.min(other.jaugemax,other.jauge+5);}
 				}
 				if(!parrywasdone){this.pv-=stats.damageonblock;}
 				if(this.pv<=0){this.pv = 1;}
@@ -2554,6 +2597,8 @@ function main(){
 				this.pv -= degs;
 				this.combo_deg += degs;
 				this.combo_hits += 1;
+				this.jauge = Math.min(this.jaugemax,this.jauge+degs);
+				other.jauge = Math.min(other.jaugemax,other.jauge+Math.round(degs/3));
 				if(this.n==1 && secondplayerisdummy && this.pv<=0){this.pv=1;}
 				if(stats.comboscaling!==undefined){this.comboscaling-=stats.comboscaling;}
 				else{this.comboscaling -= 0.05;}
@@ -2591,7 +2636,7 @@ function main(){
 			if(this.perso=="shao_kahn" && roundwonsj1>=1){this.explode();}
 			else{
 				play_sound_eff(this.charac.voiceactor+"bighurted")
-				slow_game(60,2);
+				if(!this.did_slowdown){slow_game(60,2);this.did_slowdown=true;}
 				shake_screen(25,6);
 				lag_game(20);
 			}
@@ -2869,6 +2914,9 @@ function main(){
 						else if(this.walking<b*7){this.costume="walk7"}
 						else if(this.walking<b*8){this.costume="walk8"}
 						else {this.costume="walk9"}
+						if(this.walking%2==0){
+							add_to_objects_set(new Double(this.x-this.orientation*10,this.y,this.orientation,this.skin,this.charac.run_speed/2,this.costume,this.coordinates,3));
+						}
 						break;
 					case "lpunch" :
 					case "hpunch" :
@@ -3185,6 +3233,10 @@ function main(){
 			ctx.fillStyle='rgb(107,189,33)';
 			if(this.n==0){ctx.fillRect(a+shake_x,30+shake_y,this.pvaff/this.pvmax*288,30);}
 			else{ctx.fillRect(a+b+288-this.pvaff/this.pvmax*288+shake_x,30+shake_y,this.pvaff/this.pvmax*288,30);}
+			ctx.fillStyle='rgb(44, 157, 202)';
+			if(this.jauge==this.jaugemax){ctx.fillStyle='rgb(129, 207, 237)';}
+			if(this.n==0){ctx.fillRect(a+shake_x,51+shake_y,this.jauge/this.jaugemax*288,5);}
+			else{ctx.fillRect(a+b+288-this.jauge/this.jaugemax*288+shake_x,51+shake_y,this.jauge/this.jaugemax*288,5);}
 			ctx.drawImage(lifebarpng,a-6+this.n*b+shake_x,25+shake_y);
 			for(var i=0;i<4;i++){
 				if(this.perso=="mileena" && i==0){
@@ -3949,7 +4001,7 @@ function main(){
 					skinschoisis[1] = randomInt(0,1);
 					if(persolocked[0] && persoschoisis[1]==persoschoisis[0]){skinschoisis[1]=(skinschoisis[0]+1)%2;}
 				}
-				reset_game();
+				reset_game(true);
 				is_in_charc_screen = false;
 				choserandomstage();
 				if(arcadelevel>=0 && initchar==""){initchar=persoschoisis[0];score=0;}
@@ -4373,29 +4425,29 @@ function main(){
 	var roundswav = [document.querySelector('#round1wav'),document.querySelector('#round2wav'),document.querySelector('#round3wav')];
 
 	characteristics.set("kitana",{png : kitskins,coordinates : kitcoordinates, sex : "f", standnframes : 5, rollspeed : 3, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : kitanaiconpng, namewav : document.querySelector('#kitanawav'),
-	width : 34, height : 97,vitesse : 3.1, run_speed : 5.7,jumpxspeed : 3.6,backmovnerf : 0.85, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2, hurtcontrol : 0.2, grabtype : "poser",
+	width : 34, height : 97,vitesse : 3.1, run_speed : 6.2,jumpxspeed : 3.6,backmovnerf : 0.85, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2, hurtcontrol : 0.2, grabtype : "poser",
 	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 95, getupfdur : 32, grabfdur : 35, grabdeg : 13, vicposframes : 12, vicposfdur : 50, cds : [80,120,240,240], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,squarepunchiconpng], voiceactor : "clement",
 	default_behav : "zoner", combos : kitana_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Kitana takes control of the outworld and forcibly converts all its peasants to blueberry farming in order to have access to an unlimited supply of blueberries for the rest of her life."});
 
 	characteristics.set("mileena",{png : milskins,coordinates : milcoordinates, sex : "f", standnframes : 10, rollspeed : 3, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : mileenaiconpng, namewav : document.querySelector('#mileenawav'),
-	width : 34, height : 97,vitesse : 3, run_speed : 5.6,jumpxspeed : 3.3,backmovnerf : 0.9, gravity : 0.42, jumpforce : 8.8,jumpsquat : 3, shorthop : 5.8, friction:0.22, hurtcontrol : 0.2, grabtype : "poser",
+	width : 34, height : 97,vitesse : 3, run_speed : 6.,jumpxspeed : 3.3,backmovnerf : 0.9, gravity : 0.42, jumpforce : 8.8,jumpsquat : 3, shorthop : 5.8, friction:0.22, hurtcontrol : 0.2, grabtype : "poser",
 	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.85, airdodgefdur : 13, landinglag : 9,coups : mileena_coups, pv : 92, getupfdur : 32, grabfdur : 35, grabdeg : 12, vicposframes : 10, vicposfdur : 40, cds : [150,150,240,270], icons : [knifeiconpng,balliconpng,fanlifticonpng,teleport_dropiconpng], voiceactor : "female",
 	default_behav : "normal", combos : mileena_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Mileena attends fashion week and finally buys shampoo for her hair, because, and I quote, 'You're a girl, you don't have shampoo, it's like you're a girl, you don't have hair'."});
 	
 
 	characteristics.set("raiden",{png : raiskins,coordinates : raicoordinates, sex : "m", standnframes : 8, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 3, kicknframe : 5,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 8, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
-	width : 36, height : 107,vitesse : 3, run_speed : 6.,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.42, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.2, grabtype : "poser",
+	width : 36, height : 107,vitesse : 3, run_speed : 6.2,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.42, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.2, grabtype : "poser",
 	airdrift : 0.14, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : raiden_coups, pv : 98, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 6, vicposfdur : 36, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male",
 	default_behav : "masher", combos : raiden_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Raiden obtains a state monopoly on electricity production and becomes a multi-billionaire."});
 
 
 	characteristics.set("scorpion",{png : scoskins,coordinates : scocoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : scorpioniconpng, namewav : document.querySelector('#scorpionwav'),
-	width : 40, height : 103,vitesse : 2.75, run_speed : 5.4,jumpxspeed : 3.4,backmovnerf : 0.92, gravity : 0.41, jumpforce : 9,jumpsquat : 4, shorthop : 5.2, friction:0.21, hurtcontrol : 0.2,grabtype : "launch",
+	width : 40, height : 103,vitesse : 2.75, run_speed : 5.5,jumpxspeed : 3.4,backmovnerf : 0.92, gravity : 0.41, jumpforce : 9,jumpsquat : 4, shorthop : 5.2, friction:0.21, hurtcontrol : 0.2,grabtype : "launch",
 	airdrift : 0.15, airmaxspeed : 1.8, airdodgespeed : 5.6, airdodgefdur : 14, landinglag : 6,coups : scorpion_coups, pv : 100, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 12, cds : [180,100,210,120], icons : [spearthrowiconpng,airgrabiconpng,hellgatesiconpng,legtakedowniconpng], voiceactor : "male",
 	default_behav : "rush", combos : scorpion_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Scorpion becomes a camp counsellor and concentrates on his true passion: marshmallow toasting."});
 
 	characteristics.set("subzero",{png : subskins,coordinates : subcoordinates, sex : "m", standnframes : 10, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : subzeroiconpng, namewav : document.querySelector('#subzerowav'),
-	width : 39, height : 103,vitesse : 3, run_speed : 5.8,jumpxspeed : 3.4,backmovnerf : 0.9, gravity : 0.41, jumpforce : 9.1,jumpsquat : 3, shorthop : 6.3, friction:0.17, hurtcontrol : 0.18,grabtype : "launch",
+	width : 39, height : 103,vitesse : 3, run_speed : 5.9,jumpxspeed : 3.4,backmovnerf : 0.9, gravity : 0.41, jumpforce : 9.1,jumpsquat : 3, shorthop : 6.3, friction:0.17, hurtcontrol : 0.18,grabtype : "launch",
 	airdrift : 0.13, airmaxspeed : 1.8, airdodgespeed : 5.7, airdodgefdur : 15, landinglag : 9, coups : subzero_coups, pv : 100, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 14, cds : [210,150,240,270], icons : [iceballiconpng,slideiconpng,iceflaskiconpng,icebodyiconpng], voiceactor : "male",
 	default_behav : "turtle", combos : subzero_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Subzero becomes best friends with Yeti and builds the best professional snowball fight team with him."});
 	
