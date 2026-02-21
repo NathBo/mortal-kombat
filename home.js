@@ -1333,6 +1333,8 @@ function main(){
 			var thiis = this;
 			var reaction_time = this.reaction_time;
 			if(other.mov == this.lastmovehitby && !youareintutorial){reaction_time=0;}
+			reaction_time += Math.floor(Math.abs(other.xspeed));
+			if(other.mov=="run" && Math.abs(this.x-other.x)>50 && Math.random()>(this.difficulty+2)/20){return;}
 			
 			var movtodo = "";
 			var limiteup = Math.max(Math.max(other.hurted,other.freeze),this.baserisk+this.currisking+me.pv/10);
@@ -1444,6 +1446,7 @@ function main(){
 			if(this.attacking>=5){idealrange = 40;}
 			if(this.attacking<=-5){idealrange = this.ideallongrange;}
 			if(other.mov == this.lastmovehitby){reaction_time=0;}
+			reaction_time += Math.floor(Math.abs(other.xspeed));
 			if(this.timesinceoki && other.mov == this.lastmovehitonoki){reaction_time=0;}
 			if(this.wanttowavedash && me.y>0){
 				if(Math.abs(me.x-other.x)-idealrange>0){this.pressforward();}
@@ -1885,7 +1888,7 @@ function main(){
 						if(this.droite){this.wavedashdir=1;}
 						else{this.wavedashdir=-1;}
 					}
-					else if(this.crouching==0 && this.is_human() && this.run_buffer &&movpriority.get(this.mov)<80){
+					else if(this.crouching==0 && this.is_human() && this.run_buffer &&movpriority.get(this.mov)<80&&end_of_round_countdown==0){
 						if(this.jauge==this.jaugemax){
 							this.mov = "run"; this.movlag = 6;
 							this.jauge=0; this.projectile_invincibility = 3;
