@@ -63,6 +63,7 @@ var sliderepiconpng=new Image();sliderepiconpng.src = 'ressource/icons/sliderep_
 var bombiconpng=new Image();bombiconpng.src = 'ressource/icons/bomb_icon.png';
 
 var bloodpng = new Image();bloodpng.src = 'ressource/visual_effects/blood.png';
+var burstpng = new Image();burstpng.src = 'ressource/visual_effects/burst3.png'
 
 var towergroundpng = new Image();towergroundpng.src = 'ressource/stages/towerground.png';
 var towerbackgroundpng = new Image();towerbackgroundpng.src = 'ressource/stages/towerbackground.png';

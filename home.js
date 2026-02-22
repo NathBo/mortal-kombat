@@ -155,6 +155,30 @@ function main(){
 		}
 	}
 
+	class Burst{
+		constructor(x,y){
+			this.x = x; this.y = y;
+			this.dur = 18;
+			this.num = cpt;
+			this.orientation=1;
+		}
+		loop(){}
+
+		afficher(){
+			if(this.dur==0){this.delete();return;}
+			let coords = {offx:0,width:150,offy:0,height:150,decx:0,decy:-10};
+			ctx.scale(2*this.orientation,2);
+			ctx.drawImage(burstpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*coords.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			this.dur--;
+		}
+
+		delete(){
+			objects_to_loop.delete(this.num);
+		}
+	}
+
 	class Fan{
 		constructor(x,y,orientation,other,stats){
 			this.x = x; this.y = y; this.orientation = orientation;
@@ -1242,6 +1266,7 @@ function main(){
 				newd += deepness;
 				if(key=="jskick" && me.xspeed!=0){return;}
 				if(key == "squarepunch"){return;}
+				if(key == "burst"){return;}
 				var newprio = movpriority.get(key);
 				//if (key=="lpunch" || key == "clpunch"){newprio++;}
 				if(me.y==0 && val.disponibility == "air"){}
@@ -2215,6 +2240,13 @@ function main(){
 						this.projectile_invincibility=3;
 						break;
 
+					case "burst" :
+						var stats = this.charac.coups.get(this.mov);
+						this.xspeed = 0;
+						this.tb=0; this.invincibilite = 3;
+						if(this.movlag==stats.elag+stats.fdur){add_to_objects_set(new Burst(this.x,this.y));}
+						break;
+
 
 					case "fanthrow":
 						var stats = this.charac.coups.get(this.mov);
@@ -2417,7 +2449,7 @@ function main(){
 						if(this.jambe==1 && (this.back || this.forward)){this.mov= "jkick";this.movlag=29;}
 					}
 					else if(this.mov == "jumpsquat"){this.mov = "";if((this.haut || this.jump) && this.bas == 0){this.tb = c.jumpforce;this.y = c.jumpforce;}else{this.tb = c.shorthop;this.y = c.shorthop;}}
-					else if(this.mov == "air_dodge"){this.movlag = 100;this.mov = "free_fall";this.xspeed /=4;}
+					else if((this.y>0) && (this.mov == "air_dodge" || this.mov == "burst")){this.movlag = 100;this.mov = "free_fall";this.xspeed /=4;}
 					else if(this.mov == "fanthrow" && this.y>0){this.movlag = 100;this.mov = "free_fall";}
 					else if(this.mov == "squarepunch"){this.movlag = 100;this.mov = "free_fall";}
 					else{this.mov = "";}
@@ -2449,13 +2481,30 @@ function main(){
 			if(this.y<=0 && this.falling){this.getup();}
 			if(this.pushed>0){this.pushed--;this.x+=this.pushx;}
 		}
+
+		if(this.hurted || this.falling){
+			if(this.poing==1 && this.jambe==1 && this.is_human() && this.pv>0 && end_of_round_countdown==0){
+				this.poing=2; this.jambe=2;
+				if(this.jauge==this.jaugemax){
+					this.hurted=0; this.falling=0;
+					this.xspeed*=0.2;this.tb=0;
+					this.begincoup("burst",other);
+					this.jauge=0;
+				}
+			}
+		}
 		
 		}
 
 		loop(other)
 		{
 			if(this.canthurt){return;}
-			if(this.charac.coups.has(this.mov)){
+			if(this.mov=="burst"){
+				if(Math.sqrt((this.x-other.x)**2+(this.y-other.y)**2)<100){
+					other.hurt(this,this.charac.coups.get(this.mov));
+				}
+			}
+			else if(this.charac.coups.has(this.mov)){
 				var stats = this.charac.coups.get(this.mov);
 				if(this.y==0 && other.y>0 && stats.hitboxys<0 && this.mov != "slide" && this.mov != "ball"){return;}
 				if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){
@@ -2518,7 +2567,7 @@ function main(){
 			}
 			if(this.n==1 && !secondplayerishuman && (stats.hiteffect=="projectile" || stats.hiteffect=="spear")){this.ai.ugothitorblockedaprojectile();}
 			if(this.blocking && this.bas && this.back){this.crouching=6;}
-			if(this.movlag==0&&this.hurted==0&&this.back>=1&&this.y==0 && stats.hiteffect != "iceflask" && stats.hiteffect != "unblockable_projectile_fall" && this.freeze==0 &&stats.hiteffect != "grab" && this.pv>0 && ((this.crouching<=3 && (other.y>0 || stats.hitboxys>=0) || (this.crouching>3 && other.y==0)) || stats.hiteffect=="projectile" || stats.hiteffect == "projectile_fall" || stats.hiteffect == "unblockable_projectile_fall") && !(youareintutorial && !this.allowedmoves.includes("block"))){
+			if(this.movlag==0&&this.hurted==0&&this.back>=1&&this.y==0 && stats.hiteffect != "iceflask" && stats.hiteffect != "unblockable_projectile_fall" && stats.hiteffect != "burst" && this.freeze==0 &&stats.hiteffect != "grab" && this.pv>0 && ((this.crouching<=3 && (other.y>0 || stats.hitboxys>=0) || (this.crouching>3 && other.y==0)) || stats.hiteffect=="projectile" || stats.hiteffect == "projectile_fall" || stats.hiteffect == "unblockable_projectile_fall") && !(youareintutorial && !this.allowedmoves.includes("block"))){
 				if(stats.hiteffect=="guard_break"){
 					this.hurted = stats.blockstun;
 					this.crouching=0;
@@ -2555,6 +2604,7 @@ function main(){
 					case "fall" :
 					case "iceflask" :
 					case "guard_break" :
+					case "burst" :
 						if(this.falling==0){this.falling = 1;}
 						this.crouching = 0;
 						play_sound_eff(this.charac.voiceactor+"hurted");
@@ -2924,6 +2974,12 @@ function main(){
 							add_to_objects_set(new Double(this.x-this.orientation*10,this.y,this.orientation,this.skin,this.charac.run_speed/2,this.costume,this.coordinates,3));
 						}
 						break;
+					case "burst":
+						var stats = this.charac.coups.get(this.mov);
+						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.costume = "victory"+(this.charac.vicposframes).toString()}
+						else{this.costume = "victory"+(this.charac.vicposframes-1).toString();}
+						break;
+
 					case "lpunch" :
 					case "hpunch" :
 					case "cmkick" :

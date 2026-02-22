@@ -12,6 +12,10 @@ function get_default_combos(){
     return default_combos;
 }
 
+function get_burst_stats(){
+    return {slag : 3, fdur : 6, elag : 12, degats : 0, landinglag : 8, hitstun : 60, hurtx : 4., hurty : 5., hitboxxs : 15, hitboxxe : 47,hitboxys : 1, hitboxye : 75, hitboxxouv : 20, blood_height : 0, blockstun : 12, blockx : 1.7, hiteffect : "burst", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : "coup"}
+}
+
 var default_combos = get_default_combos();
 
 var normal_moves = ["lpunch","hpunch","lkick","mkick","hkick","clpunch","huppercut","clkick","cmkick","jkick","jskick","jpunch","grab"];
@@ -35,6 +39,7 @@ kitana_coups.set("fanthrow",{slag : 16, fdur : 0, elag : 24, degats : 3, hitstun
 kitana_coups.set("fanswipe",{slag : 8, fdur : 6, elag : 8, degats : 10, hitstun : 30, hurtx : 3, hurty : 4., hitboxxs : 18, hitboxxe : 60, hitboxys : 1, hitboxye : 70, hitboxxouv : 20, blood_height : 0, blockstun : 10, blockx : 2.8, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 9, hitsound : "fan", blood : "mblood", damageonblock : 3, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : "coup"});
 kitana_coups.set("fanlift",{slag : 5, fdur : 10, elag : 5, degats : 8, comboscaling : 0.15, hitstun : 38, hurtx : 0.6, hurty : 5, hitboxxs : -10, hitboxxe : 10, hitboxys : -10, hitboxye : 10, hitboxxouv : 0, blood_height : 0, blockstun : 14, blockx : 2.5, hiteffect : "projectile_fall", hitboxxeyscaling : 0, hitlag : 5, hitsound : "hhit", blood : "lblood", damageonblock : 3, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : "coup"});
 kitana_coups.set("squarepunch",{slag : 15, fdur : 20, elag : 2, degats : 9, hitstun : 25, hurtx : 4.5, hurty : 2, hitboxxs : 15, hitboxxe : 58,hitboxys : -40, hitboxye : -1, hitboxxouv : 32, blood_height : 0, landinglag : 8, blockstun : 13, blockx : 1.9, hiteffect : "fall", hitboxxeyscaling : -0.2, hitlag : 9, hitsound : "mhit", blood : "mblood", damageonblock : 1, disponibility : "stand", voiceline : "hmov", movx : 0, coupwav : "coup"});
+kitana_coups.set("burst",get_burst_stats());
 
 var kitana_combos = get_default_combos();
 kitana_combos.set("hkick","fanthrow");
@@ -60,6 +65,7 @@ var knife_stats = {slag : 11, fdur : 0, elag : 14, degats : 8, hitstun : 22, hur
 mileena_coups.set("teleport_drop",{slag : 12, fdur : 0, elag : 0, degats : 0, hitstun : 0, hurtx : 0.9, hurty : 0, hitboxxs : 0, hitboxxe : 0,hitboxys : 0, hitboxye : -1, hitboxxouv : 15, blood_height : 0, blockstun : 12, blockx : 1.7, hiteffect : "", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : "teleport"});
 mileena_coups.set("ball",{slag : 6, fdur : 12, elag : 7, degats : 10, comboscaling : 0.15, hitstun : 60, hurtx : 2, hurty : 8, hitboxxs : 20, hitboxxe : 20,hitboxys : -20, hitboxye : 45, hitboxxouv : 0, blood_height : -5, blockstun : 8, blockx : 1.4, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 9, hitsound : "mhit", blood : "mblood", damageonblock : 2, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : ""});
 mileena_coups.set("homing_knife",{slag : 20, fdur : 0, elag : 14, degats : 5, hitstun : 22, hurtx : 1.1, hurty : 0, hitboxxs : -12, hitboxxe : 12,hitboxys : -8, hitboxye : 8, hitboxxouv : 5, blood_height : 0, blockstun : 8, blockx : 1.5, hiteffect : "projectile", hitboxxeyscaling : 0, hitlag : 7, hitsound : "fan", blood : "lblood", damageonblock : 2,landinglag : 12, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : ""});
+mileena_coups.set("burst",get_burst_stats());
 
 var mileena_combos = get_default_combos();
 mileena_combos.set("hkick","knifethrow");
@@ -84,6 +90,7 @@ raiden_coups.set("teleport",{slag : 10, fdur : 0, elag : 10, degats : 0, hitstun
 raiden_coups.set("boltthrow",{slag : 14, fdur : 0, elag : 30, degats : 8, hitstun : 22, hurtx : 1.1, hurty : 0, hitboxxs : -12, hitboxxe : 12,hitboxys : -8, hitboxye : 8, hitboxxouv : 5, blood_height : 0, blockstun : 10, blockx : 1.5, hiteffect : "projectile", hitboxxeyscaling : 0, hitlag : 7, hitsound : "electrocute", blood : "electrocute", damageonblock : 2,landinglag : 12, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : ""});
 raiden_coups.set("thundergod",{slag : 10, fdur : 30, elag : 0, degats : 11, hitstun : 60, hurtx : 5, hurty : 8, hitboxxs : 20, hitboxxe : 50,hitboxys : 0, hitboxye : 30, hitboxxouv : 40, blood_height : 20, blockstun : 10, blockx : 1.7, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 9, hitsound : "hhit", blood : "mblood", damageonblock : 2, disponibility : "stand", voiceline : "raidenbullshit", movx : 0, coupwav : ""});
 raiden_coups.set("elecgrab",{slag : 8, fdur : 8, elag : 8, degats : 50, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 38,hitboxys : 0, hitboxye : -1, hitboxxouv : 15, blood_height : 0, blockstun : 12, blockx : 1.7, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "electrocute", blood : "electrocute", damageonblock : 1, disponibility : "stand", voiceline : "mmov", movx : 2.5, coupwav : "coup"});
+raiden_coups.set("burst",get_burst_stats());
 
 var raiden_combos = get_default_combos();
 raiden_combos.set("huppercut","thundergod");
@@ -109,6 +116,7 @@ scorpion_coups.set("spear_throw",{slag : 12, fdur : 0, elag : 60, degats : 5, hi
 var spear_stats = {slag : 12, fdur : 0, elag : 60, degats : 5, hitstun : 22, comboscaling : 0.2, hurtx : -8, hurty : 0, hitboxxs : -12, hitboxxe : 12,hitboxys : -8, hitboxye : 8, hitboxxouv : 5, blood_height : -2, blockstun : 10, blockx : 1.5, hiteffect : "spear", hitboxxeyscaling : 0, hitlag : 12, hitsound : "hhit", blood : "mblood", damageonblock : 2,landinglag : 12, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : "coup"}
 scorpion_coups.set("leg_takedown",{slag : 12, fdur : 6, elag : 12, degats : 8, hitstun : 22, hurtx : 1.5, hurty : 5, hitboxxs : 10, hitboxxe : 50,hitboxys : -1, hitboxye : -20, hitboxxouv : 22, blood_height : 0, blockstun : 12, blockx : 1.9, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit", blood : "lblood", damageonblock : 2, disponibility : "crouch", voiceline : "mmov", movx : 2.2, coupwav : "coup"});
 scorpion_coups.set("airgrab",{slag : 1, fdur : 2, elag : 0, degats : 16, hitstun : 60, hurtx : 3, hurty : 6, hitboxxs : 5, hitboxxe : 38,hitboxys : -50, hitboxye : 40, hitboxxouv : 5, blood_height : 0, blockstun : 12, landinglag : 1, blockx : 1.7, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "air", voiceline : "lmov", movx : 0, coupwav : "coup"});
+scorpion_coups.set("burst",get_burst_stats());
 
 var scorpion_combos = get_default_combos();
 scorpion_combos.set("huppercut","spear_throw");
@@ -133,6 +141,7 @@ subzero_coups.set("slide",{slag : 10, fdur : 20, elag : 7, degats : 10, hitstun 
 subzero_coups.set("iceball",{slag : 13, fdur : 0, elag : 31, degats : 0, comboscaling : 0.2, hitstun : 60, hurtx : 0, hurty : 0, hitboxxs : -12, hitboxxe : 12,hitboxys : -8, hitboxye : 8, hitboxxouv : 5, blood_height : 0, blockstun : 10, blockx : 0.3, hiteffect : "freeze", hitboxxeyscaling : 0, hitlag : 7, hitsound : "freeze", blood : "electrocute", damageonblock : 0,landinglag : 12, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : ""});
 subzero_coups.set("iceflask",{slag : 21, fdur : 0, elag : 0, degats : 0, hitstun : 60, hurtx : 0, hurty : 3.5, hitboxxs : -12, hitboxxe : 12,hitboxys : -8, hitboxye : 8, hitboxxouv : 5, blood_height : 0, blockstun : 10, blockx : 0.3, hiteffect : "iceflask", hitboxxeyscaling : 0, hitlag : 2, hitsound : "freeze", blood : "electrocute", damageonblock : 0,landinglag : 12, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : ""});
 subzero_coups.set("icebody",{slag : 3, fdur : 15, elag : 15, degats : 0, hitstun : 60, hurtx : 0, hurty : 3.5, hitboxxs : -12, hitboxxe : -12,hitboxys : -8, hitboxye : 8, hitboxxouv : 5, blood_height : 0, blockstun : 10, blockx : 0.3, hiteffect : "iceflask", hitboxxeyscaling : 0, hitlag : 2, hitsound : "freeze", blood : "electrocute", damageonblock : 0,landinglag : 12, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : ""});
+subzero_coups.set("burst",get_burst_stats());
 
 var subzero_combos = get_default_combos();
 subzero_combos.set("huppercut","iceball");
@@ -157,6 +166,7 @@ reptile_coups.set("spit",{slag : 12, fdur : 0, elag : 28, degats : 8, hitstun : 
 reptile_coups.set("charge_chargeball",{slag : 5, fdur : 0, elag : 5, degats : 8, hitstun : 22, hurtx : 1.3, hurty : 4., hitboxxs : -12, hitboxxe : 12,hitboxys : -6, hitboxye : 15, hitboxxouv : 5, blood_height : 0, blockstun : 10, blockx : 1.5, hiteffect : "projectile_fall", hitboxxeyscaling : 0, hitlag : 7, hitsound : "spithit", blood : "lblood", damageonblock : 2,landinglag : 12, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : ""});
 reptile_coups.set("chargeball",{slag : 15, fdur : 0, elag : 13, degats : 14, hitstun : 60, comboscaling : 0.1, hurtx : -2., hurty : 8., hitboxxs : -15, hitboxxe : 15,hitboxys : -15, hitboxye : 20, hitboxxouv : 5, blood_height : 0, blockstun : 16, blockx : 1., hiteffect : "unblockable_projectile_fall", hitboxxeyscaling : 0, hitlag : 7, hitsound : "explcrunch", blood : "lblood", damageonblock : 3,landinglag : 12, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : ""});
 reptile_coups.set("bomb",{slag : 15, fdur : 0, elag : 15, degats : 9, hitstun : 27, comboscaling : 0.15, hurtx : 1.3, hurty : 9.5, hitboxxs : -12, hitboxxe : 12,hitboxys : -6, hitboxye : 15, hitboxxouv : 5, blood_height : 0, blockstun : 10, blockx : 1.5, hiteffect : "projectile_fall", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit", blood : "lblood", damageonblock : 2,landinglag : 12, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : "teleport"});
+reptile_coups.set("burst",get_burst_stats());
 
 var reptile_combos = get_default_combos();
 reptile_combos.set("hkick","spit");
@@ -180,6 +190,7 @@ liukang_coups.set("flying_kick",{slag : 8, fdur : 18, elag : 12, degats : 9, hit
 liukang_coups.set("fireball",{slag : 12, fdur : 0, elag : 30, degats : 6, hitstun : 17, hurtx : 1.1, hurty : 0, hitboxxs : -12, hitboxxe : 12,hitboxys : -8, hitboxye : 8, hitboxxouv : 5, blood_height : 0, blockstun : 8, blockx : 1.5, hiteffect : "projectile", hitboxxeyscaling : 0, hitlag : 7, hitsound : "lhit", blood : "lblood", damageonblock : 2,landinglag : 12, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : ""});
 liukang_coups.set("bicycle",{slag : 8, fdur : 30, elag : 6, degats : 2, hitstun : 32, hurtx : 3, hurty : 0, hitboxxs : 0, hitboxxe : 56,hitboxys : -65, hitboxye : 5, hitboxxouv : 22, blood_height : -20, landinglag : 8, blockstun : 7, blockx : 2.3, hiteffect : "none", hitboxxeyscaling : -0.2, hitlag : 6, hitsound : "mhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "bullshit", movx : 0, coupwav : "coup"});
 liukang_coups.set("cycle",{slag : 0, fdur : 0, elag : 27, degats : 0, hitstun : 0, hurtx : 0.9, hurty : 0, hitboxxs : 0, hitboxxe : 0,hitboxys : 0, hitboxye : -1, hitboxxouv : 15, blood_height : 0, blockstun : 12, blockx : 1.7, hiteffect : "", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : "coup"});
+liukang_coups.set("burst",get_burst_stats());
 
 var liukang_combos = get_default_combos();
 liukang_combos.set("hkick","flying_kick");
@@ -193,6 +204,7 @@ shao_coups.set("lpunch",{slag : 9, fdur : 5, elag : 12, degats : 8, hitstun : 25
 shao_coups.set("hpunch",{slag : 14, fdur : 9, elag : 16, degats : 12, hitstun : 32, hurtx : 1.3, hurty : 0, hitboxxs : 11, hitboxxe : 52, hitboxys : 0, hitboxye : 82, hitboxxouv : 21, blood_height : 0, blockstun : 14, blockx : 2.5, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 8, hitsound : "mhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : "coup"});
 shao_coups.set("hkick",{slag : 18, fdur : 8, elag : 18, degats : 19, hitstun : 90, hurtx : 4, hurty : 8.5, hitboxxs : 20, hitboxxe : 50, hitboxys : 1, hitboxye : 100, hitboxxouv : 30, blood_height : 8, blockstun : 16, blockx : 3.3, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 12, hitsound : "hhit", blood : "mblood", damageonblock : 1, disponibility : "stand", voiceline : "hmov", movx : 3, coupwav : "coup"});
 shao_coups.set("charge",{slag : 12, fdur : 20, elag : 7, degats : 12, hitstun : 60, hurtx : 5.2, hurty : 8, hitboxxs : 20, hitboxxe : 46,hitboxys : 0, hitboxye : 90, hitboxxouv : 40, blood_height : -5, blockstun : 35, blockx : 1, hiteffect : "guard_break", hitboxxeyscaling : 0, hitlag : 11, hitsound : "mhit", blood : "mblood", damageonblock : 4, disponibility : "stand", voiceline : "hmov", movx : 0, coupwav : "coup"});
+shao_coups.set("burst",get_burst_stats());
 
 var shao_combos = get_default_combos();
 shao_combos.set("hkick","charge");
@@ -246,6 +258,7 @@ movpriority.set("landing_lag",100);
 movpriority.set("jumpsquat",100);
 movpriority.set("free_fall",100);
 movpriority.set("grab",100);
+movpriority.set("burst",100);
 
 var cd_dependance = new Map();
 cd_dependance.set("",0);
