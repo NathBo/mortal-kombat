@@ -1463,8 +1463,9 @@ function main(){
 
 			if(this.desired_move!="" && !normal_moves.includes("desired_moves") && this.difficulty>=2){
 				block : {
+					if(this.desired_move!="flying_kick" && this.y>0){break block;}
 					if(this.desired_move=="fireball" && other.y<10){break block;}
-					if(this.desired_move=="spear_throw" && (other.y<30 || Math.abs(-stage_size/2*other.orientation-other.x)<=130)){break block;}
+					if(this.desired_move=="spear_throw" && (other.tb>4. || Math.abs(-stage_size/2*other.orientation-other.x)<=130)){break block;}
 					if(this.desired_move=="hell_gates" && Math.abs(-stage_size/2*other.orientation-other.x)<=130){break block;}
 					if((!me.charac.coups.has(me.mov) || me.movlag <= me.charac.coups.get(me.mov).elag+me.charac.coups.get(me.mov).fdur-this.cancelcombodelay)){
 						if(!(movpriority.get(this.desired_move)==70 && movpriority.get(me.mov)>=70)){this.begincoup(this.desired_move);
@@ -1578,7 +1579,7 @@ function main(){
 			this.poing=0;this.jambe=0;this.special=0;this.dodge=0; this.jump=0;
 			this.forward = 0;this.back = 0;
 			this.did_slowdown = false;
-			this.jaugemax = 50; if(reset_ai){this.jauge=0;}
+			this.jaugemax = 100; if(reset_ai){this.jauge=0;}
 			if (this.n == 0){this.orientation = 1}else{this.orientation = -1}
 			this.costume = "stand1";
 			this.standing = 0;this.walking = 0;this.jumping=0;
@@ -1640,6 +1641,7 @@ function main(){
 			if(s == "chargeball"){play_sound_eff("chargeball");}
 			if(stats.coupwav != ""){play_sound_eff(stats.coupwav);}
 			this.cooldowns[cd] = this.charac.cds[cd];
+			if(movpriority.get(s)==70){this.jauge = Math.min(this.jaugemax,this.jauge+3);}
 			if(this.mov!="run")this.xspeed += stats.movx*this.orientation;
 			this.mov = s;
 			this.movlag = stats.slag+stats.fdur+stats.elag;
@@ -1889,9 +1891,9 @@ function main(){
 						else{this.wavedashdir=-1;}
 					}
 					else if(this.crouching==0 && this.is_human() && this.run_buffer &&movpriority.get(this.mov)<80&&end_of_round_countdown==0){
-						if(this.jauge==this.jaugemax){
+						if(this.jauge>=this.jaugemax/2 && this.mov!="run"){
 							this.mov = "run"; this.movlag = 6;
-							this.jauge=0; this.projectile_invincibility = 3;
+							this.jauge-=this.jaugemax/2; this.projectile_invincibility = 3;
 						}
 						this.run_buffer=0;
 					}
@@ -2427,6 +2429,7 @@ function main(){
 			if(Math.abs(this.x-other.x)<d && this.y==0 && other.y==0){
 				this.x-=this.xspeed;
 				this.xspeed=0;
+				if(this.mov=="run"){this.mov="";this.movlag=0;}
 			}
 			if(Math.abs(this.x-camerax)>decalagex-this.charac.width/2){this.x = signe(this.x-camerax)*(decalagex+signe(this.x-camerax)*camerax-this.charac.width/2);}
 		}
@@ -3234,12 +3237,18 @@ function main(){
 			var a = 96*0.86;var b = 498*0.86;
 			ctx.fillStyle='rgb(148,16,16)';ctx.fillRect(a+this.n*b+shake_x,30+shake_y,288,30);
 			ctx.fillStyle='rgb(107,189,33)';
+			if(this.invincibilite){ctx.fillStyle='rgb(147, 211, 58)';}
 			if(this.n==0){ctx.fillRect(a+shake_x,30+shake_y,this.pvaff/this.pvmax*288,30);}
 			else{ctx.fillRect(a+b+288-this.pvaff/this.pvmax*288+shake_x,30+shake_y,this.pvaff/this.pvmax*288,30);}
 			ctx.fillStyle='rgb(44, 157, 202)';
 			if(this.jauge==this.jaugemax){ctx.fillStyle='rgb(129, 207, 237)';}
 			if(this.n==0){ctx.fillRect(a+shake_x,51+shake_y,this.jauge/this.jaugemax*288,5);}
 			else{ctx.fillRect(a+b+288-this.jauge/this.jaugemax*288+shake_x,51+shake_y,this.jauge/this.jaugemax*288,5);}
+			if(this.jauge>=this.jaugemax/2 && this.jauge<this.jaugemax){
+				ctx.fillStyle='rgb(129, 207, 237)';
+				if(this.n==0){ctx.fillRect(a+shake_x,51+shake_y,0.5*288,5);}
+				else{ctx.fillRect(a+b+288-0.5*288+shake_x,51+shake_y,0.5*288,5);}
+			}
 			ctx.drawImage(lifebarpng,a-6+this.n*b+shake_x,25+shake_y);
 			for(var i=0;i<4;i++){
 				if(this.perso=="mileena" && i==0){
