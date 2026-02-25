@@ -156,17 +156,23 @@ function main(){
 	}
 
 	class Burst{
-		constructor(x,y){
-			this.x = x; this.y = y;
-			this.dur = 18;
+		constructor(x,y,joueur){
+			this.x = x; this.y = y; this.joueur=joueur;
+			this.dur = 24;
 			this.num = cpt;
 			this.orientation=1;
 		}
-		loop(){}
+		loop(){
+			this.x = this.joueur.x;
+			this.y = this.joueur.y;
+		}
 
 		afficher(){
 			if(this.dur==0){this.delete();return;}
-			let coords = {offx:0,width:150,offy:0,height:150,decx:0,decy:-10};
+			var a = 0;
+			if(this.dur<=3){a=2;}
+			else if(this.dur <= 21){a=1;}
+			let coords = {offx:a*150,width:150,offy:0,height:150,decx:0,decy:-10};
 			ctx.scale(2*this.orientation,2);
 			ctx.drawImage(burstpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*coords.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -1400,6 +1406,7 @@ function main(){
 		begin_run(){
 			var me = this.me;
 			me.mov = "run"; me.movlag = 12;
+			me.jauge-=me.jaugemax/2;
 		}
 
 		decide(){
@@ -1473,6 +1480,13 @@ function main(){
 			if(other.mov == this.lastmovehitby){reaction_time=0;}
 			reaction_time += Math.floor(Math.abs(other.xspeed));
 			if(this.timesinceoki && other.mov == this.lastmovehitonoki){reaction_time=0;}
+			if(me.hurted || me.falling){
+				me.gauche = 0; me.droite = 0;
+				if(me.jauge==me.jaugemax && this.difficulty>=1 && Math.sqrt((me.x-other.x)**2+(me.y-other.y)**2)<120 && (this.difficulty>=3 || me.pv<=me.pvmax/2) && Math.random()<(1-me.pv/me.pvmax)/(reaction_time+3) && other.mov != "burst"){
+					me.begin_burst();
+				}
+				return;
+			}
 			if(this.wanttowavedash && me.y>0){
 				if(Math.abs(me.x-other.x)-idealrange>0){this.pressforward();}
 				else{this.pressbackward();}
@@ -1578,9 +1592,9 @@ function main(){
 			else if(me.perso=="reptile" && me.y==0 && entre(Math.abs(me.x-other.x),60,120) && Math.abs(-stage_size/2*me.orientation-me.x)<=130 && other.y>=40 && me.cooldowns[3]<=5 && movpriority.get(me.mov)<70 && !this.thereisaprojo())
 				{this.begincoup("bomb");}
 
-			//if(me.mov == "" && me.y==0 && Math.abs(Math.abs(me.x-other.x))>=this.distancetorun && idealrange<=100 && this.behavior!="zoner" && !(this.behavior=="turtle" && this.attacking<=2) && !this.thereisaprojo(true) && Math.random()<=this.chancetorun){this.begin_run();}
+			if(me.mov == "" && me.y==0 && me.jauge>me.jaugemax/2 && Math.abs(Math.abs(me.x-other.x))>=this.distancetorun && idealrange<=100 && this.behavior!="zoner" && !(this.behavior=="turtle" && this.attacking<=2) && Math.random()<=this.chancetorun && this.currisking>0){this.begin_run();}
 
-			if(Math.abs(Math.abs(me.x-other.x)-idealrange)>=this.distancetowavedash && !this.thereisaprojo(true)){this.beginwavedash();}
+			else if(Math.abs(Math.abs(me.x-other.x)-idealrange)>=this.distancetowavedash && !this.thereisaprojo(true)){this.beginwavedash();}
 
 			else if(this.behavior=="turtle" && entre(Math.abs(me.x-other.x)-idealrange,-30 - 80*this.hascommiteddown,30+30*this.hascommiteddown) && this.attacking<4){this.pressbackward();me.bas=1;this.hascommiteddown=1;}
 			
@@ -1604,7 +1618,7 @@ function main(){
 			this.poing=0;this.jambe=0;this.special=0;this.dodge=0; this.jump=0;
 			this.forward = 0;this.back = 0;
 			this.did_slowdown = false;
-			this.jaugemax = 100; if(reset_ai){this.jauge=0;}
+			this.jaugemax = 60; if(reset_ai){this.jauge=0;}
 			if (this.n == 0){this.orientation = 1}else{this.orientation = -1}
 			this.costume = "stand1";
 			this.standing = 0;this.walking = 0;this.jumping=0;
@@ -1666,7 +1680,7 @@ function main(){
 			if(s == "chargeball"){play_sound_eff("chargeball");}
 			if(stats.coupwav != ""){play_sound_eff(stats.coupwav);}
 			this.cooldowns[cd] = this.charac.cds[cd];
-			if(movpriority.get(s)==70){this.jauge = Math.min(this.jaugemax,this.jauge+3);}
+			if(movpriority.get(s)==70){this.jauge = Math.min(this.jaugemax,this.jauge+5);}
 			if(this.mov!="run")this.xspeed += stats.movx*this.orientation;
 			this.mov = s;
 			this.movlag = stats.slag+stats.fdur+stats.elag;
@@ -2244,7 +2258,7 @@ function main(){
 						var stats = this.charac.coups.get(this.mov);
 						this.xspeed = 0;
 						this.tb=0; this.invincibilite = 3;
-						if(this.movlag==stats.elag+stats.fdur){add_to_objects_set(new Burst(this.x,this.y));}
+						if(this.movlag==stats.elag+stats.fdur+3){add_to_objects_set(new Burst(this.x,this.y,this));}
 						break;
 
 
@@ -2486,14 +2500,18 @@ function main(){
 			if(this.poing==1 && this.jambe==1 && this.is_human() && this.pv>0 && end_of_round_countdown==0){
 				this.poing=2; this.jambe=2;
 				if(this.jauge==this.jaugemax){
-					this.hurted=0; this.falling=0;
-					this.xspeed*=0.2;this.tb=0;
-					this.begincoup("burst",other);
-					this.jauge=0;
+					this.begin_burst();
 				}
 			}
 		}
 		
+		}
+
+		begin_burst(){
+			this.hurted=0; this.falling=0;
+			this.xspeed*=0.2;this.tb=0;
+			this.begincoup("burst",this.other);
+			this.jauge=0;
 		}
 
 		loop(other)
@@ -2653,7 +2671,7 @@ function main(){
 				this.pv -= degs;
 				this.combo_deg += degs;
 				this.combo_hits += 1;
-				this.jauge = Math.min(this.jaugemax,this.jauge+degs);
+				this.jauge = Math.min(this.jaugemax,this.jauge+Math.round(degs*0.7));
 				other.jauge = Math.min(other.jaugemax,other.jauge+Math.round(degs/3));
 				if(this.n==1 && secondplayerisdummy && this.pv<=0){this.pv=1;}
 				if(stats.comboscaling!==undefined){this.comboscaling-=stats.comboscaling;}
