@@ -1079,6 +1079,10 @@ function getshaocoordinates(){
 	shaocoordinates.set("victory6",{offx:415,width:54,offy:15,height:110,decx:0,decy:0});
 	shaocoordinates.set("charge1",{offx:162,width:46,offy:622,height:113,decx:0,decy:0});
 	shaocoordinates.set("charge2",{offx:218,width:77,offy:622,height:113,decx:-15,decy:0});
+	shaocoordinates.set("chargeshadow1",{offx:15,width:48,offy:622,height:113,decx:0,decy:0});
+	shaocoordinates.set("chargeshadow2",{offx:71,width:76,offy:622,height:113,decx:-15,decy:0});
+	shaocoordinates.set("shao_tp",{offx:342,width:41,offy:136,height:114,decx:0,decy:0});
+
 
 	return shaocoordinates;
 }

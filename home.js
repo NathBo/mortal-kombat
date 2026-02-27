@@ -1141,7 +1141,7 @@ function main(){
 					this.cancelnormaldelay = 10;
 					this.commitmentonwalk = 5;
 					this.optionssonoki[Math.floor(Math.random()*4)]+=1;
-					this.fduroptiononoki = 0;
+					this.fduroptiononoki = 3;
 					this.reaction_time = 16;
 					this.chanceeviterprojo = 0.8;
 					this.distancetowavedash = 500;
@@ -1159,7 +1159,7 @@ function main(){
 					this.cancelnormaldelay = 7;
 					this.commitmentonwalk = 5;
 					this.optionssonoki[Math.floor(Math.random()*4)]+=0.8;
-					this.fduroptiononoki = 0;
+					this.fduroptiononoki = 3;
 					this.reaction_time = 13;
 					this.chanceeviterprojo = 0.9;
 					this.distancetowavedash = 200;
@@ -1176,7 +1176,7 @@ function main(){
 					this.cancelcombodelay = 1;
 					this.cancelnormaldelay = 3;
 					this.commitmentonwalk = 3;
-					this.fduroptiononoki = 0;
+					this.fduroptiononoki = 3;
 					this.reaction_time = 8;
 					this.chanceeviterprojo = 1;
 					this.distancetowavedash = 150;
@@ -1192,7 +1192,7 @@ function main(){
 					this.cancelcombodelay = 1;
 					this.cancelnormaldelay = 1;
 					this.commitmentonwalk = 1;
-					this.fduroptiononoki = 0;
+					this.fduroptiononoki = 3;
 					this.reaction_time = 4;
 					this.chanceeviterprojo = 1;
 					this.distancetowavedash = 150;
@@ -1204,7 +1204,7 @@ function main(){
 				this.donothingchance = 1-(1-this.donothingchance)/2;this.dontattackchance=1-(1-this.dontattackchance)/2;this.reaction_time+=4;
 			}
 			if(difficulte>=1 && me.perso=="scorpion"){this.agressivite+=0.002}
-			if(me.perso=="shao_kahn"){this.wanttojump-=20;this.reversalmove="charge";this.optionssonoki[4]=0.}
+			if(me.perso=="shao_kahn"){this.wanttojump-=20;this.reversalmove="shao_tp";this.optionssonoki = [.6,.4,0.,.1,0.];this.reversaldist=150;}
 			if(me.perso=="kitana"){this.idealrange=150;this.reversalmove="squarepunch";this.optionssonoki[0]+=0.2;}
 			if(me.perso=="raiden"){this.enviedantiair+=2;this.reversalmove="teleport";}
 			if(me.perso=="liukang"){this.idealrange=90;this.reversalmove="cycle";}
@@ -1309,7 +1309,7 @@ function main(){
 			if(other.crouching){this.wanttojump+=1;}
 			if(me.y>0){this.wanttojump-=2;}
 			if(other.y>0 && me.y==0){this.enviedantiair-=3;}
-			if(this.foptiononoki){this.optionssonoki[this.chosenoptiononoki]-=0.1}
+			if(this.foptiononoki && this.perso != "shao_kahn"){this.optionssonoki[this.chosenoptiononoki]*=0.8}
 			this.eviterprochainprojo = (Math.random()<=this.chanceeviterprojo);
 		}
 
@@ -1411,6 +1411,7 @@ function main(){
 
 		decide(){
 			var me = this.me;
+			console.log(me.mov);
 			var other = this.other;
 			if(end_of_round_countdown || me.pv<=0 || me.grabbing || me.grabbed){me.droite = 0;me.gauche = 0;me.bas = 0;return;}
 			if(this.hascommited){this.hascommited--;}
@@ -1647,6 +1648,7 @@ function main(){
 		}
 
 		begincoup(s,other,ai_pass=false){
+			if(!this.charac.coups.has(s)){return;}
 			var stats = this.charac.coups.get(s);
 			this.reoriente(other);
 			if(this.hurted || this.falling || this.blocking){return;}
@@ -1668,6 +1670,7 @@ function main(){
 			if(s == "knifethrow"){this.memoryslot=0;}
 			if(s == "cycle" && this.y==0){this.invincibilite=23;}
 			if(s == "teleport_drop"){this.invincibilite=12;}
+			if(s == "shao_tp"){this.invincibilite=stats.slag+stats.fdur+stats.elag+1;}
 			if(s == "ball"){this.crouching=6;}
 			if(s == "chargeball"){this.ressource=0;}
 			if(arcadelevel>=0 && this.n==0){moves_used++;}
@@ -1905,6 +1908,7 @@ function main(){
 						else if(this.mov == "free_fall"){this.y=0;this.tb=0;this.movlag = c.landinglag;this.mov = "landing_lag";this.xspeed /=2;}
 						else if(this.charac.coups.has(this.mov)){
 							this.y=0;this.tb=0;this.movlag = this.charac.coups.get(this.mov).landinglag;this.mov = "landing_lag";
+							if(this.movlag===undefined){this.movlag=3;}
 						}
 						else{this.y = 0;this.tb=0;this.xspeed = 0;this.movlag = 0;this.mov = "";}
 						
@@ -2153,6 +2157,9 @@ function main(){
 					else if(this.perso == "shao_kahn" && this.forward>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("charge",other);
 					}
+					else if(this.perso == "shao_kahn" && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+						this.begincoup("shao_tp",other);
+					}
 					else if(this.perso == "mileena" && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("teleport_drop",other);
 					}
@@ -2289,6 +2296,7 @@ function main(){
 						var stats = this.charac.coups.get(this.mov);
 						if(this.movlag==stats.elag+7){this.invincibilite=14;}
 						if(this.movlag==stats.elag){
+							this.reoriente(other,true);
 							var x = other.x+this.orientation*(this.charac.width/2+other.charac.width/2+10);
 							if(Math.abs(x-camerax)>decalagex-this.charac.width/2){x = other.x-this.orientation*(this.charac.width/2+other.charac.width/2+10);}
 							this.x = x;
@@ -2344,10 +2352,21 @@ function main(){
 						break;
 					case "charge":
 						var stats = this.charac.coups.get(this.mov);
-						if(this.movlag==stats.elag+stats.fdur+stats.elag-1){this.invincibilite=stats.fdur;}
-						if(this.movlag==stats.elag){this.invincibilite=this.xspeed=0;}
+						if(this.movlag==stats.elag+stats.fdur+stats.slag-1){this.projectile_invincibility=stats.fdur+stats.slag;}
+						if(this.movlag==stats.elag){this.projectile_invincibility=this.xspeed=0;}
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.xspeed=7*this.orientation;}
 						break;
+					case "shao_tp":
+						var stats = this.charac.coups.get(this.mov);
+						if(this.movlag==stats.elag){
+							var x = other.x+this.orientation*70;
+							if(Math.abs(x-camerax)>decalagex-this.charac.width/2){x = other.x+this.orientation*(this.charac.width/2+other.charac.width/2+10);}
+							if(Math.abs(x-camerax)>decalagex-this.charac.width/2){x = other.x-this.orientation*(this.charac.width/2+other.charac.width/2+10);}
+							this.x = x;
+						}
+						if(this.movlag<=stats.jumpf){this.y+=8;this.reoriente(this.other,true);}
+						break;
+					
 					case "iceball":
 						var stats = this.charac.coups.get(this.mov);
 						this.crouching=0;
@@ -3057,12 +3076,24 @@ function main(){
 					case "elecgrab" :
 					case "slide" :
 					case "icebody" :
-					case "charge" :
 					case "flying_kick" :
 					case "teleport_drop" :
 						var stats = this.charac.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.costume = this.mov+"2"}
 						else{this.costume = this.mov+"1";}
+						break;
+
+					case "shao_tp" :
+						this.costume = "shao_tp";
+						break;
+
+					case "charge" :
+						var stats = this.charac.coups.get(this.mov);
+						var n = 1;
+						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){n = "2";}
+						else{n = "1";}
+						if(this.movlag%2==0){this.costume = "charge"+n;}
+						else{this.costume = "chargeshadow"+n;}
 						break;
 
 					case "bicycle" :
@@ -3276,6 +3307,11 @@ function main(){
 				var y = this.y;
 				if(this.mov == "teleport_drop"){y = -8*(12-this.movlag)}
 				else if(this.mov == "ball"){y = -10;}
+				else if(this.mov == "shao_tp"){
+					var stats = this.charac.coups.get(this.mov);
+					if(this.movlag>=stats.elag){y = -8*(stats.slag-(this.movlag-stats.elag))}
+					else if(this.movlag>stats.jumpf){y += -8*(this.movlag-stats.jumpf)}
+				}
 				if(this.electrocuted){
 					this.electrocuted--;
 					ctx.filter = 'brightness(1.8)';
@@ -4578,7 +4614,7 @@ function main(){
 	var finishhim = 0; var fatalitywasdone = false; var fatalitysreen = 0;
 	var persoschoisis = ["kitana","raiden"]; var skinschoisis = [0,0]; var persolocked = [0,0]; var persosovered = [0,2];
 	var introon = true; var timer = 0; var timer_init = 60*60;
-	var liste_persos = ["raiden","mileena","scorpion","reptile","liukang", "kitana", "subzero"];
+	var liste_persos = ["raiden","mileena","scorpion","shao_kahn","liukang", "kitana", "subzero"];
 	var chartimer = 0; var chartimercycle = 3; var difficultynames = ["Easy","Normal","Hard","Insane","Terminator"];
 	var is_in_charc_screen = true; var lockincountdown = 0; var lockincountdownfdur = 40; var controlafaire = -1; var key = "";
 	var Width= window.innerWidth; var Height=window.innerHeight;
@@ -4615,6 +4651,7 @@ function main(){
 			statistics = new Map(Object.entries(JSON.parse(a)));
 			persosunlocked = new Map(Object.entries(JSON.parse(b)));
 			if(c != null){difficulte = parseInt(c);}
+			persosunlocked.set("shao_kahn",true);
 		}
 	}
 
