@@ -1066,11 +1066,11 @@ function getshaocoordinates(){
 	shaocoordinates.set("getup4",{offx:774,width:45,offy:756,height:103,decx:0,decy:0});
 	shaocoordinates.set("blocking1",{offx:459,width:39,offy:137,height:114,decx:0,decy:0});
 	shaocoordinates.set("blocking2",{offx:509,width:37,offy:137,height:114,decx:0,decy:0});
-	shaocoordinates.set("huppercut1",{offx:15,width:36,offy:687,height:122,decx:0,decy:0});
-	shaocoordinates.set("huppercut2",{offx:58,width:70,offy:687,height:122,decx:0,decy:0});
-	shaocoordinates.set("huppercut3",{offx:138,width:53,offy:687,height:122,decx:0,decy:0});
-	shaocoordinates.set("huppercut4",{offx:198,width:36,offy:687,height:122,decx:0,decy:0});
-	shaocoordinates.set("huppercut5",{offx:293,width:35,offy:687,height:122,decx:0,decy:0});
+	shaocoordinates.set("huppercut1",{offx:494,width:49,offy:378,height:128,decx:0,decy:0});
+	shaocoordinates.set("huppercut2",{offx:553,width:52,offy:378,height:128,decx:0,decy:0});
+	shaocoordinates.set("huppercut3",{offx:613,width:62,offy:378,height:128,decx:0,decy:0});
+	shaocoordinates.set("huppercut4",{offx:683,width:62,offy:378,height:128,decx:0,decy:0});
+	shaocoordinates.set("huppercut5",{offx:613,width:62,offy:378,height:128,decx:0,decy:0});
 	shaocoordinates.set("victory1",{offx:289,width:51,offy:15,height:110,decx:0,decy:0});
 	shaocoordinates.set("victory2",{offx:351,width:56,offy:15,height:110,decx:0,decy:0});
 	shaocoordinates.set("victory3",{offx:289,width:51,offy:15,height:110,decx:0,decy:0});
@@ -1082,6 +1082,10 @@ function getshaocoordinates(){
 	shaocoordinates.set("chargeshadow1",{offx:15,width:48,offy:622,height:113,decx:0,decy:0});
 	shaocoordinates.set("chargeshadow2",{offx:71,width:76,offy:622,height:113,decx:-15,decy:0});
 	shaocoordinates.set("shao_tp",{offx:342,width:41,offy:136,height:114,decx:0,decy:0});
+	shaocoordinates.set("arrow1",{offx:19,width:70,offy:513,height:99,decx:-16,decy:0});
+	shaocoordinates.set("arrow2",{offx:97,width:52,offy:513,height:99,decx:0,decy:0});
+	shaocoordinates.set("arrow3",{offx:157,width:72,offy:513,height:99,decx:0,decy:0});
+	shaocoordinates.set("arrow_proj",{offx:444,width:97,offy:600,height:13,decx:0,decy:0});
 
 
 	return shaocoordinates;

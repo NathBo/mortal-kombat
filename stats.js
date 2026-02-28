@@ -205,6 +205,7 @@ shao_coups.set("hpunch",{slag : 14, fdur : 9, elag : 16, degats : 12, hitstun : 
 shao_coups.set("hkick",{slag : 18, fdur : 8, elag : 18, degats : 19, hitstun : 90, hurtx : 4, hurty : 8.5, hitboxxs : 20, hitboxxe : 50, hitboxys : 1, hitboxye : 100, hitboxxouv : 30, blood_height : 8, blockstun : 16, blockx : 3.3, hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 12, hitsound : "hhit", blood : "mblood", damageonblock : 1, disponibility : "stand", voiceline : "hmov", movx : 3, coupwav : "coup"});
 shao_coups.set("charge",{slag : 15, fdur : 20, elag : 7, degats : 12, hitstun : 60, hurtx : 5.2, hurty : 8, hitboxxs : 20, hitboxxe : 46,hitboxys : 0, hitboxye : 90, hitboxxouv : 40, blood_height : -5, blockstun : 35, blockx : 1, hiteffect : "guard_break", hitboxxeyscaling : 0, hitlag : 11, hitsound : "mhit", blood : "mblood", damageonblock : 4, disponibility : "stand", voiceline : "hmov", movx : 0, coupwav : "coup"});
 shao_coups.set("shao_tp",{slag : 20, fdur : 0, elag : 33, jumpf : 8, degats : 0, hitstun : 0, hurtx : 0.9, hurty : 0, hitboxxs : 0, hitboxxe : 0,hitboxys : 0, hitboxye : -1, hitboxxouv : 15, blood_height : 0, blockstun : 12, blockx : 1.7, hiteffect : "", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : "teleport", landinglag : 8});
+shao_coups.set("arrow",{slag : 12, fdur : 0, elag : 32, degats : 10, hitstun : 22, hurtx : 2.3, hurty : 4., hitboxxs : -12, hitboxxe : 12,hitboxys : -6, hitboxye : 15, hitboxxouv : 5, blood_height : 0, blockstun : 1, blockx : 1.5, hiteffect : "projectile_fall", hitboxxeyscaling : 0, hitlag : 7, hitsound : "mhit", blood : "lblood", damageonblock : 2,landinglag : 12, disponibility : "stand", voiceline : "hmov", movx : 0, coupwav : ""});
 shao_coups.set("burst",get_burst_stats());
 
 var shao_combos = get_default_combos();
@@ -244,6 +245,7 @@ movpriority.set("iceball",70);
 movpriority.set("iceflask",70);
 movpriority.set("icebody",70);
 movpriority.set("charge",70);
+movpriority.set("arrow",70);
 movpriority.set("shao_tp",70);
 movpriority.set("flying_kick",70);
 movpriority.set("fireball",70);

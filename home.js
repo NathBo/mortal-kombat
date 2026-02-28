@@ -634,6 +634,49 @@ function main(){
 		}
 	}
 
+	class Arrow{
+		constructor(x,y,orientation,other,stats){
+			this.x = x; this.y = y; this.orientation = orientation;
+			this.other = other;
+			this.width=80;
+			this.height=10;
+			this.totdur = 50;this.vitesse=10;
+			this.stats = stats;
+			this.dur = this.totdur;
+			this.num = cpt;
+			this.dangerous = true;
+			
+		}
+
+		loop(){
+			this.x += this.orientation*this.vitesse;
+			var stats = this.stats; var other = this.other;
+			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-other.charac.width/2,this.width/2+other.charac.width/2)){
+				if(other.y==0){
+					if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
+				}
+				else{
+					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){other.hurt(this,stats);this.dur=1;}
+				}
+			}
+		}
+
+		afficher(){
+			this.costume = "arrow_proj";
+			ctx.scale(2*this.orientation,2);
+			var coords = shaocoordinates.get(this.costume);
+			ctx.drawImage(shaopng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			if(gamefreeze==0){this.dur--;}
+			if(this.dur==0){this.delete();return;}
+		}
+
+		delete(){
+			objects_to_loop.delete(this.num);
+		}
+	}
+
 
 	class IceFlask{
 		constructor(x,y,orientation,other,stats){
@@ -872,7 +915,7 @@ function main(){
 	}
 
 	class Head{
-		constructor(x,y,orientation,skin,coords, power=2){
+		constructor(x,y,orientation,skin,coords, power=2, vitesse = -1){
 			this.x = x; this.y = y; this.orientation = orientation; this.skin = skin; this.coords = coords;
 			this.width=22;
 			this.height=44;
@@ -881,7 +924,7 @@ function main(){
 			this.rotation = 0; this.rotationspeed = 16;
 			this.gravity = 0.15;
 			this.tb=Math.random()*2+power;
-			this.vitesse = -1-Math.random();
+			this.vitesse = vitesse-Math.random();
 			this.dangerous = false;
 			
 		}
@@ -1547,6 +1590,7 @@ function main(){
 				if(me.perso=="subzero"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("iceball");}}
 				if(me.perso=="liukang" && this.currisking<=2){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("fireball");}}
 				if(me.perso=="reptile"){if(Math.abs(me.x-other.x)>100&&me.y==0&&me.ressource<me.max_ressource){this.begincoup("spit");}}
+				if(me.perso=="shao_kahn"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("arrow");}}
 			}
 
 			if(me.perso=="raiden" && this.currisking>=-2 && Math.abs(Math.abs(me.x-other.x-other.xspeed*10)-120)<=40 && me.y==0 && (other.y>0 || this.behavior=="masher") && me.crouching==0 && movpriority.get(me.mov)<70 && other.tb<0 && me.cooldowns[1]==0)
@@ -1554,6 +1598,8 @@ function main(){
 
 			else if(me.perso=="shao_kahn" && this.currisking>=-5 && ((Math.abs(Math.abs(me.x-other.x-other.xspeed*10)-120)<=40 && me.y==0 && other.y>0 && me.crouching==0 && movpriority.get(me.mov)<70 && other.tb<=0) || (other.crouching>=4 && Math.abs(me.x-other.x)<=120 && me.y==0)))
 				{this.begincoup("charge");}
+			else if(me.perso == "shao_kahn"  && finishhim && Math.abs(me.x-other.x)<=60 && other.gettingup==0 && other.y<=30)
+				{me.special=1;this.pressforward();}
 
 			else if(me.perso=="scorpion" && this.currisking>=-5 && Math.abs(me.x-other.x-other.xspeed*10)>=80 && me.y==0 && me.crouching==0 && movpriority.get(me.mov)<70 && other.tb<=0 && me.y==0 && Math.abs(me.x-me.orientation*180-camerax)>=decalagex && me.cooldowns[2]==0)
 				{this.begincoup("hell_gates");}
@@ -1913,7 +1959,7 @@ function main(){
 						else{this.y = 0;this.tb=0;this.xspeed = 0;this.movlag = 0;this.mov = "";}
 						
 					}
-					if (this.bas&&this.movlag == 0 &&!(youareintutorial && !this.allowedmoves.includes("crouch"))){this.crouching = Math.min(this.crouching+1,6);}
+					if (this.bas&&this.movlag == 0 && this.perso != "shao_kahn" &&!(youareintutorial && !this.allowedmoves.includes("crouch"))){this.crouching = Math.min(this.crouching+1,6);}
 					else if(this.bas==0&&this.crouching>0&&this.movlag==0){this.crouching--;}
 					if((this.haut==1 || this.jump==1)&&movpriority.get(this.mov)<10&&end_of_round_countdown==0 &&!(youareintutorial && !this.allowedmoves.includes("jump"))){
 						if(this.mov=="run"){this.xspeed=(c.jumpxspeed+c.run_speed)/2*this.orientation;}
@@ -2021,13 +2067,26 @@ function main(){
 						this.mov = ""; this.movlag=0;
 						if(this.x<other.x){this.orientation = -1;}else{this.orientation = 1;}
 					}
+					else if(this.perso == "shao_kahn" && this.forward && this.bas==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=60 && other.gettingup==0 && other.y<=30){
+						this.fatality = 70;
+						other.falling=0;
+						other.y=0;
+						play_sound_eff("fatal1");
+						this.special=2;
+						other.x = clip(other.x,this.x + 40*this.orientation,this.x + 50*this.orientation);
+						finishhim = 0;
+						other.invincibilite=1000;
+						fatalitywasdone = true;
+						this.mov = ""; this.movlag=0;
+						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
+					}
 					else if(this.perso == "scorpion" && this.forward && this.special==1 && finishhim && entre(Math.abs(this.x-other.x),75,125) && other.gettingup==0 && other.y<=30){
 						this.fatality = 180;
 						other.falling=0;
 						other.y=0;
 						play_sound_eff("fatal1");
 						this.special=2;
-						clip(other.x,this.x + 90*this.orientation,this.x + 110*this.orientation);
+						other.x = clip(other.x,this.x + 90*this.orientation,this.x + 110*this.orientation);
 						finishhim = 0;
 						other.invincibilite=1000;
 						fatalitywasdone = true;
@@ -2159,6 +2218,9 @@ function main(){
 					}
 					else if(this.perso == "shao_kahn" && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("shao_tp",other);
+					}
+					else if(this.perso == "shao_kahn" && this.back==0 && this.bas==0 && this.forward==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+						this.begincoup("arrow",other);
 					}
 					else if(this.perso == "mileena" && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("teleport_drop",other);
@@ -2365,6 +2427,14 @@ function main(){
 							this.x = x;
 						}
 						if(this.movlag<=stats.jumpf){this.y+=8;this.reoriente(this.other,true);}
+						break;
+
+					case "arrow":
+						var stats = this.charac.coups.get(this.mov);
+						this.crouching=0;
+						if(this.movlag==stats.elag){
+							add_to_objects_set(new Arrow(this.x+45*this.orientation,this.y+70,this.orientation,other,stats));
+						}
 						break;
 					
 					case "iceball":
@@ -2864,6 +2934,14 @@ function main(){
 					
 					this.costume = "eat"+n.toString();
 				}
+				if(this.perso=="shao_kahn"){
+					if(this.fatality>=40){this.costume = "huppercut1"}
+					else if(this.fatality>=36){this.costume = "huppercut2"}
+					else if(this.fatality>=32){this.costume = "huppercut3"}
+					else if(this.fatality>=5){this.costume = "huppercut4"}
+					else {this.costume = "huppercut5"}
+					if(this.fatality==32){other.decapitate(3,-5);play_sound_eff("hhit");play_sound_eff("spithit");shake_screen(12,10);}
+				}
 			}
 			else if(this.fatality && this.fatalitytype==1){
 				if(this.perso=="scorpion"){
@@ -3094,6 +3172,14 @@ function main(){
 						else{n = "1";}
 						if(this.movlag%2==0){this.costume = "charge"+n;}
 						else{this.costume = "chargeshadow"+n;}
+						break;
+
+					case "arrow" :
+						var stats = this.charac.coups.get(this.mov);
+						if(this.movlag>=stats.elag+stats.slag/2){this.costume="arrow1"}
+						else if(this.movlag>=stats.elag){this.costume="arrow2"}
+						else if(this.movlag>=stats.elag/3){this.costume="arrow3"}
+						else{this.costume="arrow2"}
 						break;
 
 					case "bicycle" :
@@ -3422,9 +3508,9 @@ function main(){
 			if(this.pv>0&&end_of_round_countdown==pause_after_vicpose+Math.max(this.charac.vicposfdur,35)){this.vicpose = 1;}
 		}
 
-		decapitate(power = 2){
+		decapitate(power = 2, vitesse=-1){
 			this.decapitated = 100;
-			add_to_objects_set(new Head(this.x,this.y+this.charac.height,this.orientation,this.skin,this.coordinates, power));
+			add_to_objects_set(new Head(this.x,this.y+this.charac.height,this.orientation,this.skin,this.coordinates, power,vitesse));
 			add_to_objects_set(new Blood(this.x,this.y+this.charac.height-5,this.orientation,"hblood"));
 		}
 
@@ -4614,7 +4700,7 @@ function main(){
 	var finishhim = 0; var fatalitywasdone = false; var fatalitysreen = 0;
 	var persoschoisis = ["kitana","raiden"]; var skinschoisis = [0,0]; var persolocked = [0,0]; var persosovered = [0,2];
 	var introon = true; var timer = 0; var timer_init = 60*60;
-	var liste_persos = ["raiden","mileena","scorpion","shao_kahn","liukang", "kitana", "subzero"];
+	var liste_persos = ["raiden","mileena","scorpion","reptile","liukang", "kitana", "subzero"];
 	var chartimer = 0; var chartimercycle = 3; var difficultynames = ["Easy","Normal","Hard","Insane","Terminator"];
 	var is_in_charc_screen = true; var lockincountdown = 0; var lockincountdownfdur = 40; var controlafaire = -1; var key = "";
 	var Width= window.innerWidth; var Height=window.innerHeight;
