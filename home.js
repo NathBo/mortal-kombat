@@ -1454,7 +1454,6 @@ function main(){
 
 		decide(){
 			var me = this.me;
-			console.log(me.mov);
 			var other = this.other;
 			if(end_of_round_countdown || me.pv<=0 || me.grabbing || me.grabbed){me.droite = 0;me.gauche = 0;me.bas = 0;return;}
 			if(this.hascommited){this.hascommited--;}
@@ -3868,7 +3867,7 @@ function main(){
 				}
 				if(arcadelevel>=0 && j1.pv>0 && entre(end_of_round_countdown,20,80)){
 					var score_to_add = round_of(j1.pv/j1.pvmax*1000,50);
-					if(j1.pv==j1.pvmax){score_to_add = 2000;}
+					if(j1.pv==j1.pvmax){score_to_add = 2000+arcadelevel*500;}
 					if(end_of_round_countdown==80){score+=score_to_add}
 					ctx.fillStyle = "yellow";
 					ctx.font = "30px serif";
@@ -3953,10 +3952,10 @@ function main(){
 		if(fightstartcountdown){
 			if(youareintutorial){
 				ctx.fillStyle = "gray";
-				ctx.fillRect(312,100,400,300);
+				ctx.fillRect(312*0.86,100,400*0.86,300);
 				ctx.fillStyle = "white";
 				ctx.font = "20px serif";
-				printAtWordWrap(ctx,currentuto.msg, 332, 140, 22, 360);
+				printAtWordWrap(ctx,currentuto.msg, 332*0.86, 140, 22, 360*0.86);
 				if(j1.poing==1){j1.poing=2;fightstartcountdown=0;musiques[chosenstage].play();}
 			}
 			else {fightstartcountdown--;}
@@ -4304,10 +4303,10 @@ function main(){
 		ctx.fillStyle = "white";
 		ctx.fillText("Character tutorials",480,80);
 		ctx.scale(3,3);
-		for(var i=0;i<liste_persos.length;i++){
-			if(persosunlocked.get(liste_persos[i])){
+		for(var i=0;i<persos_tuto.length;i++){
+			if(persosunlocked.get(persos_tuto[i])){
 				if(b==i){ctx.filter = "brightness(0.8)";}else{ctx.filter = "none";}
-				ctx.drawImage(characteristics.get(liste_persos[i]).icon,leftside+22*(i%3),topside+33*Math.floor(i/3));
+				ctx.drawImage(characteristics.get(persos_tuto[i]).icon,leftside+22*(i%3),topside+33*Math.floor(i/3));
 			}
 		}
 		ctx.filter = "none";
@@ -4321,7 +4320,7 @@ function main(){
 				currenttutoline = tutolineslist[Math.floor((clicky-0.26)*10)];
 				launchtutorial(currenttutoline[0]);
 			}
-			else if(entre(clickx,175*3/dim_x, (175*3+22*9)/dim_x) && entre(clicky,40*3/500,106*3/500) && persosunlocked.get(liste_persos[Math.floor((clickx-175*3/dim_x)/(22*3/dim_x))+3*(clicky>219/500)])){
+			else if(entre(clickx,175*3/dim_x, (175*3+22*9)/dim_x) && entre(clicky,40*3/500,106*3/500) && persosunlocked.get(persos_tuto[Math.floor((clickx-175*3/dim_x)/(22*3/dim_x))+3*(clicky>219/500)])){
 				currenttutoline = tutopersoslist[Math.floor((clickx-175*3/dim_x)/(22*3/dim_x))+3*(clicky>219/500)];
 				launchtutorial(currenttutoline[0]);
 			}
@@ -4701,6 +4700,7 @@ function main(){
 	var persoschoisis = ["kitana","raiden"]; var skinschoisis = [0,0]; var persolocked = [0,0]; var persosovered = [0,2];
 	var introon = true; var timer = 0; var timer_init = 60*60;
 	var liste_persos = ["raiden","mileena","scorpion","reptile","liukang", "kitana", "subzero"];
+	var persos_tuto = ["raiden","mileena","scorpion","liukang", "kitana", "subzero"];
 	var chartimer = 0; var chartimercycle = 3; var difficultynames = ["Easy","Normal","Hard","Insane","Terminator"];
 	var is_in_charc_screen = true; var lockincountdown = 0; var lockincountdownfdur = 40; var controlafaire = -1; var key = "";
 	var Width= window.innerWidth; var Height=window.innerHeight;
