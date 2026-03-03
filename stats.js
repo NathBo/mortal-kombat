@@ -255,6 +255,7 @@ movpriority.set("knifethrow",70);
 movpriority.set("teleport_drop",70);
 movpriority.set("spit",70);
 movpriority.set("chargeball",70);
+movpriority.set("ball",70);
 movpriority.set("charge_chargeball",70);
 movpriority.set("bomb",70);
 movpriority.set("air_dodge",100);
