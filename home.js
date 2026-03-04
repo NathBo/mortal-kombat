@@ -3320,7 +3320,8 @@ function main(){
 					if(this.jumping<0){this.costume = "jump3";this.jumping+=1;}
 					else {this.jumping = mod(this.jumping+signe(this.xspeed*this.orientation),7*this.charac.rollspeed);
 						let a = Math.floor(this.jumping/this.charac.rollspeed)+1;
-						this.costume = "roll"+a;	
+						this.costume = "roll"+a;
+						console.log(this.costume)
 					}
 				}
 			}
@@ -4663,6 +4664,11 @@ function main(){
 	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : reptile_coups, pv : 100, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 14, cds : [210,160,150,300], icons : [iceballiconpng,sliderepiconpng,spiticonpng,bombiconpng], voiceactor : "male",
 	default_behav : "zoner", combos : reptile_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Reptile resurrects the dinosaurs and imposes a reptilian dictatorship!"});
 	
+	characteristics.set("johnny",{png : johskins,coordinates : johcoordinates, sex : "m", standnframes : 5, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 8, icon : subzeroiconpng, namewav : document.querySelector('#subzerowav'),
+	width : 38, height : 103,vitesse : 3.5, run_speed : 7.,jumpxspeed : 3.4,backmovnerf : 0.9, gravity : 0.42, jumpforce : 9.1,jumpsquat : 3, shorthop : 6.3, friction:0.2, hurtcontrol : 0.18,grabtype : "launch",
+	airdrift : 0.11, airmaxspeed : 2., airdodgespeed : 5.9, airdodgefdur : 15, landinglag : 10, coups : subzero_coups, pv : 100, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 13, vicposfdur : 52, cds : [210,150,240,270], icons : [iceballiconpng,slideiconpng,iceflaskiconpng,icebodyiconpng], voiceactor : "male",
+	default_behav : "turtle", combos : subzero_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Subzero becomes best friends with Yeti and builds the best professional snowball fight team with him."});
+	
 
 
 	characteristics.set("shao_kahn",{png : shaoskins,coordinates : shaocoordinates, sex : "m", standnframes : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 5,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 8, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
@@ -4699,7 +4705,7 @@ function main(){
 	var finishhim = 0; var fatalitywasdone = false; var fatalitysreen = 0;
 	var persoschoisis = ["kitana","raiden"]; var skinschoisis = [0,0]; var persolocked = [0,0]; var persosovered = [0,2];
 	var introon = true; var timer = 0; var timer_init = 60*60;
-	var liste_persos = ["raiden","mileena","scorpion","reptile","liukang", "kitana", "subzero"];
+	var liste_persos = ["johnny","mileena","scorpion","reptile","liukang", "kitana", "subzero"];
 	var persos_tuto = ["raiden","mileena","scorpion","liukang", "kitana", "subzero"];
 	var chartimer = 0; var chartimercycle = 3; var difficultynames = ["Easy","Normal","Hard","Insane","Terminator"];
 	var is_in_charc_screen = true; var lockincountdown = 0; var lockincountdownfdur = 40; var controlafaire = -1; var key = "";
@@ -4738,6 +4744,7 @@ function main(){
 			persosunlocked = new Map(Object.entries(JSON.parse(b)));
 			if(c != null){difficulte = parseInt(c);}
 			persosunlocked.set("shao_kahn",true);
+			persosunlocked.set("johnny",true);
 		}
 	}
 
