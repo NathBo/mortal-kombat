@@ -4098,14 +4098,14 @@ function main(){
 		if(j1.bas==1){
 			j1.bas=2;
 			if(!persolocked[0]){
-				if(persosovered[0]<=2){
+				if(persosovered[0]<=3){
 					persosovered[0]=Math.min(liste_persos.length-1,persosovered[0]+persos_per_line);
 					reset_for_charac_screen(0);
 					play_sound_eff("cursor_move");
 				}
 			}
 			else if(!secondplayerishuman && !persolocked[1] && secondplayerchosescharac){
-				if(persosovered[1]<=2){
+				if(persosovered[1]<=3){
 					persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]+persos_per_line);
 					reset_for_charac_screen(1);
 					play_sound_eff("cursor_move");
@@ -4145,7 +4145,7 @@ function main(){
 		if(j2.bas==1){
 			j2.bas=2;
 			if(!persolocked[1]){
-				if(persosovered[1]<persos_per_line-1){
+				if(persosovered[1]<persos_per_line){
 					persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]+persos_per_line);
 					reset_for_charac_screen(1);
 					play_sound_eff("cursor_move");
@@ -4664,10 +4664,10 @@ function main(){
 	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : reptile_coups, pv : 100, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 14, cds : [210,160,150,300], icons : [iceballiconpng,sliderepiconpng,spiticonpng,bombiconpng], voiceactor : "male",
 	default_behav : "zoner", combos : reptile_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Reptile resurrects the dinosaurs and imposes a reptilian dictatorship!"});
 	
-	characteristics.set("johnny",{png : johskins,coordinates : johcoordinates, sex : "m", standnframes : 5, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 8, icon : subzeroiconpng, namewav : document.querySelector('#subzerowav'),
-	width : 38, height : 103,vitesse : 3.5, run_speed : 7.,jumpxspeed : 3.4,backmovnerf : 0.9, gravity : 0.42, jumpforce : 9.1,jumpsquat : 3, shorthop : 6.3, friction:0.2, hurtcontrol : 0.18,grabtype : "launch",
-	airdrift : 0.11, airmaxspeed : 2., airdodgespeed : 5.9, airdodgefdur : 15, landinglag : 10, coups : subzero_coups, pv : 100, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 13, vicposfdur : 52, cds : [210,150,240,270], icons : [iceballiconpng,slideiconpng,iceflaskiconpng,icebodyiconpng], voiceactor : "male",
-	default_behav : "turtle", combos : subzero_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Subzero becomes best friends with Yeti and builds the best professional snowball fight team with him."});
+	characteristics.set("johnny",{png : johskins,coordinates : johcoordinates, sex : "m", standnframes : 5, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 40, stunnframes : 5, walknframes : 8, icon : johnnyiconpng, namewav : document.querySelector('#johnnywav'),
+	width : 38, height : 103,vitesse : 3.5, run_speed : 7.,jumpxspeed : 3.4,backmovnerf : 0.9, gravity : 0.42, jumpforce : 9.1,jumpsquat : 3, shorthop : 6.4, friction:0.2, hurtcontrol : 0.2,grabtype : "poser",
+	airdrift : 0.11, airmaxspeed : 2., airdodgespeed : 5.9, airdodgefdur : 15, landinglag : 10, coups : johnny_coups, pv : 100, getupfdur : 36, grabfdur : 22, grabdeg : 13, vicposframes : 13, vicposfdur : 52, cds : [210,150,240,270], icons : [iceballiconpng,slideiconpng,iceflaskiconpng,icebodyiconpng], voiceactor : "male",
+	default_behav : "normal", combos : johnny_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Subzero becomes best friends with Yeti and builds the best professional snowball fight team with him."});
 	
 
 
@@ -4705,7 +4705,7 @@ function main(){
 	var finishhim = 0; var fatalitywasdone = false; var fatalitysreen = 0;
 	var persoschoisis = ["kitana","raiden"]; var skinschoisis = [0,0]; var persolocked = [0,0]; var persosovered = [0,2];
 	var introon = true; var timer = 0; var timer_init = 60*60;
-	var liste_persos = ["johnny","mileena","scorpion","reptile","liukang", "kitana", "subzero"];
+	var liste_persos = ["raiden","mileena","scorpion","johnny","liukang", "kitana", "subzero","reptile"];
 	var persos_tuto = ["raiden","mileena","scorpion","liukang", "kitana", "subzero"];
 	var chartimer = 0; var chartimercycle = 3; var difficultynames = ["Easy","Normal","Hard","Insane","Terminator"];
 	var is_in_charc_screen = true; var lockincountdown = 0; var lockincountdownfdur = 40; var controlafaire = -1; var key = "";

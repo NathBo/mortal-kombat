@@ -98,6 +98,7 @@ var scorpioniconpng=new Image();scorpioniconpng.src = 'ressource/icons/scorpion.
 var subzeroiconpng=new Image();subzeroiconpng.src = 'ressource/icons/subzero.png';
 var reptileiconpng=new Image();reptileiconpng.src = 'ressource/icons/reptile.png';
 var liukangiconpng=new Image();liukangiconpng.src = 'ressource/icons/liukang.png';
+var johnnyiconpng=new Image();johnnyiconpng.src = 'ressource/icons/johnny.png';
 var lockediconpng=new Image();lockediconpng.src = 'ressource/icons/locked.png';
 var boticonpng=new Image();boticonpng.src = 'ressource/icons/bot.png';
 var playericonpng=new Image();playericonpng.src = 'ressource/icons/player.png';
