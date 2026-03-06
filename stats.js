@@ -186,9 +186,11 @@ johnny_coups.set("jkick",{slag : 9, fdur : 25, elag : 4, degats : 10, hitstun : 
 johnny_coups.set("jskick",{slag : 9, fdur : 15, elag : 7, degats : 11, hitstun : 30, hurtx : 0.8, hurty : 0, hitboxxs : 10, hitboxxe : 48,hitboxys : -20, hitboxye : 20, hitboxxouv : 12, blood_height : 0, landinglag : 8, blockstun : 10, blockx : 1.7, hiteffect : "none", hitboxxeyscaling : 0.5, hitlag : 8, hitsound : "mhit", blood : "lblood", damageonblock : 1, disponibility : "air", voiceline : "mmov", movx : 0, coupwav : "coup"});
 johnny_coups.set("jpunch",{slag : 6, fdur : 10, elag : 10, degats : 8, hitstun : 25, hurtx : 1.2, hurty : 0, hitboxxs : 30, hitboxxe : 59,hitboxys : -50, hitboxye : 10, hitboxxouv : 32, blood_height : 0, landinglag : 6, blockstun : 12, blockx : 2.5, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "air", voiceline : "mmov", movx : 0, coupwav : "coup"});
 johnny_coups.set("grab",{slag : 5, fdur : 3, elag : 12, degats : 16, hitstun : 60, hurtx : 3, hurty : 6, hitboxxs : 5, hitboxxe : 38,hitboxys : 0, hitboxye : -1, hitboxxouv : 15, blood_height : 0, blockstun : 12, blockx : 1.7, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : "coup"});
+johnny_coups.set("shadowkick",{slag : 12, fdur : 20, elag : 18, degats : 13, hitstun : 60, hurtx : 8.2, hurty : 8.2, hitboxxs : 20, hitboxxe : 50,hitboxys : 0, hitboxye : 30, hitboxxouv : 40, blood_height : 20, blockstun : 10, blockx : 1.2, hiteffect : "fall_bounce", hitboxxeyscaling : 0, hitlag : 13, hitsound : "hhit", blood : "mblood", damageonblock : 2, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : ""});
 johnny_coups.set("burst",get_burst_stats());
 
 var johnny_combos = get_default_combos();
+johnny_combos.set("hkick","shadowkick");
 
 var liukang_coups = new Map();
 liukang_coups.set("lpunch",{slag : 4, fdur : 6, elag : 8, degats : 4, hitstun : 21, hurtx : 1.1, hurty : 0, hitboxxs : 15, hitboxxe : 40,hitboxys : 1, hitboxye : 95, hitboxxouv : 18, blood_height : 10, blockstun : 9, blockx : 1.7, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : "coup"});
@@ -276,6 +278,7 @@ movpriority.set("chargeball",70);
 movpriority.set("ball",70);
 movpriority.set("charge_chargeball",70);
 movpriority.set("bomb",70);
+movpriority.set("shadowkick",70);
 movpriority.set("air_dodge",100);
 movpriority.set("landing_lag",100);
 movpriority.set("jumpsquat",100);
@@ -331,3 +334,4 @@ cd_dependance.set("teleport_drop",3);
 cd_dependance.set("ball",1);
 cd_dependance.set("spit",2);
 cd_dependance.set("bomb",3);
+cd_dependance.set("shadowkick",1);

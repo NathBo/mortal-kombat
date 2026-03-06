@@ -1578,9 +1578,9 @@ function main(){
 
 			if(me.perso=="kitana" && me.y==0 && other.y>0 && me.crouching==0 && entre(Math.abs(me.x-other.x),100,150) && me.orientation*other.xspeed<=-2.5 && other.tb>0){this.begincoup("fanlift");}
 
-			var proj_authorized = (Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-idealrange)<=me.charac.vitesse*2+other.movlag*3 && me.y==0 && movpriority.get(me.mov)<70 && Math.random()>this.dontattackchance && !(other.mov == "thundergod" || other.mov == "boltthrow" || other.mov == "fanthrow" || other.mov=="hell_gates" || other.mov == "spear_throw" || other.mov == "slide" || other.mov == "iceball" || other.mov == "fireball" || other.mov == "flying_kick" || other.mov == "knife_throw" || other.mov == "teleport_drop" || other.mov == "bomb"))
+			var proj_authorized = (Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-idealrange)<=me.charac.vitesse*2+other.movlag*3 && me.y==0 && movpriority.get(me.mov)<70 && Math.random()>this.dontattackchance && !(other.mov == "thundergod" || other.mov == "shadowkick" || other.mov == "boltthrow" || other.mov == "fanthrow" || other.mov=="hell_gates" || other.mov == "spear_throw" || other.mov == "slide" || other.mov == "iceball" || other.mov == "fireball" || other.mov == "flying_kick" || other.mov == "knife_throw" || other.mov == "teleport_drop" || other.mov == "bomb"))
 			if(this.behavior=="zoner"){proj_authorized = me.y==0}
-			if(this.behavior=="masher"){proj_authorized = proj_authorized || (me.y==0 && other.movlag>10 && other.charac.coups.has(other.mov) && other.movlag<=c.slag+c.fdur+c.elag-reaction_time && !(other.mov == "thundergod" || other.mov == "boltthrow" || other.mov == "fanthrow" || other.mov=="hell_gates" || other.mov == "spear_throw" || other.mov == "slide" || other.mov == "iceball" || other.mov == "fireball" || other.mov == "flying_kick" || other.mov == "knife_throw" || other.mov == "teleport_drop" || other.mov == "bomb"))}
+			if(this.behavior=="masher"){proj_authorized = proj_authorized || (me.y==0 && other.movlag>10 && other.charac.coups.has(other.mov) && other.movlag<=c.slag+c.fdur+c.elag-reaction_time && !(other.mov == "thundergod" || other.mov == "shadowkick" || other.mov == "boltthrow" || other.mov == "fanthrow" || other.mov=="hell_gates" || other.mov == "spear_throw" || other.mov == "slide" || other.mov == "iceball" || other.mov == "fireball" || other.mov == "flying_kick" || other.mov == "knife_throw" || other.mov == "teleport_drop" || other.mov == "bomb"))}
 			if(proj_authorized){
 				if(me.perso=="kitana"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("fanthrow");}}
 				if(me.perso=="mileena"){if(Math.abs(me.x-other.x)>200&&me.y==0){this.begincoup("homing_knife");}else if(Math.abs(me.x-other.x)>70&&me.y==0 && other.crouching==0){this.begincoup("knifethrow");}}
@@ -1637,6 +1637,8 @@ function main(){
 
 			else if(me.perso=="reptile" && me.y==0 && entre(Math.abs(me.x-other.x),60,120) && Math.abs(-stage_size/2*me.orientation-me.x)<=130 && other.y>=40 && me.cooldowns[3]<=5 && movpriority.get(me.mov)<70 && !this.thereisaprojo())
 				{this.begincoup("bomb");}
+			else if(me.perso=="johnny" && this.currisking>=-2 && Math.abs(Math.abs(me.x-other.x-other.xspeed*10)-120)<=40 && me.y==0 && (other.y>0 || this.behavior=="masher") && me.crouching==0 && movpriority.get(me.mov)<70 && other.tb<0 && me.cooldowns[1]==0)
+				{this.begincoup("shadowkick");}
 
 			if(me.mov == "" && me.y==0 && me.jauge>me.jaugemax/2 && Math.abs(Math.abs(me.x-other.x))>=this.distancetorun && idealrange<=100 && this.behavior!="zoner" && !(this.behavior=="turtle" && this.attacking<=2) && Math.random()<=this.chancetorun && this.currisking>0){this.begin_run();}
 
@@ -1678,7 +1680,7 @@ function main(){
 			this.projectile_invincibility = 0;
 			this.pv = this.charac.pv; this.pvmax = this.charac.pv; this.pvaff = this.charac.pv;
 			this.pushed = 0;this.pushx = 0;
-			this.blocking = 0; this.falling = 0; this.gettingup = 0; this.grabbing = 0; this.grabbed = 0;
+			this.blocking = 0; this.falling = 0; this.gettingup = 0; this.grabbing = 0; this.grabbed = 0; this.bouncing = false;
 			this.comboscaling = 1;
 			this.vicpose = 0;
 			this.cooldowns = [0,0,0,0];
@@ -1718,6 +1720,7 @@ function main(){
 			if(s == "shao_tp"){this.invincibilite=stats.slag+stats.fdur+stats.elag+1;}
 			if(s == "ball"){this.crouching=6;}
 			if(s == "chargeball"){this.ressource=0;}
+			if(s == "shadowkick"){this.memoryslot=0;}
 			if(arcadelevel>=0 && this.n==0){moves_used++;}
 			if(s == "knifethrow" || s == "homing_knife"){
 				if(this.ressource){this.ressource--;}
@@ -2240,6 +2243,9 @@ function main(){
 						if(this.ressource==this.max_ressource){this.begincoup("chargeball",other);this.ressource=0;}
 						else{this.begincoup("charge_chargeball",other);}
 					}
+					else if(this.perso == "johnny" && this.forward>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+						this.begincoup("shadowkick",other);
+					}
 					else if(this.forward>=1&&movpriority.get(this.mov)<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
 						this.x+=this.charac.vitesse*this.orientation;this.xspeed = 0;
 						let d = (this.charac.width+other.charac.width)/3;
@@ -2375,6 +2381,11 @@ function main(){
 						var stats = this.charac.coups.get(this.mov);
 						if(this.movlag<=stats.elag+stats.fdur){this.x += 6*this.orientation;if(this.movlag==2){this.movlag++;}}
 						if(Math.abs(this.x-camerax)>decalagex-this.charac.width/2){this.movlag=0;this.mov="";this.tb=7;this.xspeed = -this.orientation;this.y=0.1;}
+						break;
+					case "shadowkick":
+						var stats = this.charac.coups.get(this.mov);
+						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.x += 8*this.orientation;}
+						if(this.memoryslot && this.movlag>=2){this.movlag--;}
 						break;
 					case "hell_gates":
 						var stats = this.charac.coups.get(this.mov);
@@ -2579,7 +2590,10 @@ function main(){
 			}
 			if(this.y>0 || this.tb>0){this.y+=this.tb;this.tb-=c.gravity;}
 			else if(this.y<0 && this.tb<=0){this.y=0;this.tb=0;}
-			if(Math.abs(this.x-camerax)>decalagex-this.charac.width/2){this.x = signe(this.x-camerax)*(decalagex+signe(this.x-camerax)*camerax-this.charac.width/2);}
+			if(Math.abs(this.x-camerax)>decalagex-this.charac.width/2){
+				this.x = signe(this.x-camerax)*(decalagex+signe(this.x-camerax)*camerax-this.charac.width/2);
+				if(this.bouncing){this.xspeed*=-0.7;}
+			}
 			if(this.y<=0 && this.falling){this.getup();}
 			if(this.pushed>0){this.pushed--;this.x+=this.pushx;}
 		}
@@ -2654,6 +2668,7 @@ function main(){
 			if(this.mov=="jumpsquat" && stats.hiteffect=="grab"){return;}
 			if(other.mov=="thundergod"){other.movlag=1;other.tb=8;other.xspeed = -1;other.y=0.1;}
 			if(other.mov=="squarepunch"){other.movlag=1;other.tb=0;other.xspeed = -1;}
+			if(other.mov=="shadowkick"){other.movlag=other.charac.coups.get(other.mov).elag;}
 			if(this.invincibilite || end_of_round_countdown){return;}
 			if(this.projectile_invincibility && !this.hiteffect_is_not_projo(stats.hiteffect)){return;}
 			if(other.mov=="thundergod"){other.y=0;}
@@ -2666,6 +2681,7 @@ function main(){
 				other.movlag=0;other.mov="";
 				return;
 			}
+			this.bouncing=false;
 			var parrywasdone = false;
 			if(this.mov == "icebody"){
 				var s = this.charac.coups.get("icebody");
@@ -2711,10 +2727,13 @@ function main(){
 					case "iceflask" :
 					case "guard_break" :
 					case "burst" :
+					case "fall_bounce":
 						if(this.falling==0){this.falling = 1;}
 						this.crouching = 0;
 						play_sound_eff(this.charac.voiceactor+"hurted");
 						if(Math.random()<stats.degats/25){play_sound_eff("compliment");}
+						if(stats.hiteffect=="fall_bounce"){this.bouncing=true;fixcamera=60;}
+						if(other.mov=="shadowkick"){other.memoryslot=1;}
 						break;
 					case "grab" :
 						if(this.n==1 && !secondplayerishuman){this.ai.ugothit();}
@@ -2776,7 +2795,11 @@ function main(){
 				else if(this.y>0 && other.y==0){add_to_objects_set(new Blood(this.x+5*this.orientation,stats.hitboxye,-this.orientation,stats.blood));}
 			}
 			if(this.y>0 && other.y>0 && stats.hiteffect != "projectile" && stats.hiteffect != "freeze" && stats.hiteffect != "projectile_fall" && stats.hiteffect != "unblockable_projectile_fall"){this.xspeed+=other.xspeed*2/3;this.hurted+=4;}
-			if(Math.abs(this.x+this.xspeed*Math.abs(this.xspeed)/2/this.charac.friction-camerax)>decalagex-this.charac.width/2){other.pushed = Math.min(20,Math.floor((8+stats.hitstun)/2));other.pushx = - this.xspeed * 1.2; if(signe(other.xspeed)==signe(other.orientation)){other.xspeed=0;}}
+			if(Math.abs(this.x+this.xspeed*Math.abs(this.xspeed)/2/this.charac.friction-camerax)>decalagex-this.charac.width/2){
+				other.pushed = Math.min(20,Math.floor((8+stats.hitstun)/2));other.pushx = - this.xspeed * 1.2;
+				if(signe(other.xspeed)==signe(other.orientation)){other.xspeed=0;}
+				if(stats.hiteffect=="fall_bounce"){other.pushx *= 0.2;}
+				}
 			other.canthurt = true;
 			if(stats.hiteffect == "iceflask"){this.invincibilite=60;}
 			if(this.pv<=0){
@@ -3107,16 +3130,25 @@ function main(){
 
 					case "lkick" :
 					case "mkick" :
+					case "shadowkick":
+						var mov = this.mov;
+						if(mov=="shadowkick"){mov="lkick"}
 						var nframes = this.charac.kicknframe;
 						var stats = this.charac.coups.get(this.mov);
-						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.costume = this.mov+nframes.toString()}
+						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.costume = mov+nframes.toString()}
 						else if (this.movlag<stats.elag){
 							var a = Math.floor(this.movlag/stats.elag*(nframes-1))+1;
-							this.costume = this.mov+a.toString();
+							this.costume = mov+a.toString();
 						}
 						else{
 							var a = nframes-1-Math.floor((this.movlag-stats.elag-stats.fdur)/stats.slag*(nframes-1));
-							this.costume = this.mov+a.toString();
+							this.costume = mov+a.toString();
+						}
+						if(this.mov=="shadowkick" && this.movlag>stats.elag+stats.fdur){
+							add_to_objects_set(new Double(this.x-this.orientation*10,this.y,this.orientation,this.skin,2.,"green"+this.costume.substr(1,5),this.coordinates,3));
+						}
+						else if(this.mov=="shadowkick" && this.movlag>stats.elag){
+							add_to_objects_set(new Double(this.x-this.orientation*10,this.y,this.orientation,this.skin,8.,"green"+this.costume.substr(1,5),this.coordinates,3));
 						}
 						break;
 
@@ -3321,7 +3353,6 @@ function main(){
 					else {this.jumping = mod(this.jumping+signe(this.xspeed*this.orientation),7*this.charac.rollspeed);
 						let a = Math.floor(this.jumping/this.charac.rollspeed)+1;
 						this.costume = "roll"+a;
-						console.log(this.costume)
 					}
 				}
 			}
@@ -4666,7 +4697,7 @@ function main(){
 	
 	characteristics.set("johnny",{png : johskins,coordinates : johcoordinates, sex : "m", standnframes : 5, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 40, stunnframes : 5, walknframes : 8, icon : johnnyiconpng, namewav : document.querySelector('#johnnywav'),
 	width : 38, height : 103,vitesse : 3.5, run_speed : 7.,jumpxspeed : 3.4,backmovnerf : 0.9, gravity : 0.42, jumpforce : 9.1,jumpsquat : 3, shorthop : 6.4, friction:0.2, hurtcontrol : 0.2,grabtype : "poser",
-	airdrift : 0.11, airmaxspeed : 2., airdodgespeed : 5.9, airdodgefdur : 15, landinglag : 10, coups : johnny_coups, pv : 100, getupfdur : 36, grabfdur : 22, grabdeg : 13, vicposframes : 13, vicposfdur : 52, cds : [210,150,240,270], icons : [iceballiconpng,slideiconpng,iceflaskiconpng,icebodyiconpng], voiceactor : "male",
+	airdrift : 0.11, airmaxspeed : 2., airdodgespeed : 5.9, airdodgefdur : 15, landinglag : 10, coups : johnny_coups, pv : 100, getupfdur : 36, grabfdur : 22, grabdeg : 13, vicposframes : 13, vicposfdur : 52, cds : [210,140,240,270], icons : [iceballiconpng,shadowkickiconpng,iceflaskiconpng,icebodyiconpng], voiceactor : "male",
 	default_behav : "normal", combos : johnny_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Subzero becomes best friends with Yeti and builds the best professional snowball fight team with him."});
 	
 

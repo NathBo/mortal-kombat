@@ -1126,6 +1126,11 @@ function getjohcoordinates(){
 	johcoordinates.set("stunned4",{offx:897,width:32,offy:1313,height:100,decx:0,decy:0});
 	johcoordinates.set("stunned5",{offx:938,width:32,offy:1312,height:101,decx:0,decy:0});
 
+	johcoordinates.set("greenkick1",{offx:250,width:35,offy:1548,height:103,decx:0,decy:0});
+	johcoordinates.set("greenkick2",{offx:294,width:37,offy:1558,height:93,decx:0,decy:0});
+	johcoordinates.set("greenkick3",{offx:341,width:53,offy:1562,height:89,decx:0,decy:0});
+	johcoordinates.set("greenkick4",{offx:403,width:72,offy:1564,height:87,decx:0,decy:0});
+
 	johcoordinates.set("head",{offx:466,width:14,offy:2221,height:18,decx:0,decy:0});
 	
 
