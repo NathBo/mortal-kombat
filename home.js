@@ -1727,10 +1727,11 @@ function main(){
 			if(this.perso=="mileena"){this.ressource = 3; this.max_ressource = 3;}
 			else{this.ressource=0;this.max_ressource=60;}
 			this.hurted = 0; this.hurtx = 0; this.invincibilite = 0; this.freeze = 0; this.canthurt = false;
+			this.shaking = 0; this.shakeforce = 0.;
 			this.projectile_invincibility = 0;
 			this.pv = this.charac.pv; this.pvmax = this.charac.pv; this.pvaff = this.charac.pv;
 			this.pushed = 0;this.pushx = 0;
-			this.blocking = 0; this.falling = 0; this.gettingup = 0; this.grabbing = 0; this.grabbed = 0; this.bouncing = false;
+			this.blocking = 0; this.falling = 0; this.gettingup = 0; this.grabbing = 0; this.grabbed = 0; this.bouncing = false; this.nutting = false;
 			this.comboscaling = 1;
 			this.vicpose = 0;
 			this.cooldowns = [0,0,0,0];
@@ -1799,6 +1800,10 @@ function main(){
 
 		getup(){
 			this.falling = 0;this.hurted =0; this.gettingup = 1;this.invincibilite = this.charac.getupfdur; this.y = 0;
+		}
+
+		shake_player(frames,force){
+			this.shaking=frames;this.shakeforce=force;
 		}
 
 		begin_grab(other){
@@ -2760,7 +2765,7 @@ function main(){
 				other.movlag=0;other.mov="";
 				return;
 			}
-			this.bouncing=false;
+			this.bouncing=false; this.nutting=false;
 			var parrywasdone = false;
 			if(this.mov == "icebody"){
 				var s = this.charac.coups.get("icebody");
@@ -2817,6 +2822,7 @@ function main(){
 					case "restand":
 						this.falling=0;
 						this.y=0; this.crouching=0;
+						if(other.mov=="nutpunch"){this.nutting=true;this.shake_player(50,5.);play_sound_eff(this.charac.voiceactor+"bighurted");}
 						break;
 					case "grab" :
 						if(this.n==1 && !secondplayerishuman){this.ai.ugothit();}
@@ -3131,7 +3137,8 @@ function main(){
 					else{this.costume = "churted1";}
 				}
 				else{
-					if(this.hurted>=15){this.costume = "hurted2";}
+					if(this.nutting){this.costume="ballshurt";}
+					else if(this.hurted>=15){this.costume = "hurted2";}
 					else{this.costume = "hurted1";}
 				}
 			}
@@ -3540,7 +3547,15 @@ function main(){
 				}
 				ctx.scale(2*this.orientation,2);
 				var coords = this.coordinates.get(this.costume);
-				ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.charac.width/2+shakex)*this.orientation,ground-y-coords.height-coords.decy+shakey,coords.width,coords.height);
+				var self_shakex = 0.; var self_shakey = 0.;
+				if(this.shaking > 0){
+					this.shaking --;
+					if(this.shaking<=3){shakeforce*=0.8;}
+					self_shakex = -this.shakeforce + 2*Math.random()*this.shakeforce;
+					self_shakey = -this.shakeforce/2 + 2*Math.random()*this.shakeforce/2;
+				}
+
+				ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.charac.width/2+shakex+self_shakex)*this.orientation,ground-y-coords.height-coords.decy+shakey+self_shakey,coords.width,coords.height);
 				ctx.setTransform(1, 0, 0, 1, 0, 0);
 				ctx.scale(1,1);
 
@@ -4687,7 +4702,8 @@ function main(){
 	sounds_eff.set("parry",[document.querySelector('#parrywav')]);
 	sounds_eff.set("fan",[document.querySelector('#fanwav')]);
 	sounds_eff.set("freeze",[document.querySelector('#freezewav')]);
-	sounds_eff.set("electrocute",[document.querySelector('#electrocutewav')]);
+	sounds_eff.set("electrocute",[document.querySelector('#electrocutewav'),document.querySelector('#electrocute2wav')]);
+	sounds_eff.set("magicshot",[document.querySelector('#magicshotwav'),document.querySelector('#magicshot2wav')]);
 	sounds_eff.set("explosion",[document.querySelector('#explosion1wav'),document.querySelector('#explosion2wav')]);
 	sounds_eff.set("clementlmov",[document.querySelector('#clementlmov1wav'),document.querySelector('#clementlmov2wav')]);
 	sounds_eff.set("clementmmov",[document.querySelector('#clementmmov1wav'),document.querySelector('#clementmmov2wav')]);

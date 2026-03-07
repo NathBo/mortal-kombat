@@ -124,6 +124,7 @@ function getkitcoordinates(){
     kitcoordinates.set("stunned3",{offx:760,width:40,offy:1276,height:101,decx:-4,decy:0});
     kitcoordinates.set("stunned4",{offx:805,width:36,offy:1276,height:101,decx:0,decy:0});
     kitcoordinates.set("stunned5",{offx:846,width:35,offy:1276,height:101,decx:2,decy:0});
+	kitcoordinates.set("ballshurt",{offx:810,width:28,offy:1287,height:90,decx:0,decy:0});
 
 	kitcoordinates.set("head",{offx:852,width:18,offy:1799,height:25,decx:0,decy:0});
 	kitcoordinates.set("wave",{offx:553,width:32,offy:1442,height:38,decx:0,decy:0});
@@ -252,6 +253,7 @@ function getmilcoordinates(){
     milcoordinates.set("stunned3",{offx:760,width:40,offy:1276,height:101,decx:-4,decy:0});
     milcoordinates.set("stunned4",{offx:805,width:36,offy:1276,height:101,decx:0,decy:0});
     milcoordinates.set("stunned5",{offx:846,width:35,offy:1276,height:101,decx:2,decy:0});
+	milcoordinates.set("ballshurt",{offx:810,width:28,offy:1287,height:90,decx:0,decy:0});
 
 	milcoordinates.set("knifethrow1",{offx:17,width:50,offy:1382,height:121,decx:-4,decy:0});
 	milcoordinates.set("knifethrow2",{offx:73,width:44,offy:1382,height:121,decx:0,decy:0});
@@ -383,6 +385,8 @@ function getraicoordinates(){
     raicoordinates.set("stunned4",{offx:915,width:38,offy:1342,height:107,decx:0,decy:0});
     raicoordinates.set("stunned5",{offx:959,width:43,offy:1342,height:107,decx:0,decy:0});
 	raicoordinates.set("stunned6",{offx:1008,width:46,offy:1342,height:107,decx:0,decy:0});
+	raicoordinates.set("ballshurt",{offx:724,width:33,offy:1354,height:95,decx:0,decy:0});
+
 	raicoordinates.set("boltthrow1",{offx:447,width:43,offy:1457,height:104,decx:0,decy:0});
     raicoordinates.set("boltthrow2",{offx:497,width:50,offy:1457,height:104,decx:0,decy:0});
 	raicoordinates.set("bolt1",{offx:263,width:45,offy:1645,height:17,decx:0,decy:0});
@@ -509,6 +513,8 @@ function getscocoordinates(){
     scocoordinates.set("stunned3",{offx:227,width:32,offy:1136,height:99,decx:0,decy:0});
     scocoordinates.set("stunned4",{offx:269,width:33,offy:1134,height:101,decx:1,decy:0});
     scocoordinates.set("stunned5",{offx:310,width:44,offy:1134,height:101,decx:0,decy:0});
+	scocoordinates.set("ballshurt",{offx:15,width:34,offy:1156,height:79,decx:0,decy:0});
+
 	scocoordinates.set("spear_throw1",{offx:15,width:52,offy:1245,height:101,decx:0,decy:0});
 	scocoordinates.set("spear_throw2",{offx:76,width:54,offy:1245,height:101,decx:0,decy:0});
 	scocoordinates.set("spear_throw3",{offx:138,width:76,offy:1245,height:101,decx:0,decy:0});
@@ -655,6 +661,8 @@ function getsubcoordinates(){
     subcoordinates.set("stunned3",{offx:227,width:32,offy:1136,height:99,decx:0,decy:0});
     subcoordinates.set("stunned4",{offx:269,width:33,offy:1134,height:101,decx:1,decy:0});
     subcoordinates.set("stunned5",{offx:310,width:44,offy:1134,height:101,decx:0,decy:0});
+	subcoordinates.set("ballshurt",{offx:15,width:34,offy:1156,height:79,decx:0,decy:0});
+
 	subcoordinates.set("slide1",{offx:876,width:58,offy:1364,height:95,decx:0,decy:0});
 	subcoordinates.set("slide2",{offx:944,width:58,offy:1364,height:95,decx:0,decy:0});
 	subcoordinates.set("iceball1",{offx:15,width:37,offy:1249,height:97,decx:0,decy:0});
@@ -799,6 +807,8 @@ function getrepcoordinates(){
     repcoordinates.set("stunned3",{offx:227,width:32,offy:1136,height:99,decx:0,decy:0});
     repcoordinates.set("stunned4",{offx:269,width:33,offy:1134,height:101,decx:1,decy:0});
     repcoordinates.set("stunned5",{offx:310,width:44,offy:1134,height:101,decx:0,decy:0});
+	repcoordinates.set("ballshurt",{offx:15,width:34,offy:1156,height:79,decx:0,decy:0});
+
 	repcoordinates.set("slide1",{offx:311,width:58,offy:1384,height:95,decx:0,decy:0});
 	repcoordinates.set("slide2",{offx:379,width:58,offy:1384,height:95,decx:0,decy:0});
 	repcoordinates.set("spit1",{offx:15,width:41,offy:1242,height:107,decx:0,decy:0});
@@ -977,6 +987,7 @@ function getliucoordinates(){
 	liucoordinates.set("stunned4",{offx:761,width:35,offy:1306,height:104,decx:0,decy:0});
 	liucoordinates.set("stunned5",{offx:805,width:35,offy:1306,height:104,decx:0,decy:0});
 	liucoordinates.set("stunned6",{offx:848,width:35,offy:1306,height:104,decx:0,decy:0});
+	liucoordinates.set("ballshurt",{offx:568,width:35,offy:1340,height:70,decx:0,decy:0});
 	liucoordinates.set("head",{offx:754,width:19,offy:2128,height:16,decx:0,decy:0});
 	liucoordinates.set("flying_kick1",{offx:287,width:47,offy:1011,height:57,decx:0,decy:10});
 	liucoordinates.set("flying_kick2",{offx:344,width:68,offy:1011,height:57,decx:0,decy:10});
@@ -1125,6 +1136,7 @@ function getjohcoordinates(){
 	johcoordinates.set("stunned3",{offx:856,width:32,offy:1313,height:100,decx:0,decy:0});
 	johcoordinates.set("stunned4",{offx:897,width:32,offy:1313,height:100,decx:0,decy:0});
 	johcoordinates.set("stunned5",{offx:938,width:32,offy:1312,height:101,decx:0,decy:0});
+	johcoordinates.set("ballshurt",{offx:897,width:32,offy:1313,height:100,decx:0,decy:0});
 
 	johcoordinates.set("greenkick1",{offx:250,width:35,offy:1548,height:103,decx:0,decy:0});
 	johcoordinates.set("greenkick2",{offx:294,width:37,offy:1558,height:93,decx:0,decy:0});
