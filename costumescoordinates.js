@@ -1130,6 +1130,16 @@ function getjohcoordinates(){
 	johcoordinates.set("greenkick2",{offx:294,width:37,offy:1558,height:93,decx:0,decy:0});
 	johcoordinates.set("greenkick3",{offx:341,width:53,offy:1562,height:89,decx:0,decy:0});
 	johcoordinates.set("greenkick4",{offx:403,width:72,offy:1564,height:87,decx:0,decy:0});
+	johcoordinates.set("ballthrow1",{offx:15,width:67,offy:1454,height:85,decx:-27,decy:0});
+	johcoordinates.set("ballthrow2",{offx:91,width:70,offy:1454,height:85,decx:-30,decy:0});
+	johcoordinates.set("ballthrow3",{offx:169,width:39,offy:1445,height:94,decx:-10,decy:0});
+	johcoordinates.set("ballthrow4",{offx:219,width:38,offy:1442,height:97,decx:-8,decy:0});
+	johcoordinates.set("ball",{offx:391,width:17,offy:1518,height:21,decx:0,decy:0});
+	johcoordinates.set("shadowpunch1",{offx:645,width:36,offy:1422,height:117,decx:0,decy:0});
+	johcoordinates.set("shadowpunch2",{offx:691,width:36,offy:1422,height:117,decx:0,decy:0});
+	johcoordinates.set("nutpunch1",{offx:496,width:81,offy:1579,height:72,decx:-19,decy:0});
+	johcoordinates.set("nutpunch2",{offx:587,width:92,offy:1592,height:59,decx:-28,decy:0});
+	johcoordinates.set("nutpunch3",{offx:690,width:92,offy:1589,height:62,decx:-28,decy:0});
 
 	johcoordinates.set("head",{offx:466,width:14,offy:2221,height:18,decx:0,decy:0});
 	

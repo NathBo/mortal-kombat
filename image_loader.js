@@ -65,6 +65,9 @@ var spiticonpng=new Image();spiticonpng.src = 'ressource/icons/spit_icon.png';
 var sliderepiconpng=new Image();sliderepiconpng.src = 'ressource/icons/sliderep_icon.png';
 var bombiconpng=new Image();bombiconpng.src = 'ressource/icons/bomb_icon.png';
 var shadowkickiconpng=new Image();shadowkickiconpng.src = 'ressource/icons/shadowkick_icon.png';
+var shadowpunchiconpng=new Image();shadowpunchiconpng.src = 'ressource/icons/shadowpunch_icon.png';
+var ballthrowiconpng=new Image();ballthrowiconpng.src = 'ressource/icons/ballthrow_icon.png';
+var nutpunchiconpng=new Image();nutpunchiconpng.src = 'ressource/icons/nutpunch_icon.png';
 
 var bloodpng = new Image();bloodpng.src = 'ressource/visual_effects/blood.png';
 var burstpng = new Image();burstpng.src = 'ressource/visual_effects/burst2.png'

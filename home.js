@@ -634,6 +634,51 @@ function main(){
 		}
 	}
 
+	class Ball{
+		constructor(x,y,orientation,other,stats){
+			this.x = x; this.y = y; this.orientation = orientation;
+			this.other = other;
+			this.width=17;
+			this.height=21;
+			this.totdur = 60;this.vitesse=9;this.tb=9.;this.gravity=-.5;
+			this.stats = stats;
+			this.dur = this.totdur;
+			this.num = cpt;
+			this.dangerous = false;
+			
+		}
+
+		loop(){
+			this.x += this.orientation*this.vitesse;
+			this.y+=this.tb;
+			this.tb+=this.gravity;
+			var stats = this.stats; var other = this.other;
+			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
+				if(other.y==0){
+					if(entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3*(other.crouching<=3),this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
+				}
+				else{
+					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){other.hurt(this,stats);this.dur=1;}
+				}
+			}
+		}
+
+		afficher(){
+			this.costume = "ball";
+			ctx.scale(2*this.orientation,2);
+			var coords = johcoordinates.get(this.costume);
+			ctx.drawImage(johpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			if(gamefreeze==0){this.dur--;}
+			if(this.dur==0){this.delete();return;}
+		}
+
+		delete(){
+			objects_to_loop.delete(this.num);
+		}
+	}
+
 	class Arrow{
 		constructor(x,y,orientation,other,stats){
 			this.x = x; this.y = y; this.orientation = orientation;
@@ -1721,6 +1766,7 @@ function main(){
 			if(s == "ball"){this.crouching=6;}
 			if(s == "chargeball"){this.ressource=0;}
 			if(s == "shadowkick"){this.memoryslot=0;}
+			if(s == "shadowpunch"){this.invincibilite=stats.slag+stats.fdur+stats.elag+1;}
 			if(arcadelevel>=0 && this.n==0){moves_used++;}
 			if(s == "knifethrow" || s == "homing_knife"){
 				if(this.ressource){this.ressource--;}
@@ -2246,6 +2292,15 @@ function main(){
 					else if(this.perso == "johnny" && this.forward>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("shadowkick",other);
 					}
+					else if(this.perso == "johnny" && this.back==0 && this.bas==0 && this.forward==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+						this.begincoup("ballthrow",other);
+					}
+					else if(this.perso == "johnny" && this.back>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+						this.begincoup("shadowpunch",other);
+					}
+					else if(this.perso == "johnny" && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+						this.begincoup("nutpunch",other);
+					}
 					else if(this.forward>=1&&movpriority.get(this.mov)<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
 						this.x+=this.charac.vitesse*this.orientation;this.xspeed = 0;
 						let d = (this.charac.width+other.charac.width)/3;
@@ -2386,6 +2441,21 @@ function main(){
 						var stats = this.charac.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.x += 8*this.orientation;}
 						if(this.memoryslot && this.movlag>=2){this.movlag--;}
+						break;
+					case "ballthrow":
+						var stats = this.charac.coups.get(this.mov);
+						this.crouching=0;
+						if(this.movlag==stats.elag){
+							add_to_objects_set(new Ball(this.x+20*this.orientation,this.y+65,this.orientation,other,stats));
+						}
+						break;
+					case "shadowpunch":
+						var stats = this.charac.coups.get(this.mov);
+						if(this.movlag<=stats.fdur-1){
+							this.tb=0; this.xspeed=0;
+							this.y+=5.;
+							this.x+=2*this.orientation;
+						}
 						break;
 					case "hell_gates":
 						var stats = this.charac.coups.get(this.mov);
@@ -2564,7 +2634,7 @@ function main(){
 					else if(this.mov == "jumpsquat"){this.mov = "";if((this.haut || this.jump) && this.bas == 0){this.tb = c.jumpforce;this.y = c.jumpforce;}else{this.tb = c.shorthop;this.y = c.shorthop;}}
 					else if((this.y>0) && (this.mov == "air_dodge" || this.mov == "burst")){this.movlag = 100;this.mov = "free_fall";this.xspeed /=4;}
 					else if(this.mov == "fanthrow" && this.y>0){this.movlag = 100;this.mov = "free_fall";}
-					else if(this.mov == "squarepunch"){this.movlag = 100;this.mov = "free_fall";}
+					else if(this.mov == "squarepunch" || this.mov == "shadowpunch"){this.movlag = 100;this.mov = "free_fall";}
 					else{this.mov = "";}
 				}
 			}
@@ -2626,7 +2696,7 @@ function main(){
 			}
 			else if(this.charac.coups.has(this.mov)){
 				var stats = this.charac.coups.get(this.mov);
-				if(this.y==0 && other.y>0 && stats.hitboxys<0 && this.mov != "slide" && this.mov != "ball"){return;}
+				if(this.y==0 && other.y>0 && stats.hitboxys<0 && this.mov != "slide" && this.mov != "nutpunch" && this.mov != "ball"){return;}
 				if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){
 					var hitboxxe = stats.hitboxxe;
 					if(other.charac.coups.has(other.mov)){
@@ -2734,6 +2804,10 @@ function main(){
 						if(Math.random()<stats.degats/25){play_sound_eff("compliment");}
 						if(stats.hiteffect=="fall_bounce"){this.bouncing=true;fixcamera=60;}
 						if(other.mov=="shadowkick"){other.memoryslot=1;}
+						break;
+					case "restand":
+						this.falling=0;
+						this.y=0;
 						break;
 					case "grab" :
 						if(this.n==1 && !secondplayerishuman){this.ai.ugothit();}
@@ -3122,6 +3196,7 @@ function main(){
 					case "cmkick" :
 					case "thundergod" :
 					case "leg_takedown" :
+					case "nutpunch" :
 						var stats = this.charac.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.costume = this.mov+"3"}
 						else if(entre(this.movlag,0,stats.elag/2)||entre(this.movlag,stats.elag+stats.fdur+stats.slag/2,stats.elag+stats.fdur+stats.slag)){this.costume = this.mov+"1"}
@@ -3341,6 +3416,21 @@ function main(){
 						var stats = this.charac.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag/2,stats.elag+stats.slag/2)){this.costume = this.mov+"2";}
 						else{this.costume = this.mov+"1";}
+						break;
+					case "ballthrow":
+						var stats = this.charac.coups.get(this.mov);
+						if(this.movlag<=stats.elag){this.costume = this.mov+"4";}
+						else if(this.movlag<=stats.elag+stats.slag/3){this.costume = this.mov+"3";}
+						else if(this.movlag<=stats.elag+stats.slag*2/3){this.costume = this.mov+"2";}
+						else {this.costume = this.mov+"1";}
+						break;
+					case "shadowpunch":
+						var stats = this.charac.coups.get(this.mov);
+						if(this.movlag<=stats.fdur){this.costume="shadowpunch1";}
+						else{this.costume="crouching1"}
+						if(this.movlag<=stats.fdur+2){
+							add_to_objects_set(new Double(this.x-this.orientation*10,this.y-6,this.orientation,this.skin,0.,"shadowpunch2",this.coordinates,3));
+						}
 						break;
 
 				}
@@ -4697,7 +4787,7 @@ function main(){
 	
 	characteristics.set("johnny",{png : johskins,coordinates : johcoordinates, sex : "m", standnframes : 5, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 40, stunnframes : 5, walknframes : 8, icon : johnnyiconpng, namewav : document.querySelector('#johnnywav'),
 	width : 38, height : 103,vitesse : 3.5, run_speed : 7.,jumpxspeed : 3.4,backmovnerf : 0.9, gravity : 0.42, jumpforce : 9.1,jumpsquat : 3, shorthop : 6.4, friction:0.2, hurtcontrol : 0.2,grabtype : "poser",
-	airdrift : 0.11, airmaxspeed : 2., airdodgespeed : 5.9, airdodgefdur : 15, landinglag : 10, coups : johnny_coups, pv : 100, getupfdur : 36, grabfdur : 22, grabdeg : 13, vicposframes : 13, vicposfdur : 52, cds : [210,140,240,270], icons : [iceballiconpng,shadowkickiconpng,iceflaskiconpng,icebodyiconpng], voiceactor : "male",
+	airdrift : 0.11, airmaxspeed : 2., airdodgespeed : 5.9, airdodgefdur : 15, landinglag : 10, coups : johnny_coups, pv : 100, getupfdur : 36, grabfdur : 22, grabdeg : 13, vicposframes : 13, vicposfdur : 52, cds : [180,140,210,300], icons : [ballthrowiconpng,shadowkickiconpng,shadowpunchiconpng,nutpunchiconpng], voiceactor : "male",
 	default_behav : "normal", combos : johnny_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Subzero becomes best friends with Yeti and builds the best professional snowball fight team with him."});
 	
 
