@@ -2818,6 +2818,7 @@ function main(){
 						if(Math.random()<stats.degats/25){play_sound_eff("compliment");}
 						if(stats.hiteffect=="fall_bounce"){this.bouncing=true;fixcamera=60;}
 						if(other.mov=="shadowkick" || other.mov=="shadowpunch"){other.memoryslot=1;}
+						this.shake_player(stats.hitlag,stats.degats*0.3)
 						break;
 					case "restand":
 						this.falling=0;
