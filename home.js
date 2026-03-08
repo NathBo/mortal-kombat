@@ -4156,10 +4156,11 @@ function main(){
 					if (j2.pv>0){
 						perso = j2.perso;
 					}
-					if(perso=="raiden"){a = "liukang";}
-					if(perso=="mileena"){a = "kitana";}
-					if(perso=="scorpion"){a = "subzero";}
-					if(!secondplayerishuman && j2.perso=="reptile"){a="reptile";}
+					if(perso=="raiden" && !persosunlocked.get("liukang")){a = "liukang";}
+					if(perso=="mileena" && !persosunlocked.get("kitana")){a = "kitana";}
+					if(perso=="scorpion" && !persosunlocked.get("subzero")){a = "subzero";}
+					if(!secondplayerishuman && j2.perso=="reptile" && !persosunlocked.get("")){a="reptile";}
+					if(fatalitywasdone && !persosunlocked.get("johnny")){a="johnny";}
 					if(!(a=="" || persosunlocked.get(a))){
 						ctx.fillStyle = "gray";
 						ctx.fillRect(312*0.86,100,400*0.86,300);
@@ -4170,13 +4171,14 @@ function main(){
 						if(a=="kitana"){b = "Kitana";}
 						if(a=="subzero"){b = "Subzero";}
 						if(a=="reptile"){b = "Reptile";}
+						if(a=="johnny"){b = "Johnny Cage";}
 						printAtWordWrap(ctx,b+" unlocked!", 332*0.86, 140, 22, 360);
 						ctx.scale(3,3);
 						ctx.drawImage(characteristics.get(a).icon,160*0.86,70);
 						ctx.setTransform(1, 0, 0, 1, 0, 0);
 						ctx.scale(1,1);
 						if(j1.poing==1){j1.poing=2;persosunlocked.set(a,true);saveStats()}
-						else{end_of_round_countdown++;}
+						end_of_round_countdown++;
 					}
 				}
 				if(end_of_round_countdown==110 && j1.pv>0 && !eligible_reptile_challenge()){characteristics.get(persoschoisis[0]).namewav.play();}
@@ -4922,7 +4924,7 @@ function main(){
 	characteristics.set("johnny",{png : johskins,coordinates : johcoordinates, sex : "m", standnframes : 5, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 40, stunnframes : 5, walknframes : 8, icon : johnnyiconpng, namewav : document.querySelector('#johnnywav'),
 	width : 38, height : 103,vitesse : 3.5, run_speed : 7.,jumpxspeed : 3.4,backmovnerf : 0.9, gravity : 0.42, jumpforce : 9.1,jumpsquat : 3, shorthop : 6.4, friction:0.2, hurtcontrol : 0.2,grabtype : "poser",
 	airdrift : 0.11, airmaxspeed : 2., airdodgespeed : 5.9, airdodgefdur : 15, landinglag : 10, coups : johnny_coups, pv : 100, getupfdur : 36, grabfdur : 22, grabdeg : 13, vicposframes : 13, vicposfdur : 52, cds : [180,140,210,300], icons : [ballthrowiconpng,shadowkickiconpng,shadowpunchiconpng,nutpunchiconpng], voiceactor : "male",
-	default_behav : "normal", combos : johnny_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Subzero becomes best friends with Yeti and builds the best professional snowball fight team with him."});
+	default_behav : "normal", combos : johnny_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Johnny Cage becomes president of the United States and reduces unemployment to -1000%!"});
 	
 
 
