@@ -105,6 +105,17 @@ function printAtWordWrap( context , text, x, y, lineHeight, fitWidth)
         context.fillText( words.join(' '), x, y + (lineHeight*currentLine) );
 }
 
+function last_char(s){
+	return s[s.length-1];
+}
+
+function racine(s){
+	if(s===undefined){return undefined}
+	if(s==""){return "";}
+	if (last_char(s)=='#'){return s.substr(0,s.length-1)}
+	return s;
+}
+
 
 function main(){
 	const VERSION = 2;
@@ -1815,11 +1826,16 @@ function main(){
 			if(this.cooldowns[cd]){if(this.cooldowns[cd]>bufferwindow){this.special=2;}return;}
 			else if(cd != -1){this.special=2;}
 			if(movpriority.get(s)==70 && movpriority.get(this.mov)>=70){return;}
+			if(this.enhance && this.charac.coups.has(s+"#") && this.jauge>=this.jaugemax/2){
+				s = s+"#";
+				this.jauge-=this.jaugemax/2;
+				stats = this.charac.coups.get(s);
+			}
 			if(s == "hell_gates"){this.orientation*=-1;}
 			if(s == "squarepunch"){this.invincibilite=15;this.y=1;this.tb=9;}
 			if(s == "icebody"){this.crouching = 0;}
-			if(s == "flying_kick" && this.y==0){this.y=20;}
-			if(s == "bicycle" && this.y==0){this.y=40;}
+			if(racine(s) == "flying_kick" && this.y==0){this.y=20;}
+			if(s == "bicycle" || s == "bicycle#"){this.y=40;}
 			if(s == "knifethrow"){this.memoryslot=0;}
 			if(s == "cycle" && this.y==0){this.invincibilite=23;}
 			if(s == "teleport_drop"){this.invincibilite=12;}
@@ -2443,7 +2459,7 @@ function main(){
 					if(this.falling&&this.y<=0){this.getup();}
 				}
 			if(this.movlag!=0){
-				switch (this.mov)
+				switch (racine(this.mov))
 				{
 					case "forward_dash":
 						if(entre(this.movlag,c.fdashelag,c.fdashelag + c.fdashfdur)){this.xspeed = c.fdashspeed*this.orientation;}
@@ -2614,7 +2630,9 @@ function main(){
 						break;
 					case "flying_kick":
 						var stats = this.charac.coups.get(this.mov);
-						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.x += 8*this.orientation;this.xspeed=0;}
+						var a = 8;
+						if(last_char(this.mov)=='#'){a=10;}
+						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.x += a*this.orientation;this.xspeed=0;}
 						if(this.movlag>stats.elag){this.tb=0;}
 						break;
 					case "bicycle":
@@ -2826,7 +2844,7 @@ function main(){
 			if(this.projectile_invincibility && !this.hiteffect_is_not_projo(stats.hiteffect)){return;}
 			if(other.mov=="thundergod"){other.y=0;}
 			if(other.mov=="charge"){other.movlag=8;other.xspeed=0;}
-			if(other.mov=="flying_kick"){other.movlag=13;other.xspeed=0;}
+			if(racine(other.mov)=="flying_kick"){other.movlag=13;other.xspeed=0;}
 			if(stats.hiteffect=="grab" && this.mov=="grab" && this.movlag>=this.charac.coups.get("grab").elag){
 				this.pushed = 5;this.pushx = -4*this.orientation;
 				other.pushed = 5;other.pushx = -4*other.orientation;
@@ -3267,7 +3285,7 @@ function main(){
 				}
 			}
 			else if(this.movlag>=1){
-				switch(this.mov)
+				switch(racine(this.mov))
 				{
 					case "free_fall" :
 						this.costume = "jump2";
@@ -3379,8 +3397,8 @@ function main(){
 					case "flying_kick" :
 					case "teleport_drop" :
 						var stats = this.charac.coups.get(this.mov);
-						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.costume = this.mov+"2"}
-						else{this.costume = this.mov+"1";}
+						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.costume = racine(this.mov)+"2"}
+						else{this.costume = racine(this.mov)+"1";}
 						break;
 
 					case "shao_tp" :
@@ -3405,12 +3423,13 @@ function main(){
 						break;
 
 					case "bicycle" :
+					case "bicycle#" :
 						var stats = this.charac.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){
 							var n = Math.floor((stats.elag+stats.fdur-this.movlag)/2)%6+1;
-							this.costume = this.mov+n.toString()
+							this.costume = racine(this.mov)+n.toString()
 						}
-						else{this.costume = this.mov+"1";}
+						else{this.costume = racine(this.mov)+"1";}
 						break;
 
 					case "huppercut" :
@@ -5067,7 +5086,7 @@ function main(){
 	}
 
 	
-	var controls=[["ArrowRight","ArrowLeft","ArrowUp","ArrowDown","KeyB","KeyN","KeyM","KeyH","KeyJ","Space"],["KeyF","KeyS","KeyE","KeyD","KeyQ","KeyA","KeyZ","KeyW","KeyE","KeyX"]];
+	var controls=[["ArrowRight","ArrowLeft","ArrowUp","ArrowDown","KeyB","KeyN","KeyM","KeyH","KeyJ","ShiftRight"],["KeyF","KeyS","KeyE","KeyD","KeyQ","KeyA","KeyZ","KeyW","KeyE","KeyX"]];
 	var controlspause = "Enter";
 	var pausepressed = 0; var gamepaused = false; var is_challenge_match = false; var real_last_pers = "";
 
