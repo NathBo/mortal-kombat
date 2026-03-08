@@ -1767,7 +1767,7 @@ function main(){
 			this.charac = characteristics.get(perso);
 			this.x = x; this.y = y; this.perso = perso; this.n = n; this.skin = this.charac.png[skin]; this.coordinates = this.charac.coordinates;
 			this.allowedmoves = allowedmoves; this.xinit = x; this.other = other;
-			this.poing=0;this.jambe=0;this.special=0;this.dodge=0; this.jump=0;
+			this.poing=0;this.jambe=0;this.special=0;this.dodge=0; this.jump=0; this.enhance = 0;
 			this.forward = 0;this.back = 0;
 			this.did_slowdown = false;
 			this.jaugemax = 60; if(reset_ai){this.jauge=0;}
@@ -2092,12 +2092,13 @@ function main(){
 						if(this.droite){this.wavedashdir=1;}
 						else{this.wavedashdir=-1;}
 					}
-					else if(this.crouching==0 && this.is_human() && this.run_buffer &&movpriority.get(this.mov)<80&&end_of_round_countdown==0){
+					else if( this.is_human() && this.enhance && this.jambe==1 &&movpriority.get(this.mov)<80&&end_of_round_countdown==0){
 						if(this.jauge>=this.jaugemax/2 && this.mov!="run"){
-							this.mov = "run"; this.movlag = 6;
+							this.mov = "run"; this.movlag = 6; this.crouching=0;
 							this.jauge-=this.jaugemax/2; this.projectile_invincibility = 3;
 						}
 						this.run_buffer=0;
+						this.jambe=2;
 					}
 					else if(this.poing==1&&this.forward+this.back==0&&movpriority.get(this.mov)<30&&this.crouching==0&&this.bas==0&&end_of_round_countdown==0){
 						this.begincoup("lpunch",other);
@@ -2136,7 +2137,7 @@ function main(){
 						this.begincoup("cmkick",other);
 						this.jambe = 2;
 					}
-					else if(this.dodge==1&&this.movlag==0&&this.crouching==0&&end_of_round_countdown==0){
+					else if(this.dodge==1&&this.crouching==0&&end_of_round_countdown==0&&movpriority.get(this.mov)<30){
 						this.begincoup("grab",other);
 						this.dodge = 2;
 					}
@@ -5066,7 +5067,7 @@ function main(){
 	}
 
 	
-	var controls=[["ArrowRight","ArrowLeft","ArrowUp","ArrowDown","KeyB","KeyN","KeyM","KeyH","KeyJ"],["KeyF","KeyS","KeyE","KeyD","KeyQ","KeyA","KeyZ","KeyW","KeyE"]];
+	var controls=[["ArrowRight","ArrowLeft","ArrowUp","ArrowDown","KeyB","KeyN","KeyM","KeyH","KeyJ","Space"],["KeyF","KeyS","KeyE","KeyD","KeyQ","KeyA","KeyZ","KeyW","KeyE","KeyX"]];
 	var controlspause = "Enter";
 	var pausepressed = 0; var gamepaused = false; var is_challenge_match = false; var real_last_pers = "";
 
@@ -5083,6 +5084,7 @@ function main(){
 		if(e.code==controls[0][6]&&j1.special==0){j1.special=1}
 		if(e.code==controls[0][7]&&j1.dodge==0){j1.dodge=1;}
 		if(e.code==controls[0][8]&&j1.jump==0){j1.jump=1;}
+		if(e.code==controls[0][9]&&j1.jump==0){j1.enhance=1;}
 		if(secondplayerishuman){
 			if(e.code==controls[1][0]&&j2.droite==0){j2.droite=1}
 			if(e.code==controls[1][1]&&j2.gauche==0){j2.gauche=1}
@@ -5093,6 +5095,7 @@ function main(){
 			if(e.code==controls[1][6]&&j2.special==0){j2.special=1}
 			if(e.code==controls[1][7]&&j2.dodge==0){j2.dodge=1}
 			if(e.code==controls[1][8]&&j2.jump==0){j2.jump=1;}
+			if(e.code==controls[1][9]&&j2.jump==0){j2.enhance=1;}
 		}
 		if(e.code==controlspause&&pausepressed==0){pausepressed=1;}
 		key=e.code;
@@ -5107,6 +5110,7 @@ function main(){
 		if(e.code==controls[0][6]){j1.special=0}
 		if(e.code==controls[0][7]){j1.dodge=0;}
 		if(e.code==controls[0][8]){j1.jump=0;}
+		if(e.code==controls[0][9]){j1.enhance=0;}
 		if(e.code==controls[1][0]){j2.droite=0}
 		if(e.code==controls[1][1]){j2.gauche=0}
 		if(e.code==controls[1][2]){j2.haut=0}
@@ -5116,6 +5120,7 @@ function main(){
 		if(e.code==controls[1][6]){j2.special=0}
 		if(e.code==controls[1][7]){j2.dodge=0}
 		if(e.code==controls[1][8]){j2.jump=0;}
+		if(e.code==controls[1][9]){j2.enhance=0;}
 		if(e.code==controlspause){pausepressed=0;}
 	}
 	function clickEvent(e){
@@ -5206,6 +5211,7 @@ window.addEventListener(
 				if(controls[0][6]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.special=0}else {if(j1.special==0){j1.special=1}}}
 				if(controls[0][7]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.dodge=0}else {if(j1.dodge==0){j1.dodge=1}}}
 				if(controls[0][8]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.jump=0}else {if(j1.jump==0){j1.jump=1}}}
+				if(controls[0][9]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j1.jump=0}else {if(j1.enhance==0){j1.enhance=1}}}
 				if(secondplayerishuman){
 					if(controls[1][0]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.droite=0}else {if(j2.droite==0){j2.droite=1}}}
 					if(controls[1][1]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.gauche=0}else {if(j2.gauche==0){j2.gauche=1}}}
@@ -5216,6 +5222,7 @@ window.addEventListener(
 					if(controls[1][6]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.special=0}else {if(j2.special==0){j2.special=1}}}
 					if(controls[1][7]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.dodge=0}else {if(j2.dodge==0){j2.dodge=1}}}
 					if(controls[1][8]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.jump=0}else {if(j2.jump==0){j2.jump=1}}}
+					if(controls[1][9]==i.toString()+r.toString(20)){if(!buttonPressed(gp.buttons[r])){j2.enhance=0}else {if(j2.jump==0){j2.enhance=1}}}
 				}
 				if(buttonPressed(gp.buttons[r])){key=i.toString()+r.toString(20);}
 			}
