@@ -823,9 +823,9 @@ function getrepcoordinates(){
     repcoordinates.set("stunned4",{offx:269,width:33,offy:1134,height:101,decx:1,decy:0});
     repcoordinates.set("stunned5",{offx:310,width:44,offy:1134,height:101,decx:0,decy:0});
 	repcoordinates.set("ballshurt",{offx:15,width:34,offy:1156,height:79,decx:0,decy:0});
-	repcoordinates.set("torso",{offx:42,width:29,offy:1632,height:59,decx:0,decy:0});
-	repcoordinates.set("torso2",{offx:206,width:51,offy:1661,height:30,decx:0,decy:0});
-	repcoordinates.set("legs",{offx:15,width:13,offy:1621,height:70,decx:0,decy:0});
+	repcoordinates.set("legs",{offx:15,width:13,offy:1638,height:70,decx:0,decy:0});
+	repcoordinates.set("torso",{offx:42,width:29,offy:1649,height:59,decx:0,decy:0});
+	repcoordinates.set("torso2",{offx:206,width:51,offy:1678,height:30,decx:0,decy:0});
 
 	repcoordinates.set("slide1",{offx:311,width:58,offy:1384,height:95,decx:0,decy:0});
 	repcoordinates.set("slide2",{offx:379,width:58,offy:1384,height:95,decx:0,decy:0});
@@ -1276,6 +1276,7 @@ function getshaocoordinates(){
 	shaocoordinates.set("arrow2",{offx:97,width:52,offy:513,height:99,decx:0,decy:0});
 	shaocoordinates.set("arrow3",{offx:157,width:72,offy:513,height:99,decx:0,decy:0});
 	shaocoordinates.set("arrow_proj",{offx:444,width:97,offy:600,height:13,decx:0,decy:0});
+	shaocoordinates.set("ballshurt",{offx:701,width:34,offy:627,height:108,decx:0,decy:0});
 
 
 	return shaocoordinates;

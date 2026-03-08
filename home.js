@@ -1237,7 +1237,7 @@ function main(){
 			me.charac.coups.forEach(aux);
 			this.grade=grade;
 			if(this.difficulty<4 && arcadelevel>=0 && arcadelevel<=2){this.difficulty-=1;}
-			else if(this.difficulty<3 && arcadelevel==6){this.difficulty+=1;}
+			else if(this.difficulty<3 && arcadelevel==7){this.difficulty+=1;}
 			switch(this.difficulty){
 				case -1:
 					this.donothingchance = 0.9;
@@ -4968,7 +4968,7 @@ function main(){
 	var decalage = 0; var wdecalagey = 0;
 	var bufferwindow = 5; var minimumcomboscaling = 0.5;
 	var framesforperfectblock = 9; var perfectblockcd = 9;
-	var arcadelevel = -1; var arcadeorder = [...liste_persos]; arcadeorder.shuffle(); var arcadestagesorder = [1,0,3,2,0,3,4,5];
+	var arcadelevel = -1; var arcadeorder = [...liste_persos]; arcadeorder.shuffle(); var arcadestagesorder = [1,0,3,2,0,3,2,4,5];
 	var youareintutorial = false; var tutorialscenenumber = 0; var currentuto = null; var currenttutoline = tutospecial;
 	var haschangedchar = false; var initchar = "";
 	var score = 0; var matchscore = 0; var roundscore = 0;
@@ -4999,7 +4999,11 @@ function main(){
 			persosunlocked = new Map(Object.entries(JSON.parse(b)));
 			if(c != null){difficulte = parseInt(c);}
 			persosunlocked.set("shao_kahn",true);
-			persosunlocked.set("johnny",true);
+			for(i=0;i<liste_persos.length;i++){
+				if(!persosunlocked.has(liste_persos[i])){persosunlocked.set(liste_persos[i],false);}
+				if(!statistics.has(liste_persos[i])){statistics.set(liste_persos[i],newCharacStats())}
+			}
+			saveStats();
 		}
 	}
 
@@ -5030,6 +5034,7 @@ function main(){
 		persosunlocked.set("kitana",false);
 		persosunlocked.set("subzero",false);
 		persosunlocked.set("reptile",false);
+		persosunlocked.set("johnny",false);
 
 		return statistics;
 	}
@@ -5041,6 +5046,7 @@ function main(){
 	unlock_clues.set("kitana","Win as Mileena");
 	unlock_clues.set("subzero","Win as Scorpion");
 	unlock_clues.set("reptile","Find and defeat Reptile");
+	unlock_clues.set("johnny","Do a fatality");
 
 	loadStats();
 
