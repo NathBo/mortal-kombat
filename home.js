@@ -1001,6 +1001,60 @@ function main(){
 
 	}
 
+	class Torso{
+		constructor(x,y,orientation,skin,coords){
+			this.x = x; this.y = y; this.orientation = orientation; this.skin = skin; this.coords = coords;
+			this.width=35;
+			this.height=40;
+			this.width=18;this.height = 25;
+			this.num = cpt;
+			this.rotation = 0;
+			this.dangerous = false;
+			this.liberated = false;
+			this.bounces = 1;
+			this.vitesse=-1.5;
+			this.tb = 0;
+			this.gravity = -0.4;
+		}
+
+		loop(){
+			if(this.liberated){
+				if(this.y<=-10){
+					if(this.bounces){
+						this.bounces--;
+						this.tb*=-0.2;
+						this.y=-10+this.tb;
+						play_sound_eff("mhit");
+					}
+					else{
+						this.y=-10;
+					}
+				}
+				else{
+					this.y+=this.tb;
+					this.tb+=this.gravity;
+					this.x+=this.vitesse*this.orientation;
+				}
+			}
+		}
+
+		afficher(){
+			this.costume = "torso";
+			if(this.liberated){this.costume="torso2";}
+			var coords = this.coords.get(this.costume);
+			var x = (this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation;
+			var y = ground-this.y-coords.height-coords.decy+shakey;
+			ctx.scale(2*this.orientation,2);
+			ctx.translate(x+coords.width/2,y+coords.height/2);
+			ctx.rotate(Math.PI*this.rotation/180);
+			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,-coords.width/2,-coords.height/2,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			ctx.restore();
+		}
+
+	}
+
 	class EatenHead{
 		constructor(x,y,orientation,skin,coords, dur, vitesse){
 			this.x = x; this.y = y; this.orientation = orientation; this.skin = skin; this.coords = coords;
@@ -1299,7 +1353,7 @@ function main(){
 			if(me.perso=="kitana"){this.idealrange=150;this.reversalmove="squarepunch";this.optionssonoki[0]+=0.2;}
 			if(me.perso=="raiden"){this.enviedantiair+=2;this.reversalmove="teleport";}
 			if(me.perso=="liukang"){this.idealrange=90;this.reversalmove="cycle";}
-			if(me.perso=="johnnyg"){this.idealrange=100;this.reversalmove="shadowpunch";this.optionssonoki[0]+=0.1;}
+			if(me.perso=="johnny"){this.idealrange=100;this.reversalmove="shadowpunch";this.optionssonoki[0]+=0.1;}
 			if(me.perso=="mileena"){this.rangescaling=4;this.reversalmove="teleport_drop";this.optionssonoki[0]+=0.4;this.reversaldist=200;}
 			//if(youareintutorial && !me.allowedmoves.includes("block")){this.agressivite+=0.01;}	//pour l'instant ca ferait ca tout le temps
 			if(this.behavior=="zoner"){this.agressivite-=0.01;}
@@ -1732,10 +1786,11 @@ function main(){
 			this.pv = this.charac.pv; this.pvmax = this.charac.pv; this.pvaff = this.charac.pv;
 			this.pushed = 0;this.pushx = 0;
 			this.blocking = 0; this.falling = 0; this.gettingup = 0; this.grabbing = 0; this.grabbed = 0; this.bouncing = false; this.nutting = false;
+			this.grabbed_object = null;
 			this.comboscaling = 1;
 			this.vicpose = 0;
 			this.cooldowns = [0,0,0,0];
-			this.fatality = 0; this.decapitated = 0; this.electrocuted = 0; this.hide = 0; this.burning = 0; this.fatalitytype = 0;
+			this.fatality = 0; this.decapitated = 0; this.electrocuted = 0; this.hide = 0; this.burning = 0; this.fatalitytype = 0; this.is_legs = false;
 			if(!secondplayerishuman && this.n==1 && reset_ai){
 				if(behavior==""){behavior=this.charac.default_behav;}
 				this.ai = new AI(this,other,difficulte,behavior);
@@ -2213,6 +2268,19 @@ function main(){
 						fatalitywasdone = true;
 						this.mov = ""; this.movlag=0;
 						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
+					}
+					else if(this.perso == "johnny" && this.back && this.bas==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=60 && other.gettingup==0 && other.y<=30){
+						this.fatality = 110;
+						other.falling=0;
+						other.y=0;
+						other.x = this.x+36*this.orientation;
+						play_sound_eff("fatal1");
+						this.special=2;
+						finishhim = 0;
+						other.invincibilite=1000;
+						fatalitywasdone = true;
+						this.mov = ""; this.movlag=0;
+						other.reoriente(this);
 					}
 					else if(this.perso == "kitana" && this.forward>=1 && this.special==1 && this.bas==0 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("fanswipe",other);
@@ -3046,7 +3114,37 @@ function main(){
 					
 					this.costume = "eat"+n.toString();
 				}
-				if(this.perso=="shao_kahn"){
+				else if(this.perso=="johnny"){
+					var a = 50; var c = 4; var d=10; var b = 4*c+d;	//a = cut_time, b grab dur, c per frame, d pause
+					if(this.fatality == a){this.grabbed_object = other.cut_torso();shake_screen(8,7.);}
+					else if(this.fatality==a+15){other.shake_player(6,5.);}
+					else if(this.fatality==a+5){play_sound_eff("spithit");}
+					else if(this.fatality==a-b+c-1){
+						this.grabbed_object.liberated=true;
+						this.grabbed_object.tb=-10;
+						this.grabbed_object.rotation = 0.;
+						this.grabbed_object.x = this.x-this.orientation*20;
+						this.grabbed_object.orientation*=-1;
+						this.grabbed_object=null;
+					}
+					if(this.fatality>=a+30){this.costume = "fatagrab1";}
+					else if(this.fatality>=a+26){this.costume="fatagrab2";}
+					else if(this.fatality>=a){this.costume="fatagrab3";}
+					else if(this.fatality>=a-b){
+						var n = 8;
+						if(this.fatality>=a-c){n=4;}
+						else if(this.fatality>=a-2*c){n=5;}
+						else if(this.fatality>=a-2*c-d){n=6;}
+						else if(this.fatality>=a-3*c-d){n=7;}
+						if(n==4){this.grabbed_object.x = this.x+this.orientation*30;this.grabbed_object.y=50;this.grabbed_object.rotation=0.;}
+						else if(n==5){this.grabbed_object.x = this.x+this.orientation*25;this.grabbed_object.y=65;this.grabbed_object.rotation=25.}
+						else if(n==6){this.grabbed_object.x = this.x+this.orientation*5;this.grabbed_object.y=80;this.grabbed_object.rotation=80.}
+						else if(n==7){this.grabbed_object.x = this.x-this.orientation*5;this.grabbed_object.y=80;this.grabbed_object.rotation=100.}
+						this.costume = "fatagrab"+n.toString();
+					}
+					else{this.costume="fatagrab8";}
+				}
+				else if(this.perso=="shao_kahn"){
 					if(this.fatality>=40){this.costume = "huppercut1"}
 					else if(this.fatality>=36){this.costume = "huppercut2"}
 					else if(this.fatality>=32){this.costume = "huppercut3"}
@@ -3517,6 +3615,8 @@ function main(){
 					this.costume="eat"+n.toString();
 			}
 
+			if(this.is_legs){this.costume="legs";}
+
 			
 			if(this.burning && !this.hide){
 				this.costume = "burning"+(Math.floor(this.burning/4)+1).toString();
@@ -3664,6 +3764,14 @@ function main(){
 			this.decapitated = 100;
 			add_to_objects_set(new EatenHead(this.x,80,this.orientation,this.skin,this.coordinates,dur,vitesse));
 			add_to_objects_set(new Blood(this.x,this.y+this.charac.height-5,this.orientation,"hblood"));
+		}
+
+		cut_torso(){
+			this.is_legs = true;
+			add_to_objects_set(new Blood(this.x,this.y+this.charac.height-5,this.orientation,"hblood"));
+			var torso = new Torso(this.x,this.y+this.charac.height-20,this.orientation,this.skin,this.coordinates);
+			add_to_objects_set(torso);
+			return torso;
 		}
 
 		explode(){
