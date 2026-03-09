@@ -106,6 +106,7 @@ function printAtWordWrap( context , text, x, y, lineHeight, fitWidth)
 }
 
 function last_char(s){
+	if (s=="")return"";
 	return s[s.length-1];
 }
 
@@ -1429,6 +1430,7 @@ function main(){
 				newd += deepness;
 				if(key=="jskick" && me.xspeed!=0){return;}
 				if(key == "squarepunch"){return;}
+				if(last_char(key)=='#'){return;}
 				if(key == "shadowpunch" && thiis.currisking<=-2){return;}
 				if(key == "burst"){return;}
 				var newprio = movpriority.get(key);
@@ -1837,7 +1839,7 @@ function main(){
 			if(racine(s) == "flying_kick" && this.y==0){this.y=20;}
 			if(s == "bicycle" || s == "bicycle#"){this.y=40;}
 			if(s == "knifethrow"){this.memoryslot=0;}
-			if(s == "cycle" && this.y==0){this.invincibilite=23;}
+			if(racine(s) == "cycle" && this.y==0){this.invincibilite=23;}
 			if(s == "teleport_drop"){this.invincibilite=12;}
 			if(s == "shao_tp"){this.invincibilite=stats.slag+stats.fdur+stats.elag+1;}
 			if(s == "ball"){this.crouching=6;}
@@ -1875,6 +1877,10 @@ function main(){
 
 		shake_player(frames,force){
 			this.shaking=frames;this.shakeforce=force;
+		}
+
+		is_enhanced(){
+			return last_char(this.mov)=='#';
 		}
 
 		begin_grab(other){
@@ -2649,10 +2655,15 @@ function main(){
 						if(this.movlag==stats.elag){
 							add_to_objects_set(new Fireball(this.x+25*this.orientation,this.y+70,this.orientation,other,stats));
 						}
+						if(this.movlag==stats.elag-5 && this.mov=="fireball#"){
+							add_to_objects_set(new Fireball(this.x+25*this.orientation,this.y+70,this.orientation,other,stats));
+						}
 						break;
 					case "cycle":
 						var stats = this.charac.coups.get(this.mov);
-						this.x -= 4.5*this.orientation;this.xspeed=0;
+						if(this.is_enhanced()){this.x += 5.5*this.orientation;}
+						else{this.x -= 4.5*this.orientation;}
+						this.xspeed=0;
 						break;
 					case "knifethrow":
 						var stats = this.charac.coups.get(this.mov);
@@ -3381,7 +3392,8 @@ function main(){
 						var n = 9;
 
 						var a = 1+Math.floor(this.movlag/stats.elag*(n));
-						this.costume = this.mov+a;
+						if(this.is_enhanced()){a = 10-a;}
+						this.costume = racine(this.mov)+a;
 						
 						break;
 
@@ -3481,8 +3493,8 @@ function main(){
 					case "boltthrow" :
 					case "fireball" :
 						var stats = this.charac.coups.get(this.mov);
-						if(entre(this.movlag,stats.slag,stats.slag+stats.fdur+stats.elag-10)){this.costume = this.mov+"2"}
-						else{this.costume = this.mov+"1";}
+						if(entre(this.movlag,stats.slag,stats.slag+stats.fdur+stats.elag-10)){this.costume = racine(this.mov)+"2"}
+						else{this.costume = racine(this.mov)+"1";}
 						break;
 					case "iceball" :
 						var stats = this.charac.coups.get(this.mov);
@@ -3675,8 +3687,13 @@ function main(){
 					self_shakex = -this.shakeforce + 2*Math.random()*this.shakeforce;
 					self_shakey = -this.shakeforce/2 + 2*Math.random()*this.shakeforce/2;
 				}
-
-				ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.charac.width/2+shakex+self_shakex)*this.orientation,ground-y-coords.height-coords.decy+shakey+self_shakey,coords.width,coords.height);
+				if(last_char(this.mov)=='#' && this.movlag%4<=1)ctx.filter = "sepia(1) saturate(5) hue-rotate(20deg)";
+				var x = (this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.charac.width/2+shakex+self_shakex)*this.orientation;
+				y = ground-y-coords.height-coords.decy+shakey+self_shakey;
+				ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,x,y,coords.width,coords.height);
+				
+				ctx.globalCompositeOperation = "source-over";
+				
 				ctx.setTransform(1, 0, 0, 1, 0, 0);
 				ctx.scale(1,1);
 
