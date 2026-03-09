@@ -513,7 +513,7 @@ function main(){
 			this.other = other;
 			this.width=40;
 			this.height=19;
-			this.totdur = 80;this.vitesse=vitesse; this.vitessey = 1;
+			this.totdur = 320/vitesse;this.vitesse=vitesse; this.vitessey = 1;
 			this.costcpt = 0;
 			this.framepercost = 3;
 			this.stats = stats;
@@ -1839,8 +1839,9 @@ function main(){
 			if(racine(s) == "flying_kick" && this.y==0){this.y=20;}
 			if(s == "bicycle" || s == "bicycle#"){this.y=40;}
 			if(s == "knifethrow"){this.memoryslot=0;}
+			if(s == "knifethrow#"){this.memoryslot=20;}
 			if(racine(s) == "cycle" && this.y==0){this.invincibilite=23;}
-			if(s == "teleport_drop"){this.invincibilite=12;}
+			if(racine(s) == "teleport_drop"){this.invincibilite=14;}
 			if(s == "shao_tp"){this.invincibilite=stats.slag+stats.fdur+stats.elag+1;}
 			if(s == "ball"){this.crouching=6;}
 			if(s == "chargeball"){this.ressource=0;}
@@ -2679,12 +2680,16 @@ function main(){
 						var stats = this.charac.coups.get(this.mov);
 						this.crouching=0;
 						if(this.movlag==stats.elag){
-							add_to_objects_set(new HomingKnife(this.x+20*this.orientation,this.y+60,this.orientation,other,stats));
+							var a = 4;
+							if(this.is_enhanced()){a = 2;}
+							add_to_objects_set(new HomingKnife(this.x+20*this.orientation,this.y+60,this.orientation,other,stats,a));
 						}
 						break;
 					case "ball":
 						var stats = this.charac.coups.get(this.mov);
-						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.xspeed=6*this.orientation;}
+						var a = 6;
+						if(this.is_enhanced() && this.movlag>stats.elag+1){a=9;}
+						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.xspeed=a*this.orientation;}
 						break;
 					case "spit":
 						var stats = this.charac.coups.get(this.mov);
@@ -2733,7 +2738,7 @@ function main(){
 					}
 				this.movlag--;
 				if(this.movlag == 0){
-					if(this.mov=="teleport_drop"){
+					if(racine(this.mov)=="teleport_drop"){
 						this.mov = "";
 						var x = other.x+this.orientation*(this.charac.width/2+other.charac.width/2+10);
 						if(Math.abs(x-camerax)>decalagex-this.charac.width/2){x = other.x-this.orientation*(this.charac.width/2+other.charac.width/2+10);}
@@ -2808,7 +2813,7 @@ function main(){
 			}
 			else if(this.charac.coups.has(this.mov)){
 				var stats = this.charac.coups.get(this.mov);
-				if(this.y==0 && other.y>0 && stats.hitboxys<0 && this.mov != "slide" && this.mov != "nutpunch" && this.mov != "ball"){return;}
+				if(this.y==0 && other.y>0 && stats.hitboxys<0 && this.mov != "slide" && this.mov != "nutpunch" && racine(this.mov) != "ball"){return;}
 				if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){
 					var hitboxxe = stats.hitboxxe;
 					if(other.charac.coups.has(other.mov)){
@@ -2897,7 +2902,7 @@ function main(){
 					else{lag_game(5);}
 				}
 				else{lag_game(Math.floor(stats.hitlag/0.8));}
-				if(other.mov=="ball"){other.movlag=2;other.tb=6.5;other.xspeed = -1;other.y=0.1;other.falling=1;other.hurted=30;other.crouching=0;gamefreeze=5;}
+				if(racine(other.mov)=="ball"){other.movlag=2;other.tb=6.5;other.xspeed = -1;other.y=0.1;other.falling=1;other.hurted=30;other.crouching=0;gamefreeze=5;}
 				if(this.n==0 && !secondplayerishuman && stats.hiteffect!="projectile" && stats.hiteffect != "spear" && stats.hiteffect != "freeze"  && stats.hiteffect != "iceflask" && stats.hiteffect != "projectile_fall" && stats.hiteffect != "unblockable_projectile_fall"){
 					other.ai.ugotblocked();
 				}
@@ -3661,8 +3666,8 @@ function main(){
 			}
 			else if(this.hide==0){
 				var y = this.y;
-				if(this.mov == "teleport_drop"){y = -8*(12-this.movlag)}
-				else if(this.mov == "ball"){y = -10;}
+				if(racine(this.mov) == "teleport_drop"){y = -(8+2*this.is_enhanced())*(14-this.movlag)}
+				else if(racine(this.mov) == "ball"){y = -10;}
 				else if(this.mov == "shao_tp"){
 					var stats = this.charac.coups.get(this.mov);
 					if(this.movlag>=stats.elag){y = -8*(stats.slag-(this.movlag-stats.elag))}
