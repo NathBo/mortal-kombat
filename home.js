@@ -261,23 +261,28 @@ function main(){
 
 
 	class Bolt{
-		constructor(x,y,orientation,other,stats,skin=raipng){
+		constructor(x,y,orientation,other,stats,skin=raipng,enhanced = false){
 			this.x = x; this.y = y; this.orientation = orientation; this.skin = skin;
 			this.other = other;
 			this.width=40;
 			this.height=17;
-			this.totdur = 40;this.vitesse=8;
+			this.totdur = 40*(1+enhanced);this.vitesse=8;
 			this.costcpt = 0;
 			this.framepercost = 3;
 			this.stats = stats;
 			this.dur = this.totdur;
 			this.num = cpt;
 			this.dangerous = true;
-			
+			this.enhanced = enhanced;
+			this.bloup = 0 + this.enhanced;
 		}
 
 		loop(){
 			this.x += this.orientation*this.vitesse;
+			if(Math.abs(this.x-this.orientation*30-camerax)>=decalagex){
+				if(this.bloup){this.bloup--;this.x += this.orientation*-2*decalagex;}
+				else{this.delete()}
+			}
 			var stats = this.stats; var other = this.other;
 			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
 				if(other.y==0){
@@ -1855,6 +1860,7 @@ function main(){
 			if(stats.voiceline!="")play_sound_eff(this.charac.voiceactor+stats.voiceline);
 			if(s == "spit"){play_sound_eff("repspit");}
 			if(s == "chargeball"){play_sound_eff("chargeball");}
+			if(s == "boltthrow#"){this.orientation*=-1;}
 			if(stats.coupwav != ""){play_sound_eff(stats.coupwav);}
 			this.cooldowns[cd] = this.charac.cds[cd];
 			if(movpriority.get(s)==70){this.jauge = Math.min(this.jaugemax,this.jauge+5);}
@@ -2521,9 +2527,17 @@ function main(){
 						if(this.movlag==stats.elag+7){this.invincibilite=14;}
 						if(this.movlag==stats.elag){
 							this.reoriente(other,true);
-							var x = other.x+this.orientation*(this.charac.width/2+other.charac.width/2+10);
-							if(Math.abs(x-camerax)>decalagex-this.charac.width/2){x = other.x-this.orientation*(this.charac.width/2+other.charac.width/2+10);}
-							this.x = x;
+							if(this.is_enhanced()){
+								var x = other.x+this.orientation*100;
+								if(Math.abs(x-camerax)>decalagex-this.charac.width/2){x = other.x+this.orientation*(this.charac.width/2+other.charac.width/2+10);}
+								if(Math.abs(x-camerax)>decalagex-this.charac.width/2){x = other.x-this.orientation*(this.charac.width/2+other.charac.width/2+10);}
+								this.x = x;
+							}
+							else{
+								var x = other.x+this.orientation*(this.charac.width/2+other.charac.width/2+10);
+								if(Math.abs(x-camerax)>decalagex-this.charac.width/2){x = other.x-this.orientation*(this.charac.width/2+other.charac.width/2+10);}
+								this.x = x;
+							}
 						}
 						break;
 
@@ -2531,12 +2545,14 @@ function main(){
 						var stats = this.charac.coups.get(this.mov);
 						this.crouching=0;
 						if(this.movlag==stats.elag){
-							add_to_objects_set(new Bolt(this.x+20*this.orientation,this.y+60,this.orientation,other,stats,this.skin));
+							add_to_objects_set(new Bolt(this.x+20*this.orientation,this.y+60,this.orientation,other,stats,this.skin,this.is_enhanced()));
 						}
 						break;
 					case "thundergod":
 						var stats = this.charac.coups.get(this.mov);
-						if(this.movlag<=stats.elag+stats.fdur){this.x += 6*this.orientation;if(this.movlag==2){this.movlag++;}}
+						var a = 6;
+						if(this.is_enhanced()){this.projectile_invincibility=2;a=8;}
+						if(this.movlag<=stats.elag+stats.fdur){this.x += a*this.orientation;if(this.movlag==2){this.movlag++;}}
 						if(Math.abs(this.x-camerax)>decalagex-this.charac.width/2){this.movlag=0;this.mov="";this.tb=7;this.xspeed = -this.orientation;this.y=0.1;}
 						break;
 					case "shadowkick":
@@ -2853,12 +2869,12 @@ function main(){
 			if(stats.hiteffect==""){return;}
 			if(this.perso=="shao_kahn" && stats.hiteffect=="grab"){return;}
 			if(this.mov=="jumpsquat" && stats.hiteffect=="grab"){return;}
-			if(other.mov=="thundergod"){other.movlag=1;other.tb=8;other.xspeed = -1;other.y=0.1;}
+			if(racine(other.mov)=="thundergod"){other.movlag=1;other.tb=8;other.xspeed = -1;other.y=0.1;}
 			if(other.mov=="squarepunch"){other.movlag=1;other.tb=0;other.xspeed = -1;}
 			if(other.mov=="shadowkick"){other.movlag=other.charac.coups.get(other.mov).elag;}
 			if(this.invincibilite || end_of_round_countdown){return;}
 			if(this.projectile_invincibility && !this.hiteffect_is_not_projo(stats.hiteffect)){return;}
-			if(other.mov=="thundergod"){other.y=0;}
+			if(racine(other.mov)=="thundergod"){other.y=0;}
 			if(other.mov=="charge"){other.movlag=8;other.xspeed=0;}
 			if(racine(other.mov)=="flying_kick"){other.movlag=13;other.xspeed=0;}
 			if(stats.hiteffect=="grab" && this.mov=="grab" && this.movlag>=this.charac.coups.get("grab").elag){
@@ -2999,7 +3015,7 @@ function main(){
 				this.killanim();
 				this.end_of_official_combo()
 			}
-			if(other.mov=="thundergod"){other.y=0.1;}
+			if(racine(other.mov)=="thundergod"){other.y=0.1;}
 			if(arcadelevel>=0 && this.n==0){damage_taken+=initpv-this.pv;}
 		}
 
@@ -3348,9 +3364,9 @@ function main(){
 					case "leg_takedown" :
 					case "nutpunch" :
 						var stats = this.charac.coups.get(this.mov);
-						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.costume = this.mov+"3"}
-						else if(entre(this.movlag,0,stats.elag/2)||entre(this.movlag,stats.elag+stats.fdur+stats.slag/2,stats.elag+stats.fdur+stats.slag)){this.costume = this.mov+"1"}
-						else{this.costume = this.mov+"2";}
+						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.costume = racine(this.mov)+"3"}
+						else if(entre(this.movlag,0,stats.elag/2)||entre(this.movlag,stats.elag+stats.fdur+stats.slag/2,stats.elag+stats.fdur+stats.slag)){this.costume = racine(this.mov)+"1"}
+						else{this.costume = racine(this.mov)+"2";}
 						break;
 
 					case "lkick" :

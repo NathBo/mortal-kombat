@@ -813,7 +813,7 @@ function getrepcoordinates(){
 	repcoordinates.set("victory2",{offx:1029,width:33,offy:110,height:129,decx:0,decy:0});
     repcoordinates.set("decapitated1",{offx:15,width:15,offy:1737,height:92,decx:0,decy:0});
     repcoordinates.set("decapitated2",{offx:38,width:24,offy:1737,height:92,decx:0,decy:0});
-    repcoordinates.set("decapitated3",{offx:68,width:25,offy:17337,height:92,decx:0,decy:0});
+    repcoordinates.set("decapitated3",{offx:68,width:25,offy:1737,height:92,decx:0,decy:0});
     repcoordinates.set("decapitated4",{offx:100,width:31,offy:1737,height:92,decx:0,decy:0});
     repcoordinates.set("decapitated5",{offx:138,width:69,offy:1737,height:92,decx:0,decy:0});
     repcoordinates.set("decapitated6",{offx:214,width:74,offy:1737,height:92,decx:0,decy:0});
