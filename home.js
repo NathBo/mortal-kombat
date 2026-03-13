@@ -198,7 +198,7 @@ function main(){
 	}
 
 	class Fan{
-		constructor(x,y,orientation,other,stats){
+		constructor(x,y,orientation,other,stats,enhanced=false){
 			this.x = x; this.y = y; this.orientation = orientation;
 			this.other = other;
 			this.width=22;
@@ -209,12 +209,31 @@ function main(){
 			this.num = cpt;
 			this.rotation = 0; this.rotationspeed = 45;
 			this.dangerous = true; this.canthurt = 0;
-			
+			this.enhanced = enhanced;
+			this.tb = 0;
+			this.phase = "normal";
+		}
+
+		touch(){
+			this.canthurt=3;
+			if(this.other.blocking){
+				if(this.enhanced && this.phase=="normal"){this.phase="bounce";this.tb=6;this.canthurt=18;this.vitesse*=0.2;this.dur+=20;}
+				else if(this.enhanced && this.phase=="bounce"){this.delete();}
+				else{this.dangerous=false;this.vitesse*=-0.5;this.vitessey = 6;this.dur=35;}
+			}
+			else if(this.dur>20){this.dur=15;this.vitesse*=0.3;}
 		}
 
 		loop(){
-			this.x += this.orientation*this.vitesse;
-			this.y += this.vitessey;
+			if(this.phase=="normal"){
+				this.x += this.orientation*this.vitesse;
+				this.y += this.vitessey;
+			}
+			else if(this.phase=="bounce"){
+				this.x += this.orientation*this.vitesse;
+				this.y += this.tb;
+				this.tb-=0.3;
+			}
 			var stats = this.stats; var other = this.other;
 			if(this.canthurt){this.canthurt--;return;}
 			if(!this.dangerous){return;}
@@ -222,17 +241,13 @@ function main(){
 				if(other.y==0){
 					if(entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3*(other.crouching<=3),this.height/2+other.charac.height/3)){
 						other.hurt(this,stats);
-						this.canthurt=3;
-						if(other.blocking){this.dangerous=false;this.vitesse*=-0.5;this.vitessey = 6;this.dur=35;}
-						else if(this.dur>20){this.dur=15;this.vitesse*=0.3;}
+						this.touch();
 					}
 				}
 				else{
 					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){
 						other.hurt(this,stats);
-						this.canthurt=3;
-						if(other.blocking){this.dangerous=false;this.vitesse*=-0.5;this.vitessey = 6;this.dur=35;}
-						else if(this.dur>20){this.dur=15;this.vitesse*=0.3;}
+						this.touch();
 					}
 				}
 			}
@@ -938,7 +953,7 @@ function main(){
 
 
 	class Wave{
-		constructor(x,y,orientation,other,stats){
+		constructor(x,y,orientation,other,stats,enhanced=false){
 			this.x = x; this.y = y; this.orientation = orientation;
 			this.other = other;
 			this.width=22;
@@ -949,25 +964,33 @@ function main(){
 			this.dur = this.totdur;
 			this.num = cpt;
 			this.rotation = 0; this.rotationspeed = 16;
-			this.dangerous = false;
-			
+			this.dangerous = enhanced;
+			this.enhanced = enhanced;
+			this.phase = 5;
 		}
 
 		loop(){
 			this.x += this.orientation*this.vitesse;
-			this.y += this.vitesse;
+			if(!this.enhanced){this.y += this.vitesse;}
+			else{
+				if(this.phase<15){this.y += this.vitesse;}
+				else{this.y-=this.vitesse}
+				this.phase = (this.phase+1)%30
+			}
 			var stats = this.stats; var other = this.other;
-			if(other.invincibilite==0 && other.y>0 &&entre((other.x-this.x)*this.orientation,stats.hitboxxs-other.charac.width/2,stats.hitboxxe+other.charac.width/2+stats.hitboxxeyscaling*(other.y-(this.y+stats.hitboxys)))){
-				if(entre((other.y+other.charac.height/3-this.y),stats.hitboxys-other.charac.height/6,stats.hitboxxe+other.charac.height/6)){other.hurt(this,stats);this.dur=1;}
+			if(other.invincibilite==0 && (other.y>0 || this.enhanced) &&entre((other.x-this.x)*this.orientation,stats.hitboxxs-other.charac.width/2,stats.hitboxxe+other.charac.width/2+stats.hitboxxeyscaling*(other.y-(this.y+stats.hitboxys)))){
+				if(entre((other.y+other.charac.height/3-this.y),stats.hitboxys-other.charac.height/6-(other.crouching==0 && other.y==0)*other.charac.height/2,stats.hitboxxe+other.charac.height/6)){other.hurt(this,stats);this.dur=1;}
 			}
 		}
 
 		afficher(){
 			this.costume = "wave";
 			this.rotation = (this.rotation+this.rotationspeed)%360;
-			ctx.scale(2*this.orientation,2);
+			var a = 1;
+			if(this.phase<15){ctx.scale(2*this.orientation,2);}
+			else{ctx.scale(2*this.orientation,-2);a=-1;}
 			var coords = kitcoordinates.get(this.costume);
-			ctx.drawImage(kitpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.drawImage(kitpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,(ground-this.y-coords.height*a-coords.decy+shakey)*a,coords.width,coords.height);
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
 			if(gamefreeze==0){this.dur--;}
@@ -1434,7 +1457,7 @@ function main(){
 				if(thiis.overshoot){newd-=val.hitboxxe;}
 				newd += deepness;
 				if(key=="jskick" && me.xspeed!=0){return;}
-				if(key == "squarepunch"){return;}
+				if(racine(key) == "squarepunch"){return;}
 				if(last_char(key)=='#'){return;}
 				if(key == "shadowpunch" && thiis.currisking<=-2){return;}
 				if(key == "burst"){return;}
@@ -1818,7 +1841,7 @@ function main(){
 			this.running = 0; this.lastforward = 0; this.lastdir = 0; this.run_buffer = 0;
 		}
 
-		begincoup(s,other,ai_pass=false){
+		begincoup(s,other,ai_pass=false,follow_up=false){
 			if(!this.charac.coups.has(s)){return;}
 			var stats = this.charac.coups.get(s);
 			this.reoriente(other);
@@ -1830,16 +1853,16 @@ function main(){
 			else{this.crouching=0;}
 			if(s == "jkick"){if(this.x<other.x){this.orientation = 1;}else{this.orientation = -1;}}
 			var cd = cd_dependance.get(s);
-			if(this.cooldowns[cd]){if(this.cooldowns[cd]>bufferwindow){this.special=2;}return;}
+			if(this.cooldowns[cd] && !follow_up){if(this.cooldowns[cd]>bufferwindow){this.special=2;}return;}
 			else if(cd != -1){this.special=2;}
 			if(movpriority.get(s)==70 && movpriority.get(this.mov)>=70){return;}
-			if(this.enhance && this.charac.coups.has(s+"#") && this.jauge>=this.jaugemax/2){
+			if(this.enhance && this.charac.coups.has(s+"#") && this.jauge>=this.jaugemax/2 && !follow_up){
 				s = s+"#";
 				this.jauge-=this.jaugemax/2;
 				stats = this.charac.coups.get(s);
 			}
 			if(s == "hell_gates"){this.orientation*=-1;}
-			if(s == "squarepunch"){this.invincibilite=15;this.y=1;this.tb=9;}
+			if(racine(s) == "squarepunch"){this.invincibilite=15;this.y=1;this.tb=9;}
 			if(s == "icebody"){this.crouching = 0;}
 			if(racine(s) == "flying_kick" && this.y==0){this.y=20;}
 			if(s == "bicycle" || s == "bicycle#"){this.y=40;}
@@ -2502,7 +2525,7 @@ function main(){
 					case "fanthrow":
 						var stats = this.charac.coups.get(this.mov);
 						if(this.movlag==stats.elag){
-							add_to_objects_set(new Fan(this.x+20*this.orientation,this.y+35,this.orientation,other,stats));
+							add_to_objects_set(new Fan(this.x+20*this.orientation,this.y+35,this.orientation,other,stats,this.is_enhanced()));
 						}
 						else if(this.movlag==stats.elag+Math.floor(stats.slag/2)){
 							this.xspeed -= 2*this.orientation;
@@ -2512,13 +2535,15 @@ function main(){
 					case "fanlift":
 						var stats = this.charac.coups.get(this.mov);
 						if(this.movlag==stats.elag+Math.floor(stats.fdur/2)){
-							add_to_objects_set(new Wave(this.x+20*this.orientation,this.y+55,this.orientation,other,stats));
+							add_to_objects_set(new Wave(this.x+20*this.orientation,this.y+55,this.orientation,other,stats,this.is_enhanced()));
 						}
 						break;
 
 					case "squarepunch":
 						var stats = this.charac.coups.get(this.mov);
-						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.tb=0;this.xspeed=8*this.orientation;}
+						var a = 8;
+						if(this.is_enhanced()){a=11;}
+						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.tb=0;this.xspeed=a*this.orientation;}
 						if(this.movlag<=stats.elag){this.xspeed=0;this.tb=-3;}
 						break;
 
@@ -2765,9 +2790,10 @@ function main(){
 					}
 					else if(this.mov == "jumpsquat"){this.mov = "";if((this.haut || this.jump) && this.bas == 0){this.tb = c.jumpforce;this.y = c.jumpforce;}else{this.tb = c.shorthop;this.y = c.shorthop;}}
 					else if((this.y>0) && (this.mov == "air_dodge" || this.mov == "burst")){this.movlag = 100;this.mov = "free_fall";this.xspeed /=4;}
-					else if(this.mov == "fanthrow" && this.y>0){this.movlag = 100;this.mov = "free_fall";}
+					else if(racine(this.mov) == "fanthrow" && this.y>0){this.movlag = 100;this.mov = "free_fall";}
 					else if(this.mov == "squarepunch"){this.movlag = 100;this.mov = "free_fall";}
 					else if(this.mov == "shadowpunch" && this.memoryslot==0){this.movlag = 100;this.mov = "free_fall";}
+					else if(this.mov == "fanswipe#"){this.begincoup("fanswipe",other,false,true);}
 					else{this.mov = "";}
 				}
 			}
@@ -3492,17 +3518,18 @@ function main(){
 					case "fanthrow" :
 						var stats = this.charac.coups.get(this.mov);
 						if(this.movlag<=stats.elag/4&&this.y==0){this.costume = "huppercut5";}
-						else if(this.movlag<stats.elag*0.5){this.costume = "fanthrow4";}
+						else if(this.movlag<stats.elag){this.costume = "fanthrow4";}
 						else if(this.movlag<=stats.elag+stats.slag/4){this.costume = "fanthrow3";}
 						else if(this.movlag<=stats.elag+stats.slag*2/4){this.costume = "fanthrow2";}
 						else{this.costume = "fanthrow1";}
+						break;
 
 					case "fanswipe" :
 						var stats = this.charac.coups.get(this.mov);
-						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.costume = this.mov+"3"}
-						else if(entre(this.movlag,stats.elag+stats.fdur+stats.slag/2,stats.elag+stats.fdur+stats.slag)){this.costume = this.mov+"1"}
-						else if(this.movlag>=stats.elag){this.costume = this.mov+"2"}
-						else {this.costume = this.mov+"4"}
+						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.costume = racine(this.mov)+"3"}
+						else if(entre(this.movlag,stats.elag+stats.fdur+stats.slag/2,stats.elag+stats.fdur+stats.slag)){this.costume = racine(this.mov)+"1"}
+						else if(this.movlag>=stats.elag){this.costume = racine(this.mov)+"2"}
+						else {this.costume = racine(this.mov)+"4"}
 						break;
 					
 					case "teleport" :
@@ -4949,7 +4976,7 @@ function main(){
 
 	characteristics.set("kitana",{png : kitskins,coordinates : kitcoordinates, sex : "f", standnframes : 5, rollspeed : 3, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : kitanaiconpng, namewav : document.querySelector('#kitanawav'),
 	width : 34, height : 97,vitesse : 3.1, run_speed : 6.2,jumpxspeed : 3.6,backmovnerf : 0.85, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2, hurtcontrol : 0.2, grabtype : "poser",
-	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 95, getupfdur : 32, grabfdur : 35, grabdeg : 13, vicposframes : 12, vicposfdur : 50, cds : [80,120,240,240], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,squarepunchiconpng], voiceactor : "clement",
+	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 95, getupfdur : 32, grabfdur : 35, grabdeg : 13, vicposframes : 12, vicposfdur : 50, cds : [80,120,24,240], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,squarepunchiconpng], voiceactor : "clement",
 	default_behav : "zoner", combos : kitana_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Kitana takes control of the outworld and forcibly converts all its peasants to blueberry farming in order to have access to an unlimited supply of blueberries for the rest of her life."});
 
 	characteristics.set("mileena",{png : milskins,coordinates : milcoordinates, sex : "f", standnframes : 10, rollspeed : 3, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : mileenaiconpng, namewav : document.querySelector('#mileenawav'),
