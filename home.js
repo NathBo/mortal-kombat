@@ -581,12 +581,13 @@ function main(){
 
 
 	class Iceball{
-		constructor(x,y,orientation,other,stats){
+		constructor(x,y,orientation,other,stats,enhanced){
 			this.x = x; this.y = y; this.orientation = orientation;
 			this.other = other;
 			this.width=60;
 			this.height=20;
 			this.totdur = 50;this.vitesse=5;
+			if(enhanced){this.vitesse=2;this.totdur=150;}
 			this.stats = stats;
 			this.dur = this.totdur;
 			this.num = cpt;
@@ -622,6 +623,50 @@ function main(){
 			objects_to_loop.delete(this.num);
 		}
 	}
+
+class IceClone{
+		constructor(x,y,orientation,other,stats){
+			this.x = x; this.y = y; this.orientation = orientation;
+			this.other = other;
+			this.width=37;
+			this.height=103;
+			this.totdur = 150;
+			this.stats = stats;this.vitesse=0;
+			this.dur = this.totdur;
+			this.num = cpt;
+			this.dangerous = true;
+			
+		}
+
+		loop(){
+			var stats = this.stats; var other = this.other;
+			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
+				if(other.y==0){
+					if(entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
+				}
+				else{
+					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height*0.8+other.charac.height/6)){other.hurt(this,stats);this.dur=1;}
+				}
+			}
+		}
+
+		afficher(){
+			this.costume = "icebody2";
+			ctx.scale(2*this.orientation,2);
+			var coords = subcoordinates.get(this.costume);
+			ctx.drawImage(subpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			if(gamefreeze==0){this.dur--;}
+			if(this.dur==0){this.delete();return;}
+		}
+
+		delete(){
+			objects_to_loop.delete(this.num);
+		}
+	}
+
+
 
 	class Fireball{
 		constructor(x,y,orientation,other,stats){
@@ -1573,7 +1618,7 @@ function main(){
 				if(other.y>0 && me.y==0){conviction-=thiis.enviedantiair;}
 				if(coups.get(m).slag<=other.hurted){conviction = -100+movpriority.get(m); conviction -= coups.get(m).degats/2;}
 				if(m=="huppercut" && other.y>0){conviction -= 0;}
-				if(m=="slide"){return;}
+				if(racine(m)=="slide"){return;}
 				if(me.y>0 && me.tb<0){conviction-=40;}
 				conviction += thiis.inconsistency*Math.random();
 				conviction-=thiis.grade.get(m);
@@ -1864,6 +1909,7 @@ function main(){
 			if(s == "hell_gates"){this.orientation*=-1;}
 			if(racine(s) == "squarepunch"){this.invincibilite=15;this.y=1;this.tb=9;}
 			if(s == "icebody"){this.crouching = 0;}
+			if(s == "slide#"){this.crouching=6;}
 			if(racine(s) == "flying_kick" && this.y==0){this.y=20;}
 			if(s == "bicycle" || s == "bicycle#"){this.y=40;}
 			if(s == "knifethrow"){this.memoryslot=0;}
@@ -2374,11 +2420,11 @@ function main(){
 					else if(this.perso == "subzero" && this.back==0 && this.bas==0 && this.forward==0 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("iceball",other);
 					}
-					else if(this.perso == "subzero" && this.back>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
-						this.begincoup("iceflask",other);
-					}
 					else if(this.perso == "subzero" && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("icebody",other);
+					}
+					else if(this.perso == "subzero" && this.back>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
+						this.begincoup("iceflask",other);
 					}
 					else if(this.perso == "liukang" && this.bas>=1 && this.special==1 && movpriority.get(this.mov)<70&&end_of_round_countdown==0){
 						this.begincoup("cycle",other);
@@ -2636,7 +2682,8 @@ function main(){
 						break;
 					case "slide":
 						var stats = this.charac.coups.get(this.mov);
-						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.xspeed=6*this.orientation;}
+						var a = 6 + this.is_enhanced()*2;
+						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.xspeed=a*this.orientation;}
 						break;
 					case "charge":
 						var stats = this.charac.coups.get(this.mov);
@@ -2667,13 +2714,22 @@ function main(){
 						var stats = this.charac.coups.get(this.mov);
 						this.crouching=0;
 						if(this.movlag==stats.elag){
-							add_to_objects_set(new Iceball(this.x+20*this.orientation,this.y+60,this.orientation,other,stats));
+							add_to_objects_set(new Iceball(this.x+20*this.orientation,this.y+60,this.orientation,other,stats,this.is_enhanced()));
 						}
 						break;
 					case "iceflask" :
 						var stats = this.charac.coups.get(this.mov);
 						if(this.movlag==1){
 							add_to_objects_set(new IceFlask(this.x+60*this.orientation,this.y-5,this.orientation,other,stats));
+						}
+						break;
+					case "icebody":
+						if(this.is_enhanced()){
+							var stats = this.charac.coups.get(this.mov);
+							if(this.movlag==stats.elag){
+								add_to_objects_set(new IceClone(this.x,this.y,this.orientation,other,stats));
+								this.xspeed = -4*this.orientation;
+							}
 						}
 						break;
 					case "flying_kick":
@@ -2855,7 +2911,7 @@ function main(){
 			}
 			else if(this.charac.coups.has(this.mov)){
 				var stats = this.charac.coups.get(this.mov);
-				if(this.y==0 && other.y>0 && stats.hitboxys<0 && this.mov != "slide" && this.mov != "nutpunch" && racine(this.mov) != "ball"){return;}
+				if(this.y==0 && other.y>0 && stats.hitboxys<0 && racine(this.mov) != "slide" && this.mov != "nutpunch" && racine(this.mov) != "ball"){return;}
 				if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){
 					var hitboxxe = stats.hitboxxe;
 					if(other.charac.coups.has(other.mov)){
@@ -3036,7 +3092,7 @@ function main(){
 				if(stats.hiteffect=="fall_bounce"){other.pushx *= 0.2;}
 				}
 			other.canthurt = true;
-			if(stats.hiteffect == "iceflask"){this.invincibilite=60;}
+			if(stats.hiteffect == "iceflask" && stats.hurty<=4){this.invincibilite=60;}
 			if(this.pv<=0){
 				this.killanim();
 				this.end_of_official_combo()
@@ -3546,9 +3602,9 @@ function main(){
 						break;
 					case "iceball" :
 						var stats = this.charac.coups.get(this.mov);
-						if(entre(this.movlag,stats.slag,stats.slag+stats.fdur+stats.elag-10)){this.costume = this.mov+"3"}
-						else if(entre(this.movlag,stats.slag-5,stats.slag+stats.fdur+stats.elag-5)){this.costume = this.mov+"2"}
-						else{this.costume = this.mov+"1";}
+						if(entre(this.movlag,stats.slag,stats.slag+stats.fdur+stats.elag-10)){this.costume = racine(this.mov)+"3"}
+						else if(entre(this.movlag,stats.slag-5,stats.slag+stats.fdur+stats.elag-5)){this.costume = racine(this.mov)+"2"}
+						else{this.costume = racine(this.mov)+"1";}
 						break;
 					case "squarepunch" :
 						var stats = this.charac.coups.get(this.mov);
