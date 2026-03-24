@@ -2069,10 +2069,9 @@ class IceClone{
 			}
 			
 			if(this.lastforward){this.lastforward--;}
-			if(this.droite==1 && this.lastforward==0){this.droite=2;if(this.orientation==1){this.lastforward=10;}}
-			if(this.gauche==1 && this.lastforward==0){this.gauche=2;if(this.orientation==-1){this.lastforward=10;}}
+			if(this.enhance==1 && this.lastforward==0){this.enhance=2;this.lastforward=10;}
 			if(this.run_buffer){this.run_buffer--;}
-			if(this.lastforward && this.is_human() && ((this.droite==1 && this.orientation==1) || (this.gauche==1 && this.orientation==-1))){
+			if(this.lastforward && this.is_human() && this.enhance==1){
 				this.run_buffer=10;
 				this.forward=2;
 			}
@@ -2100,6 +2099,8 @@ class IceClone{
 						other.tb = stats.hurty;
 						//play_sound_eff("mhit");
 						other.pv -= this.charac.grabdeg;
+						other.combo_deg += this.charac.grabdeg;
+						other.combo_hits += 1;
 						//other.orientation*=-1;
 						if(other.pv<=0){other.killanim();}
 						this.falling=1;
@@ -2114,6 +2115,8 @@ class IceClone{
 						shake_screen(10,3);
 						play_sound_eff("mhit");
 						other.pv -= this.charac.grabdeg;
+						other.combo_deg += this.charac.grabdeg;
+						other.combo_hits += 1;
 						if(other.pv<=0){other.killanim();}
 					}
 				}
@@ -2190,13 +2193,12 @@ class IceClone{
 						if(this.droite){this.wavedashdir=1;}
 						else{this.wavedashdir=-1;}
 					}
-					else if( this.is_human() && this.enhance && this.jambe==1 &&movpriority.get(this.mov)<80&&end_of_round_countdown==0){
+					else if( this.run_buffer &&movpriority.get(this.mov)<80&&end_of_round_countdown==0){
 						if(this.jauge>=this.jaugemax/2 && this.mov!="run"){
 							this.mov = "run"; this.movlag = 6; this.crouching=0;
 							this.jauge-=this.jaugemax/2; this.projectile_invincibility = 3;
 						}
 						this.run_buffer=0;
-						this.jambe=2;
 					}
 					else if(this.poing==1&&this.forward+this.back==0&&movpriority.get(this.mov)<30&&this.crouching==0&&this.bas==0&&end_of_round_countdown==0){
 						this.begincoup("lpunch",other);
