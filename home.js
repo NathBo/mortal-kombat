@@ -352,7 +352,7 @@ function main(){
 						if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
 					}
 					else{
-						if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){other.hurt(this,stats);this.dur=1;}
+						if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/4,this.height/2+other.charac.height/4)){other.hurt(this,stats);this.dur=1;}
 					}
 				}
 			}
@@ -1505,7 +1505,7 @@ class IceClone{
 				if(racine(key) == "squarepunch"){return;}
 				if(last_char(key)=='#'){return;}
 				if(key == "shadowpunch" && thiis.currisking<=-2){return;}
-				if(key == "burst"){return;}
+				if(key == "burst" || key == "charge_chargeball"){return;}
 				var newprio = movpriority.get(key);
 				//if (key=="lpunch" || key == "clpunch"){newprio++;}
 				if(me.y==0 && val.disponibility == "air"){}
@@ -1927,7 +1927,7 @@ class IceClone{
 				else{return;}
 			}
 			if(stats.voiceline!="")play_sound_eff(this.charac.voiceactor+stats.voiceline);
-			if(s == "spit"){play_sound_eff("repspit");}
+			if(racine(s) == "spit"){play_sound_eff("repspit");}
 			if(s == "chargeball"){play_sound_eff("chargeball");}
 			if(s == "boltthrow#"){this.orientation*=-1;}
 			if(stats.coupwav != ""){play_sound_eff(stats.coupwav);}
@@ -2812,6 +2812,7 @@ class IceClone{
 								else{
 									this.ressource++;
 									this.movlag++;
+									if(this.ressource<this.max_ressource-1 && this.is_enhanced()){this.ressource+=2;}
 								}
 								if(this.ressource%11==0){add_to_objects_set(new Ring(this.x+30*this.orientation,this.y+65,this.orientation,this.skin,0,0));}
 								if(this.ressource%7==0){play_sound_eff("repcharge");}
@@ -2822,6 +2823,7 @@ class IceClone{
 					case "bomb":
 						var stats = this.charac.coups.get(this.mov);
 						if(this.movlag==stats.elag+5){this.invincibilite=10;}
+						if(this.movlag==stats.elag+stats.slag && this.is_enhanced()){this.invincibilite=10;}
 						if(this.movlag==stats.elag){
 							var dist = 170;
 							if(this.forward){dist+=30;}
@@ -3645,9 +3647,9 @@ class IceClone{
 						break;
 					case "spit":
 						var stats = this.charac.coups.get(this.mov);
-						if(entre(this.movlag,stats.elag*2/3,stats.elag+stats.fdur)){this.costume = this.mov+"3"}
-						else if(entre(this.movlag,0,stats.elag/3)||entre(this.movlag,stats.elag+stats.fdur+stats.slag/2,stats.elag+stats.fdur+stats.slag)){this.costume = this.mov+"1"}
-						else{this.costume = this.mov+"2";}
+						if(entre(this.movlag,stats.elag*2/3,stats.elag+stats.fdur)){this.costume = racine(this.mov)+"3"}
+						else if(entre(this.movlag,0,stats.elag/3)||entre(this.movlag,stats.elag+stats.fdur+stats.slag/2,stats.elag+stats.fdur+stats.slag)){this.costume = racine(this.mov)+"1"}
+						else{this.costume = racine(this.mov)+"2";}
 						break;
 					case "charge_chargeball":
 						var stats = this.charac.coups.get(this.mov);
@@ -3667,8 +3669,8 @@ class IceClone{
 						break;
 					case "bomb" :
 						var stats = this.charac.coups.get(this.mov);
-						if(entre(this.movlag,stats.elag/2,stats.elag+stats.slag/2)){this.costume = this.mov+"2";}
-						else{this.costume = this.mov+"1";}
+						if(entre(this.movlag,stats.elag/2,stats.elag+stats.slag/2)){this.costume = racine(this.mov)+"2";}
+						else{this.costume = racine(this.mov)+"1";}
 						break;
 					case "ballthrow":
 						var stats = this.charac.coups.get(this.mov);
