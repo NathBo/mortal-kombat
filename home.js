@@ -900,12 +900,12 @@ class IceClone{
 
 
 	class Spear{
-		constructor(x,y,orientation,other,stats,owner){
+		constructor(x,y,orientation,other,stats,owner,enhanced=false){
 			this.x = x; this.y = y; this.orientation = orientation; this.owner = owner;
 			this.other = other;
 			this.width=25;
 			this.height=8;
-			this.totdur = 60;this.vitesse=8;
+			this.totdur = 60;this.vitesse=8+enhanced*2;
 			this.stats = stats;
 			this.dur = this.totdur;
 			this.num = cpt;
@@ -915,18 +915,18 @@ class IceClone{
 
 		loop(){
 			if(this.dangerous){this.x += this.orientation*this.vitesse;}
-			else{this.x -= this.orientation*this.vitesse;}
+			else{this.x -= this.orientation*8;}
 			var stats = this.stats; var other = this.other;
 			if(other.invincibilite==0 && other.projectile_invincibility==0 && this.dangerous &&entre((other.x-this.x)*this.orientation,-other.charac.width/2,this.width/2+other.charac.width/2)){
 				if(other.y==0){
 					if(entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3*(other.crouching<=3),this.height/2+other.charac.height/3)){
-						if(this.owner.mov == "spear_throw"){spear_stats.hitstun = this.totdur-this.dur + 25;this.owner.movlag = stats.elag-40;other.hurt(this,spear_stats);this.dur=Math.max(this.totdur-10-this.dur,1);this.x=other.x-this.orientation*16;this.dangerous=false;}
+						if(racine(this.owner.mov) == "spear_throw"){spear_stats.hitstun = this.totdur-this.dur + 25;this.owner.movlag = stats.elag-40;other.hurt(this,spear_stats);this.dur=Math.max(this.totdur-10-this.dur,1);this.x=other.x-this.orientation*16;this.dangerous=false;}
 						else{other.hurt(this,stats);this.dur=1;}
 					}
 				}
 				else{
 					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){
-						if(this.owner.mov == "spear_throw"){spear_stats.hitstun = this.totdur-this.dur + 25;this.owner.movlag = stats.elag-40;other.hurt(this,spear_stats);this.dur=Math.max(this.totdur-10-this.dur,1);this.x=other.x-this.orientation*16;this.dangerous=false;}
+						if(racine(this.owner.mov) == "spear_throw"){spear_stats.hitstun = this.totdur-this.dur + 25;this.owner.movlag = stats.elag-40;other.hurt(this,spear_stats);this.dur=Math.max(this.totdur-10-this.dur,1);this.x=other.x-this.orientation*16;this.dangerous=false;}
 						else{other.hurt(this,stats);this.dur=1;}
 					}
 				}
@@ -940,7 +940,7 @@ class IceClone{
 			this.rotation = (this.rotation+this.rotationspeed)%360;
 			ctx.scale(2*this.orientation,2);
 			var coords = scocoordinates.get(this.costume);
-			if(this.owner.mov == "spear_throw"){
+			if(racine(this.owner.mov) == "spear_throw"){
 				ctx.fillStyle = "rgb(230,170,140)";
 				ctx.fillRect((this.owner.x+this.owner.orientation*(45+10*this.dangerous)+decalagex-camerax)*this.orientation,ground-this.y-5,Math.abs(this.x-this.owner.x)-50-10*this.dangerous,1);
 				ctx.fillStyle = "rgb(140,114,82)";
@@ -1906,10 +1906,12 @@ class IceClone{
 				this.jauge-=this.jaugemax/2;
 				stats = this.charac.coups.get(s);
 			}
-			if(s == "hell_gates"){this.orientation*=-1;}
+			if(racine(s) == "hell_gates"){this.orientation*=-1;}
 			if(racine(s) == "squarepunch"){this.invincibilite=15;this.y=1;this.tb=9;}
 			if(s == "icebody"){this.crouching = 0;}
 			if(s == "slide#"){this.crouching=6;}
+			if(s == "airgrab#"){this.xspeed = this.orientation*5.5;}
+			if(racine(s)=="airgrab"){this.tb=0.}
 			if(racine(s) == "flying_kick" && this.y==0){this.y=20;}
 			if(s == "bicycle" || s == "bicycle#"){this.y=40;}
 			if(s == "knifethrow"){this.memoryslot=0;}
@@ -2653,6 +2655,7 @@ class IceClone{
 						break;
 					case "hell_gates":
 						var stats = this.charac.coups.get(this.mov);
+						if(this.movlag==stats.elag+stats.fdur+stats.slag && this.is_enhanced()){this.invincibilite = 12;}
 						if(this.movlag==stats.elag+stats.fdur){this.tb=6;this.y+=1;fixcamera=30;}
 						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.xspeed=9*this.orientation;}
 						if(Math.abs(this.x+this.xspeed-camerax)>decalagex-this.charac.width/2){
@@ -2678,7 +2681,7 @@ class IceClone{
 					case "spear_throw" :
 						var stats = this.charac.coups.get(this.mov);
 						if(this.movlag==stats.elag){
-							add_to_objects_set(new Spear(this.x+20*this.orientation,this.y+73,this.orientation,other,stats,this));
+							add_to_objects_set(new Spear(this.x+20*this.orientation,this.y+73,this.orientation,other,stats,this,this.is_enhanced()));
 						}
 						else if(this.movlag == stats.elag-40+1){this.movlag=0;this.mov="";}
 						break;
@@ -3402,7 +3405,7 @@ class IceClone{
 					else{this.costume = "blocking1";}
 				}
 			}
-			else if(this.movlag>=1){
+			else if(this.movlag>=1 && racine(this.mov) != "airgrab"){
 				switch(racine(this.mov))
 				{
 					case "free_fall" :
@@ -3626,7 +3629,7 @@ class IceClone{
 						var stats = this.charac.coups.get(this.mov);
 						if(this.movlag>stats.elag+stats.fdur){
 							var a = 2-Math.floor(((this.movlag-(stats.elag+stats.fdur))/stats.slag)*2)
-							this.costume = this.mov+a;
+							this.costume = racine(this.mov)+a;
 						}
 						else if(this.movlag>stats.elag-40){this.costume = "spear_throw3";}
 						else if(this.movlag>stats.elag-43){this.costume = "spear_throw4";}
