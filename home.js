@@ -1868,7 +1868,7 @@ class IceClone{
 			this.movlag = 0;
 			this.mov = "";
 			this.tb = 0; this.xspeed = 0; this.crouching = 0;
-			this.memoryslot = 0; this.perfectblock = 0; this.parrying = 0; 
+			this.memoryslot = 0; this.perfectblock = 0; this.parrying = 0; this.no_burst = 0;
 			if(this.perso=="mileena"){this.ressource = 3; this.max_ressource = 3;}
 			else{this.ressource=0;this.max_ressource=60;}
 			this.hurted = 0; this.hurtx = 0; this.invincibilite = 0; this.freeze = 0; this.canthurt = false;
@@ -1964,6 +1964,10 @@ class IceClone{
 
 		is_enhanced(){
 			return last_char(this.mov)=='#';
+		}
+
+		break_burst(){
+			this.no_burst = 90;
 		}
 
 		begin_grab(other){
@@ -2064,6 +2068,7 @@ class IceClone{
 			if(other.fatality){return;}
 			if(fightstartcountdown){return;}
 			if(this.mov == ""){this.movlag = 0;}
+			if(this.no_burst){this.no_burst--;}
 			if(!secondplayerishuman && this.n==1 && difficulte>=0){this.ai.decide();}
 			if(!this.gettingup && !this.blocking && !(finishhim && this.pv<=0 && this.falling==0) && this.hurted==0 && this.falling==0 && this.grabbed==0 && this.grabbing==0){
 				this.reoriente(other);
@@ -2909,6 +2914,7 @@ class IceClone{
 		}
 
 		begin_burst(){
+			if(this.no_burst){return;}
 			this.hurted=0; this.falling=0;
 			this.xspeed*=0.2;this.tb=0;
 			this.begincoup("burst",this.other);
@@ -2925,7 +2931,7 @@ class IceClone{
 			}
 			else if(this.charac.coups.has(this.mov)){
 				var stats = this.charac.coups.get(this.mov);
-				if(this.y==0 && other.y>0 && stats.hitboxys<0 && racine(this.mov) != "slide" && this.mov != "nutpunch" && racine(this.mov) != "ball"){return;}
+				if(this.y==0 && other.y>0 && stats.hitboxys<0 && racine(this.mov) != "slide" && racine(this.mov) != "nutpunch" && racine(this.mov) != "ball"){return;}
 				if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){
 					var hitboxxe = stats.hitboxxe;
 					if(other.charac.coups.has(other.mov)){
@@ -3038,7 +3044,7 @@ class IceClone{
 					case "restand":
 						this.falling=0;
 						this.y=0; this.crouching=0;
-						if(other.mov=="nutpunch"){this.nutting=true;this.shake_player(50,5.);play_sound_eff(this.charac.voiceactor+"bighurted");}
+						if(racine(other.mov)=="nutpunch"){this.nutting=true;this.shake_player(50,5.);play_sound_eff(this.charac.voiceactor+"bighurted");if(other.is_enhanced()){this.break_burst();}}
 						break;
 					case "grab" :
 						if(this.n==1 && !secondplayerishuman){this.ai.ugothit();}
@@ -3839,10 +3845,12 @@ class IceClone{
 			else{ctx.fillRect(a+b+288-this.pvaff/this.pvmax*288+shake_x,30+shake_y,this.pvaff/this.pvmax*288,30);}
 			ctx.fillStyle='rgb(44, 157, 202)';
 			if(this.jauge==this.jaugemax){ctx.fillStyle='rgb(129, 207, 237)';}
+			if(this.no_burst){ctx.fillStyle = 'rgb(100, 100, 100)'}
 			if(this.n==0){ctx.fillRect(a+shake_x,51+shake_y,this.jauge/this.jaugemax*288,5);}
 			else{ctx.fillRect(a+b+288-this.jauge/this.jaugemax*288+shake_x,51+shake_y,this.jauge/this.jaugemax*288,5);}
 			if(this.jauge>=this.jaugemax/2 && this.jauge<this.jaugemax){
 				ctx.fillStyle='rgb(129, 207, 237)';
+				if(this.no_burst){ctx.fillStyle = 'rgb(100, 100, 100)'}
 				if(this.n==0){ctx.fillRect(a+shake_x,51+shake_y,0.5*288,5);}
 				else{ctx.fillRect(a+b+288-0.5*288+shake_x,51+shake_y,0.5*288,5);}
 			}
