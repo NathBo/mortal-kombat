@@ -1473,9 +1473,13 @@ class IceClone{
 
 		eviterprojectiles(){
 			var me = this.me;
+			var other = this.other;
 			for(let value of objects_to_loop.values()){
 				if(value.dangerous && value.other===me){
 					if(this.me.perso == "shao_kahn" && this.me.cooldowns[1]==0 && Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))<=value.stats.hitboxxe+30+this.me.charac.width/2 && this.me.y==0 && this.me.mov!="jumpsquat"){this.begincoup("charge");return true;}
+					else if(me.perso=="raiden" && Math.abs(me.x-other.x)<=220 && this.wantstoenhance()>-2 && this.thereisaprojo() && me.y==0 && me.cooldowns[1]==0 && Math.random()<1./this.reaction_time){
+						me.enhance = 1;this.begincoup("thundergod");me.enhance=0;return true;
+					}
 					if(this.me.y==0 && (signe(this.me.x-value.x)==signe(value.vitesse)) && value.stats.hiteffect == "unblockable_projectile_fall"){
 						this.me.haut=1;
 						if(this.attacking>=2 || Math.abs(me.x-this.other.x)>=150)this.pressforward(true);
@@ -1774,6 +1778,7 @@ class IceClone{
 					if(me.perso=="liukang" && other.movlag>c.elag+c.fdur+1 && me.y==0){this.begincoup("cycle");}
 					this.pressbackward();
 					if(other.charac.coups.get(other.mov).hitboxys<0 && other.y==0){me.bas = 1;}
+					if(other.y>0){me.bas=0;}
 					if(["grab","unblockable_projectile_fall"].includes(other.charac.coups.get(other.mov).hiteffect) && me.perso!="shao_kahn"){me.haut=1;}
 					return;
 				}
@@ -1792,7 +1797,7 @@ class IceClone{
 			if(proj_authorized){
 				if(me.perso=="kitana"){if(Math.abs(me.x-other.x)>100&&me.y==0){if(this.wantstoenhance()>3){me.enhance=1;}this.begincoup("fanthrow");me.enhance=0;}}
 				if(me.perso=="mileena"){if(Math.abs(me.x-other.x)>200&&me.y==0){this.begincoup("homing_knife");}else if(Math.abs(me.x-other.x)>70&&me.y==0 && other.crouching==0){this.begincoup("knifethrow");}}
-				if(me.perso=="raiden"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("boltthrow");}}
+				if(me.perso=="raiden"){if(Math.abs(me.x-other.x)>100&&me.y==0){if(this.wantstoenhance()>4 && this.attacking<5){me.enhance=1;}this.begincoup("boltthrow");me.enhance=0;}}
 				if(me.perso=="scorpion" && this.currisking>=0){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("spear_throw");}}
 				if(me.perso=="subzero"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("iceball");}}
 				if(me.perso=="liukang" && this.currisking<=2){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("fireball");}}
@@ -1918,7 +1923,7 @@ class IceClone{
 			var cd = cd_dependance.get(s);
 			if(this.cooldowns[cd] && !follow_up){if(this.cooldowns[cd]>bufferwindow){this.special=2;}return;}
 			else if(cd != -1){this.special=2;}
-			if(movpriority.get(s)==70 && movpriority.get(racine(this.mov))>=70){return;}
+			if(movpriority.get(s)==70 && movpriority.get(racine(this.mov))>=70 && !follow_up){return;}
 			if(this.enhance && this.charac.coups.has(s+"#") && this.jauge>=this.jaugemax/2 && !follow_up){
 				s = s+"#";
 				this.jauge-=this.jaugemax/2;
