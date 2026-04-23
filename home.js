@@ -1495,7 +1495,7 @@ class IceClone{
 		wantstoenhance(){
 			var me  = this.me;
 			if(me.jauge<me.jaugemax/2){return -10;}
-			return this.currisking + (me.jauge-me.jaugemax/2)/5;
+			return this.currisking/2. + (me.jauge-me.jaugemax/2)/5;
 		}
 
 		wantstoenhancedef(){
@@ -1818,11 +1818,13 @@ class IceClone{
 
 			else if(me.perso=="subzero" && me.y==0 && other.y==0 && other.freeze<15 && other.gettingup && other.gettingup<=other.charac.getupfdur-28 && Math.abs(me.x-other.x)<=100 && movpriority.get(racine(me.mov))<70 && !this.thereisaprojo())
 				{this.begincoup("iceflask");}
+			else if(me.perso=="subzero" && me.y==0 && Math.abs(me.x-other.x)>120 && this.attacking>-3 && this.wantstoenhance()>0 && movpriority.get(racine(me.mov))<70 && !this.thereisaprojo() && me.cooldowns[0]==0)
+				{me.enhance=1;this.begincoup("iceball");me.enhance=0;this.attacking+=4;}
 			else if(me.perso=="subzero" && me.y==0 && other.y==0 && other.freeze<15 && Math.abs(-stage_size/2*other.orientation-other.x)<=200 && entre(Math.abs(me.x-other.x),100,150) && movpriority.get(racine(me.mov))<70 && !this.thereisaprojo() && me.cooldowns[2]==0)
 				{this.begincoup("iceflask");this.attacking+=2;}
 
 			else if((me.perso=="subzero" || me.perso=="reptile") && me.y==0 && other.y==0 && other.freeze<15 && other.crouching==0 && this.currisking>=0 && Math.abs(Math.abs(me.x-other.x)-idealrange)>=60 && Math.abs(me.x-other.x)<=120 && movpriority.get(racine(me.mov))<70 && !this.thereisaprojo() && me.cooldowns[1]==0)
-				{this.begincoup("slide");}
+				{if(this.attacking>1 && this.wantstoenhance()>2){me.enhance=1;}this.begincoup("slide");me.enhance=0;}
 
 			else if(me.perso=="mileena" && me.y==0 && other.y<=20 && other.crouching==0 && Math.abs(Math.abs(me.x-other.x)-idealrange)>=40 && Math.abs(me.x-other.x)<=80 && movpriority.get(racine(me.mov))<70 && !this.thereisaprojo())
 				{this.begincoup("ball");}
@@ -1843,13 +1845,13 @@ class IceClone{
 				{me.movlag = 4;}
 
 			else if(me.perso == "reptile" && me.y==0 && me.ressource<me.max_ressource && Math.abs(me.x-other.x)>200 && timer<=timer_init-120)
-				{this.begincoup("charge_chargeball")}
+				{if(this.wantstoenhance()>2){me.enhance=1;}this.begincoup("charge_chargeball");me.enhance=0;}
 
 			else if(me.perso=="reptile" && entre(Math.abs(me.x-other.x),80,150)&&me.y==0 && other.tb<=0 && me.ressource==me.max_ressource && other.invincibilite<12)
 				{this.begincoup("chargeball");}
 
 			else if(me.perso=="reptile" && me.y==0 && entre(Math.abs(me.x-other.x),60,120) && Math.abs(-stage_size/2*me.orientation-me.x)<=130 && other.y>=40 && me.cooldowns[3]<=5 && movpriority.get(racine(me.mov))<70 && !this.thereisaprojo())
-				{this.begincoup("bomb");}
+				{if(this.wantstoenhancedef()>2){me.enhance=1;}this.begincoup("bomb");me.enhance=0;}
 			else if(me.perso=="johnny" && this.currisking>=-2 && Math.abs(Math.abs(me.x-other.x-other.xspeed*10)-120)<=40 && me.y==0 && (other.y>0 || this.behavior=="masher") && me.crouching==0 && movpriority.get(racine(me.mov))<70 && other.tb<0 && me.cooldowns[1]==0)
 				{this.begincoup("shadowkick");}
 
