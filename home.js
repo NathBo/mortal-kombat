@@ -1944,7 +1944,7 @@ class IceClone{
 			if(racine(s) == "cycle" && this.y==0){this.invincibilite=23;}
 			if(racine(s) == "teleport_drop"){this.invincibilite=14;}
 			if(s == "shao_tp"){this.invincibilite=stats.slag+stats.fdur+stats.elag+1;}
-			if(s == "ball"){this.crouching=6;}
+			if(racine(s) == "ball"){this.crouching=6;}
 			if(s == "chargeball"){this.ressource=0;}
 			if(racine(s) == "shadowkick" || racine(s) == "shadowpunch" || racine(s) == "ballthrow"){this.memoryslot=0;}
 			if(racine(s) == "shadowpunch"){this.invincibilite=stats.slag+stats.fdur+stats.elag+1;}
