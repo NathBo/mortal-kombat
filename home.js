@@ -911,7 +911,7 @@ class IceClone{
 			this.other = other;
 			this.width=25;
 			this.height=8;
-			this.totdur = 60;this.vitesse=8+enhanced*2;
+			this.totdur = 60;this.vitesse=8+enhanced*2.5;
 			this.stats = stats;
 			this.dur = this.totdur;
 			this.num = cpt;
@@ -1115,7 +1115,7 @@ class IceClone{
 						this.bounces--;
 						this.tb*=-0.2;
 						this.y=-10+this.tb;
-						play_sound_eff("mhit");
+						play_sound_eff("lhit");
 					}
 					else{
 						this.y=-10;
@@ -1758,12 +1758,15 @@ class IceClone{
 			if(this.desired_move!="" && !normal_moves.includes("desired_moves") && this.difficulty>=2){
 				block : {
 					if(this.desired_move!="flying_kick" && this.y>0){break block;}
-					if(this.desired_move=="fireball" && other.y<10){break block;}
+					if(this.desired_move=="flying_kick" && this.wantstoenhance()>0){me.enhance=1;}
+					if(this.desired_move=="fireball" && other.tb>0){break block;}
 					if(this.desired_move=="spear_throw" && (other.tb>4. || Math.abs(-stage_size/2*other.orientation-other.x)<=130)){break block;}
 					if(this.desired_move=="hell_gates" && Math.abs(-stage_size/2*other.orientation-other.x)<=130){break block;}
+					if(this.desired_move=="leg_takedown" && this.wantstoenhance()>0){me.enhance=1;}
 					if((!me.charac.coups.has(me.mov) || me.movlag <= me.charac.coups.get(me.mov).elag+me.charac.coups.get(me.mov).fdur-this.cancelcombodelay)){
 						if(!(movpriority.get(this.desired_move)==70 && movpriority.get(racine(me.mov))>=70)){this.begincoup(this.desired_move);
 					}
+					me.enhance=0;
 				}
 				}
 			}
@@ -1775,7 +1778,7 @@ class IceClone{
 			if(!me.charac.coups.has(me.mov)){
 				if(other.charac.coups.has(other.mov) && other.movlag<=c.slag+c.fdur+c.elag-reaction_time && Math.abs(me.x-other.x)<=c.hitboxxe+me.charac.width/2+me.charac.vitesse*this.commitmentonwalk+5 && other.movlag>=c.elag-1){
 					if(me.perso=="subzero" && other.movlag>c.elag+c.fdur+3 && me.y==0){this.begincoup("icebody");}
-					if(me.perso=="liukang" && other.movlag>c.elag+c.fdur+1 && me.y==0){this.begincoup("cycle");}
+					if(me.perso=="liukang" && other.movlag>c.elag+c.fdur+1 && me.y==0){if(this.wantstoenhance()>2){me.enhance=1;}this.begincoup("cycle");me.enhance=0;}
 					this.pressbackward();
 					if(other.charac.coups.get(other.mov).hitboxys<0 && other.y==0){me.bas = 1;}
 					if(other.y>0){me.bas=0;}
@@ -1796,13 +1799,14 @@ class IceClone{
 			if(this.behavior=="masher"){proj_authorized = proj_authorized || (me.y==0 && other.movlag>10 && other.charac.coups.has(other.mov) && other.movlag<=c.slag+c.fdur+c.elag-reaction_time && !(other.mov == "thundergod" || other.mov == "shadowkick" || other.mov == "boltthrow" || other.mov == "fanthrow" || other.mov=="hell_gates" || other.mov == "spear_throw" || other.mov == "slide" || other.mov == "iceball" || other.mov == "fireball" || other.mov == "flying_kick" || other.mov == "knife_throw" || other.mov == "teleport_drop" || other.mov == "bomb"))}
 			if(proj_authorized){
 				if(me.perso=="kitana"){if(Math.abs(me.x-other.x)>100&&me.y==0){if(this.wantstoenhance()>3){me.enhance=1;}this.begincoup("fanthrow");me.enhance=0;}}
-				if(me.perso=="mileena"){if(Math.abs(me.x-other.x)>200&&me.y==0){this.begincoup("homing_knife");}else if(Math.abs(me.x-other.x)>70&&me.y==0 && other.crouching==0){this.begincoup("knifethrow");}}
+				if(me.perso=="mileena"){if(Math.abs(me.x-other.x)>200&&me.y==0){if(this.wantstoenhance()>4){me.enhance=1}this.begincoup("homing_knife");me.enhance=0;}else if(Math.abs(me.x-other.x)>70&&me.y==0 && other.crouching==0){if(this.wantstoenhance()>4){me.enhance=1}this.begincoup("knifethrow");me.enhance=0;}}
 				if(me.perso=="raiden"){if(Math.abs(me.x-other.x)>100&&me.y==0){if(this.wantstoenhance()>4 && this.attacking<5){me.enhance=1;}this.begincoup("boltthrow");me.enhance=0;}}
-				if(me.perso=="scorpion" && this.currisking>=0){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("spear_throw");}}
+				if(me.perso=="scorpion" && this.currisking>=0){if(Math.abs(me.x-other.x)>100&&me.y==0){if(this.wantstoenhance()>6){me.enhance=1;}this.begincoup("spear_throw");me.enhance=0;}}
 				if(me.perso=="subzero"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("iceball");}}
 				if(me.perso=="liukang" && this.currisking<=2){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("fireball");}}
 				if(me.perso=="reptile"){if(Math.abs(me.x-other.x)>100&&me.y==0&&me.ressource<me.max_ressource){this.begincoup("spit");}}
 				if(me.perso=="shao_kahn"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("arrow");}}
+				if(me.perso == "johnny" && entre(Math.abs(me.x-other.x),90,200) && this.wantstoenhance()>0){me.enhance=1;this.begincoup("ballthrow");me.enhance=0;this.attacking+=4;}
 			}
 
 			if(me.perso=="raiden" && this.currisking>=-2 && Math.abs(Math.abs(me.x-other.x-other.xspeed*10)-120)<=40 && me.y==0 && (other.y>0 || this.behavior=="masher") && me.crouching==0 && movpriority.get(racine(me.mov))<70 && other.tb<0 && me.cooldowns[1]==0)
@@ -1827,10 +1831,10 @@ class IceClone{
 				{if(this.attacking>1 && this.wantstoenhance()>2){me.enhance=1;}this.begincoup("slide");me.enhance=0;}
 
 			else if(me.perso=="mileena" && me.y==0 && other.y<=20 && other.crouching==0 && Math.abs(Math.abs(me.x-other.x)-idealrange)>=40 && Math.abs(me.x-other.x)<=80 && movpriority.get(racine(me.mov))<70 && !this.thereisaprojo())
-				{this.begincoup("ball");}
+				{if(this.wantstoenhance()>2 && Math.abs(me.x-other.x)>80){me.enhance=1;}this.begincoup("ball");me.enhance=0;}
 
 			else if(me.perso=="scorpion" && Math.abs(me.x-other.x)>=60 && Math.abs(-stage_size/2*me.orientation-me.x)<=180 && me.y==0 && me.crouching==0 && movpriority.get(racine(me.mov))<70 && Math.abs(me.x-me.orientation*180-camerax)>=decalagex && me.cooldowns[2]<=5)
-				{this.begincoup("hell_gates");}
+				{if(this.wantstoenhancedef()>2 && Math.abs(me.x-other.x)<100){me.enhance=1;}this.begincoup("hell_gates");me.enhance=0;}
 			
 			else if(me.perso=="kitana" && me.y==0 && Math.abs(me.x-other.x)<=100 && other.movlag>=20 && Math.abs(-stage_size/2*me.orientation-me.x)<=150 && me.cooldowns[3]<=5 && movpriority.get(racine(me.mov))<70)
 				{if(this.wantstoenhancedef()>4){me.enhance=1;}this.begincoup("squarepunch");me.enhance=0;}
@@ -1853,7 +1857,7 @@ class IceClone{
 			else if(me.perso=="reptile" && me.y==0 && entre(Math.abs(me.x-other.x),60,120) && Math.abs(-stage_size/2*me.orientation-me.x)<=130 && other.y>=40 && me.cooldowns[3]<=5 && movpriority.get(racine(me.mov))<70 && !this.thereisaprojo())
 				{if(this.wantstoenhancedef()>2){me.enhance=1;}this.begincoup("bomb");me.enhance=0;}
 			else if(me.perso=="johnny" && this.currisking>=-2 && Math.abs(Math.abs(me.x-other.x-other.xspeed*10)-120)<=40 && me.y==0 && (other.y>0 || this.behavior=="masher") && me.crouching==0 && movpriority.get(racine(me.mov))<70 && other.tb<0 && me.cooldowns[1]==0)
-				{this.begincoup("shadowkick");}
+				{if(this.wantstoenhance()>5){me.enhance=1;}this.begincoup("shadowkick");me.enhance=0;}
 
 			if(me.mov == "" && me.y==0 && me.jauge>me.jaugemax/2 && Math.abs(Math.abs(me.x-other.x))>=this.distancetorun && idealrange<=100 && this.behavior!="zoner" && !(this.behavior=="turtle" && this.attacking<=2) && Math.random()<=this.chancetorun && this.currisking>0){this.begin_run();}
 
@@ -1932,10 +1936,10 @@ class IceClone{
 				stats = this.charac.coups.get(s);
 			}
 			if(racine(s) == "hell_gates"){this.orientation*=-1;}
-			if(racine(s) == "squarepunch"){this.invincibilite=15;this.y=1;this.tb=9;}
+			if(racine(s) == "squarepunch"){this.invincibilite=15;this.y=1;this.tb=9;if(s=="squarepunch#"){this.invincibilite+=10;}}
 			if(s == "icebody"){this.crouching = 0;}
 			if(s == "slide#"){this.crouching=6;}
-			if(s == "airgrab#"){this.xspeed = this.orientation*5.5;}
+			if(s == "airgrab#"){this.xspeed = this.orientation*7.5;}
 			if(racine(s)=="airgrab"){this.tb=0.}
 			if(racine(s) == "flying_kick" && this.y==0){this.y=20;}
 			if(s == "bicycle" || s == "bicycle#"){this.y=40;}
@@ -2767,6 +2771,7 @@ class IceClone{
 								add_to_objects_set(new IceClone(this.x,this.y,this.orientation,other,stats));
 								this.xspeed = -4*this.orientation;
 							}
+							else if(this.movlag == stats.elag + stats.slag){this.invincibilite=5;}
 						}
 						break;
 					case "flying_kick":
@@ -3132,7 +3137,7 @@ class IceClone{
 				if(stats.hiteffect=="fall_bounce"){other.pushx *= 0.2;}
 				}
 			other.canthurt = true;
-			if(stats.hiteffect == "iceflask" && stats.hurty<=4){this.invincibilite=60;}
+			if(stats.hiteffect == "iceflask"){this.invincibilite=60;}
 			if(this.pv<=0){
 				this.killanim();
 				this.end_of_official_combo()
