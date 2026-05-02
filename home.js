@@ -118,6 +118,93 @@ function racine(s){
 }
 
 
+let grainCanvas = null;
+let grainCtx = null;
+let grainFrameCounter = 0;
+
+function ensureGrainCanvas(width, height, scale = 4) {
+	const gw = Math.max(1, Math.ceil(width / scale));
+	const gh = Math.max(1, Math.ceil(height / scale));
+
+	if (!grainCanvas || grainCanvas.width !== gw || grainCanvas.height !== gh) {
+		grainCanvas = document.createElement("canvas");
+		grainCanvas.width = gw;
+		grainCanvas.height = gh;
+		grainCtx = grainCanvas.getContext("2d", { alpha: true });
+		rebuildGrain();
+	}
+}
+
+function rebuildGrain() {
+	const { width, height } = grainCanvas;
+	const imageData = grainCtx.createImageData(width, height);
+	const data = imageData.data;
+
+	for (let i = 0; i < data.length; i += 4) {
+		const v = (Math.random() * 255) | 0;
+		data[i] = v;
+		data[i + 1] = v;
+		data[i + 2] = v;
+		data[i + 3] = 255;
+	}
+
+	grainCtx.putImageData(imageData, 0, 0);
+}
+
+function drawFilmGrainFast(ctx, width, height, alpha = 0.035, scale = 4, refreshEvery = 6) {
+	ensureGrainCanvas(width, height, scale);
+
+	grainFrameCounter++;
+	if (grainFrameCounter >= refreshEvery) {
+		grainFrameCounter = 0;
+		rebuildGrain();
+	}
+
+	ctx.save();
+	ctx.globalAlpha = alpha;
+	ctx.imageSmoothingEnabled = false;
+	ctx.drawImage(grainCanvas, 0, 0, width, height);
+	ctx.restore();
+}
+
+function drawVignette(ctx, width, height, options = {}) {
+	const innerAlpha = options.innerAlpha ?? 0;
+	const outerAlpha = options.outerAlpha ?? 0.3;
+
+	ctx.save();
+
+	const cx = width * 0.5;
+	const cy = height * 0.5;
+	const innerRadius = Math.min(width, height) * 0.35;
+	const outerRadius = Math.max(width, height) * 0.7;
+
+	const gradient = ctx.createRadialGradient(
+		cx, cy, innerRadius,
+		cx, cy, outerRadius
+	);
+
+	gradient.addColorStop(0, `rgba(0, 0, 0, ${innerAlpha})`);
+	gradient.addColorStop(1, `rgba(0, 0, 0, ${outerAlpha})`);
+
+	ctx.fillStyle = gradient;
+	ctx.fillRect(0, 0, width, height);
+
+	ctx.restore();
+}
+
+function drawScanlines(ctx, width, height, alpha = 0.04) {
+	ctx.save();
+	ctx.globalAlpha = alpha;
+	ctx.fillStyle = "#000";
+
+	for (let y = 0; y < height; y += 2) {
+		ctx.fillRect(0, y, width, 1);
+	}
+
+	ctx.restore();
+}
+
+
 function main(){
 	const VERSION = 2;
 	function resizecanvas(){
@@ -4430,6 +4517,53 @@ class IceClone{
 		functiontoexecute = loop;
 	}
 
+	
+
+	function presentFrame() {
+		if (screenCanvas.style.width !== canvas.style.width) {
+			screenCanvas.style.width = canvas.style.width;
+		}
+
+		if (screenCanvas.style.height !== canvas.style.height) {
+			screenCanvas.style.height = canvas.style.height;
+		}
+
+		if (screenCanvas.style.left !== canvas.style.left) {
+			screenCanvas.style.left = canvas.style.left;
+		}
+
+		if (screenCanvas.style.top !== canvas.style.top) {
+			screenCanvas.style.top = canvas.style.top;
+		}
+
+		const w = screenCanvas.width;
+		const h = screenCanvas.height;
+
+		screenCtx.imageSmoothingEnabled = false;
+		screenCtx.clearRect(0, 0, w, h);
+
+		screenCtx.save();
+
+		screenCtx.filter = "contrast(105%) saturate(110%) brightness(95%)";
+		screenCtx.drawImage(canvas, 0, 0, w, h);
+
+		screenCtx.globalAlpha = 0.10;
+		screenCtx.filter = "blur(2px) contrast(140%)";
+		screenCtx.drawImage(canvas, 0, 0, w, h);
+
+		screenCtx.globalAlpha = 1;
+		screenCtx.filter = "none";
+
+		drawScanlines(screenCtx, w, h, 0.08);
+		drawFilmGrainFast(screenCtx, w, h, 0.015, 4, 8);
+		drawVignette(screenCtx, w, h, {
+			innerAlpha: 0,
+			outerAlpha: 0.32
+		});
+
+		screenCtx.restore();
+	}
+
 	function menupersos(){
 		resizecanvas();
 		let m = stage_size/2-256;
@@ -4968,6 +5102,7 @@ class IceClone{
 		resizecanvas();
 		gameLoop();
 		functiontoexecute();
+		presentFrame()
 		if(end_mini_game){
 			end_mini_game=false;
 			score+=mini_game_score;
@@ -4976,15 +5111,35 @@ class IceClone{
 	}
 
 
-	var canvas = document.getElementById("canvas");
+	var screenCanvas = document.getElementById("canvas");
+	var screenCtx = screenCanvas.getContext("2d");
+
+	// On garde les dimensions de base du canvas HTML
+	var baseWidth = screenCanvas.width;
+	var baseHeight = screenCanvas.height;
+
+	screenCanvas.style.left = "0px";
+	screenCanvas.style.top = "0px";
+	screenCanvas.style.position = "absolute";
+
+	// Canvas invisible où le jeu dessine
+	var canvas = document.createElement("canvas");
+	canvas.width = baseWidth;
+	canvas.height = baseHeight;
+
 	var ctx = canvas.getContext("2d");
-	canvas.style.left = "0px";
-	canvas.style.top = "0px";
-	canvas.style.position = "absolute";
-	ctx.font = "40px Arial";
+
+	// Réglages pixel art
 	ctx.webkitImageSmoothingEnabled = false;
 	ctx.mozImageSmoothingEnabled = false;
 	ctx.imageSmoothingEnabled = false;
+
+	screenCtx.webkitImageSmoothingEnabled = false;
+	screenCtx.mozImageSmoothingEnabled = false;
+	screenCtx.imageSmoothingEnabled = false;
+
+	ctx.font = "40px Arial";
+	screenCtx.font = "40px Arial";
 
 	const dim_x = 890;
 	const dim_y = 500;
