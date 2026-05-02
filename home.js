@@ -221,7 +221,7 @@ function main(){
 				else if(this.enhanced && this.phase=="bounce"){this.delete();}
 				else{this.dangerous=false;this.vitesse*=-0.5;this.vitessey = 6;this.dur=35;}
 			}
-			else if(this.dur>20){this.dur=15;this.vitesse*=0.3;}
+			else if(this.dur>20+this.enhanced*12){this.dur=15+this.enhanced*12;this.vitesse*=0.3;if(this.enhanced){this.vitesse*=0.7;}}
 		}
 
 		loop(){
