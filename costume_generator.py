@@ -9,7 +9,7 @@ import re
 # =========================
 # CONFIG
 # =========================
-PREFIX = "joh"   # ex: "joh" -> johcoordinates.set(...)
+PREFIX = "blood"   # ex: "joh" -> johcoordinates.set(...)
 # =========================
 
 

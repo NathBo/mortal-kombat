@@ -1304,6 +1304,19 @@ function getbloodcoordinates(){
 	bloodcoordinates.set("hblood4",{offx:162,width:82,offy:143,height:54,decx:0,decy:-15});
 	bloodcoordinates.set("hblood5",{offx:260,width:94,offy:133,height:64,decx:0,decy:-15});
 	bloodcoordinates.set("hblood6",{offx:374,width:117,offy:120,height:77,decx:0,decy:-15});
+	bloodcoordinates.set("dropblood1",{offx:5,width:11,offy:88,height:12,decx:0,decy:0});
+	bloodcoordinates.set("dropblood2",{offx:27,width:13,offy:96,height:9,decx:0,decy:0});
+	bloodcoordinates.set("dropblood3",{offx:52,width:15,offy:99,height:6,decx:0,decy:0});
+	bloodcoordinates.set("dropblood4",{offx:79,width:16,offy:99,height:7,decx:0,decy:0});
+	bloodcoordinates.set("dropblood5",{offx:105,width:13,offy:94,height:12,decx:0,decy:0});
+	bloodcoordinates.set("dropblood6",{offx:129,width:11,offy:92,height:14,decx:0,decy:0});
+	bloodcoordinates.set("dropblood7",{offx:151,width:7,offy:93,height:13,decx:0,decy:0});
+	bloodcoordinates.set("dropblood8",{offx:169,width:5,offy:91,height:15,decx:0,decy:0});
+	bloodcoordinates.set("dropblood9",{offx:184,width:5,offy:88,height:18,decx:0,decy:0});
+	bloodcoordinates.set("dropblood10",{offx:202,width:14,offy:98,height:8,decx:0,decy:0});
+	bloodcoordinates.set("dropblood11",{offx:226,width:16,offy:100,height:6,decx:0,decy:0});
+	bloodcoordinates.set("dropblood12",{offx:254,width:17,offy:98,height:8,decx:0,decy:0});
+
 	bloodcoordinates.set("organ1",{offx:55,width:19,offy:366,height:18,decx:0,decy:0});
 	bloodcoordinates.set("organ2",{offx:89,width:17,offy:366,height:18,decx:0,decy:0});
 	bloodcoordinates.set("organ3",{offx:293,width:11,offy:359,height:25,decx:0,decy:0});

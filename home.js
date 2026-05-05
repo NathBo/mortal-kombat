@@ -254,6 +254,47 @@ function main(){
 		}
 	}
 
+	class DropBlood
+	{
+		constructor(x,y,orientation,bloodtype,vitesse=2.,tb=3.){
+			this.x = x; this.y = y; this.orientation = orientation;
+			this.bloodtype = bloodtype;
+			this.totdur = 20+Math.floor(tb*4);this.nframes = 9;this.vitesse=vitesse;
+			this.tb = tb; this.gravity = 0.25;
+			this.dec = 1;
+			this.dur = this.totdur;
+			this.num = cpt;
+			this.dangerous = false;
+		}
+
+		loop(){}
+
+		afficher(){
+			if(this.dur==0){this.delete();return;}
+			let n = Math.floor((this.totdur - this.dur)/this.totdur*this.nframes)+this.dec;
+			let cost = this.bloodtype+n;
+			let coords = bloodcoordinates.get(cost);
+			ctx.scale(2*this.orientation,2);
+			ctx.drawImage(bloodpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*coords.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			this.dur--;
+			if(this.y>0){
+				this.x-=this.vitesse*this.orientation;
+				this.y += this.tb;
+				this.tb -= this.gravity;
+				this.dur = Math.max(this.dur,1);
+				if(this.y<0){this.y=0;this.dur = 9;this.dec = 10; this.nframes=3;this.totdur = 9;}
+			}
+		}
+
+		delete(){
+			objects_to_loop.delete(this.num);
+		}
+	}
+
+
+
 	class Burst{
 		constructor(x,y,joueur){
 			this.x = x; this.y = y; this.joueur=joueur;
@@ -3212,10 +3253,15 @@ class IceClone{
 				shake_screen(stats.hitlag+2,stats.degats/4);
 				if(stats.hiteffect=="freeze"){this.hurted=0;this.freeze=stats.hitstun;}
 				else if(stats.blood=="electrocute"){this.electrocuted = 10;}
-				else if(this.y==0 && this.crouching<=3 && (other.y>0 || stats.hitboxys >=0)){add_to_objects_set(new Blood(this.x,this.charac.height-20+stats.blood_height,-this.orientation,stats.blood));}
+				else if(this.y==0 && this.crouching<=3 && (other.y>0 || stats.hitboxys >=0)){
+					add_to_objects_set(new Blood(this.x,this.charac.height-20+stats.blood_height,-this.orientation,stats.blood));
+					if(other.y==0 &&  Math.random()<0.4){add_to_objects_set(new DropBlood(this.x,this.charac.height-20+stats.blood_height,-other.orientation,"dropblood",stats.hurtx*0.8+2.+Math.random()*0.3,stats.hurty*.2+2.8));}
+				}
 				else if((this.y==0 && stats.hitboxys<0) || this.crouching){add_to_objects_set(new Blood(this.x+10*this.orientation,this.charac.height/2+stats.hitboxys,-this.orientation,stats.blood));}
 				else if(this.y>0 && other.y>0){add_to_objects_set(new Blood(this.x+10*this.orientation,this.y+this.charac.height/2+(other.y-this.y)/4,-this.orientation,stats.blood));}
-				else if(this.y>0 && other.y==0){add_to_objects_set(new Blood(this.x+5*this.orientation,stats.hitboxye,-this.orientation,stats.blood));}
+				else if(this.y>0 && other.y==0){
+					add_to_objects_set(new Blood(this.x+5*this.orientation,stats.hitboxye,-this.orientation,stats.blood));
+				}
 			}
 			if(this.y>0 && other.y>0 && stats.hiteffect != "projectile" && stats.hiteffect != "freeze" && stats.hiteffect != "projectile_fall" && stats.hiteffect != "unblockable_projectile_fall"){this.xspeed+=other.xspeed*2/3;this.hurted+=4;}
 			if(Math.abs(this.x+this.xspeed*Math.abs(this.xspeed)/2/this.charac.friction-camerax)>decalagex-this.charac.width/2){
