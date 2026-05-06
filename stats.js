@@ -13,7 +13,7 @@ function get_default_combos(){
 }
 
 function get_burst_stats(){
-    return {slag : 3, fdur : 6, elag : 12, degats : 0, landinglag : 8, hitstun : 60, hurtx : 4., hurty : 5., hitboxxs : 15, hitboxxe : 47,hitboxys : 1, hitboxye : 75, hitboxxouv : 20, blood_height : 0, blockstun : 12, blockx : 1.7, hiteffect : "burst", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : "coup"}
+    return {slag : 3, fdur : 6, elag : 12, degats : 0, landinglag : 8, hitstun : 60, hurtx : 4., hurty : 5., hitboxxs : 15, hitboxxe : 47,hitboxys : 1, hitboxye : 75, hitboxxouv : 20, blood_height : 0, blockstun : 12, blockx : 1.7, hiteffect : "burst", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "electrocute", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : "coup"}
 }
 
 var default_combos = get_default_combos();

@@ -4601,7 +4601,7 @@ class IceClone{
 		screenCtx.filter = "none";
 
 		drawScanlines(screenCtx, w, h, 0.08);
-		drawFilmGrainFast(screenCtx, w, h, 0.015, 4, 12);
+		drawFilmGrainFast(screenCtx, w, h, 0.007, 4, 12);
 		drawVignette(screenCtx, w, h, {
 			innerAlpha: 0,
 			outerAlpha: 0.32
