@@ -258,12 +258,12 @@ function main(){
 	{
 		constructor(x,y,orientation,bloodtype,vitesse=2.,tb=3.){
 			this.x = x; this.y = y; this.orientation = orientation;
-			this.bloodtype = bloodtype;
+			this.bloodtype = bloodtype;this.dec = 1;
 			if(this.bloodtype=="dropblood"){this.totdur = 20+Math.floor(tb*4);this.nframes = 9;}
+			else if(this.bloodtype=="ldropblood"){this.bloodtype="hdropblood";this.totdur = 20+Math.floor(tb*4);this.nframes = 6;this.dec=5;}
 			else{this.totdur = 20+Math.floor(tb*4);this.nframes=10;}
 			this.vitesse=vitesse;
 			this.tb = tb; this.gravity = 0.25;
-			this.dec = 1;
 			this.dur = this.totdur;
 			this.num = cpt;
 			this.dangerous = false;
@@ -4214,6 +4214,7 @@ class IceClone{
 			else{play_sound_eff("finishhim");}
 		}
 		if(fatalitysreen){
+			if(fatalitysreen%4==1){add_to_objects_set(new DropBlood(randomInt(-100,100)+camerax,103,1,"ldropblood",0.,0.));}
 			ctx.scale(4,4);
 			ctx.drawImage(fatalitypng,71*0.86,40);
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -5291,7 +5292,7 @@ class IceClone{
 
 	characteristics.set("kitana",{png : kitskins,coordinates : kitcoordinates, sex : "f", standnframes : 5, rollspeed : 3, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : kitanaiconpng, namewav : document.querySelector('#kitanawav'),
 	width : 34, height : 97,vitesse : 3.1, run_speed : 6.2,jumpxspeed : 3.6,backmovnerf : 0.85, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2, hurtcontrol : 0.2, grabtype : "poser",
-	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 95, getupfdur : 32, grabfdur : 35, grabdeg : 13, vicposframes : 12, vicposfdur : 50, cds : [80,120,24,240], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,squarepunchiconpng], voiceactor : "clement",
+	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 4, getupfdur : 32, grabfdur : 35, grabdeg : 13, vicposframes : 12, vicposfdur : 50, cds : [80,120,24,240], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,squarepunchiconpng], voiceactor : "clement",
 	default_behav : "zoner", combos : kitana_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Kitana takes control of the outworld and forcibly converts all its peasants to blueberry farming in order to have access to an unlimited supply of blueberries for the rest of her life."});
 
 	characteristics.set("mileena",{png : milskins,coordinates : milcoordinates, sex : "f", standnframes : 10, rollspeed : 3, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : mileenaiconpng, namewav : document.querySelector('#mileenawav'),
