@@ -259,7 +259,9 @@ function main(){
 		constructor(x,y,orientation,bloodtype,vitesse=2.,tb=3.){
 			this.x = x; this.y = y; this.orientation = orientation;
 			this.bloodtype = bloodtype;
-			this.totdur = 20+Math.floor(tb*4);this.nframes = 9;this.vitesse=vitesse;
+			if(this.bloodtype=="dropblood"){this.totdur = 20+Math.floor(tb*4);this.nframes = 9;}
+			else{this.totdur = 20+Math.floor(tb*4);this.nframes=10;}
+			this.vitesse=vitesse;
 			this.tb = tb; this.gravity = 0.25;
 			this.dec = 1;
 			this.dur = this.totdur;
@@ -284,7 +286,15 @@ function main(){
 				this.y += this.tb;
 				this.tb -= this.gravity;
 				this.dur = Math.max(this.dur,1);
-				if(this.y<0){this.y=0;this.dur = 9;this.dec = 10; this.nframes=3;this.totdur = 9;}
+				if(this.y<0){
+					this.y=0;
+					if(this.bloodtype=="dropblood"){this.totdur = 9;this.dec = 10; this.nframes=3;}
+					else{this.totdur = 21;this.dec = 11; this.nframes=6;}
+					this.dur = this.totdur;
+				}
+			}
+			else if(fatalitywasdone){
+				this.dur = Math.max(this.dur,1);
 			}
 		}
 
@@ -4079,6 +4089,7 @@ class IceClone{
 			this.decapitated = 100;
 			add_to_objects_set(new Head(this.x,this.y+this.charac.height,this.orientation,this.skin,this.coordinates, power,vitesse));
 			add_to_objects_set(new Blood(this.x,this.y+this.charac.height-5,this.orientation,"hblood"));
+			add_to_objects_set(new DropBlood(this.x,this.y+this.charac.height-5,this.orientation,"hdropblood",0.,1.+power));
 		}
 
 		eat_head(dur,vitesse){
