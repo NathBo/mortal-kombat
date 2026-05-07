@@ -2419,7 +2419,7 @@ class IceClone{
 						this.begincoup("fanthrow",other);
 					}
 					else if(this.perso == "kitana" && this.forward>=1 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=80 && other.falling==0 && other.gettingup==0){
-						this.fatality = 90;
+						this.fatality = 90; this.memoryslot=0;
 						other.y=0;
 						play_sound_eff("fatal1");
 						this.special=2;
@@ -2518,7 +2518,7 @@ class IceClone{
 						this.mov = ""; this.movlag=0;
 						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
 					}
-					else if(this.perso == "mileena" && this.bas && this.special==1 && finishhim &&  other.gettingup==0 && other.y<=30){
+					else if(this.perso == "mileena" && this.bas && this.special==1 && finishhim &&  other.gettingup==0 && other.y<=30 && Math.abs(this.x-other.x)>90){
 						this.fatality = 60;
 						other.falling=0;
 						other.y=0;
@@ -3321,12 +3321,24 @@ class IceClone{
 					else if(this.fatality>=60){this.costume = "fanswipe3"}
 					else {this.costume = "fanswipe4"}
 					if(this.fatality==64){other.decapitate();play_sound_eff("fan");}
+					var a = 55;
+					if(this.special==1){
+						this.special=2;
+						if(entre(this.fatality,a,64)){this.memoryslot=1;}
+					}
+					if(this.memoryslot==1){
+						if(this.fatality>=a){}
+						else if(this.fatality>=a-3){this.costume = "fanswipe1"}
+						else if(this.fatality>=a-6){this.costume = "fanswipe2"}
+						else if(this.fatality>=a-9){this.costume = "fanswipe3"}
+						if(this.fatality==a-7){other.explode();}
+					}
 				}
 				else if(this.perso=="raiden"){
 					if(this.fatality==110){other.y=20;}
 					if(this.fatality>=40){
 						this.costume = "elecgrab"+(Math.floor(this.fatality/4)%2+1);
-						if(this.fatality%8==0){other.electrocuted=4;}
+						if(this.fatality%8==0){other.electrocuted=4;other.shake_player(8,3.)}
 						if(this.fatality%20==0){play_sound_eff("electrocute");shake_screen(20,4);}
 					}
 					if(this.fatality==40){other.explode();}
@@ -4096,11 +4108,13 @@ class IceClone{
 			this.decapitated = 100;
 			add_to_objects_set(new EatenHead(this.x,80,this.orientation,this.skin,this.coordinates,dur,vitesse));
 			add_to_objects_set(new Blood(this.x,this.y+this.charac.height-5,this.orientation,"hblood"));
+			add_to_objects_set(new DropBlood(this.x-this.orientation*8,this.y+this.charac.height-5,this.orientation,"hdropblood",0.,2.));
 		}
 
 		cut_torso(){
 			this.is_legs = true;
 			add_to_objects_set(new Blood(this.x,this.y+this.charac.height-5,this.orientation,"hblood"));
+			add_to_objects_set(new DropBlood(this.x-this.orientation*8,this.y+this.charac.height-15,this.orientation,"hdropblood",0.,1.5));
 			var torso = new Torso(this.x,this.y+this.charac.height-20,this.orientation,this.skin,this.coordinates);
 			add_to_objects_set(torso);
 			return torso;
