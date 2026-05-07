@@ -260,7 +260,7 @@ function main(){
 			this.x = x; this.y = y; this.orientation = orientation;
 			this.bloodtype = bloodtype;this.dec = 1;
 			if(this.bloodtype=="dropblood"){this.totdur = 20+Math.floor(tb*4);this.nframes = 9;}
-			else if(this.bloodtype=="ldropblood"){this.bloodtype="hdropblood";this.totdur = 20+Math.floor(tb*4);this.nframes = 6;this.dec=5;}
+			else if(this.bloodtype=="ldropblood"){this.bloodtype="hdropblood";this.totdur = 20+Math.floor(tb*4);this.nframes = 5;this.dec=6;}
 			else{this.totdur = 20+Math.floor(tb*4);this.nframes=10;}
 			this.vitesse=vitesse;
 			this.tb = tb; this.gravity = 0.25;
@@ -4183,9 +4183,9 @@ class IceClone{
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
 		}
-		for(let value of objects_to_loop.values()){
-			if(value.vitesse==0){value.afficher();}
-		}
+		// for(let value of objects_to_loop.values()){
+		// 	if(value.vitesse==0){value.afficher();}
+		// }
 		if(j2.hurted || j2.pv<=0){
 			j2.afficher(j1);
 			j1.afficher(j2);
@@ -4214,7 +4214,7 @@ class IceClone{
 			else{play_sound_eff("finishhim");}
 		}
 		if(fatalitysreen){
-			if(fatalitysreen%4==1){add_to_objects_set(new DropBlood(randomInt(-100,100)+camerax,103,1,"ldropblood",0.,0.));}
+			if(fatalitysreen%8==1 && fatalitysreen>30){add_to_objects_set(new DropBlood(randomInt(-90,90)+camerax,-128+ground,1,"ldropblood",0.,0.));}
 			ctx.scale(4,4);
 			ctx.drawImage(fatalitypng,71*0.86,40);
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -4222,7 +4222,7 @@ class IceClone{
 			if(fatalitysreen==40){play_sound_eff("fatal2");}
 		}
 		for(let value of objects_to_loop.values()){
-			if(value.vitesse!=0){value.afficher();}
+			if(value.vitesse!=100){value.afficher();}
 		}
 		if (arcadelevel>=0){
 			ctx.fillStyle = "white";
@@ -4269,6 +4269,7 @@ class IceClone{
 		end_of_round_countdown=0;
 		if(introon && !secondplayerisdummy){fightstartcountdown = 130;}else{fightstartcountdown=1;}
 		fatalitywasdone = false; fatalitysreen = 0;
+		if(fatality_testing){roundwonsj1 = 1;j2.pv=1;j2.pvaff=1;fightstartcountdown=1;}
 	}
 
 	function gobacktotitlescreen(){
@@ -5292,7 +5293,7 @@ class IceClone{
 
 	characteristics.set("kitana",{png : kitskins,coordinates : kitcoordinates, sex : "f", standnframes : 5, rollspeed : 3, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : kitanaiconpng, namewav : document.querySelector('#kitanawav'),
 	width : 34, height : 97,vitesse : 3.1, run_speed : 6.2,jumpxspeed : 3.6,backmovnerf : 0.85, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2, hurtcontrol : 0.2, grabtype : "poser",
-	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 4, getupfdur : 32, grabfdur : 35, grabdeg : 13, vicposframes : 12, vicposfdur : 50, cds : [80,120,24,240], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,squarepunchiconpng], voiceactor : "clement",
+	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 95, getupfdur : 32, grabfdur : 35, grabdeg : 13, vicposframes : 12, vicposfdur : 50, cds : [80,120,24,240], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,squarepunchiconpng], voiceactor : "clement",
 	default_behav : "zoner", combos : kitana_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Kitana takes control of the outworld and forcibly converts all its peasants to blueberry farming in order to have access to an unlimited supply of blueberries for the rest of her life."});
 
 	characteristics.set("mileena",{png : milskins,coordinates : milcoordinates, sex : "f", standnframes : 10, rollspeed : 3, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : mileenaiconpng, namewav : document.querySelector('#mileenawav'),
@@ -5377,7 +5378,8 @@ class IceClone{
 	var score = 0; var matchscore = 0; var roundscore = 0;
 	var old_stats = null; var new_stats = null; var highscore_screen_cpt = 0;
 
-	
+	var fatality_testing = false;
+
 	
 	function saveStats(){
 		localStorage.setItem("statistics",JSON.stringify(Object.fromEntries(statistics)));
