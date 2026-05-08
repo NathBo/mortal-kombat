@@ -2,9 +2,9 @@ function getkitcoordinates(){
     var kitcoordinates = new Map();
 	kitcoordinates.set("stand1",{offx:71,width:34,offy:19,height:97,decx:0,decy:0});
 	kitcoordinates.set("stand2",{offx:116,width:34,offy:19,height:97,decx:0,decy:0});
-	kitcoordinates.set("stand3",{offx:161,width:33,offy:19,height:97,decx:0,decy:0});
+	kitcoordinates.set("stand3",{offx:161,width:33,offy:19,height:97,decx:1,decy:0});
 	kitcoordinates.set("stand4",{offx:204,width:33,offy:19,height:97,decx:0,decy:0});
-	kitcoordinates.set("stand5",{offx:247,width:33,offy:19,height:97,decx:0,decy:0});
+	kitcoordinates.set("stand5",{offx:247,width:33,offy:19,height:97,decx:-1,decy:0});
 	kitcoordinates.set("crouching1",{offx:483,width:37,offy:19,height:97,decx:0,decy:-1});
 	kitcoordinates.set("crouching2",{offx:532,width:36,offy:19,height:97,decx:0,decy:-1});
 	kitcoordinates.set("walk1",{offx:15,width:36,offy:137,height:102,decx:-8,decy:-5});
@@ -419,7 +419,7 @@ function getscocoordinates(){
     var scocoordinates = new Map();
 	scocoordinates.set("stand1",{offx:83,width:43,offy:17,height:103,decx:0,decy:0});
 	scocoordinates.set("stand2",{offx:135,width:44,offy:17,height:103,decx:0,decy:0});
-	scocoordinates.set("stand3",{offx:189,width:43,offy:17,height:103,decx:0,decy:0});
+	scocoordinates.set("stand3",{offx:189,width:43,offy:17,height:103,decx:1,decy:0});
 	scocoordinates.set("stand4",{offx:241,width:43,offy:17,height:103,decx:0,decy:0});
 	scocoordinates.set("stand5",{offx:294,width:43,offy:17,height:103,decx:0,decy:0});
 	scocoordinates.set("stand6",{offx:346,width:43,offy:17,height:103,decx:0,decy:0});

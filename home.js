@@ -3907,6 +3907,8 @@ class IceClone{
 				let a = Math.floor(this.standing/5)+1
 				this.costume = "stand"+a;
 				this.walking=0;
+				// if(this.n==0)console.log(this.costume);
+				// slow_game(2,4);
 			}
 			else{this.standing=0;
 				if(this.forward>=1 || this.back>=1){
