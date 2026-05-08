@@ -206,7 +206,8 @@ function drawScanlines(ctx, width, height, alpha = 0.04) {
 
 
 function main(){
-	const VERSION = 2;
+	const VERSION = 3;
+	const last_OK_version = 2;
 	function resizecanvas(){
 		Width= window.innerWidth;
 		Height=window.innerHeight;
@@ -5413,6 +5414,13 @@ class IceClone{
 		if(a===null || b===null || local_version != VERSION){
 			console.log("Reset saves");
 			statistics = newArcadeStats();
+			if(local_version>=last_OK_version){
+				persosunlocked = new Map(Object.entries(JSON.parse(b)));
+				for(i=0;i<liste_persos.length;i++){
+					if(!persosunlocked.has(liste_persos[i])){persosunlocked.set(liste_persos[i],false);}
+					if(!statistics.has(liste_persos[i])){statistics.set(liste_persos[i],newCharacStats())}
+				}
+			}
 			saveStats();
 		}
 		else{
