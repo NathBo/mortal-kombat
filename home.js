@@ -4113,7 +4113,7 @@ class IceClone{
 
 		cut_torso(){
 			this.is_legs = true;
-			add_to_objects_set(new Blood(this.x,this.y+this.charac.height-5,this.orientation,"hblood"));
+			add_to_objects_set(new Blood(this.x,this.y+this.charac.height-20,this.orientation,"hblood"));
 			add_to_objects_set(new DropBlood(this.x-this.orientation*8,this.y+this.charac.height-15,this.orientation,"hdropblood",0.,1.5));
 			var torso = new Torso(this.x,this.y+this.charac.height-20,this.orientation,this.skin,this.coordinates);
 			add_to_objects_set(torso);
