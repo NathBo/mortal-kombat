@@ -120,7 +120,7 @@ class MiniGame{
 
 
 class TestYourMight extends MiniGame{
-    constructor(ctx,j1,base_score,music,perso1stats,perso2stats,skins){
+    constructor(ctx,j1,base_score,music,perso1stats,perso2stats,skins=[0,0]){
         super(ctx,j1,base_score,music);
         this.perso1stats = perso1stats;
         this.skin1 = perso1stats.png[skins[0]];this.skin2 = perso2stats.png[skins[1]];
@@ -231,6 +231,38 @@ class TestYourMight extends MiniGame{
         }
 
         if(this.has_reached || this.global_cpt<=decap+10){this.global_cpt++;}
+
+    }
+}
+
+
+class GuessBarrel extends MiniGame{
+    constructor(ctx,j1,base_score,music,perso1stats,skin=0){
+        super(ctx,j1,base_score,music);
+        this.perso1stats = perso1stats;
+        this.skin1 = perso1stats.png[skin];
+        this.width1 = perso1stats.width;
+        this.coordinates1 = perso1stats.coordinates;
+        this.standnframes1 = perso1stats.standnframes;
+        this.stunnframes1 = perso1stats.stunnframes;
+
+        this.cameray = 0; this.costcpt1 = 0;
+        this.shakepersx = 0.; this.shakepersy = 0.;
+    }
+    render(){
+        super.render();
+        if(this.global_cpt==0){play_sound_eff("testyourmight");}
+        this.drawImage(mountainpng,0,this.cameray-680);
+
+        var a = 4;
+        this.costcpt1 = (this.costcpt1+1)%(this.standnframes1*a);
+        var n1 = Math.floor(this.costcpt1/a)+1; this.costume1 = "stand"+n1.toString();
+        
+        this.drawSkin(200+this.shakepersx,this.cameray+245+this.shakepersy,this.skin1,this.costume1,1,this.coordinates1,this.width1);
+
+        
+
+        this.drawScore();
 
     }
 }

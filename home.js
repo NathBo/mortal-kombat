@@ -5096,8 +5096,8 @@ class IceClone{
 			else if(entre(clicky,400/500,440/500)){
 				if(entre(clickx,80/1024,260/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=true;secondplayerisdummy=true;camerax=0;}
 				else if(entre(clickx,380/1024,620/1024)){
-					//var minigame = new TestYourMight(ctx,j1,0,minigame_music,characteristics.get("liukang"),characteristics.get("scorpion"));var test_your_might_fun = () => minigame.render();
-					functiontoexecute = menupersos;secondplayerishuman=false;arcadelevel=0;menupersoswav.play();	//minigamestest
+					var minigame = new GuessBarrel(ctx,j1,0,minigame_music,characteristics.get("liukang"));var test_your_might_fun = () => minigame.render();
+					functiontoexecute = test_your_might_fun;secondplayerishuman=false;arcadelevel=0;//menupersoswav.play();	//minigamestest
 					arcadeorder.shuffle();
 					if(!persosunlocked.get("reptile")){
 						var i = arcadeorder.indexOf("reptile");
