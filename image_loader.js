@@ -110,6 +110,8 @@ var logopng=new Image();logopng.src = 'ressource/ui/logo.png';
 
 
 var mountainpng = new Image();mountainpng.src = 'ressource/mini_games/mountain.png';
+var donkeykongpng = new Image();donkeykongpng.src = 'ressource/mini_games/donkey_kong.png';
+
 
 
 var kitcoordinates = getkitcoordinates();

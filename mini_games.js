@@ -245,22 +245,114 @@ class GuessBarrel extends MiniGame{
         this.coordinates1 = perso1stats.coordinates;
         this.standnframes1 = perso1stats.standnframes;
         this.stunnframes1 = perso1stats.stunnframes;
+        this.voiceactor = perso1stats.voiceactor;
+        this.barrellcoords = getbarellcoordinates();
+        this.barrelwidth = 30;
 
-        this.cameray = 0; this.costcpt1 = 0;
+        this.cameray = 0; this.costcpt1 = 0; this.costcptbarrel = 0;
         this.shakepersx = 0.; this.shakepersy = 0.;
+        
+        this.state = "intro";
+        this.global_cpt = 90;
+        this.head_position = 1; this.player_pos = 1;
+        this.py = 0; this.ptb = 0;
+        this.breakbarrel = -1;
     }
     render(){
         super.render();
-        if(this.global_cpt==0){play_sound_eff("testyourmight");}
         this.drawImage(mountainpng,0,this.cameray-680);
 
         var a = 4;
         this.costcpt1 = (this.costcpt1+1)%(this.standnframes1*a);
         var n1 = Math.floor(this.costcpt1/a)+1; this.costume1 = "stand"+n1.toString();
+        if(this.py>0){this.costume1="jump1";}
         
-        this.drawSkin(200+this.shakepersx,this.cameray+245+this.shakepersy,this.skin1,this.costume1,1,this.coordinates1,this.width1);
+        this.drawSkin(120+this.player_pos*100+this.shakepersx,this.cameray+245-this.py+this.shakepersy,this.skin1,this.costume1,1,this.coordinates1,this.width1);
 
+        var a = 6;
+        this.costcptbarrel = (this.costcptbarrel+1)%(6*a);
+        var n2 = Math.floor(this.costcptbarrel/a)+1;
+        var costbarrel = "barrel"+n2.toString();
+        for (var i = 0; i<3;i++){
+            if(i!=this.breakbarrel){this.drawSkin(120+i*100,this.cameray+125,donkeykongpng,costbarrel,1,this.barrellcoords,this.barrelwidth);}
+        }
         
+
+        switch(this.state){
+            case "intro":
+                if(this.global_cpt==90){play_sound_eff("testyoursight");}
+                this.global_cpt--;
+                if(this.global_cpt==0){
+                    this.state = "observe";
+                    this.global_cpt = 119+Math.floor(Math.random()*3)*10;
+                }
+                break;
+            case "observe":
+                 if(this.global_cpt>0){
+                    if((this.global_cpt%10==0 && this.global_cpt>=40) || (this.global_cpt<40 && this.global_cpt%8==0)){
+                        var a = this.head_position;
+                        while (a == this.head_position){
+                            a = Math.floor(Math.random()*3);
+                        }
+                        this.head_position = a;
+                    }
+                    this.drawSkin(120+100*this.head_position,this.cameray+120,this.skin1,"head",1,this.coordinates1,14);
+                    this.global_cpt--;
+                }
+                else{this.state = "choose";}
+                break;
+            case "choose":
+                if(this.j1.gauche==1 && this.player_pos>0){
+                    this.player_pos--;
+                    this.j1.gauche = 2;
+                    play_sound_eff("cursor_move");
+                }
+                if(this.j1.droite==1 && this.player_pos<2){
+                    this.player_pos++;
+                    this.j1.droite = 2;
+                    play_sound_eff("cursor_move");
+                }
+                if(this.j1.haut || this.j1.jump){
+                    this.state = "reveal";
+                    this.global_cpt = 120;
+                    this.ptb = 6;
+                    play_sound_eff(this.voiceactor+"lmov")
+                }
+                break;
+            case "reveal" :
+                if(this.py<0){this.py=0;this.ptb=0;}
+                else if(this.ptb!=0){
+                    this.py+=this.ptb;
+                    this.ptb -= 0.4;
+                }
+                if(this.global_cpt==110){this.breakbarrel=this.player_pos;}
+                if(entre(this.global_cpt,84,110)){
+                    var a = 3;
+                    var n2 = Math.floor((110-this.global_cpt)/a)+1;
+                    var costbarrel = "barrelbreak"+n2.toString();
+                    console.log(costbarrel);
+                    this.drawSkinRota(120+this.player_pos*100,this.cameray+125,donkeykongpng,costbarrel,1,this.barrellcoords,0.);
+                }
+                if(this.head_position==this.player_pos){
+                    console.log("win");
+                    if(entre(this.global_cpt,80,110)){
+                        this.drawSkin(120+100*this.head_position,this.cameray+120-(110-this.global_cpt)*2,this.skin1,"head",1,this.coordinates1,14);
+                    }
+                    if(this.global_cpt==112){play_sound_eff("appear");}
+                    if(this.global_cpt==72){play_sound_eff("ding");}
+                    if(this.global_cpt==70){this.addScore(3000);}
+                }
+                else{
+                    if(entre(this.global_cpt,85,90) || entre(this.global_cpt,75,80) || entre(this.global_cpt,65,70)){
+                        this.drawSkin(120+100*this.head_position,this.cameray+120,this.skin1,"head",1,this.coordinates1,14);
+                    }
+                }
+                this.global_cpt--;
+                if(this.global_cpt==0){this.endMiniGame();}
+                break;
+        }
+
+
 
         this.drawScore();
 

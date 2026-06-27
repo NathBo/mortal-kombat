@@ -1350,3 +1350,28 @@ function getbloodcoordinates(){
 
     return bloodcoordinates;
 }
+
+
+function getbarellcoordinates(){
+    var barellcoordinates = new Map();
+	barellcoordinates.set("barrel1",{offx:14,width:30,offy:1341,height:39,decx:0,decy:0});
+	barellcoordinates.set("barrel2",{offx:48,width:30,offy:1341,height:39,decx:0,decy:0});
+	barellcoordinates.set("barrel3",{offx:83,width:30,offy:1341,height:39,decx:0,decy:0});
+	barellcoordinates.set("barrel4",{offx:117,width:30,offy:1342,height:38,decx:0,decy:0});
+	barellcoordinates.set("barrel5",{offx:151,width:29,offy:1344,height:36,decx:0,decy:0});
+	barellcoordinates.set("barrel6",{offx:185,width:30,offy:1342,height:38,decx:0,decy:0});
+
+	barellcoordinates.set("barrelbreak1",{offx:6,width:29,offy:1647,height:39,decx:0,decy:0});
+	barellcoordinates.set("barrelbreak2",{offx:40,width:31,offy:1646,height:40,decx:0,decy:0});
+	barellcoordinates.set("barrelbreak3",{offx:76,width:38,offy:1646,height:40,decx:0,decy:0});
+	barellcoordinates.set("barrelbreak4",{offx:119,width:47,offy:1644,height:42,decx:0,decy:0});
+	barellcoordinates.set("barrelbreak5",{offx:170,width:55,offy:1644,height:42,decx:0,decy:0});
+	barellcoordinates.set("barrelbreak6",{offx:231,width:62,offy:1646,height:40,decx:0,decy:0});
+	barellcoordinates.set("barrelbreak7",{offx:300,width:68,offy:1646,height:40,decx:0,decy:0});
+	barellcoordinates.set("barrelbreak8",{offx:375,width:74,offy:1647,height:40,decx:0,decy:0});
+	barellcoordinates.set("barrelbreak9",{offx:455,width:77,offy:1649,height:43,decx:0,decy:0});
+
+    return barellcoordinates;
+}
+
+

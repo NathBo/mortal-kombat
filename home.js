@@ -5271,9 +5271,11 @@ class IceClone{
 	sounds_eff.set("compliment",[document.querySelector('#compliment1wav'),document.querySelector('#compliment2wav'),document.querySelector('#compliment3wav'),document.querySelector('#compliment4wav')]);
 	sounds_eff.set("shaowinquote",[document.querySelector('#shaowinquote1wav'),document.querySelector('#shaowinquote2wav'),document.querySelector('#shaowinquote3wav')]);
 	sounds_eff.set("testyourmight",[document.querySelector('#test_your_mightwav')]);
+	sounds_eff.set("testyoursight",[document.querySelector('#test_your_sightwav')]);
 
 	sounds_eff.set("cursor_move",[document.querySelector('#cursorwav')]);
 	sounds_eff.set("ding",[document.querySelector('#dingwav')]);
+	sounds_eff.set("appear",[document.querySelector('#appearwav')]);
 
 	sounds_eff.set("coup",[document.querySelector('#coup1wav'),document.querySelector('#coup2wav'),document.querySelector('#coup3wav'),document.querySelector('#coup4wav'),document.querySelector('#coup5wav')]);
 	sounds_eff.set("grapple",[document.querySelector('#grapplewav')]);
