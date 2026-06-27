@@ -1616,9 +1616,6 @@ class IceClone{
 			for(let value of objects_to_loop.values()){
 				if(value.dangerous && value.other===me){
 					if(this.me.perso == "shao_kahn" && this.me.cooldowns[1]==0 && Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))<=value.stats.hitboxxe+30+this.me.charac.width/2 && this.me.y==0 && this.me.mov!="jumpsquat"){this.begincoup("charge");return true;}
-					else if(me.perso=="raiden" && Math.abs(me.x-other.x)<=220 && this.wantstoenhance()>-2 && this.thereisaprojo() && me.y==0 && me.cooldowns[1]==0 && Math.random()<1./this.reaction_time){
-						me.enhance = 1;this.begincoup("thundergod");me.enhance=0;return true;
-					}
 					if(this.me.y==0 && (signe(this.me.x-value.x)==signe(value.vitesse)) && value.stats.hiteffect == "unblockable_projectile_fall"){
 						this.me.haut=1;
 						if(this.attacking>=2 || Math.abs(me.x-this.other.x)>=150)this.pressforward(true);
@@ -2799,14 +2796,14 @@ class IceClone{
 					case "thundergod":
 						var stats = this.charac.coups.get(this.mov);
 						var a = 6;
-						if(this.is_enhanced()){this.projectile_invincibility=2;a=8;}
+						if(this.is_enhanced()){a=9;}
 						if(this.movlag<=stats.elag+stats.fdur){this.x += a*this.orientation;if(this.movlag==2){this.movlag++;}}
 						if(Math.abs(this.x-camerax)>decalagex-this.charac.width/2){this.movlag=0;this.mov="";this.tb=7;this.xspeed = -this.orientation;this.y=0.1;}
 						break;
 					case "shadowkick":
 						var stats = this.charac.coups.get(this.mov);
 						var a = 8;
-						if(this.is_enhanced()){this.projectile_invincibility=2;a=11;}
+						if(this.is_enhanced()){a=12;}
 						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.x += a*this.orientation;}
 						if(this.memoryslot && this.movlag>=2){this.movlag--;}
 						break;
