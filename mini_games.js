@@ -257,6 +257,8 @@ class GuessBarrel extends MiniGame{
         this.head_position = 1; this.player_pos = 1;
         this.py = 0; this.ptb = 0;
         this.breakbarrel = -1;
+        this.toswitch = -3;
+        this.switchdelay = 10;
     }
     render(){
         super.render();
@@ -274,7 +276,10 @@ class GuessBarrel extends MiniGame{
         var n2 = Math.floor(this.costcptbarrel/a)+1;
         var costbarrel = "barrel"+n2.toString();
         for (var i = 0; i<3;i++){
-            if(i!=this.breakbarrel){this.drawSkin(120+i*100,this.cameray+125,donkeykongpng,costbarrel,1,this.barrellcoords,this.barrelwidth);}
+            var x = 120 + i*100;
+            if(this.toswitch == i){x += (10-this.switchdelay)*10;}
+            if(this.toswitch == i-1){x -= (10-this.switchdelay)*10;}
+            if(i!=this.breakbarrel){this.drawSkin(x,this.cameray+125,donkeykongpng,costbarrel,1,this.barrellcoords,this.barrelwidth);}
         }
         
 
@@ -284,22 +289,28 @@ class GuessBarrel extends MiniGame{
                 this.global_cpt--;
                 if(this.global_cpt==0){
                     this.state = "observe";
-                    this.global_cpt = 119+Math.floor(Math.random()*3)*10;
+                    this.global_cpt = 121+Math.floor(Math.random()*3)*20;
                 }
+                this.drawSkin(120+100*this.head_position,this.cameray+120,this.skin1,"head",1,this.coordinates1,14);
                 break;
             case "observe":
                  if(this.global_cpt>0){
-                    if((this.global_cpt%10==0 && this.global_cpt>=40) || (this.global_cpt<40 && this.global_cpt%8==0)){
-                        var a = this.head_position;
-                        while (a == this.head_position){
-                            a = Math.floor(Math.random()*3);
+                    if((this.global_cpt%20==0 && this.global_cpt>=60) || (this.global_cpt%15==0 && this.global_cpt<60)){
+                        this.toswitch = Math.floor(Math.random()*2);
+                        this.switchdelay = 10;
+                        if(this.toswitch==0){
+                            if(this.head_position==0){this.head_position=1;}
+                            else if(this.head_position==1){this.head_position=0;}
                         }
-                        this.head_position = a;
+                        else{
+                            if(this.head_position==2){this.head_position=1;}
+                            else if(this.head_position==1){this.head_position=2;}
+                        }
                     }
-                    this.drawSkin(120+100*this.head_position,this.cameray+120,this.skin1,"head",1,this.coordinates1,14);
                     this.global_cpt--;
+                    if(this.switchdelay>0)this.switchdelay --;
                 }
-                else{this.state = "choose";}
+                else{this.state = "choose";this.switchdelay=10;}
                 break;
             case "choose":
                 if(this.j1.gauche==1 && this.player_pos>0){
