@@ -237,15 +237,17 @@ class TestYourMight extends MiniGame{
 
 
 class GuessBarrel extends MiniGame{
-    constructor(ctx,j1,base_score,music,perso1stats,skin=0){
+    constructor(ctx,j1,base_score,music,perso1stats,skin1,perso2stats,skin2){
         super(ctx,j1,base_score,music);
         this.perso1stats = perso1stats;
-        this.skin1 = perso1stats.png[skin];
+        this.skin1 = perso1stats.png[skin1];
+        this.skin2 = perso2stats.png[skin2];
         this.width1 = perso1stats.width;
         this.coordinates1 = perso1stats.coordinates;
         this.standnframes1 = perso1stats.standnframes;
         this.stunnframes1 = perso1stats.stunnframes;
         this.voiceactor = perso1stats.voiceactor;
+        this.coordinates2 = perso2stats.coordinates;
         this.barrellcoords = getbarellcoordinates();
         this.barrelwidth = 30;
 
@@ -291,7 +293,7 @@ class GuessBarrel extends MiniGame{
                     this.state = "observe";
                     this.global_cpt = 121+Math.floor(Math.random()*3)*20;
                 }
-                this.drawSkin(120+100*this.head_position,this.cameray+120,this.skin1,"head",1,this.coordinates1,14);
+                this.drawSkin(120+100*this.head_position,this.cameray+120,this.skin2,"head",1,this.coordinates2,14);
                 break;
             case "observe":
                  if(this.global_cpt>0){
@@ -347,7 +349,7 @@ class GuessBarrel extends MiniGame{
                 if(this.head_position==this.player_pos){
                     console.log("win");
                     if(entre(this.global_cpt,80,110)){
-                        this.drawSkin(120+100*this.head_position,this.cameray+120-(110-this.global_cpt)*2,this.skin1,"head",1,this.coordinates1,14);
+                        this.drawSkin(120+100*this.head_position,this.cameray+120-(110-this.global_cpt)*2,this.skin2,"head",1,this.coordinates2,14);
                     }
                     if(this.global_cpt==112){play_sound_eff("appear");}
                     if(this.global_cpt==72){play_sound_eff("ding");}
@@ -355,7 +357,7 @@ class GuessBarrel extends MiniGame{
                 }
                 else{
                     if(entre(this.global_cpt,85,90) || entre(this.global_cpt,75,80) || entre(this.global_cpt,65,70)){
-                        this.drawSkin(120+100*this.head_position,this.cameray+120,this.skin1,"head",1,this.coordinates1,14);
+                        this.drawSkin(120+100*this.head_position,this.cameray+120,this.skin2,"head",1,this.coordinates2,14);
                     }
                 }
                 this.global_cpt--;

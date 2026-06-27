@@ -4390,10 +4390,15 @@ class IceClone{
 						choserandomstage();
 						if(persoschoisis[1]==persoschoisis[0]){skinschoisis[1]=(skinschoisis[0]+1)%2;}
 						reset_game(true);
-						if(arcadelevel==2 || arcadelevel==6){		//minigames handle
+						if(arcadelevel==1 || arcadelevel==7){		//minigames handle
 							var minigame = new TestYourMight(ctx,j1,score,minigame_music,characteristics.get(persos[0]),characteristics.get(persos[1]),skins);
 							var test_your_might_fun = () => minigame.render();
 							functiontoexecute = test_your_might_fun;
+						}
+						if(arcadelevel == 3 || arcadelevel == 5){
+							var minigame = new GuessBarrel(ctx,j1,score,minigame_music,characteristics.get(persos[0]),skins[0],characteristics.get(persos[1]),skins[1]);
+							var test_your_sight_fun = () => minigame.render();
+							functiontoexecute = test_your_sight_fun;
 						}
 						return;
 					}
@@ -5096,8 +5101,8 @@ class IceClone{
 			else if(entre(clicky,400/500,440/500)){
 				if(entre(clickx,80/1024,260/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=true;secondplayerisdummy=true;camerax=0;}
 				else if(entre(clickx,380/1024,620/1024)){
-					var minigame = new GuessBarrel(ctx,j1,0,minigame_music,characteristics.get("liukang"));var test_your_might_fun = () => minigame.render();
-					functiontoexecute = test_your_might_fun;secondplayerishuman=false;arcadelevel=0;//menupersoswav.play();	//minigamestest
+					//var minigame = new GuessBarrel(ctx,j1,0,minigame_music,characteristics.get("liukang"));var test_your_might_fun = () => minigame.render();
+					functiontoexecute = menupersos;secondplayerishuman=false;arcadelevel=0;menupersoswav.play();	//minigamestest
 					arcadeorder.shuffle();
 					if(!persosunlocked.get("reptile")){
 						var i = arcadeorder.indexOf("reptile");
