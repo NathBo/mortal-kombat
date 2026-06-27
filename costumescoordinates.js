@@ -709,7 +709,7 @@ function getsubcoordinates(){
 	subcoordinates.set("oicegrenade1",{offx:665,width:18,offy:1569,height:7,decx:0,decy:0});
 	subcoordinates.set("oicegrenade2",{offx:694,width:23,offy:1569,height:7,decx:-5,decy:0});
 
-	subcoordinates.set("head",{offx:296,width:14,offy:1791,height:17,decx:0,decy:0});
+	subcoordinates.set("head",{offx:296,width:14,offy:1787,height:17,decx:0,decy:0});
 	
 
     return subcoordinates;
@@ -888,7 +888,7 @@ function getrepcoordinates(){
 	repcoordinates.set("expl13",{offx:941,width:10,offy:1361,height:118,decx:a,decy:b});
 
 
-	repcoordinates.set("head",{offx:296,width:14,offy:1812,height:17,decx:0,decy:0});
+	repcoordinates.set("head",{offx:296,width:14,offy:1808,height:17,decx:0,decy:0});
 	
 
     return repcoordinates;
