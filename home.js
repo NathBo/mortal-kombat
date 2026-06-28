@@ -2263,7 +2263,7 @@ class IceClone{
 				else if(this.grabbing == Math.floor(this.charac.grabfdur*5/7)){
 					other.grabbed=0;
 					other.falling=10;
-					if(c.grabtype == "launch"){
+					if(c.grabtype == "launch" || c.grabtype == "launch_free"){
 						var stats = this.charac.coups.get("grab");
 						other.y = this.y+30;
 						other.hurted = stats.hitstun;
@@ -2275,8 +2275,10 @@ class IceClone{
 						other.combo_hits += 1;
 						//other.orientation*=-1;
 						if(other.pv<=0){other.killanim();}
-						this.falling=1;
-						this.hurted=1;
+						if(c.grabtype == "launch"){
+							this.falling=1;
+							this.hurted=1;
+						}
 					}
 					else{
 						other.y = 0;
@@ -3131,7 +3133,7 @@ class IceClone{
 			var initpv = this.pv;
 			if(stats.hiteffect==""){return;}
 			if(this.perso=="shao_kahn" && stats.hiteffect=="grab"){return;}
-			if(this.mov=="jumpsquat" && stats.hiteffect=="grab"){return;}
+			if((this.mov=="jumpsquat" || this.y>0) && stats.hiteffect=="grab"){return;}
 			if(racine(other.mov)=="thundergod"){other.movlag=1;other.tb=8;other.xspeed = -1;other.y=0.1;}
 			if(other.mov=="squarepunch"){other.movlag=1;other.tb=0;other.xspeed = -1;}
 			if(racine(other.mov)=="shadowkick"){other.movlag=other.charac.coups.get(other.mov).elag;}
@@ -3928,7 +3930,7 @@ class IceClone{
 
 			if(other.grabbed && this.grabbed==0){
 				var angletot = Math.PI;
-				if(this.charac.grabtype == "launch"){
+				if(this.charac.grabtype == "launch" || this.charac.grabtype == "launch_free"){
 					angletot = Math.PI*1/2;
 				}
 				if(this.grabbing<=this.charac.grabfdur*1/7){var othercost = "grabbed1";}
@@ -5354,7 +5356,7 @@ class IceClone{
 	default_behav : "normal", combos : johnny_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Johnny Cage becomes president of the United States and reduces unemployment to -1000%!"});
 	
 	characteristics.set("baraka",{png : barskins,coordinates : barcoordinates, sex : "m", standnframes : 6, standframespeed : 6, rollspeed : 5, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 3,grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
-	width : 36, height : 99,vitesse : 3, run_speed : 6.2,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.42, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.2, grabtype : "launch",
+	width : 36, height : 99,vitesse : 3, run_speed : 6.2,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.42, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.2, grabtype : "launch_free",
 	airdrift : 0.14, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : baraka_coups, pv : 98, getupfdur : 30, grabfdur : 20, grabdeg : 12, vicposframes : 7, vicposfdur : 36, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male",
 	default_behav : "masher", combos : baraka_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Raiden obtains a state monopoly on electricity production and becomes a multi-billionaire."});
 
