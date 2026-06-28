@@ -3984,8 +3984,10 @@ class IceClone{
 				if(this.parrying){
 					ctx.filter = 'brightness(1.5) saturate(1.5)';
 				}
-				ctx.scale(2*this.orientation,2);
 				var coords = this.coordinates.get(this.costume);
+				var orientation = this.orientation;
+				if (coords.flip == true){orientation = -orientation;}
+				ctx.scale(2*orientation,2);
 				var self_shakex = 0.; var self_shakey = 0.;
 				if(this.shaking > 0){
 					this.shaking --;
@@ -3994,7 +3996,7 @@ class IceClone{
 					self_shakey = -this.shakeforce/2 + 2*Math.random()*this.shakeforce/2;
 				}
 				if(last_char(this.mov)=='#' && this.movlag%4<=1)ctx.filter = "sepia(1) saturate(5) hue-rotate(20deg)";
-				var x = (this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.charac.width/2+shakex+self_shakex)*this.orientation;
+				var x = (this.x+decalagex-camerax+coords.decx*orientation-orientation*this.charac.width/2+shakex+self_shakex)*orientation;
 				y = ground-y-coords.height-coords.decy+shakey+self_shakey;
 				ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,x,y,coords.width,coords.height);
 				

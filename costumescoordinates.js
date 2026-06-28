@@ -1202,7 +1202,7 @@ function getbarcoordinates(){
 	barcoordinates.set("stand4",{offx:134,width:36,offy:10,height:101,decx:0,decy:0});
 	barcoordinates.set("stand5",{offx:93,width:36,offy:12,height:99,decx:0,decy:0});
 	barcoordinates.set("stand6",{offx:52,width:35,offy:13,height:98,decx:0,decy:0});
-	var a = -4;
+	var a = -3;
 	barcoordinates.set("walk1",{offx:232,width:47,offy:7,height:105,decx:-3,decy:a-2});
 	barcoordinates.set("walk2",{offx:286,width:46,offy:6,height:105,decx:-1,decy:a-2});
 	barcoordinates.set("walk3",{offx:336,width:43,offy:6,height:106,decx:0,decy:a-3});
@@ -1245,23 +1245,23 @@ function getbarcoordinates(){
 	barcoordinates.set("hkick5",{offx:790,width:56,offy:253,height:100,decx:0,decy:0});
 	barcoordinates.set("hkick6",{offx:850,width:47,offy:249,height:103,decx:0,decy:0});
 
-	barcoordinates.set("hurted1",{offx:15,width:37,offy:1002,height:100,decx:0,decy:0});
-	barcoordinates.set("hurted2",{offx:55,width:43,offy:1006,height:96,decx:0,decy:0});
-	barcoordinates.set("falling1",{offx:493,width:36,offy:887,height:96,decx:0,decy:0});
-	barcoordinates.set("falling2",{offx:539,width:61,offy:890,height:50,decx:0,decy:0});
-	barcoordinates.set("falling3",{offx:612,width:39,offy:885,height:81,decx:0,decy:0});
-	barcoordinates.set("grounded1",{offx:657,width:60,offy:916,height:59,decx:0,decy:0});
-	barcoordinates.set("grounded2",{offx:726,width:73,offy:956,height:29,decx:0,decy:0});
-	barcoordinates.set("getup1",{offx:813,width:45,offy:934,height:53,decx:0,decy:0});
-	barcoordinates.set("getup2",{offx:865,width:66,offy:923,height:60,decx:0,decy:0});
-	barcoordinates.set("getup3",{offx:937,width:55,offy:935,height:51,decx:0,decy:0});
-	barcoordinates.set("getup4",{offx:996,width:39,offy:911,height:75,decx:0,decy:0});
+	barcoordinates.set("hurted1",{offx:15,width:37,offy:1002,height:100,decx:0,decy:0,flip:true});
+	barcoordinates.set("hurted2",{offx:55,width:43,offy:1006,height:96,decx:0,decy:0,flip:true});
+	barcoordinates.set("falling1",{offx:493,width:36,offy:887,height:96,decx:0,decy:0,flip:true});
+	barcoordinates.set("falling2",{offx:539,width:61,offy:890,height:50,decx:0,decy:0,flip:true});
+	barcoordinates.set("falling3",{offx:612,width:39,offy:885,height:81,decx:0,decy:0,flip:true});
+	barcoordinates.set("grounded1",{offx:657,width:60,offy:916,height:59,decx:0,decy:0,flip:true});
+	barcoordinates.set("grounded2",{offx:726,width:73,offy:956,height:29,decx:0,decy:0,flip:true});
+	barcoordinates.set("getup1",{offx:813,width:45,offy:934,height:53,decx:0,decy:0,flip:true});
+	barcoordinates.set("getup2",{offx:865,width:66,offy:923,height:60,decx:0,decy:0,flip:true});
+	barcoordinates.set("getup3",{offx:937,width:55,offy:935,height:51,decx:0,decy:0,flip:true});
+	barcoordinates.set("getup4",{offx:996,width:39,offy:911,height:75,decx:0,decy:0,flip:true});
 	barcoordinates.set("blocking1",{offx:1002,width:37,offy:5,height:108,decx:0,decy:0});
 	barcoordinates.set("blocking2",{offx:1047,width:34,offy:4,height:109,decx:0,decy:0});
 	barcoordinates.set("cblocking1",{offx:849,width:39,offy:45,height:67,decx:0,decy:0});
 	barcoordinates.set("cblocking2",{offx:896,width:39,offy:42,height:70,decx:0,decy:0});
-	barcoordinates.set("churted1",{offx:461,width:43,offy:1036,height:66,decx:0,decy:0});
-	barcoordinates.set("churted2",{offx:512,width:46,offy:1040,height:62,decx:0,decy:0});
+	barcoordinates.set("churted1",{offx:461,width:43,offy:1036,height:66,decx:0,decy:0,flip:true});
+	barcoordinates.set("churted2",{offx:512,width:46,offy:1040,height:62,decx:0,decy:0,flip:true});
 
 	barcoordinates.set("clpunch1",{offx:252,width:47,offy:175,height:62,decx:0,decy:0});
 	barcoordinates.set("clpunch2",{offx:306,width:65,offy:177,height:60,decx:0,decy:0});
