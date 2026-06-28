@@ -5351,9 +5351,9 @@ class IceClone{
 	airdrift : 0.11, airmaxspeed : 2., airdodgespeed : 5.9, airdodgefdur : 15, landinglag : 10, coups : johnny_coups, pv : 100, getupfdur : 36, grabfdur : 22, grabdeg : 13, vicposframes : 13, vicposfdur : 52, cds : [180,140,210,300], icons : [ballthrowiconpng,shadowkickiconpng,shadowpunchiconpng,nutpunchiconpng], voiceactor : "male",
 	default_behav : "normal", combos : johnny_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Johnny Cage becomes president of the United States and reduces unemployment to -1000%!"});
 	
-	characteristics.set("baraka",{png : barskins,coordinates : barcoordinates, sex : "m", standnframes : 6, standframespeed : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 3, kicknframe : 5,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 9, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
-	width : 36, height : 99,vitesse : 3, run_speed : 6.2,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.42, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.2, grabtype : "poser",
-	airdrift : 0.14, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : baraka_coups, pv : 98, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 7, vicposfdur : 36, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male",
+	characteristics.set("baraka",{png : barskins,coordinates : barcoordinates, sex : "m", standnframes : 6, standframespeed : 6, rollspeed : 5, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 3,grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
+	width : 36, height : 99,vitesse : 3, run_speed : 6.2,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.42, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.2, grabtype : "launch",
+	airdrift : 0.14, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : baraka_coups, pv : 98, getupfdur : 30, grabfdur : 20, grabdeg : 12, vicposframes : 7, vicposfdur : 36, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male",
 	default_behav : "masher", combos : baraka_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Raiden obtains a state monopoly on electricity production and becomes a multi-billionaire."});
 
 
