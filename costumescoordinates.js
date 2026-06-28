@@ -1289,10 +1289,10 @@ function getbarcoordinates(){
 	barcoordinates.set("grabbing3",{offx:1087,width:36,offy:346,height:128,decx:0,decy:0});
 	barcoordinates.set("grabbing4",{offx:1129,width:48,offy:363,height:113,decx:0,decy:0});
 	barcoordinates.set("grabbing5",{offx:1129,width:48,offy:363,height:113,decx:0,decy:0});
-	barcoordinates.set("grabbed1",{offx:869,width:57,offy:1027,height:75,decx:0,decy:0});
-	barcoordinates.set("grabbed2",{offx:935,width:59,offy:1010,height:76,decx:0,decy:0});
-	barcoordinates.set("grabbed3",{offx:1001,width:50,offy:1001,height:70,decx:0,decy:0});
-	barcoordinates.set("grabbed4",{offx:1057,width:47,offy:1005,height:72,decx:0,decy:0});
+	barcoordinates.set("grabbed1",{offx:869,width:57,offy:1027,height:75,decx:0,decy:0,flip:true});
+	barcoordinates.set("grabbed2",{offx:935,width:59,offy:1010,height:76,decx:0,decy:0,flip:true});
+	barcoordinates.set("grabbed3",{offx:1001,width:50,offy:1001,height:70,decx:0,decy:0,flip:true});
+	barcoordinates.set("grabbed4",{offx:1057,width:47,offy:1005,height:72,decx:0,decy:0,flip:true});
 
 	barcoordinates.set("victory1",{offx:551,width:33,offy:731,height:137,decx:6,decy:0});
 	barcoordinates.set("victory2",{offx:591,width:109,offy:763,height:105,decx:-40,decy:0});
@@ -1302,19 +1302,19 @@ function getbarcoordinates(){
 	barcoordinates.set("victory6",{offx:936,width:21,offy:767,height:101,decx:6,decy:0});
 	barcoordinates.set("victory7",{offx:966,width:42,offy:758,height:110,decx:-5,decy:0});
 
-	barcoordinates.set("decapitated1",{offx:252,width:16,offy:1233,height:97,decx:0,decy:0});
-	barcoordinates.set("decapitated2",{offx:281,width:27,offy:1241,height:91,decx:0,decy:0});
-	barcoordinates.set("decapitated3",{offx:316,width:26,offy:1262,height:67,decx:0,decy:0});
-	barcoordinates.set("decapitated4",{offx:351,width:38,offy:1262,height:65,decx:0,decy:0});
-	barcoordinates.set("decapitated5",{offx:397,width:73,offy:1307,height:30,decx:0,decy:0});
-	barcoordinates.set("decapitated6",{offx:397,width:73,offy:1307,height:30,decx:0,decy:0});
-	barcoordinates.set("stunned1",{offx:618,width:35,offy:999,height:103,decx:0,decy:0});
-	barcoordinates.set("stunned2",{offx:661,width:36,offy:1000,height:102,decx:0,decy:0});
-	barcoordinates.set("stunned3",{offx:705,width:36,offy:1003,height:99,decx:0,decy:0});
-	barcoordinates.set("stunned4",{offx:746,width:37,offy:1006,height:96,decx:0,decy:0});
-	barcoordinates.set("stunned5",{offx:788,width:36,offy:1003,height:99,decx:0,decy:0});
+	barcoordinates.set("decapitated1",{offx:252,width:16,offy:1233,height:97,decx:0,decy:0,flip:true});
+	barcoordinates.set("decapitated2",{offx:281,width:27,offy:1241,height:91,decx:0,decy:0,flip:true});
+	barcoordinates.set("decapitated3",{offx:316,width:26,offy:1262,height:67,decx:0,decy:0,flip:true});
+	barcoordinates.set("decapitated4",{offx:351,width:38,offy:1262,height:65,decx:0,decy:0,flip:true});
+	barcoordinates.set("decapitated5",{offx:397,width:73,offy:1307,height:30,decx:0,decy:0,flip:true});
+	barcoordinates.set("decapitated6",{offx:397,width:73,offy:1307,height:30,decx:0,decy:0,flip:true});
+	barcoordinates.set("stunned1",{offx:618,width:35,offy:999,height:103,decx:0,decy:0,flip:true});
+	barcoordinates.set("stunned2",{offx:661,width:36,offy:1000,height:102,decx:0,decy:0,flip:true});
+	barcoordinates.set("stunned3",{offx:705,width:36,offy:1003,height:99,decx:0,decy:0,flip:true});
+	barcoordinates.set("stunned4",{offx:746,width:37,offy:1006,height:96,decx:0,decy:0,flip:true});
+	barcoordinates.set("stunned5",{offx:788,width:36,offy:1003,height:99,decx:0,decy:0,flip:true});
 	barcoordinates.set("ballshurt",{offx:1141,width:36,offy:1025,height:77,decx:0,decy:0});
-	barcoordinates.set("legs",{offx:179,width:15,offy:1255,height:75,decx:0,decy:0});
+	barcoordinates.set("legs",{offx:179,width:15,offy:1255,height:75,decx:0,decy:0,flip:true});
 	barcoordinates.set("torso",{offx:24,width:34,offy:1272,height:36,decx:0,decy:0});
 	barcoordinates.set("torso2",{offx:70,width:37,offy:1269,height:37,decx:0,decy:0});
 	barcoordinates.set("head",{offx:317,width:14,offy:1224,height:18,decx:0,decy:0});
