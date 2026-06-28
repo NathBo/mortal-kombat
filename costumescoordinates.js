@@ -1194,6 +1194,40 @@ function getjohcoordinates(){
 }
 
 
+function getbarcoordinates(){
+    var barcoordinates = new Map();
+	barcoordinates.set("stand1",{offx:10,width:34,offy:14,height:97,decx:0,decy:0});
+	barcoordinates.set("stand2",{offx:52,width:35,offy:13,height:98,decx:0,decy:0});
+	barcoordinates.set("stand3",{offx:93,width:36,offy:12,height:99,decx:0,decy:0});
+	barcoordinates.set("stand4",{offx:134,width:36,offy:10,height:101,decx:0,decy:0});
+	barcoordinates.set("stand5",{offx:93,width:36,offy:12,height:99,decx:0,decy:0});
+	barcoordinates.set("stand6",{offx:52,width:35,offy:13,height:98,decx:0,decy:0});
+	var a = -4;
+	barcoordinates.set("walk1",{offx:232,width:47,offy:7,height:105,decx:-3,decy:a-2});
+	barcoordinates.set("walk2",{offx:286,width:46,offy:6,height:105,decx:-1,decy:a-2});
+	barcoordinates.set("walk3",{offx:336,width:43,offy:6,height:106,decx:0,decy:a-3});
+	barcoordinates.set("walk4",{offx:383,width:43,offy:7,height:104,decx:0,decy:a-1});
+	barcoordinates.set("walk5",{offx:432,width:43,offy:9,height:103,decx:0,decy:a});
+	barcoordinates.set("walk6",{offx:479,width:43,offy:8,height:104,decx:0,decy:a-1});
+	barcoordinates.set("walk7",{offx:527,width:43,offy:8,height:104,decx:0,decy:a-1});
+	barcoordinates.set("walk8",{offx:575,width:43,offy:9,height:103,decx:0,decy:a});
+	barcoordinates.set("walk9",{offx:624,width:44,offy:10,height:102,decx:0,decy:a+1});
+
+
+	barcoordinates.set("victory1",{offx:551,width:33,offy:731,height:137,decx:6,decy:0});
+	barcoordinates.set("victory2",{offx:591,width:109,offy:763,height:105,decx:-40,decy:0});
+	barcoordinates.set("victory3",{offx:705,width:106,offy:770,height:98,decx:-34,decy:0});
+	barcoordinates.set("victory4",{offx:817,width:68,offy:780,height:88,decx:-16,decy:0});
+	barcoordinates.set("victory5",{offx:893,width:29,offy:780,height:88,decx:2,decy:0});
+	barcoordinates.set("victory6",{offx:936,width:21,offy:767,height:101,decx:6,decy:0});
+	barcoordinates.set("victory7",{offx:966,width:42,offy:758,height:110,decx:-5,decy:0});
+
+    return barcoordinates;
+}
+
+
+
+
 
 function getshaocoordinates(){
 	var shaocoordinates = new Map();
