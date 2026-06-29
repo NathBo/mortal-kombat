@@ -1327,6 +1327,11 @@ function getbarcoordinates(){
 	barcoordinates.set("spin6",{offx:557,width:94,offy:1554,height:102,decx:-52,decy:0});
 	barcoordinates.set("spin7",{offx:668,width:25,offy:1554,height:102,decx:-5,decy:0});
 	barcoordinates.set("spin8",{offx:713,width:68,offy:1555,height:101,decx:-29,decy:0});
+	barcoordinates.set("gripe1",{offx:369,width:65,offy:611,height:115,decx:0,decy:0});
+	barcoordinates.set("gripe2",{offx:438,width:68,offy:646,height:80,decx:0,decy:0});
+	barcoordinates.set("gripe3",{offx:510,width:65,offy:624,height:102,decx:0,decy:0});
+	barcoordinates.set("gripe4",{offx:579,width:67,offy:627,height:99,decx:0,decy:0});
+	barcoordinates.set("gripe5",{offx:652,width:53,offy:610,height:116,decx:0,decy:0});
 
     return barcoordinates;
 }

@@ -270,6 +270,8 @@ baraka_coups.set("jskick",{slag : 8, fdur : 15, elag : 7, degats : 11, hitstun :
 baraka_coups.set("jpunch",{slag : 6, fdur : 10, elag : 10, degats : 8, hitstun : 24, hurtx : 1., hurty : 0, hitboxxs : 40, hitboxxe : 61,hitboxys : -50, hitboxye : 10, hitboxxouv : 32, blood_height : 0, landinglag : 6, blockstun : 12, blockx : 2.5, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 7, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "air", voiceline : "mmov", movx : 0, coupwav : "coup"});
 baraka_coups.set("spin",{slag : 8, fdur : 30, elag : 6, degats : 2, hitstun : 32, hurtx : 3, hurty : 2.5, hitboxxs : -30, hitboxxe : 56,hitboxys : 1, hitboxye : 95, hitboxxouv : 10, blood_height : 10, landinglag : 8, blockstun : 7, blockx : 2.3, hiteffect : "fall", hitboxxeyscaling : -0.2, hitlag : 6, hitsound : "fan", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : "coup"});
 baraka_coups.set("spin#",{slag : 8, fdur : 30, elag : 6, degats : 3, hitstun : 32, hurtx : 3, hurty : 2.7, hitboxxs : -30, hitboxxe : 56,hitboxys : 1, hitboxye : 95, hitboxxouv : 10, blood_height : 10, landinglag : 8, blockstun : 7, blockx : 2.3, hiteffect : "fall", hitboxxeyscaling : -0.2, hitlag : 6, hitsound : "fan", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : "coup"});
+baraka_coups.set("gripe",{slag : 8, fdur : 30, elag : 6, degats : 2, hitstun : 32, hurtx : 0.1, hurty : 3., hitboxxs : -30, hitboxxe : 56,hitboxys : 0, hitboxye : 95, hitboxxouv : 0, blood_height : 10, landinglag : 8, blockstun : 7, blockx : 2.3, hiteffect : "fall", hitboxxeyscaling : -0.2, hitlag : 6, hitsound : "fan", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : "coup"});
+baraka_coups.set("gripe#",{slag : 6, fdur : 30, elag : 6, degats : 3, hitstun : 32, hurtx : 1.1, hurty : 3., hitboxxs : -30, hitboxxe : 56,hitboxys : 0, hitboxye : 95, hitboxxouv : 0, blood_height : 10, landinglag : 8, blockstun : 7, blockx : 2.3, hiteffect : "fall", hitboxxeyscaling : -0.2, hitlag : 6, hitsound : "fan", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : "coup",movx : 4.});
 baraka_coups.set("grab",{slag : 5, fdur : 3, elag : 12, degats : 12, hitstun : 22, hurtx : 4.2, hurty : 5., hitboxxs : 5, hitboxxe : 38,hitboxys : 0, hitboxye : -1, hitboxxouv : 15, blood_height : 0, blockstun : 12, blockx : 1.7, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : "coup"});
 baraka_coups.set("burst",get_burst_stats());
 
@@ -342,6 +344,7 @@ movpriority.set("ballthrow",70);
 movpriority.set("shadowpunch",70);
 movpriority.set("nutpunch",70);
 movpriority.set("spin",70);
+movpriority.set("gripe",70);
 movpriority.set("air_dodge",100);
 movpriority.set("landing_lag",100);
 movpriority.set("jumpsquat",100);
@@ -402,3 +405,4 @@ cd_dependance.set("ballthrow",0);
 cd_dependance.set("shadowpunch",2);
 cd_dependance.set("nutpunch",3);
 cd_dependance.set("spin",0);
+cd_dependance.set("gripe",3);
