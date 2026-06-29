@@ -71,6 +71,10 @@ var shadowkickiconpng=new Image();shadowkickiconpng.src = 'ressource/icons/shado
 var shadowpunchiconpng=new Image();shadowpunchiconpng.src = 'ressource/icons/shadowpunch_icon.png';
 var ballthrowiconpng=new Image();ballthrowiconpng.src = 'ressource/icons/ballthrow_icon.png';
 var nutpunchiconpng=new Image();nutpunchiconpng.src = 'ressource/icons/nutpunch_icon.png';
+var spiniconpng=new Image();spiniconpng.src = 'ressource/icons/spin_icon.png';
+var diveiconpng=new Image();diveiconpng.src = 'ressource/icons/dive_icon.png';
+var slicethrowiconpng=new Image();slicethrowiconpng.src = 'ressource/icons/slicethrow_icon.png';
+var gripeiconpng=new Image();gripeiconpng.src = 'ressource/icons/gripe_icon.png';
 
 var bloodpng = new Image();bloodpng.src = 'ressource/visual_effects/blood.png';
 var burstpng = new Image();burstpng.src = 'ressource/visual_effects/burst2.png'
@@ -106,6 +110,7 @@ var subzeroiconpng=new Image();subzeroiconpng.src = 'ressource/icons/subzero.png
 var reptileiconpng=new Image();reptileiconpng.src = 'ressource/icons/reptile.png';
 var liukangiconpng=new Image();liukangiconpng.src = 'ressource/icons/liukang.png';
 var johnnyiconpng=new Image();johnnyiconpng.src = 'ressource/icons/johnny.png';
+var barakaiconpng=new Image();barakaiconpng.src = 'ressource/icons/baraka.png';
 var lockediconpng=new Image();lockediconpng.src = 'ressource/icons/locked.png';
 var boticonpng=new Image();boticonpng.src = 'ressource/icons/bot.png';
 var playericonpng=new Image();playericonpng.src = 'ressource/icons/player.png';
