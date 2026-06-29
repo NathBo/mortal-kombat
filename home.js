@@ -2654,6 +2654,9 @@ class IceClone{
 					else if(this.perso == "johnny" && this.back>=1 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
 						this.begincoup("shadowpunch",other);
 					}
+					else if(this.perso == "baraka" && this.back==0 && this.bas==0 && this.forward==0 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
+						this.begincoup("spin",other);
+					}
 					else if(this.forward>=1&&movpriority.get(racine(this.mov))<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
 						this.x+=this.charac.vitesse*this.orientation;this.xspeed = 0;
 						let d = (this.charac.width+other.charac.width)/3;
@@ -3013,6 +3016,17 @@ class IceClone{
 							this.reoriente(other,true);
 						}
 						if(this.movlag==stats.elag-1){add_to_objects_set(new ExploProj(this.x,this.y+60,this.orientation,other,stats,this.skin));}
+						break;
+					case "spin":
+						var stats = this.charac.coups.get(this.mov);
+						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){
+							var a = 4;
+							if(this.is_enhanced()){a=6;}
+							if(this.forward){this.x += a*this.orientation;this.xspeed+=0.25*this.orientation;}
+							else if(this.back){this.x -= a*this.orientation;this.xspeed-=0.25*this.orientation;}
+							if((stats.elag+stats.fdur-this.movlag)%8==0){this.canthurt=false;}
+						}
+						this.tb=0;
 						break;
 					}
 				this.movlag--;
@@ -3882,6 +3896,15 @@ class IceClone{
 						if(this.movlag<=stats.fdur+2){
 							add_to_objects_set(new Double(this.x-this.orientation*10,this.y-6,this.orientation,this.skin,0.,"shadowpunch2",this.coordinates,3));
 						}
+						break;
+					case "spin" :
+					case "spin#" :
+						var stats = this.charac.coups.get(this.mov);
+						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){
+							var n = Math.floor((stats.elag+stats.fdur-this.movlag)/2)%8+1;
+							this.costume = racine(this.mov)+n.toString()
+						}
+						else{this.costume = racine(this.mov)+"1";}
 						break;
 
 				}
@@ -5357,7 +5380,7 @@ class IceClone{
 	
 	characteristics.set("baraka",{png : barskins,coordinates : barcoordinates, sex : "m", standnframes : 6, standframespeed : 6, rollspeed : 5, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 3,grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
 	width : 35, height : 99,vitesse : 3.1, run_speed : 6.3,jumpxspeed : 3.5,backmovnerf : 0.92, gravity : 0.44, jumpforce : 9.2,jumpsquat : 3, shorthop : 6.2, friction:0.23, hurtcontrol : 0.22, grabtype : "launch_free",
-	airdrift : 0.18, airmaxspeed : 2, airdodgespeed : 6., airdodgefdur : 14, landinglag : 7,coups : baraka_coups, pv : 96, getupfdur : 36, grabfdur : 20, grabdeg : 11, vicposframes : 7, vicposfdur : 36, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male",
+	airdrift : 0.18, airmaxspeed : 2, airdodgespeed : 6., airdodgefdur : 14, landinglag : 7,coups : baraka_coups, pv : 96, getupfdur : 36, grabfdur : 20, grabdeg : 11, vicposframes : 7, vicposfdur : 36, cds : [130,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male",
 	default_behav : "masher", combos : baraka_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Raiden obtains a state monopoly on electricity production and becomes a multi-billionaire."});
 
 
