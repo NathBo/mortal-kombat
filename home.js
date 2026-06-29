@@ -2139,6 +2139,7 @@ class IceClone{
 			if(s == "bicycle" || s == "bicycle#"){this.y=40;}
 			if(s == "knifethrow"){this.memoryslot=0;}
 			if(s == "knifethrow#"){this.memoryslot=20;}
+			if(racine(s)=="dive"){this.memoryslot=1;}
 			if(racine(s) == "cycle" && this.y==0){this.invincibilite=23;}
 			if(racine(s) == "teleport_drop"){this.invincibilite=14;}
 			if(s == "shao_tp"){this.invincibilite=stats.slag+stats.fdur+stats.elag+1;}
@@ -2721,6 +2722,9 @@ class IceClone{
 					else if(this.perso == "baraka" && this.back>=1 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
 						this.begincoup("slicethrow",other);
 					}
+					else if(this.perso == "baraka" && this.forward>=1 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
+						this.begincoup("dive",other);
+					}
 					else if(this.forward>=1&&movpriority.get(racine(this.mov))<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
 						this.x+=this.charac.vitesse*this.orientation;this.xspeed = 0;
 						let d = (this.charac.width+other.charac.width)/3;
@@ -3105,6 +3109,18 @@ class IceClone{
 							add_to_objects_set(new SliceProj(this.x+40*this.orientation,this.y+75,this.orientation,other,stats,this.skin));
 						}
 						break;
+					case "dive":
+						var stats = this.charac.coups.get(this.mov);
+						if(this.movlag==stats.elag+stats.fdur+stats.slag && this.is_enhanced()){this.invincibilite = 12;}
+						if(this.movlag==stats.elag+stats.fdur+1){this.tb=4.5;this.y=20;fixcamera=30;}
+						if(this.movlag<=stats.elag+stats.fdur+stats.slag){
+							var a = 7;
+							if(this.is_enhanced()){a=8;}
+							if(this.memoryslot==0){this.xspeed=0;}
+							else{this.x+=a*this.orientation;}
+							this.tb -= this.charac.gravity*0.2;
+						}
+						break;
 					}
 				this.movlag--;
 				if(this.movlag == 0){
@@ -3218,7 +3234,6 @@ class IceClone{
 		gainpv(n){
 			this.pv = Math.min(this.pvmax,this.pv+n);
 			this.pvaff = Math.max(this.pvaff,this.pv);
-			console.log(this.pv);
 		}
 
 		hiteffect_is_not_projo(s){
@@ -3274,6 +3289,7 @@ class IceClone{
 				if(!parrywasdone){this.pv-=stats.damageonblock;}
 				if(this.pv<=0){this.pv = 1;}
 				this.xspeed = -stats.blockx*this.orientation;
+				if(racine(other.mov)=="dive"){other.memoryslot=0;console.log("blocked");}
 				if(parrywasdone){
 					if(this.hiteffect_is_not_projo(stats.hiteffect)){lag_game(11);}
 					else{lag_game(5);}
@@ -4003,6 +4019,11 @@ class IceClone{
 						else if(entre(this.movlag,stats.elag*0.5,stats.elag+stats.slag*0.5)){this.costume = racine(this.mov)+"2";}
 						else if(entre(this.movlag,stats.elag*0.5,stats.elag+stats.slag)){this.costume = racine(this.mov)+"1";}
 						else{this.costume = racine(this.mov)+"4";}
+						break;
+					case "dive" :
+						var stats = this.charac.coups.get(this.mov);
+						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.costume = "jpunch2"}
+						else{this.costume = "jump3";}
 						break;
 				}
 			}
@@ -5477,7 +5498,7 @@ class IceClone{
 	
 	characteristics.set("baraka",{png : barskins,coordinates : barcoordinates, sex : "m", standnframes : 6, standframespeed : 6, rollspeed : 5, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 3,grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
 	width : 35, height : 99,vitesse : 3.1, run_speed : 6.3,jumpxspeed : 3.5,backmovnerf : 0.92, gravity : 0.44, jumpforce : 9.2,jumpsquat : 3, shorthop : 6.2, friction:0.23, hurtcontrol : 0.22, grabtype : "launch_free",
-	airdrift : 0.18, airmaxspeed : 2, airdodgespeed : 6., airdodgefdur : 14, landinglag : 7,coups : baraka_coups, pv : 96, getupfdur : 36, grabfdur : 20, grabdeg : 11, vicposframes : 7, vicposfdur : 36, cds : [130,180,150,180], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male",
+	airdrift : 0.18, airmaxspeed : 2, airdodgespeed : 6., airdodgefdur : 14, landinglag : 7,coups : baraka_coups, pv : 96, getupfdur : 36, grabfdur : 20, grabdeg : 11, vicposframes : 7, vicposfdur : 36, cds : [130,150,150,180], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male",
 	default_behav : "masher", combos : baraka_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Raiden obtains a state monopoly on electricity production and becomes a multi-billionaire."});
 
 
