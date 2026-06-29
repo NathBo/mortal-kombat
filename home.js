@@ -467,6 +467,64 @@ function main(){
 		}
 	}
 
+	class SliceProj{
+		constructor(x,y,orientation,other,stats,skin=reppng){
+			this.x = x; this.y = y; this.orientation = orientation;
+			this.other = other; this.skin = skin;
+			this.width=40;
+			this.height=17;
+			this.totdur = 40;this.vitesse=8.5;
+			this.costcpt = 0;
+			this.framepercost = 3;
+			this.stats = stats;
+			this.dur = this.totdur;
+			this.num = cpt;
+			this.dangerous = true;
+			this.dying = 0;
+		}
+
+		loop(){
+			if(this.dying==0){
+				this.x += this.orientation*this.vitesse;
+				var stats = this.stats; var other = this.other;
+				if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
+					if(other.y==0){
+						if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
+					}
+					else{
+						if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/4,this.height/2+other.charac.height/4)){other.hurt(this,stats);this.dur=1;}
+					}
+				}
+			}
+			else{
+				this.dying--;
+				this.x -= this.orientation;
+				if(this.dying==1){this.delete();}
+			}
+		}
+
+		afficher(){
+			this.costcpt = (this.costcpt+1)%(4*this.framepercost);
+			if(this.dying==0){this.costume = "slicethrow";}
+			else if(this.dying>=6){this.costume = "slicethrowcont1";}
+			else if(this.dying>=4){this.costume = "slicethrowcont2";}
+			else if(this.dying>=2){this.costume = "slicethrowcont3";}
+			else{this.costume = "slicethrowcont4";}
+			this.rotation = (this.rotation+this.rotationspeed)%360;
+			ctx.scale(2*this.orientation,2);
+			var coords = barcoordinates.get(this.costume);
+			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			if(gamefreeze==0){this.dur--;}
+			if(this.dur==0){this.dying=8;return;}
+		}
+
+		delete(){
+			objects_to_loop.delete(this.num);
+		}
+	}
+
 	class SpitProj{
 		constructor(x,y,orientation,other,stats,skin=reppng){
 			this.x = x; this.y = y; this.orientation = orientation;
@@ -2660,6 +2718,9 @@ class IceClone{
 					else if(this.perso == "baraka" && this.bas>=1 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
 						this.begincoup("gripe",other);
 					}
+					else if(this.perso == "baraka" && this.back>=1 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
+						this.begincoup("slicethrow",other);
+					}
 					else if(this.forward>=1&&movpriority.get(racine(this.mov))<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
 						this.x+=this.charac.vitesse*this.orientation;this.xspeed = 0;
 						let d = (this.charac.width+other.charac.width)/3;
@@ -3035,6 +3096,13 @@ class IceClone{
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){
 							if((stats.elag+stats.fdur-this.movlag)%4==0){this.canthurt=false;}
 							if(this.is_enhanced()){this.x+=this.orientation;}
+						}
+						break;
+					case "slicethrow":
+						var stats = this.charac.coups.get(this.mov);
+						this.crouching=0;
+						if(this.movlag==stats.elag){
+							add_to_objects_set(new SliceProj(this.x+40*this.orientation,this.y+75,this.orientation,other,stats,this.skin));
 						}
 						break;
 					}
@@ -3913,7 +3981,6 @@ class IceClone{
 						}
 						break;
 					case "spin" :
-					case "spin#" :
 						var stats = this.charac.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){
 							var n = Math.floor((stats.elag+stats.fdur-this.movlag)/2)%8+1;
@@ -3930,7 +3997,13 @@ class IceClone{
 						}
 						else{this.costume = racine(this.mov)+"1";}
 						break;
-
+					case "slicethrow" :
+						var stats = this.charac.coups.get(this.mov);
+						if(entre(this.movlag,stats.elag*0.4,stats.elag)){this.costume = racine(this.mov)+"3";}
+						else if(entre(this.movlag,stats.elag*0.5,stats.elag+stats.slag*0.5)){this.costume = racine(this.mov)+"2";}
+						else if(entre(this.movlag,stats.elag*0.5,stats.elag+stats.slag)){this.costume = racine(this.mov)+"1";}
+						else{this.costume = racine(this.mov)+"4";}
+						break;
 				}
 			}
 			else if (this.y>0 && !is_in_charc_screen){

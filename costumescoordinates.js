@@ -1332,6 +1332,15 @@ function getbarcoordinates(){
 	barcoordinates.set("gripe3",{offx:510,width:65,offy:624,height:102,decx:0,decy:0});
 	barcoordinates.set("gripe4",{offx:579,width:67,offy:627,height:99,decx:0,decy:0});
 	barcoordinates.set("gripe5",{offx:652,width:53,offy:610,height:116,decx:0,decy:0});
+	barcoordinates.set("slicethrow1",{offx:781,width:55,offy:612,height:113,decx:0,decy:0});
+	barcoordinates.set("slicethrow2",{offx:846,width:44,offy:618,height:107,decx:0,decy:0});
+	barcoordinates.set("slicethrow3",{offx:904,width:77,offy:604,height:121,decx:0,decy:0});
+	barcoordinates.set("slicethrow4",{offx:986,width:67,offy:622,height:103,decx:0,decy:0});
+	barcoordinates.set("slicethrow",{offx:196,width:47,offy:1486,height:9,decx:0,decy:0});
+	barcoordinates.set("slicethrowcont1",{offx:262,width:40,offy:1484,height:32,decx:0,decy:0});
+	barcoordinates.set("slicethrowcont2",{offx:312,width:40,offy:1476,height:45,decx:0,decy:0});
+	barcoordinates.set("slicethrowcont3",{offx:367,width:37,offy:1466,height:59,decx:0,decy:0});
+	barcoordinates.set("slicethrowcont4",{offx:406,width:51,offy:1459,height:38,decx:0,decy:0});
 
     return barcoordinates;
 }
