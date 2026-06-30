@@ -1954,11 +1954,12 @@ class IceClone{
 					if(this.desired_move!="flying_kick" && this.y>0){break block;}
 					if(this.desired_move=="flying_kick" && this.wantstoenhance()>0){me.enhance=1;}
 					if(this.desired_move=="fireball" && other.tb>0){break block;}
+					if(this.desired_move=="slicethrow" && other.tb>1.8){break block;}
 					if(this.desired_move=="spear_throw" && (other.tb>4. || Math.abs(-stage_size/2*other.orientation-other.x)<=130)){break block;}
 					if(this.desired_move=="hell_gates" && Math.abs(-stage_size/2*other.orientation-other.x)<=130){break block;}
 					if(this.desired_move=="leg_takedown" && this.wantstoenhance()>0){me.enhance=1;}
 					if((!me.charac.coups.has(me.mov) || me.movlag <= me.charac.coups.get(me.mov).elag+me.charac.coups.get(me.mov).fdur-this.cancelcombodelay)){
-						if(!(movpriority.get(this.desired_move)==70 && movpriority.get(racine(me.mov))>=70)){this.begincoup(this.desired_move);
+						if(movpriority.get(this.desired_move)>movpriority.get(racine(me.mov))){this.begincoup(this.desired_move);
 					}
 					me.enhance=0;
 				}
@@ -3127,7 +3128,7 @@ class IceClone{
 					case "dive":
 						var stats = this.charac.coups.get(this.mov);
 						if(this.movlag==stats.elag+stats.fdur+stats.slag && this.is_enhanced()){this.invincibilite = 12;}
-						if(this.movlag==stats.elag+stats.fdur+1){this.tb=4.5;this.y=20;fixcamera=30;}
+						if(this.movlag==stats.elag+stats.fdur+1){this.tb=4.5;this.y=20;this.x-=7*this.orientation;}
 						if(this.movlag<=stats.elag+stats.fdur+stats.slag){
 							var a = 7;
 							if(this.is_enhanced()){a=8;}
