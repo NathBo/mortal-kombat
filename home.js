@@ -2107,6 +2107,7 @@ class IceClone{
 			this.combo_deg = 0; this.combo_hits = 0; this.combo_affich_cpt = 0; this.combo_affich_hits = 0; this.combo_affich_percent = 0; this.combo_affich_score = 0;
 			this.easy_wavedash = true; this.wanttowavedash = false; this.wavedashdir = 1;
 			this.running = 0; this.lastforward = 0; this.lastdir = 0; this.run_buffer = 0;
+			this.no_costume_control = false;
 		}
 
 		begincoup(s,other,ai_pass=false,follow_up=false){
@@ -2605,6 +2606,20 @@ class IceClone{
 					}
 					else if(this.perso == "johnny" && this.back && this.bas==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=60 && other.gettingup==0 && other.y<=30){
 						this.fatality = 110;
+						other.falling=0;
+						other.y=0;
+						other.x = this.x+36*this.orientation;
+						play_sound_eff("fatal1");
+						this.special=2;
+						finishhim = 0;
+						other.invincibilite=1000;
+						fatalitywasdone = true;
+						this.mov = ""; this.movlag=0;
+						other.reoriente(this);
+					}
+					else if(this.perso == "baraka" && this.back && this.bas==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=60 && other.gettingup==0 && other.y<=30){
+						this.fatality = 150;
+						this.memoryslot=0;
 						other.falling=0;
 						other.y=0;
 						other.x = this.x+36*this.orientation;
@@ -3427,6 +3442,7 @@ class IceClone{
 				return;
 			}
 			if(this.freeze){}
+			else if(this.no_costume_control){}
 			else if(this.fatality && this.fatalitytype==0){
 				if(this.perso=="kitana"){
 					if(this.fatality>=70){this.costume = "fanswipe1"}
@@ -3589,6 +3605,40 @@ class IceClone{
 						this.costume = "fatagrab"+n.toString();
 					}
 					else{this.costume="fatagrab8";}
+				}
+				else if(this.perso=="baraka"){
+					var a = 120; var b = 3; var c = 90; var d = 45; var e = 20; var f = 0.3;
+					var n = 1;
+					if(this.fatality==c){
+						other.no_costume_control=false;this.grabbed_object = other.decapitate_keep();
+						play_sound_eff("spithit");play_sound_eff("fan");shake_screen(8,10);
+					}
+					else if(this.fatality==a-7){other.no_costume_control=true;other.shake_player(10,8);play_sound_eff("lhit");}
+					if(this.fatality>=a){n=1;}
+					else if(this.fatality>=a-3){n=2;}
+					else if(this.fatality>=a-6){n=3;}
+					else if(this.fatality>=c){other.costume="stunned2";n=4;}
+					else if(this.fatality>=c-3){n=5;this.grabbed_object.x = this.x+45*this.orientation; this.grabbed_object.y=100;}
+					else if(this.fatality>=d){n=6;this.grabbed_object.x = this.x+45*this.orientation; this.grabbed_object.y=120;}
+					else if(this.fatality>=e){
+						n=6;this.grabbed_object.x = this.x+(45+(this.fatality-d)*f)*this.orientation; this.grabbed_object.y=120+(this.fatality-d)*2*f;
+						if(this.fatality%5==0){add_to_objects_set(new Blood(this.x+(45+(this.fatality-d)*f)*this.orientation,120+(this.fatality-d)*2*f,-this.orientation,"lblood"));}
+						this.grabbed_object.tb=0;
+					}
+					else if(this.pv==this.pvmax){
+						if(this.fatality>=e-6){n=1;}
+						else if(this.fatality>=e-9){n=3;}
+						else{n=4;}
+						this.costume = "huppercut"+n.toString();
+						if(this.fatality==e-10){this.grabbed_object.y=-100;organexplosion(this.x+20*this.orientation,70,-this.orientation)}
+						if(this.fatality==1){
+							if(this.memoryslot==0){this.memoryslot=30;}
+							this.memoryslot--;
+							if(this.memoryslot>0){this.fatality++;}
+						}
+					}
+					else{n=6;this.grabbed_object.x = this.x+(45+(e-d)*f)*this.orientation; this.grabbed_object.y=120+(e-d)*2*f;this.grabbed_object.tb=0;}
+					if(!(this.fatality<e && this.pv==this.pvmax)){this.costume = "fatapique"+n.toString();}
 				}
 				else if(this.perso=="shao_kahn"){
 					if(this.fatality>=40){this.costume = "huppercut1"}
@@ -4251,6 +4301,16 @@ class IceClone{
 			add_to_objects_set(new DropBlood(this.x,this.y+this.charac.height-5,this.orientation,"hdropblood",0.,1.+power));
 		}
 
+		decapitate_keep(power = 2, vitesse=-1){
+			this.decapitated = 100;
+			var head = new Head(this.x,this.y+this.charac.height,this.orientation,this.skin,this.coordinates, power,vitesse);
+			head.rotationspeed=0;head.tb=0;head.vitesse=0;
+			add_to_objects_set(head);
+			add_to_objects_set(new Blood(this.x,this.y+this.charac.height-5,this.orientation,"hblood"));
+			add_to_objects_set(new DropBlood(this.x,this.y+this.charac.height-5,this.orientation,"hdropblood",0.,1.+power));
+			return head;
+		}
+
 		eat_head(dur,vitesse){
 			this.decapitated = 100;
 			add_to_objects_set(new EatenHead(this.x,80,this.orientation,this.skin,this.coordinates,dur,vitesse));
@@ -4301,6 +4361,14 @@ class IceClone{
 		else{
 			shakex = 0; shakey = 0;
 		}
+	}
+
+	function organexplosion(x,y,orientation){
+		for(var i=0;i<25;i++){
+			add_to_objects_set(new Organ(x,y,orientation));
+		}
+		play_sound_eff("explosion");
+		shake_screen(30,10);
 	}
 
 	function drawStage(){

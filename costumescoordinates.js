@@ -1341,6 +1341,12 @@ function getbarcoordinates(){
 	barcoordinates.set("slicethrowcont2",{offx:312,width:40,offy:1476,height:45,decx:16,decy:0});
 	barcoordinates.set("slicethrowcont3",{offx:367,width:37,offy:1466,height:59,decx:22,decy:0});
 	barcoordinates.set("slicethrowcont4",{offx:406,width:51,offy:1459,height:38,decx:25,decy:0});
+	barcoordinates.set("fatapique1",{offx:22,width:42,offy:769,height:99,decx:0,decy:0});
+	barcoordinates.set("fatapique2",{offx:71,width:47,offy:769,height:99,decx:0,decy:0});
+	barcoordinates.set("fatapique3",{offx:119,width:83,offy:776,height:92,decx:0,decy:0});
+	barcoordinates.set("fatapique4",{offx:207,width:77,offy:768,height:100,decx:0,decy:0});
+	barcoordinates.set("fatapique5",{offx:288,width:76,offy:755,height:113,decx:0,decy:0});
+	barcoordinates.set("fatapique6",{offx:370,width:63,offy:736,height:132,decx:0,decy:0});
 
     return barcoordinates;
 }
