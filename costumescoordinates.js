@@ -1317,7 +1317,7 @@ function getbarcoordinates(){
 	barcoordinates.set("legs",{offx:179,width:15,offy:1255,height:75,decx:0,decy:0,flip:true});
 	barcoordinates.set("torso",{offx:24,width:34,offy:1272,height:36,decx:0,decy:0});
 	barcoordinates.set("torso2",{offx:70,width:37,offy:1269,height:37,decx:0,decy:0});
-	barcoordinates.set("head",{offx:317,width:14,offy:1224,height:18,decx:0,decy:0});
+	barcoordinates.set("head",{offx:317,width:14,offy:1224,height:18,decx:0,decy:0,flip:true});
 
 	barcoordinates.set("spin1",{offx:28,width:142,offy:1555,height:100,decx:-61,decy:0});
 	barcoordinates.set("spin2",{offx:185,width:68,offy:1555,height:101,decx:-20,decy:0});

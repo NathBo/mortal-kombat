@@ -1276,9 +1276,11 @@ class IceClone{
 		afficher(){
 			this.costume = "head";
 			var coords = this.coords.get(this.costume);
-			var x = (this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation;
+			var orientation = this.orientation;
+			if(coords.flip==true){orientation*=-1;}
+			var x = (this.x+decalagex-camerax+coords.decx*orientation-orientation*this.width/2+shakex)*orientation;
 			var y = ground-this.y-coords.height-coords.decy+shakey;
-			ctx.scale(2*this.orientation,2);
+			ctx.scale(2*orientation,2);
 			ctx.translate(x+coords.width/2,y+coords.height/2);
 			ctx.rotate(Math.PI*this.rotation/180);
 			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,-coords.width/2,-coords.height/2,coords.width,coords.height);
@@ -5620,7 +5622,7 @@ class IceClone{
 	var score = 0; var matchscore = 0; var roundscore = 0;
 	var old_stats = null; var new_stats = null; var highscore_screen_cpt = 0;
 
-	var fatality_testing = false;
+	var fatality_testing = true;
 
 	
 	function saveStats(){
