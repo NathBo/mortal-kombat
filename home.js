@@ -5700,6 +5700,7 @@ class IceClone{
 		persosunlocked.set("raiden",true);
 		persosunlocked.set("mileena",true);
 		persosunlocked.set("scorpion",true);
+		persosunlocked.set("baraka",true);
 		persosunlocked.set("liukang",false);
 		persosunlocked.set("kitana",false);
 		persosunlocked.set("subzero",false);
