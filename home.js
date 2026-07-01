@@ -48,6 +48,19 @@ function clip(a,b,c){
 	return a;
 }
 
+function areArraysEqual (arrA, arrB) {
+    const isLengthEqual = arrA.length === arrB.length
+    if (!isLengthEqual) {return false;}
+
+    let isEqual = true;
+    for (let i = 0; i < arrA.length; i++) {
+       if (arrA[i] !== arrB[i]) {
+          return false;
+       }
+    }
+    return isEqual;
+}
+
 Array.prototype.shuffle = function(n)
 {
      if(!n)
@@ -3136,7 +3149,7 @@ class IceClone{
 					case "dive":
 						var stats = this.charac.coups.get(this.mov);
 						if(this.movlag==stats.elag+stats.fdur+stats.slag && this.is_enhanced()){this.invincibilite = 12;}
-						if(this.movlag==stats.elag+stats.fdur+1){this.tb=4.5;this.y=20;this.x-=14*this.orientation;}
+						if(this.movlag==stats.elag+stats.fdur+1){this.tb=4.5;this.y=20;this.x-=21*this.orientation;}
 						if(this.movlag<=stats.elag+stats.fdur+stats.slag){
 							var a = 7;
 							if(this.is_enhanced()){a=8;}
@@ -4919,7 +4932,7 @@ class IceClone{
 			ctx.strokeStyle = "red";
 			ctx.strokeRect(leftside*3+72*(persosovered[0][1]),topside*3+120*Math.floor(persosovered[0][0]),63,96);
 		}
-		if(secondplayerchosescharac && ((chartimer>=chartimercycle && persosovered[0]==persosovered[1]) || (chartimer<chartimercycle && persosovered[0]!=persosovered[1]) || persolocked[1])){
+		if(secondplayerchosescharac && ((chartimer>=chartimercycle && areArraysEqual(persosovered[1],persosovered[0])) || (chartimer<chartimercycle && persosovered[0]!=persosovered[1]) || persolocked[1])){
 			ctx.strokeStyle = "green";
 			ctx.strokeRect(leftside*3+72*(persosovered[1][1]),topside*3+120*Math.floor(persosovered[1][0]),63,96);
 		}
@@ -5043,7 +5056,7 @@ class IceClone{
 				if(j1.poing==1){j1.poing=2;}
 				else{j1.jambe=2;}
 				persolocked[1]=true;
-				if(persolocked[1] && persosovered[1]==persosovered[0]){skinschoisis[1]=(skinschoisis[0]+1)%2;}
+				if(persolocked[1] && areArraysEqual(persosovered[1],persosovered[0])){skinschoisis[1]=(skinschoisis[0]+1)%2;}
 				characteristics.get(ordre_persos[persosovered[1][0]][persosovered[1][1]]).namewav.currentTime=0;
 				characteristics.get(ordre_persos[persosovered[1][0]][persosovered[1][1]]).namewav.play();
 				reset_for_charac_screen(1);
@@ -5056,7 +5069,7 @@ class IceClone{
 					persolocked[0]=true;
 					if(j1.poing==1){skinschoisis[0]=0;}
 					else{skinschoisis[0]=1;}
-					if(persolocked[1] && persosovered[1]==persosovered[0]){skinschoisis[0]=(skinschoisis[1]+1)%2;}
+					if(persolocked[1] && areArraysEqual(persosovered[1],persosovered[0])){skinschoisis[0]=(skinschoisis[1]+1)%2;}
 					characteristics.get(ordre_persos[persosovered[0][0]][persosovered[0][1]]).namewav.currentTime=0;
 					characteristics.get(ordre_persos[persosovered[0][0]][persosovered[0][1]]).namewav.play();
 					reset_for_charac_screen(0);
@@ -5068,7 +5081,8 @@ class IceClone{
 					persolocked[1]=true;
 					if(j1.poing==1){skinschoisis[1]=0;}
 					else{skinschoisis[1]=1;}
-					if(persolocked[0] && persosovered[1]==persosovered[0]){skinschoisis[1]=(skinschoisis[0]+1)%2;}
+					console.log(areArraysEqual(persosovered[1],persosovered[0]),persosovered[1],persosovered[0])
+					if(persolocked[0] && areArraysEqual(persosovered[1],persosovered[0])){skinschoisis[1]=(skinschoisis[0]+1)%2;}
 					characteristics.get(ordre_persos[persosovered[1][0]][persosovered[1][1]]).namewav.currentTime=0;
 					characteristics.get(ordre_persos[persosovered[1][0]][persosovered[1][1]]).namewav.play();
 					reset_for_charac_screen(1);
@@ -5579,7 +5593,7 @@ class IceClone{
 	
 	characteristics.set("baraka",{png : barskins,coordinates : barcoordinates, sex : "m", standnframes : 6, standframespeed : 6, rollspeed : 5, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 3,grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : barakaiconpng, namewav : document.querySelector('#barakawav'),
 	width : 35, height : 99,vitesse : 3.1, run_speed : 6.3,jumpxspeed : 3.5,backmovnerf : 0.92, gravity : 0.44, jumpforce : 9.2,jumpsquat : 3, shorthop : 6.2, friction:0.23, hurtcontrol : 0.22, grabtype : "launch_free",
-	airdrift : 0.18, airmaxspeed : 2, airdodgespeed : 6., airdodgefdur : 14, landinglag : 7,coups : baraka_coups, pv : 96, getupfdur : 36, grabfdur : 20, grabdeg : 11, vicposframes : 7, vicposfdur : 36, cds : [130,150,150,180], icons : [spiniconpng,diveiconpng,slicethrowiconpng,gripeiconpng], voiceactor : "male",
+	airdrift : 0.18, airmaxspeed : 2, airdodgespeed : 6., airdodgefdur : 14, landinglag : 7,coups : baraka_coups, pv : 96, getupfdur : 36, grabfdur : 20, grabdeg : 11, vicposframes : 7, vicposfdur : 36, cds : [130,180,150,210], icons : [spiniconpng,diveiconpng,slicethrowiconpng,gripeiconpng], voiceactor : "male",
 	default_behav : "masher", combos : baraka_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Raiden obtains a state monopoly on electricity production and becomes a multi-billionaire."});
 
 
