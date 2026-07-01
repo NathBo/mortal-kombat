@@ -4800,8 +4800,8 @@ class IceClone{
 	}
 
 	function reset_for_charac_screen(n){
-		if(n==0){j1.reinit(-120,0,liste_persos[persosovered[0]],0,skinschoisis[0],j2,true);if(!persosunlocked.get(liste_persos[persosovered[0]])){j1.hide=1;}}
-		else{j2.reinit(120,0,liste_persos[persosovered[1]],1,skinschoisis[1],j1,true);if(!persosunlocked.get(liste_persos[persosovered[1]])){j2.hide=1;}}
+		if(n==0){j1.reinit(-120,0,ordre_persos[persosovered[0][0]][persosovered[0][1]],0,skinschoisis[0],j2,true);if(!persosunlocked.get(ordre_persos[persosovered[0][0]][persosovered[0][1]])){j1.hide=1;}}
+		else{j2.reinit(120,0,ordre_persos[persosovered[1][0]][persosovered[1][1]],1,skinschoisis[1],j1,true);if(!persosunlocked.get(ordre_persos[persosovered[1][0]][persosovered[1][1]])){j2.hide=1;}}
 	}
 
 
@@ -4876,18 +4876,21 @@ class IceClone{
 		if(stagesground[chosenstage] != null){ctx.drawImage(stagesground[chosenstage],-camerax+256-stage_size/2+shakex,178+shakey);}
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		chartimer = (chartimer+1)%(chartimercycle*2);
-		var leftside = 120*0.86; var topside = 40;
+		var leftside = 120*0.86; var topside = 25;
 		//ctx.scale(2.32,2.32);
 		//ctx.drawImage(characterscreenpng,92,0);
 		//ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.scale(3,3);
-		var persos_per_line = 4;
-		for(var i=0;i<liste_persos.length;i++){
-			if(persosunlocked.get(liste_persos[i])){
-				ctx.drawImage(characteristics.get(liste_persos[i]).icon,leftside+24*(i%persos_per_line),topside+40*Math.floor(i/persos_per_line));
-			}
-			else{
-				ctx.drawImage(lockediconpng,leftside+24*(i%persos_per_line),topside+40*Math.floor(i/persos_per_line));
+		var persos_per_line = ordre_persos[0].length;
+		for(var i=0;i<ordre_persos.length;i++){
+			for(var j=0;j<persos_per_line;j++){
+				if(ordre_persos[i][j] == ""){}
+				else if(persosunlocked.get(ordre_persos[i][j])){
+					ctx.drawImage(characteristics.get(ordre_persos[i][j]).icon,leftside+24*j,topside+40*i);
+				}
+				else{
+					ctx.drawImage(lockediconpng,leftside+24*j,topside+40*i);
+				}
 			}
 		}
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -4914,11 +4917,11 @@ class IceClone{
 		ctx.scale(1,1);
 		if(chartimer<chartimercycle || persolocked[0]){
 			ctx.strokeStyle = "red";
-			ctx.strokeRect(leftside*3+72*(persosovered[0]%persos_per_line),topside*3+120*Math.floor(persosovered[0]/persos_per_line),63,96);
+			ctx.strokeRect(leftside*3+72*(persosovered[0][1]),topside*3+120*Math.floor(persosovered[0][0]),63,96);
 		}
 		if(secondplayerchosescharac && ((chartimer>=chartimercycle && persosovered[0]==persosovered[1]) || (chartimer<chartimercycle && persosovered[0]!=persosovered[1]) || persolocked[1])){
 			ctx.strokeStyle = "green";
-			ctx.strokeRect(leftside*3+72*(persosovered[1]%persos_per_line),topside*3+120*Math.floor(persosovered[1]/persos_per_line),63,96);
+			ctx.strokeRect(leftside*3+72*(persosovered[1][1]),topside*3+120*Math.floor(persosovered[1][0]),63,96);
 		}
 
 		
@@ -4928,15 +4931,15 @@ class IceClone{
 		if(j1.droite==1){
 			j1.droite=2;
 			if(!persolocked[0]){
-				if(persosovered[0]%persos_per_line<persos_per_line-1 && persosovered[0]<liste_persos.length-1){
-					persosovered[0]=Math.min(liste_persos.length-1,persosovered[0]+1);
+				if(persosovered[0][1]<persos_per_line-1 && ordre_persos[persosovered[0][0]][persosovered[0][1]+1]!=""){
+					persosovered[0][1]+=1;
 					reset_for_charac_screen(0);
 					play_sound_eff("cursor_move");
 				}
 			}
 			else if(!secondplayerishuman && !persolocked[1] && secondplayerchosescharac){
-				if(persosovered[1]%persos_per_line<persos_per_line-1){
-					persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]+1);
+				if(persosovered[1][1]<persos_per_line-1 && ordre_persos[persosovered[1][0]][persosovered[1][1]+1]!=""){
+					persosovered[1][1]+=1;
 					reset_for_charac_screen(1);
 					play_sound_eff("cursor_move");
 				}
@@ -4945,15 +4948,15 @@ class IceClone{
 		if(j1.gauche==1){
 			j1.gauche=2;
 			if(!persolocked[0]){
-				if(persosovered[0]%persos_per_line>0){
-					persosovered[0]=Math.max(0,persosovered[0]-1);
+				if(persosovered[0][1]>0 && ordre_persos[persosovered[0][0]][persosovered[0][1]-1]!=""){
+					persosovered[0][1]-=1;
 					reset_for_charac_screen(0);
 					play_sound_eff("cursor_move");
 				}
 			}
 			else if(!secondplayerishuman && !persolocked[1] && secondplayerchosescharac){
-				if(persosovered[1]%persos_per_line>0){
-					persosovered[1]=Math.max(0,persosovered[1]-1);
+				if(persosovered[1][1]>0 && ordre_persos[persosovered[1][0]][persosovered[1][1]-1]!=""){
+					persosovered[1][1]-=1;
 					reset_for_charac_screen(1);
 					play_sound_eff("cursor_move");
 				}
@@ -4962,15 +4965,15 @@ class IceClone{
 		if(j1.haut==1){
 			j1.haut=2;
 			if(!persolocked[0]){
-				if(persosovered[0]>persos_per_line-1){
-					persosovered[0]=Math.min(liste_persos.length-1,persosovered[0]-persos_per_line);
+				if(persosovered[0][0]>0 && ordre_persos[persosovered[0][0]-1][persosovered[0][1]]!=""){
+					persosovered[0][0]-=1;
 					reset_for_charac_screen(0);
 					play_sound_eff("cursor_move");
 				}
 			}
 			else if(!secondplayerishuman && !persolocked[1] && secondplayerchosescharac){
-				if(persosovered[1]>persos_per_line-1){
-					persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]-persos_per_line);
+				if(persosovered[1][0]>0 && ordre_persos[persosovered[1][0]-1][persosovered[1][1]]!=""){
+					persosovered[1][0]-=1;
 					reset_for_charac_screen(1);
 					play_sound_eff("cursor_move");
 				}
@@ -4979,15 +4982,15 @@ class IceClone{
 		if(j1.bas==1){
 			j1.bas=2;
 			if(!persolocked[0]){
-				if(persosovered[0]<=3){
-					persosovered[0]=Math.min(liste_persos.length-1,persosovered[0]+persos_per_line);
+				if(persosovered[0][0]<ordre_persos.length-1 && ordre_persos[persosovered[0][0]+1][persosovered[0][1]]!=""){
+					persosovered[0][0]+=1;
 					reset_for_charac_screen(0);
 					play_sound_eff("cursor_move");
 				}
 			}
 			else if(!secondplayerishuman && !persolocked[1] && secondplayerchosescharac){
-				if(persosovered[1]<=3){
-					persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]+persos_per_line);
+				if(persosovered[1][0]<ordre_persos.length-1 && ordre_persos[persosovered[1][0]+1][persosovered[1][1]]!=""){
+					persosovered[1][0]+=1;
 					reset_for_charac_screen(1);
 					play_sound_eff("cursor_move");
 				}
@@ -4996,8 +4999,8 @@ class IceClone{
 		if(j2.droite==1){
 			j2.droite=2;
 			if(!persolocked[1]){
-				if(persosovered[1]%persos_per_line<persos_per_line-1){
-					persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]+1);
+				if(persosovered[1][1]<persos_per_line-1 && ordre_persos[persosovered[1][0]][persosovered[1][1]+1]!=""){
+					persosovered[1][1]+=1;
 					reset_for_charac_screen(1);
 					play_sound_eff("cursor_move");
 				}
@@ -5006,8 +5009,8 @@ class IceClone{
 		if(j2.gauche==1){
 			j2.gauche=2;
 			if(!persolocked[1]){
-				if(persosovered[1]%persos_per_line>0){
-					persosovered[1]=Math.max(0,persosovered[1]-1);
+				if(persosovered[1][1]>0 && ordre_persos[persosovered[1][0]][persosovered[1][1]-1]!=""){
+					persosovered[1][1]-=1;
 					reset_for_charac_screen(1);
 					play_sound_eff("cursor_move");
 				}
@@ -5016,8 +5019,8 @@ class IceClone{
 		if(j2.haut==1){
 			j2.haut=2;
 			if(!persolocked[1]){
-				if(persosovered[1]>persos_per_line-1){
-					persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]-persos_per_line);
+				if(persosovered[1][0]>0 && ordre_persos[persosovered[1][0]-1][persosovered[1][1]]!=""){
+					persosovered[1][0]-=1;
 					reset_for_charac_screen(1);
 					play_sound_eff("cursor_move");
 				}
@@ -5026,48 +5029,48 @@ class IceClone{
 		if(j2.bas==1){
 			j2.bas=2;
 			if(!persolocked[1]){
-				if(persosovered[1]<persos_per_line){
-					persosovered[1]=Math.min(liste_persos.length-1,persosovered[1]+persos_per_line);
+				if(persosovered[1][0]<ordre_persos.length-1 && ordre_persos[persosovered[1][0]+1][persosovered[1][1]]!=""){
+					persosovered[1][0]+=1;
 					reset_for_charac_screen(1);
 					play_sound_eff("cursor_move");
 				}
 			}
 		}
 		if((j2.poing==1 || j2.jambe==1) && secondplayerishuman && !persolocked[1]){
-			if(persosunlocked.get(liste_persos[persosovered[1]])){
+			if(persosunlocked.get(ordre_persos[persosovered[1][0]][persosovered[1][1]])){
 				if(j2.poing==1){skinschoisis[1]=0;}
 				else{skinschoisis[1]=1;}
 				if(j1.poing==1){j1.poing=2;}
 				else{j1.jambe=2;}
 				persolocked[1]=true;
 				if(persolocked[1] && persosovered[1]==persosovered[0]){skinschoisis[1]=(skinschoisis[0]+1)%2;}
-				characteristics.get(liste_persos[persosovered[1]]).namewav.currentTime=0;
-				characteristics.get(liste_persos[persosovered[1]]).namewav.play();
+				characteristics.get(ordre_persos[persosovered[1][0]][persosovered[1][1]]).namewav.currentTime=0;
+				characteristics.get(ordre_persos[persosovered[1][0]][persosovered[1][1]]).namewav.play();
 				reset_for_charac_screen(1);
 				j2.vicpose=1;
 			}
 		}
 		if(j1.poing==1 || j1.jambe==1){
 			if(!persolocked[0]){
-				if(persosunlocked.get(liste_persos[persosovered[0]])){
+				if(persosunlocked.get(ordre_persos[persosovered[0][0]][persosovered[0][1]])){
 					persolocked[0]=true;
 					if(j1.poing==1){skinschoisis[0]=0;}
 					else{skinschoisis[0]=1;}
 					if(persolocked[1] && persosovered[1]==persosovered[0]){skinschoisis[0]=(skinschoisis[1]+1)%2;}
-					characteristics.get(liste_persos[persosovered[0]]).namewav.currentTime=0;
-					characteristics.get(liste_persos[persosovered[0]]).namewav.play();
+					characteristics.get(ordre_persos[persosovered[0][0]][persosovered[0][1]]).namewav.currentTime=0;
+					characteristics.get(ordre_persos[persosovered[0][0]][persosovered[0][1]]).namewav.play();
 					reset_for_charac_screen(0);
 					j1.vicpose=1;
 				}
 			}
 			else if(!secondplayerishuman && !persolocked[1] && secondplayerchosescharac){
-				if(persosunlocked.get(liste_persos[persosovered[1]])){
+				if(persosunlocked.get(ordre_persos[persosovered[1][0]][persosovered[1][1]])){
 					persolocked[1]=true;
 					if(j1.poing==1){skinschoisis[1]=0;}
 					else{skinschoisis[1]=1;}
 					if(persolocked[0] && persosovered[1]==persosovered[0]){skinschoisis[1]=(skinschoisis[0]+1)%2;}
-					characteristics.get(liste_persos[persosovered[1]]).namewav.currentTime=0;
-					characteristics.get(liste_persos[persosovered[1]]).namewav.play();
+					characteristics.get(ordre_persos[persosovered[1][0]][persosovered[1][1]]).namewav.currentTime=0;
+					characteristics.get(ordre_persos[persosovered[1][0]][persosovered[1][1]]).namewav.play();
 					reset_for_charac_screen(1);
 					j2.vicpose=1;
 				}
@@ -5079,7 +5082,7 @@ class IceClone{
 			lockincountdown++;
 			if(lockincountdown>=lockincountdownfdur){
 				lockincountdown=0;
-				persoschoisis = [liste_persos[persosovered[0]],liste_persos[persosovered[1]]]
+				persoschoisis = [ordre_persos[persosovered[0][0]][persosovered[0][1]],ordre_persos[persosovered[1][0]][persosovered[1][1]]]
 				if(!secondplayerchosescharac){
 					if(arcadelevel==liste_persos.length){
 						persoschoisis[1] = "shao_kahn";
@@ -5107,7 +5110,7 @@ class IceClone{
 		ctx.font = "30px serif";
 		ctx.fillText("Go to title screen",400*0.86,470);
 		if(arcadelevel>=0){
-			var a = statistics.get(liste_persos[persosovered[0]])[difficulte];
+			var a = statistics.get(ordre_persos[persosovered[0][0]][persosovered[0][1]])[difficulte];
 			if (a.beaten){
 				ctx.fillStyle = "white";
 				ctx.font = "30px serif";
@@ -5129,22 +5132,22 @@ class IceClone{
 				ctx.font = "30px serif";
 				ctx.fillText("Not yet beaten",820*0.86,400);
 			}
-			if(!haschangedchar && initchar!="" && liste_persos[persosovered[0]]!=initchar){
+			if(!haschangedchar && initchar!="" && ordre_persos[persosovered[0][0]][persosovered[0][1]]!=initchar){
 				ctx.fillStyle = "red";
 				ctx.font = "20px serif";
 				ctx.fillText("Changing character will make the records unavailable for this run", 250*0.86,80);
 			}
 		}
 
-		if(!persosunlocked.get(liste_persos[persosovered[0]])){
+		if(!persosunlocked.get(ordre_persos[persosovered[0][0]][persosovered[0][1]])){
 			ctx.fillStyle = "red";
 			ctx.font = "20px serif";
-			ctx.fillText(unlock_clues.get(liste_persos[persosovered[0]]),110,400);
+			ctx.fillText(unlock_clues.get(ordre_persos[persosovered[0][0]][persosovered[0][1]]),110,400);
 		}
-		if(!persosunlocked.get(liste_persos[persosovered[1]])){
+		if(!persosunlocked.get(ordre_persos[persosovered[1][0]][persosovered[1][1]])){
 			ctx.fillStyle = "red";
 			ctx.font = "20px serif";
-			ctx.fillText(unlock_clues.get(liste_persos[persosovered[1]]),610,400);
+			ctx.fillText(unlock_clues.get(ordre_persos[persosovered[1][0]][persosovered[1][1]]),610,400);
 		}
 	}
 
@@ -5613,10 +5616,13 @@ class IceClone{
 	var difficulte = 0;
 	var roundwonsj1 = 0; var roundwonsj2 = 0;
 	var finishhim = 0; var fatalitywasdone = false; var fatalitysreen = 0;
-	var persoschoisis = ["kitana","raiden"]; var skinschoisis = [0,0]; var persolocked = [0,0]; var persosovered = [0,2];
+	var persoschoisis = ["kitana","raiden"]; var skinschoisis = [0,0]; var persolocked = [0,0]; var persosovered = [[0,0],[0,3]];
 	var introon = true; var timer = 0; var timer_init = 60*60;
 	var liste_persos = ["baraka","mileena","scorpion","johnny","liukang", "kitana", "subzero","reptile"];
 	var persos_tuto = ["raiden","mileena","scorpion","liukang", "kitana", "subzero"];
+	var ordre_persos = [["raiden","mileena","scorpion","baraka"],
+						["liukang", "kitana", "subzero",""],
+						["","johnny","reptile",""]];
 	var chartimer = 0; var chartimercycle = 3; var difficultynames = ["Easy","Normal","Hard","Insane","Terminator"];
 	var is_in_charc_screen = true; var lockincountdown = 0; var lockincountdownfdur = 40; var controlafaire = -1; var key = "";
 	var Width= window.innerWidth; var Height=window.innerHeight;
