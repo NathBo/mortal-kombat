@@ -1731,7 +1731,7 @@ class IceClone{
 				else if(youareintutorial && !me.allowedmoves.includes(key)){}
 				else if(cd_dependance.get(key) != -1 && me.cooldowns[cd_dependance.get(key)]){}
 				else if((newprio<=prio || (movpriority.get(key)==100) && me.mov != "")&&thiis.difficulty<4){}
-				else if(other.crouching && val.hitboxys>=0 && ((!["grab","command_grab"].includes(val.hiteffect)) || thiis.enviedegrab<10)){}
+				else if(other.crouching && val.hitboxys>0 && me.y==0){}
 				else if((me.movlag || me.y>0) && val.disponibility=="crouch"){}
 				else if(!(me.crouching<=3 && me.y==0) && val.disponibility=="stand"){}
 				else if(val.hitboxxe+width/2>=newd && d>=val.hitboxxs-width/2 && val.hiteffect != "projectile" && (other.y==0 || me.y>0)){rep.add(key);}
@@ -1833,7 +1833,7 @@ class IceClone{
 				if(m=="huppercut" && other.freeze>10){movtodo=m;limiteup = -1000;}
 				conviction += (coups.get(m).hitboxys>=0)*thiis.enviedetaperenbas;
 				conviction += coups.get(m).slag+coups.get(m).elag/2+coups.get(m).fdur/4;
-				conviction += (!["grab","command_grab"].includes(val.hiteffect))*thiis.enviedegrab;
+				conviction += (!["grab","command_grab"].includes(m.hiteffect))*thiis.enviedegrab;
 				if(other.y>0 && me.y==0){conviction-=thiis.enviedantiair;}
 				if(coups.get(m).slag<=other.hurted){conviction = -100+movpriority.get(m); conviction -= coups.get(m).degats/2;}
 				if(m=="huppercut" && other.y>0){conviction -= 0;}
