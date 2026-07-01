@@ -1731,7 +1731,7 @@ class IceClone{
 				else if(youareintutorial && !me.allowedmoves.includes(key)){}
 				else if(cd_dependance.get(key) != -1 && me.cooldowns[cd_dependance.get(key)]){}
 				else if((newprio<=prio || (movpriority.get(key)==100) && me.mov != "")&&thiis.difficulty<4){}
-				else if(other.crouching && val.hitboxys>=0 && (val.hiteffect != "grab" || thiis.enviedegrab<10)){}
+				else if(other.crouching && val.hitboxys>=0 && ((!["grab","command_grab"].includes(val.hiteffect)) || thiis.enviedegrab<10)){}
 				else if((me.movlag || me.y>0) && val.disponibility=="crouch"){}
 				else if(!(me.crouching<=3 && me.y==0) && val.disponibility=="stand"){}
 				else if(val.hitboxxe+width/2>=newd && d>=val.hitboxxs-width/2 && val.hiteffect != "projectile" && (other.y==0 || me.y>0)){rep.add(key);}
@@ -1833,7 +1833,7 @@ class IceClone{
 				if(m=="huppercut" && other.freeze>10){movtodo=m;limiteup = -1000;}
 				conviction += (coups.get(m).hitboxys>=0)*thiis.enviedetaperenbas;
 				conviction += coups.get(m).slag+coups.get(m).elag/2+coups.get(m).fdur/4;
-				conviction += (coups.get(m).hiteffect != "grab")*thiis.enviedegrab;
+				conviction += (!["grab","command_grab"].includes(val.hiteffect))*thiis.enviedegrab;
 				if(other.y>0 && me.y==0){conviction-=thiis.enviedantiair;}
 				if(coups.get(m).slag<=other.hurted){conviction = -100+movpriority.get(m); conviction -= coups.get(m).degats/2;}
 				if(m=="huppercut" && other.y>0){conviction -= 0;}
@@ -1980,7 +1980,7 @@ class IceClone{
 					this.pressbackward();
 					if(other.charac.coups.get(other.mov).hitboxys<0 && other.y==0){me.bas = 1;}
 					if(other.y>0){me.bas=0;}
-					if(["grab","unblockable_projectile_fall"].includes(other.charac.coups.get(other.mov).hiteffect) && me.perso!="shao_kahn"){me.haut=1;}
+					if(["grab","unblockable_projectile_fall","command_grab"].includes(other.charac.coups.get(other.mov).hiteffect) && me.perso!="shao_kahn"){me.haut=1;}
 					return;
 				}
 				
@@ -3267,7 +3267,7 @@ class IceClone{
 		hurt(other,stats){
 			var initpv = this.pv;
 			if(stats.hiteffect==""){return;}
-			if(this.perso=="shao_kahn" && stats.hiteffect=="grab"){return;}
+			if(this.perso=="shao_kahn" && ["grab","command_grab"].includes(stats.hiteffect)){return;}
 			if((this.mov=="jumpsquat" || this.y>0) && stats.hiteffect=="grab"){return;}
 			if(racine(other.mov)=="thundergod"){other.movlag=1;other.tb=8;other.xspeed = -1;other.y=0.1;}
 			if(other.mov=="squarepunch"){other.movlag=1;other.tb=0;other.xspeed = -1;}
@@ -3292,7 +3292,7 @@ class IceClone{
 			}
 			if(this.n==1 && !secondplayerishuman && (stats.hiteffect=="projectile" || stats.hiteffect=="spear")){this.ai.ugothitorblockedaprojectile();}
 			if(this.blocking && this.bas && this.back){this.crouching=6;}
-			if(this.movlag==0&&this.hurted==0&&this.back>=1&&this.y==0 && stats.hiteffect != "iceflask" && stats.hiteffect != "unblockable_projectile_fall" && stats.hiteffect != "burst" && this.freeze==0 &&stats.hiteffect != "grab" && this.pv>0 && ((this.crouching<=3 && (other.y>0 || stats.hitboxys>=0) || (this.crouching>3 && other.y==0)) || stats.hiteffect=="projectile" || stats.hiteffect == "projectile_fall" || stats.hiteffect == "unblockable_projectile_fall") && !(youareintutorial && !this.allowedmoves.includes("block"))){
+			if(this.movlag==0&&this.hurted==0&&this.back>=1&&this.y==0 && this.freeze==0 &&!["grab","command_grab","burst","unblockable_projectile_fall","iceflask"].includes(stats.hiteffect) && this.pv>0 && ((this.crouching<=3 && (other.y>0 || stats.hitboxys>=0) || (this.crouching>3 && other.y==0)) || stats.hiteffect=="projectile" || stats.hiteffect == "projectile_fall" || stats.hiteffect == "unblockable_projectile_fall") && !(youareintutorial && !this.allowedmoves.includes("block"))){
 				if(stats.hiteffect=="guard_break"){
 					this.hurted = stats.blockstun;
 					this.crouching=0;
@@ -3347,6 +3347,7 @@ class IceClone{
 						if(racine(other.mov)=="nutpunch"){this.nutting=true;this.shake_player(50,5.);play_sound_eff(this.charac.voiceactor+"bighurted");if(other.is_enhanced()){this.break_burst();}}
 						break;
 					case "grab" :
+					case "command_grab" :
 						if(this.n==1 && !secondplayerishuman){this.ai.ugothit();}
 						other.begin_grab(this);
 						return;
