@@ -1277,8 +1277,8 @@ function getbarcoordinates(){
 	barcoordinates.set("cmkick2",{offx:471,width:47,offy:182,height:55,decx:0,decy:0});
 	barcoordinates.set("cmkick3",{offx:522,width:59,offy:170,height:66,decx:0,decy:0});
 
-	barcoordinates.set("jpunch1",{offx:685,width:80,offy:497,height:52,decx:0,decy:0});
-	barcoordinates.set("jpunch2",{offx:775,width:97,offy:513,height:41,decx:0,decy:0});
+	barcoordinates.set("jpunch1",{offx:685,width:80,offy:497,height:52,decx:-10,decy:0});
+	barcoordinates.set("jpunch2",{offx:775,width:97,offy:513,height:41,decx:-10,decy:0});
 	barcoordinates.set("jkick1",{offx:1056,width:59,offy:508,height:52,decx:0,decy:0});
 	barcoordinates.set("jkick2",{offx:1124,width:68,offy:508,height:54,decx:0,decy:0});
 	barcoordinates.set("jskick1",{offx:909,width:38,offy:502,height:92,decx:0,decy:0});

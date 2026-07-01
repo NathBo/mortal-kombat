@@ -3149,8 +3149,8 @@ class IceClone{
 					case "dive":
 						var stats = this.charac.coups.get(this.mov);
 						if(this.movlag==stats.elag+stats.fdur+stats.slag && this.is_enhanced()){this.invincibilite = 12;}
-						if(this.movlag==stats.elag+stats.fdur+1){this.tb=4.5;this.y=20;this.x-=21*this.orientation;}
-						if(this.movlag<=stats.elag+stats.fdur+stats.slag){
+						if(this.movlag==stats.elag+stats.fdur+1){this.tb=4.5;this.y=20;fixcamera=3;this.xspeed=0;}
+						if(this.movlag<=stats.elag+stats.fdur){
 							var a = 7;
 							if(this.is_enhanced()){a=8;}
 							if(this.memoryslot==0){this.xspeed=0;}
