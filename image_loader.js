@@ -28,6 +28,9 @@ var johskins = [johpng,joh2png];
 var barpng = new Image();barpng.src = 'ressource/characters/baraka.png';
 var bar2png = new Image();bar2png.src = 'ressource/characters/baraka2.png';
 var barskins = [barpng,bar2png];
+var jaxpng = new Image();jaxpng.src = 'ressource/characters/jax.png';
+var jax2png = new Image();jax2png.src = 'ressource/characters/jax.png';
+var jaxskins = [jaxpng,jax2png];
 var shaopng = new Image();shaopng.src = 'ressource/characters/shaokahn.png';
 var shaoskins = [shaopng,shaopng];
 
@@ -111,6 +114,7 @@ var reptileiconpng=new Image();reptileiconpng.src = 'ressource/icons/reptile.png
 var liukangiconpng=new Image();liukangiconpng.src = 'ressource/icons/liukang.png';
 var johnnyiconpng=new Image();johnnyiconpng.src = 'ressource/icons/johnny.png';
 var barakaiconpng=new Image();barakaiconpng.src = 'ressource/icons/baraka.png';
+var jaxiconpng=new Image();jaxiconpng.src = 'ressource/icons/jax.png';
 var lockediconpng=new Image();lockediconpng.src = 'ressource/icons/locked.png';
 var boticonpng=new Image();boticonpng.src = 'ressource/icons/bot.png';
 var playericonpng=new Image();playericonpng.src = 'ressource/icons/player.png';
@@ -132,6 +136,7 @@ var liucoordinates = getliucoordinates();
 var johcoordinates = getjohcoordinates();
 var shaocoordinates = getshaocoordinates();
 var barcoordinates = getbarcoordinates();
+var jaxcoordinates = getjaxcoordinates();
 
 var bloodcoordinates = getbloodcoordinates();
 

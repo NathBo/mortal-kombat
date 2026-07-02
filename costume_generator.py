@@ -9,7 +9,7 @@ import re
 # =========================
 # CONFIG
 # =========================
-PREFIX = "bar"   # ex: "joh" -> johcoordinates.set(...)
+PREFIX = "jax"   # ex: "joh" -> johcoordinates.set(...)
 # =========================
 
 

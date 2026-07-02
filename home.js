@@ -4607,7 +4607,7 @@ class IceClone{
 				if(roundwonsj1>=2 || roundwonsj2>=2){
 					if(roundwonsj1>=2 && arcadelevel>=0){
 						arcadelevel+=1;
-						if(arcadelevel>liste_persos.length){
+						if(arcadelevel>8){
 							reset_game(true);
 							if(haschangedchar){gobacktotitlescreen();}
 							else{
@@ -4750,6 +4750,7 @@ class IceClone{
 					if(perso=="raiden" && !persosunlocked.get("liukang")){a = "liukang";}
 					if(perso=="mileena" && !persosunlocked.get("kitana")){a = "kitana";}
 					if(perso=="scorpion" && !persosunlocked.get("subzero")){a = "subzero";}
+					if(perso=="baraka" && !persosunlocked.get("jax")){a = "jax";}
 					if(!secondplayerishuman && j2.perso=="reptile" && !persosunlocked.get("")){a="reptile";}
 					if(fatalitywasdone && !persosunlocked.get("johnny")){a="johnny";}
 					if(!(a=="" || persosunlocked.get(a))){
@@ -4763,6 +4764,7 @@ class IceClone{
 						if(a=="subzero"){b = "Subzero";}
 						if(a=="reptile"){b = "Reptile";}
 						if(a=="johnny"){b = "Johnny Cage";}
+						if(a=="jax"){b = "Jax";}
 						printAtWordWrap(ctx,b+" unlocked!", 332*0.86, 140, 22, 360);
 						ctx.scale(3,3);
 						ctx.drawImage(characteristics.get(a).icon,160*0.86,70);
@@ -5596,6 +5598,10 @@ class IceClone{
 	airdrift : 0.18, airmaxspeed : 2, airdodgespeed : 6., airdodgefdur : 14, landinglag : 7,coups : baraka_coups, pv : 96, getupfdur : 36, grabfdur : 20, grabdeg : 11, vicposframes : 7, vicposfdur : 36, cds : [130,180,150,210], icons : [spiniconpng,diveiconpng,slicethrowiconpng,gripeiconpng], voiceactor : "male",
 	default_behav : "masher", combos : baraka_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Raiden obtains a state monopoly on electricity production and becomes a multi-billionaire."});
 
+	characteristics.set("jax",{png : jaxskins,coordinates : jaxcoordinates, sex : "m", standnframes : 5, standframespeed : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : jaxiconpng, namewav : document.querySelector('#reptilewav'),
+	width : 39, height : 103,vitesse : 2.9, run_speed : 5.6,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.405, jumpforce : 9.05,jumpsquat : 4, shorthop : 6.0, friction:0.22, hurtcontrol : 0.22,grabtype : "launch",
+	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : jax_coups, pv : 100, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 6, vicposfdur : 32, cds : [210,160,150,300], icons : [iceballiconpng,sliderepiconpng,spiticonpng,bombiconpng], voiceactor : "male",
+	default_behav : "zoner", combos : jax_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Reptile resurrects the dinosaurs and imposes a reptilian dictatorship!"});
 
 
 	characteristics.set("shao_kahn",{png : shaoskins,coordinates : shaocoordinates, sex : "m", standnframes : 6, standframespeed : 5, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 5,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 8, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
@@ -5632,10 +5638,10 @@ class IceClone{
 	var finishhim = 0; var fatalitywasdone = false; var fatalitysreen = 0;
 	var persoschoisis = ["kitana","raiden"]; var skinschoisis = [0,0]; var persolocked = [0,0]; var persosovered = [[0,0],[0,3]];
 	var introon = true; var timer = 0; var timer_init = 60*60;
-	var liste_persos = ["baraka","mileena","scorpion","johnny","liukang", "kitana", "subzero","reptile"];
+	var liste_persos = ["baraka","mileena","scorpion","johnny","liukang", "kitana", "subzero","reptile","raiden","jax"];
 	var persos_tuto = ["raiden","mileena","scorpion","liukang", "kitana", "subzero"];
 	var ordre_persos = [["raiden","mileena","scorpion","baraka"],
-						["liukang", "kitana", "subzero",""],
+						["liukang", "kitana", "subzero","jax"],
 						["","johnny","reptile",""]];
 	var chartimer = 0; var chartimercycle = 3; var difficultynames = ["Easy","Normal","Hard","Insane","Terminator"];
 	var is_in_charc_screen = true; var lockincountdown = 0; var lockincountdownfdur = 40; var controlafaire = -1; var key = "";
@@ -5716,6 +5722,7 @@ class IceClone{
 		persosunlocked.set("scorpion",true);
 		persosunlocked.set("baraka",true);
 		persosunlocked.set("liukang",false);
+		persosunlocked.set("jax",false);
 		persosunlocked.set("kitana",false);
 		persosunlocked.set("subzero",false);
 		persosunlocked.set("reptile",false);
@@ -5730,6 +5737,7 @@ class IceClone{
 	unlock_clues.set("liukang","Win as Raiden");
 	unlock_clues.set("kitana","Win as Mileena");
 	unlock_clues.set("subzero","Win as Scorpion");
+	unlock_clues.set("jax","Win as Baraka");
 	unlock_clues.set("reptile","Find and defeat Reptile");
 	unlock_clues.set("johnny","Do a fatality");
 

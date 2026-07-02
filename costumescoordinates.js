@@ -1353,6 +1353,35 @@ function getbarcoordinates(){
 
 
 
+function getjaxcoordinates(){
+    var jaxcoordinates = new Map();
+	jaxcoordinates.set("stand1",{offx:68,width:38,offy:18,height:105,decx:-1,decy:0});
+	jaxcoordinates.set("stand2",{offx:116,width:41,offy:19,height:104,decx:-4,decy:0});
+	jaxcoordinates.set("stand3",{offx:167,width:40,offy:18,height:105,decx:-3,decy:0});
+	jaxcoordinates.set("stand4",{offx:217,width:37,offy:17,height:106,decx:0,decy:0});
+	jaxcoordinates.set("stand5",{offx:264,width:37,offy:17,height:106,decx:0,decy:0});
+	jaxcoordinates.set("victory1",{offx:15,width:37,offy:273,height:106,decx:0,decy:0});
+	jaxcoordinates.set("victory2",{offx:63,width:29,offy:270,height:109,decx:0,decy:0});
+	jaxcoordinates.set("victory3",{offx:102,width:40,offy:268,height:111,decx:-5,decy:0});
+	jaxcoordinates.set("victory4",{offx:151,width:73,offy:267,height:112,decx:-23,decy:0});
+	jaxcoordinates.set("victory5",{offx:233,width:57,offy:257,height:122,decx:-16,decy:0});
+	jaxcoordinates.set("victory6",{offx:301,width:43,offy:261,height:118,decx:-8,decy:0});
+	var a = -2;
+	jaxcoordinates.set("walk1",{offx:15,width:38,offy:139,height:108,decx:-1,decy:a-1});
+	jaxcoordinates.set("walk2",{offx:63,width:37,offy:140,height:107,decx:0,decy:a});
+	jaxcoordinates.set("walk3",{offx:109,width:37,offy:140,height:107,decx:0,decy:a});
+	jaxcoordinates.set("walk4",{offx:156,width:37,offy:143,height:104,decx:0,decy:a+3});
+	jaxcoordinates.set("walk5",{offx:203,width:37,offy:143,height:104,decx:0,decy:a+3});
+	jaxcoordinates.set("walk6",{offx:251,width:37,offy:141,height:106,decx:0,decy:a+1});
+	jaxcoordinates.set("walk7",{offx:298,width:37,offy:142,height:105,decx:0,decy:a+2});
+	jaxcoordinates.set("walk8",{offx:345,width:37,offy:141,height:106,decx:0,decy:a+1});
+	jaxcoordinates.set("walk9",{offx:392,width:45,offy:140,height:107,decx:0,decy:a});
+	
+    return jaxcoordinates;
+}
+
+
+
 
 
 function getshaocoordinates(){
