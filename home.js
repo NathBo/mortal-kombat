@@ -4619,7 +4619,7 @@ class IceClone{
 						var persos = [j1.perso,j2.perso]; var skins = [skinschoisis[0],skinschoisis[1]];
 						roundwonsj1 = 0; roundwonsj2 = 0; camerax = 0;
 						persolocked = [0,0];
-						if(arcadelevel==liste_persos.length){persoschoisis[1] = "shao_kahn"}
+						if(arcadelevel==8){persoschoisis[1] = "shao_kahn"}
 						else{persoschoisis[1] = arcadeorder[arcadelevel];}
 						skinschoisis[1] = randomInt(0,1);
 						choserandomstage();
@@ -5598,7 +5598,7 @@ class IceClone{
 	airdrift : 0.18, airmaxspeed : 2, airdodgespeed : 6., airdodgefdur : 14, landinglag : 7,coups : baraka_coups, pv : 96, getupfdur : 36, grabfdur : 20, grabdeg : 11, vicposframes : 7, vicposfdur : 36, cds : [130,180,150,210], icons : [spiniconpng,diveiconpng,slicethrowiconpng,gripeiconpng], voiceactor : "male",
 	default_behav : "masher", combos : baraka_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Raiden obtains a state monopoly on electricity production and becomes a multi-billionaire."});
 
-	characteristics.set("jax",{png : jaxskins,coordinates : jaxcoordinates, sex : "m", standnframes : 5, standframespeed : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : jaxiconpng, namewav : document.querySelector('#reptilewav'),
+	characteristics.set("jax",{png : jaxskins,coordinates : jaxcoordinates, sex : "m", standnframes : 5, standframespeed : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : jaxiconpng, namewav : document.querySelector('#jaxwav'),
 	width : 39, height : 104,vitesse : 2.75, run_speed : 5.8,jumpxspeed : 3.2,backmovnerf : 0.92, gravity : 0.42, jumpforce : 9.15,jumpsquat : 4, shorthop : 6.1, friction:0.24, hurtcontrol : 0.22,grabtype : "launch_free",
 	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : jax_coups, pv : 120, getupfdur : 36, grabfdur : 20, grabdeg : 11, vicposframes : 6, vicposfdur : 32, cds : [210,160,150,300], icons : [iceballiconpng,sliderepiconpng,spiticonpng,bombiconpng], voiceactor : "male",
 	default_behav : "zoner", combos : jax_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Reptile resurrects the dinosaurs and imposes a reptilian dictatorship!"});
