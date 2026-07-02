@@ -1449,6 +1449,36 @@ function getjaxcoordinates(){
 	jaxcoordinates.set("jkick2",{offx:385,width:68,offy:1056,height:66,decx:0,decy:0});
 	jaxcoordinates.set("jskick1",{offx:192,width:28,offy:1018,height:104,decx:0,decy:0});
 	jaxcoordinates.set("jskick2",{offx:231,width:65,offy:1025,height:97,decx:0,decy:0});
+
+	jaxcoordinates.set("grabbing1",{offx:15,width:42,offy:551,height:103,decx:0,decy:0});
+	jaxcoordinates.set("grabbing2",{offx:65,width:65,offy:560,height:94,decx:0,decy:0});
+	jaxcoordinates.set("grabbing3",{offx:140,width:57,offy:524,height:130,decx:0,decy:0});
+	jaxcoordinates.set("grabbing4",{offx:205,width:36,offy:520,height:134,decx:0,decy:0});
+	jaxcoordinates.set("grabbing5",{offx:252,width:58,offy:530,height:124,decx:0,decy:0});
+	jaxcoordinates.set("grabbing6",{offx:319,width:67,offy:580,height:74,decx:0,decy:0});
+	jaxcoordinates.set("grabbing7",{offx:396,width:51,offy:600,height:54,decx:0,decy:0});
+	jaxcoordinates.set("grabbing8",{offx:457,width:41,offy:564,height:90,decx:0,decy:0});
+	jaxcoordinates.set("grabbed1",{offx:15,width:53,offy:1387,height:76,decx:0,decy:0});
+	jaxcoordinates.set("grabbed2",{offx:76,width:54,offy:1406,height:57,decx:0,decy:0});
+	jaxcoordinates.set("grabbed3",{offx:138,width:47,offy:1379,height:84,decx:0,decy:0});
+	jaxcoordinates.set("grabbed4",{offx:194,width:70,offy:1405,height:58,decx:0,decy:0});
+
+	jaxcoordinates.set("decapitated1",{offx:554,width:20,offy:1964,height:99,decx:0,decy:0});
+	jaxcoordinates.set("decapitated2",{offx:584,width:29,offy:1976,height:87,decx:0,decy:0});
+	jaxcoordinates.set("decapitated3",{offx:623,width:29,offy:1997,height:66,decx:0,decy:0});
+	jaxcoordinates.set("decapitated4",{offx:661,width:38,offy:1995,height:68,decx:0,decy:0});
+	jaxcoordinates.set("decapitated5",{offx:709,width:52,offy:1998,height:65,decx:0,decy:0});
+	jaxcoordinates.set("decapitated6",{offx:771,width:82,offy:2037,height:26,decx:0,decy:0});
+	jaxcoordinates.set("stunned1",{offx:899,width:35,offy:1365,height:98,decx:0,decy:0});
+	jaxcoordinates.set("stunned2",{offx:944,width:34,offy:1366,height:97,decx:0,decy:0});
+	jaxcoordinates.set("stunned3",{offx:988,width:36,offy:1362,height:101,decx:0,decy:0});
+	jaxcoordinates.set("stunned4",{offx:1034,width:32,offy:1362,height:101,decx:0,decy:0});
+	jaxcoordinates.set("stunned5",{offx:1076,width:32,offy:1364,height:99,decx:0,decy:0});
+	jaxcoordinates.set("ballshurt",{offx:844,width:30,offy:1378,height:85,decx:0,decy:0});
+	jaxcoordinates.set("legs",{offx:15,width:14,offy:2218,height:76,decx:0,decy:0});
+	jaxcoordinates.set("torso",{offx:40,width:31,offy:2237,height:57,decx:0,decy:0});
+	jaxcoordinates.set("torso2",{offx:270,width:53,offy:2271,height:23,decx:0,decy:0});
+	jaxcoordinates.set("head",{offx:982,width:12,offy:2048,height:15,decx:0,decy:0});
 	
     return jaxcoordinates;
 }
