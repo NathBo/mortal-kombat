@@ -1376,6 +1376,79 @@ function getjaxcoordinates(){
 	jaxcoordinates.set("walk7",{offx:298,width:37,offy:142,height:105,decx:0,decy:a+2});
 	jaxcoordinates.set("walk8",{offx:345,width:37,offy:141,height:106,decx:0,decy:a+1});
 	jaxcoordinates.set("walk9",{offx:392,width:45,offy:140,height:107,decx:0,decy:a});
+
+	jaxcoordinates.set("crouching1",{offx:522,width:47,offy:48,height:75,decx:0,decy:0});
+	jaxcoordinates.set("crouching2",{offx:578,width:44,offy:64,height:59,decx:0,decy:0});
+	jaxcoordinates.set("jump1",{offx:454,width:40,offy:133,height:114,decx:0,decy:0});
+	jaxcoordinates.set("jump2",{offx:504,width:41,offy:162,height:85,decx:0,decy:0});
+	jaxcoordinates.set("jump3",{offx:564,width:34,offy:140,height:107,decx:0,decy:0});
+	jaxcoordinates.set("roll1",{offx:610,width:34,offy:190,height:57,decx:0,decy:0});
+	jaxcoordinates.set("roll2",{offx:652,width:37,offy:190,height:57,decx:0,decy:0});
+	jaxcoordinates.set("roll3",{offx:698,width:43,offy:206,height:41,decx:0,decy:0});
+	jaxcoordinates.set("roll4",{offx:750,width:44,offy:202,height:45,decx:0,decy:0});
+	jaxcoordinates.set("roll5",{offx:804,width:34,offy:190,height:57,decx:0,decy:0});
+	jaxcoordinates.set("roll6",{offx:848,width:39,offy:199,height:48,decx:0,decy:0});
+	jaxcoordinates.set("roll7",{offx:897,width:42,offy:206,height:41,decx:0,decy:0});
+
+	jaxcoordinates.set("hurted1",{offx:15,width:37,offy:1140,height:101,decx:0,decy:0});
+	jaxcoordinates.set("hurted2",{offx:61,width:42,offy:1144,height:97,decx:0,decy:0});
+	jaxcoordinates.set("falling1",{offx:15,width:54,offy:1250,height:94,decx:0,decy:0});
+	jaxcoordinates.set("falling2",{offx:78,width:84,offy:1296,height:48,decx:0,decy:0});
+	jaxcoordinates.set("falling3",{offx:171,width:70,offy:1286,height:58,decx:0,decy:0});
+	jaxcoordinates.set("grounded1",{offx:252,width:80,offy:1295,height:49,decx:0,decy:0});
+	jaxcoordinates.set("grounded2",{offx:344,width:84,offy:1317,height:27,decx:0,decy:0});
+	jaxcoordinates.set("getup1",{offx:463,width:48,offy:1400,height:63,decx:0,decy:0});
+	jaxcoordinates.set("getup2",{offx:519,width:56,offy:1374,height:89,decx:0,decy:0});
+	jaxcoordinates.set("getup3",{offx:587,width:63,offy:1422,height:41,decx:0,decy:0});
+	jaxcoordinates.set("getup4",{offx:661,width:40,offy:1388,height:75,decx:0,decy:0});
+	jaxcoordinates.set("blocking1",{offx:319,width:37,offy:16,height:107,decx:0,decy:0});
+	jaxcoordinates.set("blocking2",{offx:366,width:37,offy:15,height:108,decx:0,decy:0});
+	jaxcoordinates.set("cblocking1",{offx:642,width:42,offy:49,height:74,decx:0,decy:0});
+	jaxcoordinates.set("cblocking2",{offx:694,width:39,offy:42,height:81,decx:0,decy:0});
+	jaxcoordinates.set("churted1",{offx:654,width:39,offy:1163,height:78,decx:0,decy:0});
+	jaxcoordinates.set("churted2",{offx:705,width:39,offy:1168,height:73,decx:0,decy:0});
+
+	jaxcoordinates.set("lpunch1",{offx:15,width:41,offy:406,height:106,decx:0,decy:0});
+	jaxcoordinates.set("lpunch2",{offx:64,width:52,offy:404,height:108,decx:0,decy:0});
+	jaxcoordinates.set("lpunch3",{offx:124,width:68,offy:408,height:104,decx:0,decy:0});
+	jaxcoordinates.set("hpunch1",{offx:428,width:41,offy:406,height:106,decx:0,decy:0});
+	jaxcoordinates.set("hpunch2",{offx:478,width:58,offy:409,height:103,decx:0,decy:0});
+	jaxcoordinates.set("hpunch3",{offx:545,width:70,offy:412,height:100,decx:0,decy:0});
+	jaxcoordinates.set("lkick1",{offx:329,width:42,offy:664,height:109,decx:0,decy:0});
+	jaxcoordinates.set("lkick2",{offx:380,width:44,offy:663,height:110,decx:0,decy:0});
+	jaxcoordinates.set("lkick3",{offx:433,width:73,offy:672,height:101,decx:-22,decy:0});
+	jaxcoordinates.set("lkick4",{offx:516,width:101,offy:681,height:92,decx:-22,decy:0});
+	jaxcoordinates.set("mkick1",{offx:15,width:42,offy:664,height:109,decx:0,decy:0});
+	jaxcoordinates.set("mkick2",{offx:66,width:44,offy:663,height:110,decx:0,decy:0});
+	jaxcoordinates.set("mkick3",{offx:119,width:73,offy:672,height:101,decx:-22,decy:0});
+	jaxcoordinates.set("mkick4",{offx:200,width:95,offy:680,height:93,decx:-22,decy:0});
+	jaxcoordinates.set("hkick1",{offx:15,width:42,offy:782,height:105,decx:0,decy:0});
+	jaxcoordinates.set("hkick2",{offx:67,width:42,offy:781,height:106,decx:0,decy:0});
+	jaxcoordinates.set("hkick3",{offx:120,width:56,offy:782,height:105,decx:0,decy:0});
+	jaxcoordinates.set("hkick4",{offx:184,width:63,offy:786,height:101,decx:0,decy:0});
+	jaxcoordinates.set("hkick5",{offx:256,width:59,offy:789,height:98,decx:0,decy:0});
+	jaxcoordinates.set("hkick6",{offx:324,width:46,offy:788,height:99,decx:0,decy:0});
+
+	jaxcoordinates.set("clpunch1",{offx:357,width:47,offy:942,height:68,decx:0,decy:0});
+	jaxcoordinates.set("clpunch2",{offx:413,width:67,offy:940,height:70,decx:0,decy:0});
+	jaxcoordinates.set("clkick1",{offx:765,width:36,offy:950,height:60,decx:0,decy:0});
+	jaxcoordinates.set("clkick2",{offx:811,width:47,offy:949,height:61,decx:0,decy:0});
+	jaxcoordinates.set("clkick3",{offx:867,width:62,offy:957,height:53,decx:0,decy:0});
+	jaxcoordinates.set("cmkick1",{offx:543,width:47,offy:949,height:61,decx:0,decy:0});
+	jaxcoordinates.set("cmkick2",{offx:599,width:65,offy:953,height:57,decx:0,decy:0});
+	jaxcoordinates.set("cmkick3",{offx:673,width:70,offy:949,height:61,decx:0,decy:0});
+	jaxcoordinates.set("huppercut1",{offx:15,width:45,offy:938,height:72,decx:0,decy:0});
+	jaxcoordinates.set("huppercut2",{offx:69,width:72,offy:911,height:99,decx:0,decy:0});
+	jaxcoordinates.set("huppercut3",{offx:150,width:59,offy:897,height:113,decx:0,decy:0});
+	jaxcoordinates.set("huppercut4",{offx:218,width:47,offy:896,height:114,decx:0,decy:0});
+	jaxcoordinates.set("huppercut5",{offx:274,width:59,offy:897,height:113,decx:0,decy:0});
+
+	jaxcoordinates.set("jpunch1",{offx:15,width:60,offy:1050,height:72,decx:0,decy:0});
+	jaxcoordinates.set("jpunch2",{offx:85,width:84,offy:1046,height:76,decx:0,decy:0});
+	jaxcoordinates.set("jkick1",{offx:318,width:57,offy:1058,height:64,decx:0,decy:0});
+	jaxcoordinates.set("jkick2",{offx:385,width:68,offy:1056,height:66,decx:0,decy:0});
+	jaxcoordinates.set("jskick1",{offx:192,width:28,offy:1018,height:104,decx:0,decy:0});
+	jaxcoordinates.set("jskick2",{offx:231,width:65,offy:1025,height:97,decx:0,decy:0});
 	
     return jaxcoordinates;
 }
