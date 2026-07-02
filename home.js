@@ -4195,7 +4195,7 @@ class IceClone{
 					ctx.filter = 'brightness(1.8)';
 				}
 				if(this.freeze){
-					ctx.filter = 'brightness(1.2) saturate(0.5)';
+					ctx.filter = 'sepia(100%) saturate(300%) hue-rotate(160deg)';
 				}
 				if(this.parrying){
 					ctx.filter = 'brightness(1.5) saturate(1.5)';
