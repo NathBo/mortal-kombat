@@ -1493,6 +1493,13 @@ function getjaxcoordinates(){
 	jaxcoordinates.set("clapgrab2",{offx:84,width:76,offy:1486,height:105,decx:0,decy:0});
 	jaxcoordinates.set("clapgrab3",{offx:169,width:56,offy:1485,height:106,decx:0,decy:0});
 	jaxcoordinates.set("clapgrab4",{offx:234,width:48,offy:1485,height:106,decx:0,decy:0});
+	jaxcoordinates.set("energywave1",{offx:304,width:49,offy:1490,height:101,decx:0,decy:0});
+	jaxcoordinates.set("energywave2",{offx:363,width:49,offy:1487,height:104,decx:0,decy:0});
+	jaxcoordinates.set("energywave3",{offx:422,width:70,offy:1481,height:110,decx:0,decy:0});
+	jaxcoordinates.set("energywave4",{offx:503,width:62,offy:1479,height:112,decx:0,decy:0});
+	jaxcoordinates.set("energywave5",{offx:575,width:45,offy:1479,height:112,decx:0,decy:0});
+	jaxcoordinates.set("energywave6",{offx:630,width:40,offy:1483,height:108,decx:0,decy:0});
+	jaxcoordinates.set("energywave",{offx:685,width:57,offy:1562,height:27,decx:0,decy:0});
 	
     return jaxcoordinates;
 }

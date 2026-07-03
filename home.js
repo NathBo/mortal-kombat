@@ -922,6 +922,49 @@ class IceClone{
 		}
 	}
 
+	class EnergyWave{
+		constructor(x,y,orientation,other,stats){
+			this.x = x; this.y = y; this.orientation = orientation;
+			this.other = other;
+			this.width=57;
+			this.height=27;
+			this.totdur = 30;this.vitesse=7;
+			this.stats = stats;
+			this.dur = this.totdur;
+			this.num = cpt;
+			this.dangerous = true;
+			
+		}
+
+		loop(){
+			this.x += this.orientation*this.vitesse;
+			var stats = this.stats; var other = this.other;
+			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
+				if(other.y==0){
+					if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
+				}
+				else{
+					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){other.hurt(this,stats);this.dur=1;}
+				}
+			}
+		}
+
+		afficher(){
+			this.costume = "energywave";
+			ctx.scale(2*this.orientation,2);
+			var coords = jaxcoordinates.get(this.costume);
+			ctx.drawImage(jaxpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			if(gamefreeze==0){this.dur--;}
+			if(this.dur==0){this.delete();return;}
+		}
+
+		delete(){
+			objects_to_loop.delete(this.num);
+		}
+	}
+
 	class Ball{
 		constructor(x,y,orientation,other,stats,mem,enhanced){
 			this.x = x; this.y = y; this.orientation = orientation;
@@ -2827,6 +2870,9 @@ class IceClone{
 					else if(this.perso == "jax" && this.forward>=1 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
 						this.begincoup("clapdash",other);
 					}
+					else if(this.perso == "jax" && this.back>=1 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
+						this.begincoup("energywave",other);
+					}
 					else if(this.forward>=1&&movpriority.get(racine(this.mov))<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
 						this.x+=this.charac.vitesse*this.orientation;this.xspeed = 0;
 						let d = (this.charac.width+other.charac.width)/3;
@@ -3239,6 +3285,13 @@ class IceClone{
 						var a = 8;
 						if(this.is_enhanced()){a=12;}
 						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.x += a*this.orientation;}
+						break;
+					case "energywave":
+						var stats = this.charac.coups.get(this.mov);
+						this.crouching=0;
+						if(this.movlag==stats.elag){
+							add_to_objects_set(new EnergyWave(this.x+25*this.orientation,this.y+70,this.orientation,other,stats));
+						}
 						break;
 					}
 				this.movlag--;
@@ -4213,6 +4266,17 @@ class IceClone{
 						else if(this.movlag<stats.elag+stats.fdur+stats.slag*4/5){n=2;}
 						else{n=1;}
 						this.costume = "groundpound"+n.toString();
+						break;
+					case "energywave" :
+						var stats = this.charac.coups.get(this.mov);
+						var n =1;
+						if(entre(this.movlag,stats.elag/2,stats.elag+stats.fdur)){n=5;}
+						else if(entre(this.movlag,0,stats.elag+stats.fdur+stats.slag/5)){n=6;}
+						else if(this.movlag<stats.elag+stats.fdur+stats.slag*2/5){n=4;}
+						else if(this.movlag<stats.elag+stats.fdur+stats.slag*3/5){n=3;}
+						else if(this.movlag<stats.elag+stats.fdur+stats.slag*4/5){n=2;}
+						else{n=1;}
+						this.costume = "energywave"+n.toString();
 						break;
 				}
 			}

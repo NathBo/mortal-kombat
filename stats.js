@@ -307,6 +307,7 @@ jax_coups.set("groundpound",{slag : 13, fdur : 6, elag : 20, degats : 0, hitstun
 jax_coups.set("groundpound#",{slag : 11, fdur : 6, elag : 18, degats : 0, hitstun : 21, hurtx : 0., hurty : 6.5, hitboxxs : -200, hitboxxe : 400,hitboxys : -45, hitboxye : -20, hitboxxouv : 14, blood_height : 0, blockstun : 10, blockx : 0., hiteffect : "iceflask", hitboxxeyscaling : 0, hitlag : 5, hitsound : "mhit", blood : "", damageonblock : 0, disponibility : "crouch", voiceline : "hmov", movx : 0, coupwav : "explosion"});
 jax_coups.set("clapdash",{slag : 14, fdur : 15, elag : 18, degats : 13, hitstun : 60, hurtx : 6.2, hurty : 8.2, hitboxxs : 20, hitboxxe : 50,hitboxys : 1, hitboxye : 50, hitboxxouv : 40, blood_height : 20, blockstun : 10, blockx : 1.2, hiteffect : "command_grab", hitboxxeyscaling : 0, hitlag : 13, hitsound : "hhit", blood : "mblood", damageonblock : 2, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : ""});
 jax_coups.set("clapdash#",{slag : 10, fdur : 13, elag : 18, degats : 14, hitstun : 60, hurtx : 8.2, hurty : 8.2, hitboxxs : 20, hitboxxe : 50,hitboxys : 1, hitboxye : 50, hitboxxouv : 40, blood_height : 20, blockstun : 10, blockx : 1.2, hiteffect : "command_grab", hitboxxeyscaling : 0, hitlag : 13, hitsound : "hhit", blood : "mblood", damageonblock : 2, disponibility : "stand", voiceline : "mmov", movx : 0, coupwav : ""});
+jax_coups.set("energywave",{slag : 15, fdur : 0, elag : 15, degats : 8, hitstun : 22, hurtx : 1.3, hurty : 4., hitboxxs : -12, hitboxxe : 12,hitboxys : -6, hitboxye : 15, hitboxxouv : 5, blood_height : 0, blockstun : 10, blockx : 1.5, hiteffect : "projectile_fall", hitboxxeyscaling : 0, hitlag : 7, hitsound : "spithit", blood : "lblood", damageonblock : 2,landinglag : 12, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : ""});
 jax_coups.set("burst",get_burst_stats());
 
 var jax_combos = get_default_combos();
@@ -383,6 +384,7 @@ movpriority.set("dive",70);
 movpriority.set("bouncegrab",70);
 movpriority.set("groundpound",70);
 movpriority.set("clapdash",70);
+movpriority.set("energywave",70);
 movpriority.set("air_dodge",100);
 movpriority.set("landing_lag",100);
 movpriority.set("jumpsquat",100);
@@ -449,3 +451,4 @@ cd_dependance.set("dive",1);
 cd_dependance.set("bouncegrab",0);
 cd_dependance.set("groundpound",3);
 cd_dependance.set("clapdash",1);
+cd_dependance.set("energywave",2);
