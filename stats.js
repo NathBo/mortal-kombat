@@ -303,6 +303,8 @@ jax_coups.set("jpunch",{slag : 8, fdur : 10, elag : 10, degats : 9, hitstun : 25
 jax_coups.set("grab",{slag : 6, fdur : 3, elag : 12, degats : 16, hitstun : 60, hurtx : 3, hurty : 6, hitboxxs : 5, hitboxxe : 38,hitboxys : 0, hitboxye : -1, hitboxxouv : 15, blood_height : 0, blockstun : 12, blockx : 1.7, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : "coup"});
 jax_coups.set("bouncegrab",{slag : 8, fdur : 5, elag : 12, degats : 11, hitstun : 60, hurtx : .7, hurty : 7.5, hitboxxs : 5, hitboxxe : 42,hitboxys : 0, hitboxye : 35, hitboxxouv : 15, blood_height : 0, blockstun : 12, blockx : 1.7, hiteffect : "command_grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 2., coupwav : "coup"});
 jax_coups.set("bouncegrab#",{slag : 8, fdur : 7, elag : 10, degats : 12, hitstun : 60, hurtx : .7, hurty : 7.8, hitboxxs : 5, hitboxxe : 44,hitboxys : 0, hitboxye : 35, hitboxxouv : 15, blood_height : 0, blockstun : 12, blockx : 1.7, hiteffect : "command_grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 2., coupwav : "coup"});
+jax_coups.set("groundpound",{slag : 13, fdur : 6, elag : 20, degats : 0, hitstun : 21, hurtx : 0., hurty : 6., hitboxxs : -200, hitboxxe : 400,hitboxys : -45, hitboxye : -20, hitboxxouv : 14, blood_height : 0, blockstun : 10, blockx : 0., hiteffect : "fall", hitboxxeyscaling : 0, hitlag : 5, hitsound : "mhit", blood : "", damageonblock : 0, disponibility : "crouch", voiceline : "hmov", movx : 0, coupwav : "explosion"});
+jax_coups.set("groundpound#",{slag : 11, fdur : 6, elag : 18, degats : 0, hitstun : 21, hurtx : 0., hurty : 6.5, hitboxxs : -200, hitboxxe : 400,hitboxys : -45, hitboxye : -20, hitboxxouv : 14, blood_height : 0, blockstun : 10, blockx : 0., hiteffect : "iceflask", hitboxxeyscaling : 0, hitlag : 5, hitsound : "mhit", blood : "", damageonblock : 0, disponibility : "crouch", voiceline : "hmov", movx : 0, coupwav : "explosion"});
 jax_coups.set("burst",get_burst_stats());
 
 var jax_combos = get_default_combos();
@@ -377,6 +379,7 @@ movpriority.set("gripe",70);
 movpriority.set("slicethrow",70);
 movpriority.set("dive",70);
 movpriority.set("bouncegrab",70);
+movpriority.set("groundpound",70);
 movpriority.set("air_dodge",100);
 movpriority.set("landing_lag",100);
 movpriority.set("jumpsquat",100);
@@ -441,3 +444,4 @@ cd_dependance.set("gripe",3);
 cd_dependance.set("slicethrow",2);
 cd_dependance.set("dive",1);
 cd_dependance.set("bouncegrab",0);
+cd_dependance.set("groundpound",3);

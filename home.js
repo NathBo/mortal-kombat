@@ -2371,6 +2371,8 @@ class IceClone{
 					other.combo_deg += a;
 					other.combo_hits += 1;
 					play_sound_eff("mhit");
+					shake_screen(10,2);
+					lag_game(5);
 				}
 				else if(this.grabbing == Math.floor(grabfdur*5/7)){
 					if(this.grabtype == "launch" || this.grabtype == "launch_free"){
@@ -2800,6 +2802,9 @@ class IceClone{
 					else if(this.perso == "jax" && this.back==0 && this.bas==0 && this.forward==0 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
 						this.begincoup("bouncegrab",other);
 					}
+					else if(this.perso == "jax" && this.bas>=1 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
+						this.begincoup("groundpound",other);
+					}
 					else if(this.forward>=1&&movpriority.get(racine(this.mov))<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
 						this.x+=this.charac.vitesse*this.orientation;this.xspeed = 0;
 						let d = (this.charac.width+other.charac.width)/3;
@@ -3201,6 +3206,12 @@ class IceClone{
 						if(this.is_enhanced() && this.movlag>stats.elag+1 && this.movlag<=stats.elag+stats.fdur+1){this.xspeed=4*this.orientation;}
 						
 						break;
+					case "groundpound":
+						var stats = this.charac.coups.get(this.mov);
+						if(entre(this.movlag,stats.slag-1,stats.elag+stats.fdur+1)){shake_screen(5,5);}
+						if(this.movlag == stats.elag+stats.fdur+2){play_sound_eff("hhit");}
+						
+						break;
 					}
 				this.movlag--;
 				if(this.movlag == 0){
@@ -3458,13 +3469,13 @@ class IceClone{
 				if(stats.hiteffect=="freeze"){this.hurted=0;this.freeze=stats.hitstun;}
 				else if(stats.blood=="electrocute"){this.electrocuted = 10;}
 				else if(this.y==0 && this.crouching<=3 && (other.y>0 || stats.hitboxys >=0)){
-					add_to_objects_set(new Blood(this.x,this.charac.height-20+stats.blood_height,-this.orientation,stats.blood));
+					if(stats.blood!=""){add_to_objects_set(new Blood(this.x,this.charac.height-20+stats.blood_height,-this.orientation,stats.blood));}
 					if(other.y==0 &&  Math.random()<0.4){add_to_objects_set(new DropBlood(this.x,this.charac.height-20+stats.blood_height,-other.orientation,"dropblood",stats.hurtx*0.8+2.+Math.random()*0.3,stats.hurty*.2+2.8));}
 				}
-				else if((this.y==0 && stats.hitboxys<0) || this.crouching){add_to_objects_set(new Blood(this.x+10*this.orientation,this.charac.height/2+stats.hitboxys,-this.orientation,stats.blood));}
-				else if(this.y>0 && other.y>0){add_to_objects_set(new Blood(this.x+10*this.orientation,this.y+this.charac.height/2+(other.y-this.y)/4,-this.orientation,stats.blood));}
+				else if((this.y==0 && stats.blood!="" && stats.hitboxys<0) || this.crouching){add_to_objects_set(new Blood(this.x+10*this.orientation,this.charac.height/2+stats.hitboxys,-this.orientation,stats.blood));}
+				else if(this.y>0 && other.y>0 && stats.blood!=""){add_to_objects_set(new Blood(this.x+10*this.orientation,this.y+this.charac.height/2+(other.y-this.y)/4,-this.orientation,stats.blood));}
 				else if(this.y>0 && other.y==0){
-					add_to_objects_set(new Blood(this.x+5*this.orientation,stats.hitboxye,-this.orientation,stats.blood));
+					if(stats.blood!=""){add_to_objects_set(new Blood(this.x+5*this.orientation,stats.hitboxye,-this.orientation,stats.blood));}
 				}
 			}
 			if(this.y>0 && other.y>0 && stats.hiteffect != "projectile" && stats.hiteffect != "freeze" && stats.hiteffect != "projectile_fall" && stats.hiteffect != "unblockable_projectile_fall"){this.xspeed+=other.xspeed*2/3;this.hurted+=4;}
@@ -4157,6 +4168,17 @@ class IceClone{
 						var stats = this.charac.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag/2,stats.elag+stats.fdur)){this.costume = "grabbing2"}
 						else{this.costume ="grabbing1";}
+						break;
+					case "groundpound" :
+						var stats = this.charac.coups.get(this.mov);
+						var n =1;
+						if(entre(this.movlag,stats.elag/2,stats.elag+stats.fdur)){n=6;}
+						else if(entre(this.movlag,0,stats.elag+stats.fdur+stats.slag/5)){n=5;}
+						else if(this.movlag<stats.elag+stats.fdur+stats.slag*2/5){n=4;}
+						else if(this.movlag<stats.elag+stats.fdur+stats.slag*3/5){n=3;}
+						else if(this.movlag<stats.elag+stats.fdur+stats.slag*4/5){n=2;}
+						else{n=1;}
+						this.costume = "groundpound"+n.toString();
 						break;
 				}
 			}

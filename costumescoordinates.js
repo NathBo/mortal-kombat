@@ -1479,6 +1479,13 @@ function getjaxcoordinates(){
 	jaxcoordinates.set("torso",{offx:40,width:31,offy:2237,height:57,decx:0,decy:0});
 	jaxcoordinates.set("torso2",{offx:270,width:53,offy:2271,height:23,decx:0,decy:0});
 	jaxcoordinates.set("head",{offx:982,width:12,offy:2048,height:15,decx:0,decy:0});
+
+	jaxcoordinates.set("groundpound1",{offx:17,width:61,offy:1602,height:106,decx:0,decy:0});
+	jaxcoordinates.set("groundpound2",{offx:88,width:49,offy:1604,height:104,decx:0,decy:0});
+	jaxcoordinates.set("groundpound3",{offx:156,width:55,offy:1620,height:88,decx:0,decy:0});
+	jaxcoordinates.set("groundpound4",{offx:221,width:55,offy:1616,height:91,decx:0,decy:0});
+	jaxcoordinates.set("groundpound5",{offx:288,width:56,offy:1637,height:71,decx:0,decy:-10});
+	jaxcoordinates.set("groundpound6",{offx:355,width:55,offy:1635,height:68,decx:0,decy:-9});
 	
     return jaxcoordinates;
 }
