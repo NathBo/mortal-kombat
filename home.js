@@ -2116,7 +2116,7 @@ class IceClone{
 			this.projectile_invincibility = 0;
 			this.pv = this.charac.pv; this.pvmax = this.charac.pv; this.pvaff = this.charac.pv;
 			this.pushed = 0;this.pushx = 0;
-			this.blocking = 0; this.falling = 0; this.gettingup = 0; this.grabbing = 0; this.grabbed = 0; this.bouncing = false; this.nutting = false;
+			this.blocking = 0; this.falling = 0; this.gettingup = 0; this.grabbing = 0; this.grabbed = 0; this.bouncing = false; this.nutting = false; this.grabtype = "";
 			this.grabbed_object = null;
 			this.comboscaling = 1;
 			this.vicpose = 0;
@@ -2214,6 +2214,8 @@ class IceClone{
 
 		begin_grab(other){
 			this.grabbing = 1;
+			this.grabtype = this.charac.grabtype;
+			if(this.mov=="bouncegrab"){this.grabtype = this.mov;}
 			this.movlag = 0;
 			this.mov = "";
 			this.xspeed=0;
@@ -2341,13 +2343,40 @@ class IceClone{
 			if(this.grabbing&&this.hurted==0&&this.grabbed==0){
 				this.invincibilite = 1;
 				this.grabbing++;
-				if(this.grabbing==this.charac.grabfdur){this.end_grab(other);}
-				else if(this.grabbing == Math.floor(this.charac.grabfdur*5/7)){
-					other.grabbed=0;
-					other.falling=10;
-					if(c.grabtype == "launch" || c.grabtype == "launch_free"){
+				var grabfdur = this.charac.grabfdur;
+				if(this.grabtype == "bouncegrab"){grabfdur*=2;if(other.pv<=0){this.end_grab(other);}}
+				if(this.grabbing==grabfdur){
+					this.end_grab(other);
+					if(this.grabtype == "bouncegrab"){
+						var stats = this.charac.coups.get("bouncegrab");
+						other.y = 1;
+						other.hurted = stats.hitstun;
+						other.x = this.x + this.orientation*38;
+						other.xspeed = stats.hurtx*this.orientation;
+						other.falling = 16;
+						other.tb = stats.hurty;
+						lag_game(8);
+						shake_screen(10,3);
+						play_sound_eff("hhit");
+						other.pv -= stats.degats;
+						other.combo_deg += stats.degats;
+						other.combo_hits += 1;
+						if(other.pv<=0){other.killanim();}
+					}
+				}
+				else if(this.grabbing == grabfdur/2 && this.grabtype == "bouncegrab"){
+					var a = 10;
+					other.losepv(a);
+					other.combo_deg += a;
+					other.combo_hits += 1;
+					play_sound_eff("mhit");
+				}
+				else if(this.grabbing == Math.floor(grabfdur*5/7)){
+					if(this.grabtype == "launch" || this.grabtype == "launch_free"){
 						var stats = this.charac.coups.get("grab");
 						other.y = this.y+30;
+						other.grabbed=0;
+						other.falling=10;
 						other.hurted = stats.hitstun;
 						other.xspeed = -stats.hurtx*this.orientation;
 						other.tb = stats.hurty;
@@ -2357,13 +2386,18 @@ class IceClone{
 						other.combo_hits += 1;
 						//other.orientation*=-1;
 						if(other.pv<=0){other.killanim();}
-						if(c.grabtype == "launch"){
+						if(this.grabtype == "launch"){
 							this.falling=1;
 							this.hurted=1;
 						}
 					}
+					else if(this.grabtype == "bouncegrab"){
+						
+					}
 					else{
 						other.y = 0;
+						other.grabbed=0;
+						other.falling=10;
 						other.hurted = 15;
 						other.x = this.x - this.orientation*(this.charac.width+other.charac.width)/1.4;
 						other.xspeed = -0.2*this.orientation;
@@ -2761,6 +2795,9 @@ class IceClone{
 					}
 					else if(this.perso == "baraka" && this.forward>=1 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
 						this.begincoup("dive",other);
+					}
+					else if(this.perso == "jax" && this.back==0 && this.bas==0 && this.forward==0 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
+						this.begincoup("bouncegrab",other);
 					}
 					else if(this.forward>=1&&movpriority.get(racine(this.mov))<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
 						this.x+=this.charac.vitesse*this.orientation;this.xspeed = 0;
@@ -3734,13 +3771,25 @@ class IceClone{
 			}
 			else if(gamefreeze && !still_draw){}
 			else if(this.grabbing){
-				if(this.grabbing<=this.charac.grabfdur*1/7){this.costume = "grabbing1";}
-				else if(this.grabbing<=this.charac.grabfdur*2/7){this.costume = "grabbing2";}
-				else if(this.grabbing<=this.charac.grabfdur*3/7){this.costume = "grabbing3";}
-				else if(this.grabbing<=this.charac.grabfdur*4/7){this.costume = "grabbing4";}
-				else if(this.grabbing<=this.charac.grabfdur*5/7){this.costume = "grabbing5";}
-				else if(this.grabbing<=this.charac.grabfdur*6/7){this.costume = "grabbing4";}
-				else {this.costume = "grabbing3";}
+				if(this.grabtype=="bouncegrab"){
+					var grabbing = this.charac.grabfdur-Math.abs(this.grabbing-this.charac.grabfdur);
+					if(grabbing<=this.charac.grabfdur*1/7){this.costume = "grabbing1";}
+					else if(grabbing<=this.charac.grabfdur*2/7){this.costume = "grabbing2";}
+					else if(grabbing<=this.charac.grabfdur*3/7){this.costume = "grabbing3";}
+					else if(grabbing<=this.charac.grabfdur*4/7){this.costume = "grabbing4";}
+					else if(grabbing<=this.charac.grabfdur*5/7){this.costume = "grabbing5";}
+					else if(grabbing<=this.charac.grabfdur*6/7){this.costume = "grabbing6";}
+					else {this.costume = "grabbing7";}
+				}
+				else{
+					if(this.grabbing<=this.charac.grabfdur*1/7){this.costume = "grabbing1";}
+					else if(this.grabbing<=this.charac.grabfdur*2/7){this.costume = "grabbing2";}
+					else if(this.grabbing<=this.charac.grabfdur*3/7){this.costume = "grabbing3";}
+					else if(this.grabbing<=this.charac.grabfdur*4/7){this.costume = "grabbing4";}
+					else if(this.grabbing<=this.charac.grabfdur*5/7){this.costume = "grabbing5";}
+					else if(this.grabbing<=this.charac.grabfdur*6/7){this.costume = "grabbing4";}
+					else {this.costume = "grabbing3";}
+				}
 			}
 			else if(this.falling){
 				if(this.falling<=5){this.costume = "hurted2";}
@@ -4098,6 +4147,11 @@ class IceClone{
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.costume = "jpunch2"}
 						else{this.costume = "jump3";}
 						break;
+					case "bouncegrab" :
+						var stats = this.charac.coups.get(this.mov);
+						if(entre(this.movlag,stats.elag/2,stats.elag+stats.fdur)){this.costume = "grabbing2"}
+						else{this.costume ="grabbing1";}
+						break;
 				}
 			}
 			else if (this.y>0 && !is_in_charc_screen){
@@ -4144,16 +4198,27 @@ class IceClone{
 
 			if(other.grabbed && this.grabbed==0){
 				var angletot = Math.PI;
-				if(this.charac.grabtype == "launch" || this.charac.grabtype == "launch_free"){
+				if(this.grabtype == "launch" || this.grabtype == "launch_free"){
 					angletot = Math.PI*1/2;
 				}
-				if(this.grabbing<=this.charac.grabfdur*1/7){var othercost = "grabbed1";}
-				else if(this.grabbing<=this.charac.grabfdur*2/7){var othercost = "grabbed2";}
-				else if(this.grabbing<=this.charac.grabfdur*3/7){var othercost = "grabbed3";}
-				else {var othercost = "grabbed4";}
-				var angle = this.grabbing*7/5/this.charac.grabfdur*angletot;
-				var x = this.orientation*this.charac.grabxdist*Math.cos(angle)+this.x;
-				var y = this.charac.grabydist*Math.sin(angle)+this.y;
+				if(this.grabtype == "bouncegrab"){
+					if(this.grabbing<=this.charac.grabfdur*1/7){var othercost = "grabbed1";}
+					else if(this.grabbing<=this.charac.grabfdur*2/7){var othercost = "grabbed2";}
+					else if(this.grabbing<=this.charac.grabfdur*3/7){var othercost = "grabbed3";}
+					else {var othercost = "grabbed4";}
+					var angle = Math.PI-Math.abs(this.grabbing-this.charac.grabfdur)/this.charac.grabfdur*angletot;
+					var x = this.orientation*38*Math.cos(angle)+this.x;
+					var y = 55*Math.sin(angle)+this.y;
+				}
+				else{
+					if(this.grabbing<=this.charac.grabfdur*1/7){var othercost = "grabbed1";}
+					else if(this.grabbing<=this.charac.grabfdur*2/7){var othercost = "grabbed2";}
+					else if(this.grabbing<=this.charac.grabfdur*3/7){var othercost = "grabbed3";}
+					else {var othercost = "grabbed4";}
+					var angle = this.grabbing*7/5/this.charac.grabfdur*angletot;
+					var x = this.orientation*this.charac.grabxdist*Math.cos(angle)+this.x;
+					var y = this.charac.grabydist*Math.sin(angle)+this.y;
+				}
 				other.x = x;		//pour la camera
 				ctx.scale(2*other.orientation,2);
 				var coords = other.coordinates.get(othercost);
@@ -5598,7 +5663,7 @@ class IceClone{
 	airdrift : 0.18, airmaxspeed : 2, airdodgespeed : 6., airdodgefdur : 14, landinglag : 7,coups : baraka_coups, pv : 96, getupfdur : 36, grabfdur : 20, grabdeg : 11, vicposframes : 7, vicposfdur : 36, cds : [130,180,150,210], icons : [spiniconpng,diveiconpng,slicethrowiconpng,gripeiconpng], voiceactor : "male",
 	default_behav : "masher", combos : baraka_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Raiden obtains a state monopoly on electricity production and becomes a multi-billionaire."});
 
-	characteristics.set("jax",{png : jaxskins,coordinates : jaxcoordinates, sex : "m", standnframes : 5, standframespeed : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : jaxiconpng, namewav : document.querySelector('#jaxwav'),
+	characteristics.set("jax",{png : jaxskins,coordinates : jaxcoordinates, sex : "m", standnframes : 5, standframespeed : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 38, grabydist : 38, stunnframes : 5, walknframes : 9, icon : jaxiconpng, namewav : document.querySelector('#jaxwav'),
 	width : 39, height : 104,vitesse : 2.75, run_speed : 5.8,jumpxspeed : 3.2,backmovnerf : 0.92, gravity : 0.42, jumpforce : 9.15,jumpsquat : 4, shorthop : 6.1, friction:0.24, hurtcontrol : 0.22,grabtype : "launch_free",
 	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : jax_coups, pv : 120, getupfdur : 36, grabfdur : 20, grabdeg : 11, vicposframes : 6, vicposfdur : 32, cds : [210,160,150,300], icons : [iceballiconpng,sliderepiconpng,spiticonpng,bombiconpng], voiceactor : "male",
 	default_behav : "zoner", combos : jax_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Reptile resurrects the dinosaurs and imposes a reptilian dictatorship!"});
