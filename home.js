@@ -2215,7 +2215,7 @@ class IceClone{
 		begin_grab(other){
 			this.grabbing = 1;
 			this.grabtype = this.charac.grabtype;
-			if(racine(this.mov)=="bouncegrab"){this.grabtype = racine(this.mov);}
+			if(racine(this.mov)=="bouncegrab" || racine(this.mov)=="clapdash"){this.grabtype = racine(this.mov);}
 			this.movlag = 0;
 			this.mov = "";
 			this.xspeed=0;
@@ -2345,10 +2345,11 @@ class IceClone{
 				this.grabbing++;
 				var grabfdur = this.charac.grabfdur;
 				if(this.grabtype == "bouncegrab"){grabfdur*=2;if(other.pv<=0){this.end_grab(other);}}
+				if(this.grabtype == "clapdash"){grabfdur*=2;}
 				if(this.grabbing==grabfdur){
 					this.end_grab(other);
 					if(this.grabtype == "bouncegrab"){
-						var stats = this.charac.coups.get("bouncegrab");
+						var stats = this.charac.coups.get(this.grabtype);
 						other.y = 1;
 						other.hurted = stats.hitstun;
 						other.x = this.x + this.orientation*38;
@@ -2364,6 +2365,24 @@ class IceClone{
 						other.combo_hits += 1;
 						if(other.pv<=0){other.killanim();}
 					}
+				}
+				else if(this.grabtype == "clapdash" && this.grabbing==grabfdur-1){
+					var stats = this.charac.coups.get(this.grabtype);
+					other.y = 1;
+					other.hurted = stats.hitstun;
+					other.x = this.x + this.orientation*38;
+					other.xspeed = stats.hurtx*this.orientation;
+					other.falling = 16;
+					other.tb = stats.hurty;
+					lag_game(9);
+					shake_screen(10,4);
+					play_sound_eff("hhit");
+					other.pv -= stats.degats;
+					other.combo_deg += stats.degats;
+					other.invincibilite=0;
+					other.combo_hits += 1;
+					other.orientation = -this.orientation;
+					if(other.pv<=0){other.killanim();}
 				}
 				else if(this.grabbing == grabfdur/2 && this.grabtype == "bouncegrab"){
 					var a = 10;
@@ -2394,7 +2413,7 @@ class IceClone{
 							this.hurted=1;
 						}
 					}
-					else if(this.grabtype == "bouncegrab"){
+					else if(this.grabtype == "bouncegrab" || this.grabtype == "clapdash"){
 						
 					}
 					else{
@@ -2805,6 +2824,9 @@ class IceClone{
 					else if(this.perso == "jax" && this.bas>=1 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
 						this.begincoup("groundpound",other);
 					}
+					else if(this.perso == "jax" && this.forward>=1 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
+						this.begincoup("clapdash",other);
+					}
 					else if(this.forward>=1&&movpriority.get(racine(this.mov))<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
 						this.x+=this.charac.vitesse*this.orientation;this.xspeed = 0;
 						let d = (this.charac.width+other.charac.width)/3;
@@ -3211,6 +3233,12 @@ class IceClone{
 						if(entre(this.movlag,stats.slag-1,stats.elag+stats.fdur+1)){shake_screen(5,5);}
 						if(this.movlag == stats.elag+stats.fdur+2){play_sound_eff("hhit");}
 						
+						break;
+					case "clapdash":
+						var stats = this.charac.coups.get(this.mov);
+						var a = 8;
+						if(this.is_enhanced()){a=12;}
+						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.x += a*this.orientation;}
 						break;
 					}
 				this.movlag--;
@@ -3798,6 +3826,11 @@ class IceClone{
 					else if(grabbing<=this.charac.grabfdur*6/7){this.costume = "grabbing6";}
 					else {this.costume = "grabbing7";}
 				}
+				else if(this.grabtype=="clapdash"){
+					if(this.grabbing <= this.charac.grabfdur*1/7){this.costume = "clapgrab1";}
+					else if(this.grabbing <= this.charac.grabfdur*2-2){this.costume = "clapgrab3";}
+					else{this.costume = "clapgrab4";}
+				}
 				else{
 					if(this.grabbing<=this.charac.grabfdur*1/7){this.costume = "grabbing1";}
 					else if(this.grabbing<=this.charac.grabfdur*2/7){this.costume = "grabbing2";}
@@ -3897,6 +3930,7 @@ class IceClone{
 					case "thundergod" :
 					case "leg_takedown" :
 					case "nutpunch" :
+					case "clapdash" :
 						var stats = this.charac.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.costume = racine(this.mov)+"3"}
 						else if(entre(this.movlag,0,stats.elag/2)||entre(this.movlag,stats.elag+stats.fdur+stats.slag/2,stats.elag+stats.fdur+stats.slag)){this.costume = racine(this.mov)+"1"}
@@ -4223,7 +4257,7 @@ class IceClone{
 					// slow_game(2,4);
 				}
 			}
-
+			var other_orientation = other.orientation;
 			if(other.grabbed && this.grabbed==0){
 				var angletot = Math.PI;
 				if(this.grabtype == "launch" || this.grabtype == "launch_free"){
@@ -4238,6 +4272,11 @@ class IceClone{
 					var x = this.orientation*38*Math.cos(angle)+this.x;
 					var y = 55*Math.sin(angle)+this.y;
 				}
+				else if(this.grabtype == "clapdash"){
+					var othercost = "hurted1";
+					var x = this.orientation*28+this.x;
+					var y = 5;
+				}
 				else{
 					if(this.grabbing<=this.charac.grabfdur*1/7){var othercost = "grabbed1";}
 					else if(this.grabbing<=this.charac.grabfdur*2/7){var othercost = "grabbed2";}
@@ -4248,9 +4287,10 @@ class IceClone{
 					var y = this.charac.grabydist*Math.sin(angle)+this.y;
 				}
 				other.x = x;		//pour la camera
-				ctx.scale(2*other.orientation,2);
 				var coords = other.coordinates.get(othercost);
-				ctx.drawImage(other.skin,coords.offx,coords.offy,coords.width,coords.height,(x+decalagex-camerax+coords.decx*this.orientation-other.orientation*other.charac.width/2+shakex)*other.orientation,ground-y-coords.height-coords.decy+shakey,coords.width,coords.height);
+				if(coords.flip==true){other_orientation = -other.orientation;}
+				ctx.scale(2*other_orientation,2);
+				ctx.drawImage(other.skin,coords.offx,coords.offy,coords.width,coords.height,(x+decalagex-camerax+coords.decx*this.orientation-other_orientation*other.charac.width/2+shakex)*other_orientation,ground-y-coords.height-coords.decy+shakey,coords.width,coords.height);
 				ctx.setTransform(1, 0, 0, 1, 0, 0);
 				ctx.scale(1,1);
 				other.drawLife();
@@ -5693,7 +5733,7 @@ class IceClone{
 
 	characteristics.set("jax",{png : jaxskins,coordinates : jaxcoordinates, sex : "m", standnframes : 5, standframespeed : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 38, grabydist : 38, stunnframes : 5, walknframes : 9, icon : jaxiconpng, namewav : document.querySelector('#jaxwav'),
 	width : 39, height : 104,vitesse : 2.75, run_speed : 5.8,jumpxspeed : 3.2,backmovnerf : 0.92, gravity : 0.42, jumpforce : 9.15,jumpsquat : 4, shorthop : 6.1, friction:0.24, hurtcontrol : 0.22,grabtype : "launch_free",
-	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : jax_coups, pv : 120, getupfdur : 36, grabfdur : 20, grabdeg : 11, vicposframes : 6, vicposfdur : 32, cds : [150,160,150,300], icons : [iceballiconpng,sliderepiconpng,spiticonpng,bombiconpng], voiceactor : "male",
+	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : jax_coups, pv : 120, getupfdur : 36, grabfdur : 20, grabdeg : 11, vicposframes : 6, vicposfdur : 32, cds : [150,200,150,300], icons : [iceballiconpng,sliderepiconpng,spiticonpng,bombiconpng], voiceactor : "male",
 	default_behav : "zoner", combos : jax_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Reptile resurrects the dinosaurs and imposes a reptilian dictatorship!"});
 
 

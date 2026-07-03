@@ -1486,6 +1486,13 @@ function getjaxcoordinates(){
 	jaxcoordinates.set("groundpound4",{offx:221,width:55,offy:1616,height:91,decx:0,decy:0});
 	jaxcoordinates.set("groundpound5",{offx:288,width:56,offy:1637,height:71,decx:0,decy:-10});
 	jaxcoordinates.set("groundpound6",{offx:355,width:55,offy:1635,height:68,decx:0,decy:-9});
+	jaxcoordinates.set("clapdash1",{offx:721,width:41,offy:1722,height:105,decx:0,decy:0});
+	jaxcoordinates.set("clapdash2",{offx:770,width:42,offy:1717,height:110,decx:0,decy:0});
+	jaxcoordinates.set("clapdash3",{offx:820,width:65,offy:1718,height:109,decx:0,decy:0});
+	jaxcoordinates.set("clapgrab1",{offx:15,width:60,offy:1482,height:109,decx:0,decy:0});
+	jaxcoordinates.set("clapgrab2",{offx:84,width:76,offy:1486,height:105,decx:0,decy:0});
+	jaxcoordinates.set("clapgrab3",{offx:169,width:56,offy:1485,height:106,decx:0,decy:0});
+	jaxcoordinates.set("clapgrab4",{offx:234,width:48,offy:1485,height:106,decx:0,decy:0});
 	
     return jaxcoordinates;
 }
