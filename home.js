@@ -2215,7 +2215,7 @@ class IceClone{
 		begin_grab(other){
 			this.grabbing = 1;
 			this.grabtype = this.charac.grabtype;
-			if(this.mov=="bouncegrab"){this.grabtype = this.mov;}
+			if(racine(this.mov)=="bouncegrab"){this.grabtype = racine(this.mov);}
 			this.movlag = 0;
 			this.mov = "";
 			this.xspeed=0;
@@ -2360,6 +2360,7 @@ class IceClone{
 						play_sound_eff("hhit");
 						other.pv -= stats.degats;
 						other.combo_deg += stats.degats;
+						other.invincibilite=0;
 						other.combo_hits += 1;
 						if(other.pv<=0){other.killanim();}
 					}
@@ -3194,6 +3195,11 @@ class IceClone{
 							else{this.x+=a*this.orientation;}
 							this.tb -= this.charac.gravity*0.2;
 						}
+						break;
+					case "bouncegrab":
+						var stats = this.charac.coups.get(this.mov);
+						if(this.is_enhanced() && this.movlag>stats.elag+1 && this.movlag<=stats.elag+stats.fdur+1){this.xspeed=4*this.orientation;}
+						
 						break;
 					}
 				this.movlag--;
@@ -5665,7 +5671,7 @@ class IceClone{
 
 	characteristics.set("jax",{png : jaxskins,coordinates : jaxcoordinates, sex : "m", standnframes : 5, standframespeed : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 38, grabydist : 38, stunnframes : 5, walknframes : 9, icon : jaxiconpng, namewav : document.querySelector('#jaxwav'),
 	width : 39, height : 104,vitesse : 2.75, run_speed : 5.8,jumpxspeed : 3.2,backmovnerf : 0.92, gravity : 0.42, jumpforce : 9.15,jumpsquat : 4, shorthop : 6.1, friction:0.24, hurtcontrol : 0.22,grabtype : "launch_free",
-	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : jax_coups, pv : 120, getupfdur : 36, grabfdur : 20, grabdeg : 11, vicposframes : 6, vicposfdur : 32, cds : [210,160,150,300], icons : [iceballiconpng,sliderepiconpng,spiticonpng,bombiconpng], voiceactor : "male",
+	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : jax_coups, pv : 120, getupfdur : 36, grabfdur : 20, grabdeg : 11, vicposframes : 6, vicposfdur : 32, cds : [150,160,150,300], icons : [iceballiconpng,sliderepiconpng,spiticonpng,bombiconpng], voiceactor : "male",
 	default_behav : "zoner", combos : jax_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Reptile resurrects the dinosaurs and imposes a reptilian dictatorship!"});
 
 
