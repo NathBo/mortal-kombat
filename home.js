@@ -2448,6 +2448,7 @@ class IceClone{
 					other.orientation = -this.orientation;
 					if(other.pv<=0){other.killanim();}
 				}
+				else if(this.grabtype == "clapdash" && this.grabbing==4){play_sound_eff("gotcha");}
 				else if(this.grabbing == grabfdur/2 && this.grabtype == "bouncegrab"){
 					var degs = 10;
 					other.losepv(degs);
@@ -5806,6 +5807,7 @@ class IceClone{
 	sounds_eff.set("malehmov",[document.querySelector('#malehmov1wav'),document.querySelector('#malehmov2wav')]);
 	sounds_eff.set("malehurted",[document.querySelector('#malehurted1wav'),document.querySelector('#malehurted2wav')]);
 	sounds_eff.set("malecomehere",[document.querySelector('#comehere1wav'),document.querySelector('#comehere2wav')]);
+	sounds_eff.set("gotcha",[document.querySelector('#gotchawav')]);
 	sounds_eff.set("malebighurted",[document.querySelector('#malebighurtedwav')]);
 	sounds_eff.set("maleraidenbullshit",[document.querySelector('#raidenbullshit1wav'),document.querySelector('#raidenbullshit2wav'),document.querySelector('#raidenbullshit3wav'),document.querySelector('#raidenbullshit4wav'),document.querySelector('#raidenbullshit5wav')]);
 	sounds_eff.set("liulmov",[document.querySelector('#liulmov1wav'),document.querySelector('#liulmov2wav')]);
