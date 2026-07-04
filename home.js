@@ -3450,7 +3450,7 @@ class IceClone{
 			if(racine(other.mov)=="thundergod"){other.y=0;}
 			if(other.mov=="charge"){other.movlag=8;other.xspeed=0;}
 			if(racine(other.mov)=="flying_kick"){other.movlag=13;other.xspeed=0;}
-			if(isGrab(stats.hiteffect) && this.mov != "" && isGrab(this.charac.coups.get(this.mov).hiteffect) && this.movlag>=this.charac.coups.get("grab").elag){
+			if(isGrab(stats.hiteffect) && this.charac.coups.has(this.mov) && isGrab(this.charac.coups.get(this.mov).hiteffect) && this.movlag>=this.charac.coups.get("grab").elag){
 				this.pushed = 5;this.pushx = -4*this.orientation;
 				other.pushed = 5;other.pushx = -4*other.orientation;
 				this.movlag=0;this.mov="";
