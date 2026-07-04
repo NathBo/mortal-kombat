@@ -343,11 +343,9 @@ class GuessBarrel extends MiniGame{
                     var a = 3;
                     var n2 = Math.floor((110-this.global_cpt)/a)+1;
                     var costbarrel = "barrelbreak"+n2.toString();
-                    console.log(costbarrel);
                     this.drawSkinRota(120+this.player_pos*100,this.cameray+125,donkeykongpng,costbarrel,1,this.barrellcoords,0.);
                 }
                 if(this.head_position==this.player_pos){
-                    console.log("win");
                     if(entre(this.global_cpt,80,110)){
                         this.drawSkin(120+100*this.head_position,this.cameray+120-(110-this.global_cpt)*2,this.skin2,"head",1,this.coordinates2,14);
                     }

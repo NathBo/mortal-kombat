@@ -1547,6 +1547,10 @@ class IceClone{
 		return chosenstage==3 && secondplayerishuman && !persosunlocked.get("reptile") && (roundwonsj1>=2 || roundwonsj2>=2);
 	}
 
+	function isGrab(s){
+		return (s == "grab" || s == "command_grab");
+	}
+
 
 	class AI
 	{
@@ -1707,6 +1711,7 @@ class IceClone{
 			if(this.behavior=="masher"){this.wanttojump+=2;this.overshootchance=0.2;this.crazynessmaxcd-=60;}
 			if(this.behavior=="turtle"){this.wanttojump=-1;this.agressivite=-0.01;}
 			if(this.behavior=="rush"){this.agressivite+=0.02;this.crazynessmaxcd-=90;this.distancetorun-=30;}
+			if(this.behavior=="grabber"){this.agressivite+=0.02;this.crazynessmaxcd-=30;this.distancetorun-=20;this.enviedegrab+=10;}
 		}
 
 		pressforward(force=false){
@@ -1790,6 +1795,7 @@ class IceClone{
 				else if(other.crouching && val.hitboxys>0 && me.y==0){}
 				else if((me.movlag || me.y>0) && val.disponibility=="crouch"){}
 				else if(!(me.crouching<=3 && me.y==0) && val.disponibility=="stand"){}
+				else if(val.disponibility == "none"){}
 				else if(val.hitboxxe+width/2>=newd && d>=val.hitboxxs-width/2 && val.hiteffect != "projectile" && (other.y==0 || me.y>0)){rep.add(key);}
 				else if(other.y>0 && me.y==0 && val.hitboxxe+width/2>=newd+10){rep.add(key);}
 			}
@@ -1975,7 +1981,7 @@ class IceClone{
 				this.crazynesscd = 0;
 				if(this.behavior=="zoner"){this.attacking-=5;}
 				else if(this.behavior=="turtle"){this.attacking=0;}
-				else if(this.behavior=="rush"){this.attacking=10;}
+				else if(this.behavior=="rush" || this.behavior=="grabber"){this.attacking=10;}
 				else{this.attacking+=5;}
 			}
 			var reaction_time = this.reaction_time;
@@ -2014,6 +2020,7 @@ class IceClone{
 					if(this.desired_move=="flying_kick" && this.wantstoenhance()>0){me.enhance=1;}
 					if(this.desired_move=="fireball" && other.tb>0){break block;}
 					if(this.desired_move=="slicethrow" && other.tb>1.8){break block;}
+					if(this.desired_move=="energywave" && other.tb>2.5){break block;}
 					if(this.desired_move=="spear_throw" && (other.tb>4. || Math.abs(-stage_size/2*other.orientation-other.x)<=130)){break block;}
 					if(this.desired_move=="hell_gates" && Math.abs(-stage_size/2*other.orientation-other.x)<=130){break block;}
 					if(this.desired_move=="leg_takedown" && this.wantstoenhance()>0){me.enhance=1;}
@@ -2063,6 +2070,7 @@ class IceClone{
 				if(me.perso=="shao_kahn"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("arrow");}}
 				if(me.perso == "johnny" && entre(Math.abs(me.x-other.x),90,200) && this.wantstoenhance()>0){me.enhance=1;this.begincoup("ballthrow");me.enhance=0;this.attacking+=4;}
 				if(me.perso=="baraka"){if(Math.abs(me.x-other.x)>100&&me.y==0){if(this.wantstoenhance()>7){me.enhance=1;}this.begincoup("slicethrow");me.enhance=0;}}
+				if(me.perso=="jax"){if(Math.abs(me.x-other.x)>100&&me.y==0){if(this.wantstoenhance()>7){me.enhance=1;}this.begincoup("energywave");me.enhance=0;}}
 			}
 
 			if(me.perso=="raiden" && this.currisking>=-2 && Math.abs(Math.abs(me.x-other.x-other.xspeed*10)-120)<=40 && me.y==0 && (other.y>0 || this.behavior=="masher") && me.crouching==0 && movpriority.get(racine(me.mov))<70 && other.tb<0 && me.cooldowns[1]==0)
@@ -2118,6 +2126,10 @@ class IceClone{
 				{if(this.wantstoenhance()>3){me.enhance=1;}this.begincoup("spin");me.enhance=0;}
 			else if(me.perso=="baraka" && this.currisking>=2 && Math.abs(Math.abs(me.x-other.x-other.xspeed*10)-140)<=40 && me.y==0 && (other.y>0 || this.behavior=="masher") && me.crouching==0 && movpriority.get(racine(me.mov))<70 && other.tb<=0 && me.cooldowns[1]==0)
 				{if(this.wantstoenhance()>5){me.enhance=1;}this.begincoup("dive");me.enhance=0;}
+			else if(me.perso=="jax" && this.currisking>=-3 && Math.abs(Math.abs(me.x-other.x-other.xspeed*10)-110)<=30 && me.y==0 && other.y==0 && other.crouching!=6 && movpriority.get(racine(me.mov))<70 && me.cooldowns[1]==0)
+				{if(this.wantstoenhance()>5){me.enhance=1;}this.begincoup("clapdash");me.enhance=0;}
+			else if(me.perso=="jax" && this.currisking>=-5 && Math.abs(Math.abs(me.x-other.x-other.xspeed*10)-170)<=100 && me.y==0 && other.y==0 && movpriority.get(racine(me.mov))<70 && me.cooldowns[3]==0 && other.invincibilite<5)
+				{if(this.wantstoenhance()>2 && other.crouching>0){me.enhance=1;}this.begincoup("groundpound");me.enhance=0;}
 
 			if(me.mov == "" && me.y==0 && me.jauge>me.jaugemax/2 && Math.abs(Math.abs(me.x-other.x))>=this.distancetorun && idealrange<=100 && this.behavior!="zoner" && !(this.behavior=="turtle" && this.attacking<=2) && Math.random()<=this.chancetorun && this.currisking>0){this.begin_run();}
 
@@ -2231,6 +2243,7 @@ class IceClone{
 			this.movlag = stats.slag+stats.fdur+stats.elag;
 			this.canthurt = false;
 			this.running=false;
+			if(s=="grab"){console.log("grab");}
 		}
 
 		reoriente(other,force=false){
@@ -3437,16 +3450,17 @@ class IceClone{
 			if(racine(other.mov)=="thundergod"){other.y=0;}
 			if(other.mov=="charge"){other.movlag=8;other.xspeed=0;}
 			if(racine(other.mov)=="flying_kick"){other.movlag=13;other.xspeed=0;}
-			if(stats.hiteffect=="grab" && this.mov=="grab" && this.movlag>=this.charac.coups.get("grab").elag){
+			if(isGrab(stats.hiteffect) && this.mov != "" && isGrab(this.charac.coups.get(this.mov).hiteffect) && this.movlag>=this.charac.coups.get("grab").elag){
 				this.pushed = 5;this.pushx = -4*this.orientation;
 				other.pushed = 5;other.pushx = -4*other.orientation;
 				this.movlag=0;this.mov="";
 				other.movlag=0;other.mov="";
+				console.log("techgrab");
 				return;
 			}
 			this.bouncing=false; this.nutting=false;
 			var parrywasdone = false;
-			if(this.mov == "icebody"){
+			if(this.mov == "icebody" && !["grab","command_grab"].includes(stats.hiteffect)){
 				var s = this.charac.coups.get("icebody");
 				if(entre(this.movlag, s.elag+1, s.elag + s.fdur)){this.other.afficher(this);other.freeze=60;other.movlag=0;other.mov="";play_sound_eff("freeze");return;}
 			}
@@ -3473,7 +3487,7 @@ class IceClone{
 				if(!parrywasdone){this.pv-=stats.damageonblock;}
 				if(this.pv<=0){this.pv = 1;}
 				this.xspeed = -stats.blockx*this.orientation;
-				if(racine(other.mov)=="dive"){other.memoryslot=0;console.log("blocked");}
+				if(racine(other.mov)=="dive"){other.memoryslot=0;}
 				if(parrywasdone){
 					if(this.hiteffect_is_not_projo(stats.hiteffect)){lag_game(11);}
 					else{lag_game(5);}
@@ -3509,6 +3523,7 @@ class IceClone{
 					case "grab" :
 					case "command_grab" :
 						if(this.n==1 && !secondplayerishuman){this.ai.ugothit();}
+						else if(this.n==0 && !secondplayerishuman){other.ai.ugotahit();}
 						other.begin_grab(this);
 						return;
 					case "projectile" :
@@ -4583,6 +4598,7 @@ class IceClone{
 	}
 
 
+
 	function shake_loop(){
 		if(shakeframe > 0){
 			shakeframe --;
@@ -5292,7 +5308,6 @@ class IceClone{
 					persolocked[1]=true;
 					if(j1.poing==1){skinschoisis[1]=0;}
 					else{skinschoisis[1]=1;}
-					console.log(areArraysEqual(persosovered[1],persosovered[0]),persosovered[1],persosovered[0])
 					if(persolocked[0] && areArraysEqual(persosovered[1],persosovered[0])){skinschoisis[1]=(skinschoisis[0]+1)%2;}
 					characteristics.get(ordre_persos[persosovered[1][0]][persosovered[1][1]]).namewav.currentTime=0;
 					characteristics.get(ordre_persos[persosovered[1][0]][persosovered[1][1]]).namewav.play();
@@ -5810,7 +5825,7 @@ class IceClone{
 	characteristics.set("jax",{png : jaxskins,coordinates : jaxcoordinates, sex : "m", standnframes : 5, standframespeed : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 38, grabydist : 38, stunnframes : 5, walknframes : 9, icon : jaxiconpng, namewav : document.querySelector('#jaxwav'),
 	width : 39, height : 104,vitesse : 2.75, run_speed : 5.8,jumpxspeed : 3.2,backmovnerf : 0.92, gravity : 0.42, jumpforce : 9.15,jumpsquat : 4, shorthop : 6.1, friction:0.24, hurtcontrol : 0.22,grabtype : "launch_free",
 	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : jax_coups, pv : 120, getupfdur : 36, grabfdur : 20, grabdeg : 11, vicposframes : 6, vicposfdur : 32, cds : [150,210,150,300], icons : [iceballiconpng,sliderepiconpng,spiticonpng,bombiconpng], voiceactor : "male",
-	default_behav : "rush", combos : jax_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Reptile resurrects the dinosaurs and imposes a reptilian dictatorship!"});
+	default_behav : "grabber", combos : jax_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Reptile resurrects the dinosaurs and imposes a reptilian dictatorship!"});
 
 
 	characteristics.set("shao_kahn",{png : shaoskins,coordinates : shaocoordinates, sex : "m", standnframes : 6, standframespeed : 5, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 5,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 8, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
