@@ -2036,7 +2036,8 @@ class IceClone{
 					this.pressbackward();
 					if(other.charac.coups.get(other.mov).hitboxys<0 && other.y==0){me.bas = 1;}
 					if(other.y>0){me.bas=0;}
-					if(["grab","unblockable_projectile_fall","command_grab"].includes(other.charac.coups.get(other.mov).hiteffect) && me.perso!="shao_kahn"){me.haut=1;}
+					if(racine(other.mov)=="clapdash"){me.bas=1;}
+					if(["grab","unblockable_projectile_fall"].includes(other.charac.coups.get(other.mov).hiteffect) && me.perso!="shao_kahn"){me.haut=1;}
 					return;
 				}
 				
@@ -2403,8 +2404,11 @@ class IceClone{
 						lag_game(8);
 						shake_screen(10,3);
 						play_sound_eff("hhit");
-						other.pv -= stats.degats;
-						other.combo_deg += stats.degats;
+						var degs = stats.degats;
+						other.pv -= degs;
+						other.combo_deg += degs;
+						this.jauge = Math.min(this.jaugemax,this.jauge+Math.round(degs/3));
+						other.jauge = Math.min(other.jaugemax,other.jauge+Math.round(degs*0.7));
 						other.invincibilite=0;
 						other.combo_hits += 1;
 						if(other.pv<=0){other.killanim();}
@@ -2421,18 +2425,23 @@ class IceClone{
 					lag_game(9);
 					shake_screen(10,4);
 					play_sound_eff("hhit");
-					other.pv -= stats.degats;
-					other.combo_deg += stats.degats;
+					var degs = stats.degats;
+					other.pv -= degs;
+					other.combo_deg += degs;
+					this.jauge = Math.min(this.jaugemax,this.jauge+Math.round(degs/3));
+					other.jauge = Math.min(other.jaugemax,other.jauge+Math.round(degs*0.7));
 					other.invincibilite=0;
 					other.combo_hits += 1;
 					other.orientation = -this.orientation;
 					if(other.pv<=0){other.killanim();}
 				}
 				else if(this.grabbing == grabfdur/2 && this.grabtype == "bouncegrab"){
-					var a = 10;
-					other.losepv(a);
-					other.combo_deg += a;
+					var degs = 10;
+					other.losepv(degs);
+					other.combo_deg += degs;
 					other.combo_hits += 1;
+					this.jauge = Math.min(this.jaugemax,this.jauge+Math.round(degs/3));
+					other.jauge = Math.min(other.jaugemax,other.jauge+Math.round(degs*0.7));
 					play_sound_eff("mhit");
 					shake_screen(10,2);
 					lag_game(5);
@@ -3283,9 +3292,11 @@ class IceClone{
 						break;
 					case "clapdash":
 						var stats = this.charac.coups.get(this.mov);
-						var a = 8;
-						if(this.is_enhanced()){a=12;}
+						var a = 7;
+						if(this.is_enhanced()){a=11;}
 						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.x += a*this.orientation;}
+						let d = (this.charac.width+other.charac.width)/3;
+						if(Math.abs(this.x-other.x)<d && this.y==0 && other.y==0){this.x-=a*this.orientation;}
 						break;
 					case "energywave":
 						var stats = this.charac.coups.get(this.mov);
