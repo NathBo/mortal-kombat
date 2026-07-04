@@ -2775,6 +2775,19 @@ class IceClone{
 						this.mov = ""; this.movlag=0;
 						other.reoriente(this);
 					}
+					else if(this.perso == "jax" && this.forward+this.back==0 && this.bas==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=60 && other.gettingup==0 && other.y<=30){
+						this.fatality = 120;
+						other.falling=0;
+						other.y=0;
+						play_sound_eff("fatal1");
+						this.special=2;
+						other.x = this.x + 39*this.orientation;
+						finishhim = 0;
+						other.invincibilite=1000;
+						fatalitywasdone = true;
+						this.mov = ""; this.movlag=0;
+						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
+					}
 					else if(this.perso == "kitana" && this.forward>=1 && this.special==1 && this.bas==0 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
 						this.begincoup("fanswipe",other);
 					}
@@ -3832,6 +3845,50 @@ class IceClone{
 					else if(this.fatality>=5){this.costume = "huppercut4"}
 					else {this.costume = "huppercut5"}
 					if(this.fatality==32){other.decapitate(3,-5);play_sound_eff("hhit");play_sound_eff("spithit");shake_screen(12,10);}
+				}
+				else if(this.perso=="jax"){
+					var a = 120; var b = 116; var c = 100; var d = 12;
+					var e = 7; var f = c-e*d+5;
+					if(this.fatality>b){this.costume = "grabbing1";}
+					else if(this.fatality>c){this.costume="grabbing2";other.costume="hurted1";}
+					else if(this.fatality>f){
+						var angletot = Math.PI;
+						var fatamod = (c-this.fatality)%(2*d);
+						if(fatamod%d==0){
+							shake_screen(3,6);play_sound_eff("hhit");
+							if(this.fatality>f+3){play_sound_eff(other.charac.voiceactor+"hurted");}
+						}
+						if(fatamod==0 && this.fatality<=c-d){
+							add_to_objects_set(new DropBlood(this.x+this.orientation*38,25,-this.orientation,"dropblood",3.+2*Math.random(),3.))
+						}
+						if(fatamod==d){
+							add_to_objects_set(new DropBlood(this.x-this.orientation*38,25,this.orientation,"dropblood",3.+2*Math.random(),3.))
+						}
+						var grabphase = d-Math.abs(fatamod-d);
+						if(grabphase<=d*1/4){var othercost = "grabbed1";}
+						else if(grabphase<=d*2/4){var othercost = "grabbed2";}
+						else if(grabphase<=d*3/4){var othercost = "grabbed3";}
+						else {var othercost = "grabbed4";}
+						var angle = Math.PI-Math.abs(grabphase-d)/d*angletot;
+						var x = this.orientation*38*Math.cos(angle)+this.x;
+						var y = 55*Math.sin(angle)+this.y;
+						other.x = x; other.y = y; other.costume = othercost;
+
+						if(grabphase<=d*1/7){this.costume = "grabbing1";}
+						else if(grabphase<=d*2/7){this.costume = "grabbing2";}
+						else if(grabphase<=d*3/7){this.costume = "grabbing3";}
+						else if(grabphase<=d*4/7){this.costume = "grabbing4";}
+						else if(grabphase<=d*5/7){this.costume = "grabbing5";}
+						else if(grabphase<=d*6/7){this.costume = "grabbing6";}
+						else {this.costume = "grabbing7";}
+					}
+					else{this.costume = "grabbing8";}
+					if(this.fatality==f+1){
+						other.y=-30;other.x = this.x-this.orientation*38;other.explode();
+						play_sound_eff("spithit");play_sound_eff("hhit");
+						add_to_objects_set(new DropBlood(this.x-this.orientation*38,55,-this.orientation,"hdropblood",0.,2.));
+					}
+					if(this.fatality==b){other.no_costume_control=true;}
 				}
 			}
 			else if(this.fatality && this.fatalitytype==1){
@@ -5879,7 +5936,7 @@ class IceClone{
 	var score = 0; var matchscore = 0; var roundscore = 0;
 	var old_stats = null; var new_stats = null; var highscore_screen_cpt = 0;
 
-	var fatality_testing = false;
+	var fatality_testing = true;
 
 	
 	function saveStats(){
