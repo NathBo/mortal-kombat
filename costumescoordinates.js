@@ -1302,7 +1302,7 @@ function getbarcoordinates(){
 	barcoordinates.set("victory6",{offx:936,width:21,offy:767,height:101,decx:6,decy:0});
 	barcoordinates.set("victory7",{offx:966,width:42,offy:758,height:110,decx:-5,decy:0});
 
-	barcoordinates.set("decapitated1",{offx:252,width:16,offy:1233,height:97,decx:0,decy:0,flip:true});
+	barcoordinates.set("decapitated1",{offx:252,width:16,offy:1233,height:97,decx:10,decy:0,flip:true});
 	barcoordinates.set("decapitated2",{offx:281,width:27,offy:1241,height:91,decx:0,decy:0,flip:true});
 	barcoordinates.set("decapitated3",{offx:316,width:26,offy:1262,height:67,decx:0,decy:0,flip:true});
 	barcoordinates.set("decapitated4",{offx:351,width:38,offy:1262,height:65,decx:0,decy:0,flip:true});

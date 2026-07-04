@@ -2788,6 +2788,20 @@ class IceClone{
 						this.mov = ""; this.movlag=0;
 						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
 					}
+					else if(this.perso == "jax" && this.forward && this.bas==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=60 && other.gettingup==0 && other.y<=30){
+						this.fatality = 60;
+						this.fatalitytype = 1;
+						other.falling=0;
+						other.y=0;
+						play_sound_eff("fatal1");
+						this.special=2;
+						other.x = this.x + 39*this.orientation;
+						finishhim = 0;
+						other.invincibilite=1000;
+						fatalitywasdone = true;
+						this.mov = ""; this.movlag=0;
+						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
+					}
 					else if(this.perso == "kitana" && this.forward>=1 && this.special==1 && this.bas==0 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
 						this.begincoup("fanswipe",other);
 					}
@@ -3886,6 +3900,7 @@ class IceClone{
 					if(this.fatality==f+1){
 						other.y=-30;other.x = this.x-this.orientation*38;other.explode();
 						play_sound_eff("spithit");play_sound_eff("hhit");
+						slow_game(10,2.);
 						add_to_objects_set(new DropBlood(this.x-this.orientation*38,55,-this.orientation,"hdropblood",0.,2.));
 					}
 					if(this.fatality==b){other.no_costume_control=true;}
@@ -3933,6 +3948,14 @@ class IceClone{
 					if(this.fatality==119 || this.fatality==93 || this.fatality==64){other.decapitate();other.costume="decapitated1";play_sound_eff("hhit");shake_screen(10,8);}
 					if(this.fatality==19){other.explode();}
 					else if(this.fatality<=50 && this.fatality%10==9){shake_screen(6,6);}
+				}
+				else if(this.perso=="jax"){
+					var a = 30; var b = 26;
+					if(this.fatality>a){this.costume = "clapdash1";}
+					else if(this.fatality>b){this.costume = "clapdash2";}
+					else{this.costume = "clapdash3";}
+					if(this.fatality==b){other.decapitate_nohead();play_sound_eff("spithit");play_sound_eff("hhit");shake_screen(10,10);other.shake_player(9,5);slow_game(10,2.)}
+
 				}
 			}
 			else if(this.decapitated){
@@ -4613,6 +4636,12 @@ class IceClone{
 			add_to_objects_set(new Blood(this.x,this.y+this.charac.height-5,this.orientation,"hblood"));
 			add_to_objects_set(new DropBlood(this.x,this.y+this.charac.height-5,this.orientation,"hdropblood",0.,1.+power));
 			return head;
+		}
+
+		decapitate_nohead(){
+			this.decapitated = 100;
+			add_to_objects_set(new Blood(this.x,this.y+this.charac.height-5,this.orientation,"hblood"));
+			add_to_objects_set(new DropBlood(this.x,this.y+this.charac.height-5,this.orientation,"hdropblood",0.,2.));
 		}
 
 		eat_head(dur,vitesse){
@@ -5936,7 +5965,7 @@ class IceClone{
 	var score = 0; var matchscore = 0; var roundscore = 0;
 	var old_stats = null; var new_stats = null; var highscore_screen_cpt = 0;
 
-	var fatality_testing = true;
+	var fatality_testing = false;
 
 	
 	function saveStats(){
