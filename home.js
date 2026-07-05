@@ -5965,7 +5965,7 @@ class IceClone{
 	var score = 0; var matchscore = 0; var roundscore = 0;
 	var old_stats = null; var new_stats = null; var highscore_screen_cpt = 0;
 
-	var fatality_testing = true;
+	var fatality_testing = false;
 
 	
 	function saveStats(){
