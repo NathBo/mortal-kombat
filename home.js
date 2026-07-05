@@ -2243,7 +2243,6 @@ class IceClone{
 			this.movlag = stats.slag+stats.fdur+stats.elag;
 			this.canthurt = false;
 			this.running=false;
-			if(s=="grab"){console.log("grab");}
 		}
 
 		reoriente(other,force=false){
@@ -3483,7 +3482,6 @@ class IceClone{
 				other.pushed = 5;other.pushx = -4*other.orientation;
 				this.movlag=0;this.mov="";
 				other.movlag=0;other.mov="";
-				console.log("techgrab");
 				return;
 			}
 			this.bouncing=false; this.nutting=false;
