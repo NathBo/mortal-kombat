@@ -23,7 +23,7 @@ var reppng = new Image();reppng.src = 'ressource/characters/reptile.png';
 var rep2png = new Image();rep2png.src = 'ressource/characters/reptile2.png';
 var repskins = [reppng,rep2png];
 var johpng = new Image();johpng.src = 'ressource/characters/johnny.png';
-var joh2png = new Image();joh2png.src = 'ressource/characters/johnny2.png';
+var joh2png = new Image();joh2png.src = 'ressource/characters/johnny3.png';
 var johskins = [johpng,joh2png];
 var barpng = new Image();barpng.src = 'ressource/characters/baraka.png';
 var bar2png = new Image();bar2png.src = 'ressource/characters/baraka2.png';
