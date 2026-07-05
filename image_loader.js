@@ -29,7 +29,7 @@ var barpng = new Image();barpng.src = 'ressource/characters/baraka.png';
 var bar2png = new Image();bar2png.src = 'ressource/characters/baraka2.png';
 var barskins = [barpng,bar2png];
 var jaxpng = new Image();jaxpng.src = 'ressource/characters/jax.png';
-var jax2png = new Image();jax2png.src = 'ressource/characters/jax.png';
+var jax2png = new Image();jax2png.src = 'ressource/characters/jax2.png';
 var jaxskins = [jaxpng,jax2png];
 var shaopng = new Image();shaopng.src = 'ressource/characters/shaokahn.png';
 var shaoskins = [shaopng,shaopng];
