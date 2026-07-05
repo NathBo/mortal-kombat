@@ -4354,8 +4354,9 @@ class IceClone{
 						break;
 					case "dive" :
 						var stats = this.charac.coups.get(this.mov);
-						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.costume = "jpunch2"}
-						else{this.costume = "jump3";}
+						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur+stats.slag/3)){this.costume = "jpunch2"}
+						else if(this.movlag>=stats.elag+stats.fdur+stats.slag*2/3){this.costume = "jump3";}
+						else{this.costume="roll1";}
 						break;
 					case "bouncegrab" :
 						var stats = this.charac.coups.get(this.mov);
