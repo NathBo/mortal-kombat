@@ -2637,12 +2637,12 @@ class IceClone{
 						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
 					}
 					else if(this.perso == "raiden" && this.forward+this.back==0 && this.bas==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=60 && other.gettingup==0 && other.y<=30){
-						this.fatality = 110;
+						this.fatality = 130;
 						other.falling=0;
 						other.y=0;
 						play_sound_eff("fatal1");
 						this.special=2;
-						other.x = this.x + 39*this.orientation;
+						other.x = this.x + 35*this.orientation;
 						finishhim = 0;
 						other.invincibilite=1000;
 						fatalitywasdone = true;
@@ -3679,13 +3679,19 @@ class IceClone{
 					}
 				}
 				else if(this.perso=="raiden"){
-					if(this.fatality==110){other.y=20;}
-					if(this.fatality>=40){
+					if(this.fatality==130){other.no_costume_control=true;other.shake_player(7,3.);play_sound_eff(this.charac.voiceactor+"lmov");play_sound_eff("coup");}
+					if(entre(this.fatality,40,100)){
 						this.costume = "elecgrab"+(Math.floor(this.fatality/4)%2+1);
-						if(this.fatality%8==0){other.electrocuted=4;other.shake_player(8,3.)}
-						if(this.fatality%20==0){play_sound_eff("electrocute");shake_screen(20,4);}
+						if(this.fatality%8==0){other.electrocuted=4;other.shake_player(8,3.+this.memoryslot*0.3);}
+						if(this.fatality%20==0){play_sound_eff("electrocute");shake_screen(24,5+this.memoryslot*0.5);}
+						if(this.special==1){this.special=2;this.memoryslot++;}
 					}
-					if(this.fatality==40){other.explode();}
+					else if(this.fatality>126){this.costume="elecgrab1";other.costume = "hurted1";other.y=10;}
+					else if(this.fatality>100){
+						this.costume="elecgrab2";other.costume = "hurted2";other.y=20;
+					}
+					if(this.fatality==40){other.explode(3.5+this.memoryslot);slow_game(5,2.);shake_screen(15,8);}
+					if(this.fatality==100){other.no_costume_control = false;other.hurted=0;other.x=this.x+39*this.orientation;}
 				}
 				else if(this.perso=="mileena"){
 					this.costume = "teleport_drop1";
@@ -4500,7 +4506,8 @@ class IceClone{
 				}
 				if(this.electrocuted){
 					this.electrocuted--;
-					ctx.filter = 'brightness(1.8)';
+					if(this.electrocuted%4>=2){ctx.filter = 'invert(1) sepia(1) saturate(5) hue-rotate(150deg)';}
+					else{ctx.filter = 'brightness(4) contrast(3) grayscale(1)';}
 				}
 				if(this.freeze){
 					ctx.filter = 'sepia(100%) saturate(300%) hue-rotate(160deg)';
@@ -4664,13 +4671,13 @@ class IceClone{
 			return torso;
 		}
 
-		explode(){
+		explode(force=5.5){
 			this.hide=1;
 			for(var i=0;i<25;i++){
 				add_to_objects_set(new Organ(this.x,this.y+this.charac.height/2,this.orientation, (this.burning!=0)));
 			}
 			if(this.perso!="shao_kahn"){
-				if(!this.burning){add_to_objects_set(new Head(this.x,this.y+this.charac.height,this.orientation,this.skin,this.coordinates,5.5));}
+				if(!this.burning){add_to_objects_set(new Head(this.x,this.y+this.charac.height,this.orientation,this.skin,this.coordinates,force,-0.4));}
 				shake_screen(30,10);
 			}
 			else{
