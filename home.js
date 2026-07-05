@@ -5912,7 +5912,7 @@ class IceClone{
 
 	characteristics.set("jax",{png : jaxskins,coordinates : jaxcoordinates, sex : "m", standnframes : 5, standframespeed : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 38, grabydist : 38, stunnframes : 5, walknframes : 9, icon : jaxiconpng, namewav : document.querySelector('#jaxwav'),
 	width : 39, height : 104,vitesse : 2.75, run_speed : 5.8,jumpxspeed : 3.2,backmovnerf : 0.92, gravity : 0.42, jumpforce : 9.15,jumpsquat : 4, shorthop : 6.1, friction:0.24, hurtcontrol : 0.22,grabtype : "launch_free",
-	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : jax_coups, pv : 120, getupfdur : 36, grabfdur : 20, grabdeg : 11, vicposframes : 6, vicposfdur : 32, cds : [150,210,150,300], icons : [iceballiconpng,sliderepiconpng,spiticonpng,bombiconpng], voiceactor : "male",
+	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : jax_coups, pv : 120, getupfdur : 36, grabfdur : 20, grabdeg : 11, vicposframes : 6, vicposfdur : 32, cds : [150,210,150,300], icons : [bouncegrabiconpng,clapdashiconpng,energywaveiconpng,groundpoundiconpng], voiceactor : "male",
 	default_behav : "grabber", combos : jax_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Reptile resurrects the dinosaurs and imposes a reptilian dictatorship!"});
 
 

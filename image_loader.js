@@ -78,6 +78,10 @@ var spiniconpng=new Image();spiniconpng.src = 'ressource/icons/spin_icon.png';
 var diveiconpng=new Image();diveiconpng.src = 'ressource/icons/dive_icon.png';
 var slicethrowiconpng=new Image();slicethrowiconpng.src = 'ressource/icons/slicethrow_icon.png';
 var gripeiconpng=new Image();gripeiconpng.src = 'ressource/icons/gripe_icon.png';
+var bouncegrabiconpng=new Image();bouncegrabiconpng.src = 'ressource/icons/bouncegrab_icon.png';
+var clapdashiconpng=new Image();clapdashiconpng.src = 'ressource/icons/clapdash_icon.png';
+var energywaveiconpng=new Image();energywaveiconpng.src = 'ressource/icons/energywave_icon.png';
+var groundpoundiconpng=new Image();groundpoundiconpng.src = 'ressource/icons/groundpound_icon.png';
 
 var bloodpng = new Image();bloodpng.src = 'ressource/visual_effects/blood.png';
 var burstpng = new Image();burstpng.src = 'ressource/visual_effects/burst2.png'
