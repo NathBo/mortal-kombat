@@ -1303,18 +1303,18 @@ function getbarcoordinates(){
 	barcoordinates.set("victory7",{offx:966,width:42,offy:758,height:110,decx:-5,decy:0});
 
 	barcoordinates.set("decapitated1",{offx:252,width:16,offy:1233,height:97,decx:10,decy:0,flip:true});
-	barcoordinates.set("decapitated2",{offx:281,width:27,offy:1241,height:91,decx:0,decy:0,flip:true});
-	barcoordinates.set("decapitated3",{offx:316,width:26,offy:1262,height:67,decx:0,decy:0,flip:true});
-	barcoordinates.set("decapitated4",{offx:351,width:38,offy:1262,height:65,decx:0,decy:0,flip:true});
-	barcoordinates.set("decapitated5",{offx:397,width:73,offy:1307,height:30,decx:0,decy:0,flip:true});
-	barcoordinates.set("decapitated6",{offx:397,width:73,offy:1307,height:30,decx:0,decy:0,flip:true});
+	barcoordinates.set("decapitated2",{offx:281,width:27,offy:1241,height:91,decx:7,decy:0,flip:true});
+	barcoordinates.set("decapitated3",{offx:316,width:26,offy:1262,height:67,decx:4,decy:0,flip:true});
+	barcoordinates.set("decapitated4",{offx:351,width:38,offy:1262,height:65,decx:1,decy:0,flip:true});
+	barcoordinates.set("decapitated5",{offx:397,width:73,offy:1307,height:30,decx:-2,decy:0,flip:true});
+	barcoordinates.set("decapitated6",{offx:397,width:73,offy:1307,height:30,decx:-5,decy:0,flip:true});
 	barcoordinates.set("stunned1",{offx:618,width:35,offy:999,height:103,decx:0,decy:0,flip:true});
 	barcoordinates.set("stunned2",{offx:661,width:36,offy:1000,height:102,decx:0,decy:0,flip:true});
 	barcoordinates.set("stunned3",{offx:705,width:36,offy:1003,height:99,decx:0,decy:0,flip:true});
 	barcoordinates.set("stunned4",{offx:746,width:37,offy:1006,height:96,decx:0,decy:0,flip:true});
 	barcoordinates.set("stunned5",{offx:788,width:36,offy:1003,height:99,decx:0,decy:0,flip:true});
 	barcoordinates.set("ballshurt",{offx:1141,width:36,offy:1025,height:77,decx:0,decy:0});
-	barcoordinates.set("legs",{offx:179,width:15,offy:1255,height:75,decx:0,decy:0,flip:true});
+	barcoordinates.set("legs",{offx:179,width:15,offy:1255,height:75,decx:10,decy:0,flip:true});
 	barcoordinates.set("torso",{offx:24,width:34,offy:1272,height:36,decx:0,decy:0});
 	barcoordinates.set("torso2",{offx:70,width:37,offy:1269,height:37,decx:0,decy:0});
 	barcoordinates.set("head",{offx:317,width:14,offy:1224,height:18,decx:0,decy:0,flip:true});
