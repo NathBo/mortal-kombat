@@ -2622,10 +2622,13 @@ class IceClone{
 					else if(this.perso == "kitana" && this.forward+this.back==0 && this.bas==0 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
 						this.begincoup("fanthrow",other);
 					}
-					else if(this.perso == "kitana" && this.forward>=1 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=80 && other.falling==0 && other.gettingup==0){
+					else if(this.perso == "kitana" && this.forward>=1 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=80 && other.falling==0 && other.gettingup==0 && other.y<=30){
 						this.fatality = 90; this.memoryslot=0;
+						other.x = clip(other.x,this.x + 45*this.orientation,this.x + 70*this.orientation);
+						other.falling=0;
 						other.y=0;
 						play_sound_eff("fatal1");
+						this.memoryslot=0;
 						this.special=2;
 						finishhim = 0;
 						other.invincibilite=1000;
@@ -3660,18 +3663,19 @@ class IceClone{
 					else if(this.fatality>=65){this.costume = "fanswipe2"}
 					else if(this.fatality>=60){this.costume = "fanswipe3"}
 					else {this.costume = "fanswipe4"}
-					if(this.fatality==64){other.decapitate();play_sound_eff("fan");}
+					if(this.fatality==64){other.decapitate();play_sound_eff("fan");play_sound_eff("spithit");slow_game(5,1.5);shake_screen(8,5);}
 					var a = 55;
 					if(this.special==1){
 						this.special=2;
-						if(entre(this.fatality,a,64)){this.memoryslot=1;}
+						if(entre(this.fatality,a,64) && this.memoryslot==0){this.memoryslot=1;}
+						else{this.memoryslot=2;}
 					}
 					if(this.memoryslot==1){
 						if(this.fatality>=a){}
 						else if(this.fatality>=a-3){this.costume = "fanswipe1"}
 						else if(this.fatality>=a-6){this.costume = "fanswipe2"}
 						else if(this.fatality>=a-9){this.costume = "fanswipe3"}
-						if(this.fatality==a-7){other.explode();}
+						if(this.fatality==a-7){other.explode();play_sound_eff("fan");play_sound_eff("spithit");shake_screen(18,17);}
 					}
 				}
 				else if(this.perso=="raiden"){
@@ -5966,7 +5970,7 @@ class IceClone{
 	var score = 0; var matchscore = 0; var roundscore = 0;
 	var old_stats = null; var new_stats = null; var highscore_screen_cpt = 0;
 
-	var fatality_testing = false;
+	var fatality_testing = true;
 
 	
 	function saveStats(){
@@ -6060,6 +6064,8 @@ class IceClone{
 
 
 	function shake_screen(frames,force){
+		if(shakeforce>force){force=shakeforce;}
+		if(shakeframe>frames){frames=shakeframe;}
 		shakeforce = force; shakeframe = frames;
 	}
 
