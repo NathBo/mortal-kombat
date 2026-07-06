@@ -1046,6 +1046,18 @@ function getliucoordinates(){
 	liucoordinates.set("cycle7",{offx:411,width:56,offy:1592,height:109,decx:0,decy:0});
 	liucoordinates.set("cycle8",{offx:476,width:72,offy:1592,height:109,decx:0,decy:0});
 	liucoordinates.set("cycle9",{offx:15,width:50,offy:1620,height:84,decx:0,decy:0});
+	liucoordinates.set("dragon1",{offx:15,width:43,offy:1780,height:102,decx:0,decy:0});
+	liucoordinates.set("dragon2",{offx:66,width:45,offy:1779,height:103,decx:-5,decy:0});
+	liucoordinates.set("dragon3",{offx:120,width:70,offy:1776,height:106,decx:-10,decy:0});
+	liucoordinates.set("dragon4",{offx:200,width:92,offy:1771,height:111,decx:-15,decy:0});
+	liucoordinates.set("dragon5",{offx:303,width:120,offy:1763,height:119,decx:-20,decy:0});
+	liucoordinates.set("dragon6",{offx:435,width:110,offy:1755,height:127,decx:-20,decy:0});
+	liucoordinates.set("dragon7",{offx:556,width:102,offy:1745,height:137,decx:-20,decy:0});
+	liucoordinates.set("dragon8",{offx:669,width:93,offy:1731,height:151,decx:-20,decy:0});
+	liucoordinates.set("dragon9",{offx:775,width:91,offy:1713,height:169,decx:-20,decy:0});
+	liucoordinates.set("dragon10",{offx:15,width:104,offy:1895,height:152,decx:-20,decy:0});
+	liucoordinates.set("dragon11",{offx:131,width:119,offy:1913,height:134,decx:-20,decy:0});
+	liucoordinates.set("dragon12",{offx:263,width:129,offy:1917,height:130,decx:-20,decy:0});
 	
 
     return liucoordinates;

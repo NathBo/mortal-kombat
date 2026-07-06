@@ -43,6 +43,7 @@ function round_of(number,precis){
 
 
 function clip(a,b,c){
+	if(b>c){var d = b;b=c;c=d;}
 	if(a<b){return b;}
 	if(a>c){return c;}
 	return a;
@@ -2740,6 +2741,22 @@ class IceClone{
 						this.mov = ""; this.movlag=0;
 						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
 					}
+					else if(this.perso == "liukang" && this.back+this.forward==0 && this.bas==0 && this.special==1 && finishhim && entre(Math.abs(this.x-other.x),50,110) && other.gettingup==0 && other.y<=30){
+						this.fatality = 180;
+						other.falling=0;
+						other.y=0;
+						other.hurted = 0;
+						this.fatalitytype=1;
+						this.canthurt=false;
+						play_sound_eff("fatal1");
+						this.special=2;
+						other.x = this.x + 80*this.orientation;
+						finishhim = 0;
+						other.invincibilite=1000;
+						fatalitywasdone = true;
+						this.mov = ""; this.movlag=0;
+						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
+					}
 					else if(this.perso == "mileena" && this.bas && this.special==1 && finishhim &&  other.gettingup==0 && other.y<=30 && Math.abs(this.x-other.x)>90){
 						this.fatality = 60;
 						other.falling=0;
@@ -3739,7 +3756,7 @@ class IceClone{
 					if(this.special==1){
 						this.special=2;
 						if(entre(this.fatality,a,64) && this.memoryslot==0){this.memoryslot=1;}
-						else{this.memoryslot=2;}
+						else if(this.memoryslot==0){this.memoryslot=2;}
 					}
 					if(this.memoryslot==1){
 						if(this.fatality>=a){}
@@ -4099,6 +4116,21 @@ class IceClone{
 					if(this.fatality==b-4*c){play_sound_eff("kiss");}
 					if(this.fatality==e){other.explode();play_sound_eff("spithit",0.5);add_to_objects_set(new DropBlood(this.x+this.orientation*38,85,-this.orientation,"hdropblood",0.,4.));}
 					this.costume="kiss"+n.toString();
+				}
+				else if(this.perso=="liukang"){
+					var a = 160; var c = 4; var b = 90; var d = 40;
+					if(this.fatality<=a){
+						var n = 1;
+						if(this.fatality>=a-6*c){n=Math.floor((a-this.fatality)/c)+1;if(this.fatality%4==0){shake_screen(3,3.);}}
+						else if(this.fatality>=b){n=6;}
+						else if(this.fatality>=b-6*c){n=Math.floor((b-this.fatality)/c)+6;}
+						else if(this.fatality>=d){n=12;}
+						else{n = 12-Math.floor((d-this.fatality)/d*12);}
+						this.costume = "dragon"+n.toString();
+					}
+					if(this.fatality==b-6*c){other.become_legs();play_sound_eff("spithit");play_sound_eff("explcrunch");play_sound_eff("hhit",0.7);shake_screen(15,8.);slow_game(4,1.5);}
+					if(this.fatality==b-3*c){play_sound_eff("repspit",0.6);}
+					if(this.fatality==a){play_sound_eff("teleport");}
 				}
 			}
 			else if(this.decapitated){
@@ -6124,7 +6156,7 @@ class IceClone{
 	var score = 0; var matchscore = 0; var roundscore = 0;
 	var old_stats = null; var new_stats = null; var highscore_screen_cpt = 0;
 
-	var fatality_testing = true;
+	var fatality_testing = false;
 
 	
 	function saveStats(){

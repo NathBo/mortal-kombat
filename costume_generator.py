@@ -9,7 +9,7 @@ import re
 # =========================
 # CONFIG
 # =========================
-PREFIX = "kit"   # ex: "joh" -> johcoordinates.set(...)
+PREFIX = "liu"   # ex: "joh" -> johcoordinates.set(...)
 # =========================
 
 
