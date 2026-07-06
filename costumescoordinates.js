@@ -265,6 +265,12 @@ function getmilcoordinates(){
 	milcoordinates.set("knifethrow2",{offx:73,width:44,offy:1382,height:121,decx:0,decy:0});
 	milcoordinates.set("knifethrow3",{offx:126,width:43,offy:1382,height:121,decx:0,decy:0});
 	milcoordinates.set("teleport_drop1",{offx:628,width:35,offy:1397,height:109,decx:0,decy:0});
+	milcoordinates.set("fataknife1",{offx:15,width:51,offy:1529,height:95,decx:0,decy:0});
+	milcoordinates.set("fataknife2",{offx:75,width:45,offy:1529,height:95,decx:0,decy:0});
+	milcoordinates.set("fataknife3",{offx:130,width:44,offy:1528,height:96,decx:0,decy:0});
+	milcoordinates.set("fataknife4",{offx:183,width:43,offy:1525,height:99,decx:0,decy:0});
+	milcoordinates.set("fataknife5",{offx:234,width:49,offy:1525,height:99,decx:0,decy:0});
+	milcoordinates.set("fataknife6",{offx:294,width:52,offy:1515,height:109,decx:0,decy:0});
 
 	milcoordinates.set("head",{offx:852,width:18,offy:1822,height:29,decx:0,decy:0});
 	milcoordinates.set("knife",{offx:265,width:49,offy:1483,height:23,decx:0,decy:0});

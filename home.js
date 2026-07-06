@@ -2738,6 +2738,20 @@ class IceClone{
 						this.mov = ""; this.movlag=0;
 						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
 					}
+					else if(this.perso == "mileena" && this.back && this.bas==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=60 && other.gettingup==0 && other.y<=30){
+						this.fatality = 120;
+						this.fatalitytype=1;
+						other.falling=0;
+						other.y=0;
+						other.x = this.x+35*this.orientation;
+						play_sound_eff("fatal1");
+						this.special=2;
+						finishhim = 0;
+						other.invincibilite=1000;
+						fatalitywasdone = true;
+						this.mov = ""; this.movlag=0;
+						other.reoriente(this);
+					}
 					else if(this.perso == "reptile" && this.back && this.bas==0 && this.special==1 && finishhim && entre(Math.abs(this.x-other.x),100,140) && other.gettingup==0 && other.y<=30){
 						this.fatality = 120;
 						other.falling=0;
@@ -4036,6 +4050,23 @@ class IceClone{
 					else{this.costume="mkick4";}
 					if(this.memoryslot==0 && this.fatality<=b){this.x+=12*this.orientation;}
 					if(Math.abs(this.x-other.x)<=45 && this.memoryslot==0){this.memoryslot=1;other.become_legs();organexplosion(other.x,65,-this.orientation);}
+				}
+				else if(this.perso=="mileena"){
+					var a = 90; var b = 35;
+					if(this.fatality>a){this.costume="fataknife1";}
+					else if(entre(this.fatality,b,a)){
+						var n = Math.floor(this.fatality/2)%6+1;
+						this.costume="fataknife"+n.toString();
+						if(this.fatality%5==0){other.shake_player(3,4.);add_to_objects_set(new Blood(this.x+28*this.orientation+Math.random()*5,68+Math.random()*5,-this.orientation,"lblood"));play_sound_eff("fan");}
+						if(this.fatality%8==0){add_to_objects_set(new DropBlood(this.x+28*this.orientation+Math.random()*5,68+Math.random()*5,-this.orientation,"dropblood",1.+2*Math.random(),3.));play_sound_eff(other.charac.voiceactor+"hurted");}
+					}
+					else if(this.fatality>=b-5){this.costume="huppercut1";}
+					else if(this.fatality>=b-8){this.costume="huppercut2";}
+					else if(this.fatality>=b-11){this.costume="huppercut3";}
+					else{this.costume="huppercut4";}
+					if(this.fatality==a){other.y=20;other.no_costume_control=true;other.costume="hurted2";}
+					if(entre(this.fatality,b-8,b)){other.y-=1;}
+					if(this.fatality==b-9){other.explode();add_to_objects_set(new DropBlood(this.x+this.orientation*38,85,-this.orientation,"hdropblood",0.,6.));play_sound_eff("hhit");}
 				}
 			}
 			else if(this.decapitated){
