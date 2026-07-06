@@ -2171,7 +2171,7 @@ class IceClone{
 			this.hurted = 0; this.hurtx = 0; this.invincibilite = 0; this.freeze = 0; this.canthurt = false;
 			this.shaking = 0; this.shakeforce = 0.;
 			this.projectile_invincibility = 0;
-			this.pv = this.charac.pv; this.pvmax = this.charac.pv; this.pvaff = this.charac.pv;
+			this.pv = Math.floor(this.charac.pv*1.5); this.pvmax = this.pv; this.pvaff = this.pv;
 			this.pushed = 0;this.pushx = 0;
 			this.blocking = 0; this.falling = 0; this.gettingup = 0; this.grabbing = 0; this.grabbed = 0; this.bouncing = false; this.nutting = false; this.grabtype = "";
 			this.grabbed_object = null;
