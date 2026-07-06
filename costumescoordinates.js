@@ -1347,6 +1347,10 @@ function getbarcoordinates(){
 	barcoordinates.set("fatapique4",{offx:207,width:77,offy:768,height:100,decx:0,decy:0});
 	barcoordinates.set("fatapique5",{offx:288,width:76,offy:755,height:113,decx:0,decy:0});
 	barcoordinates.set("fatapique6",{offx:370,width:63,offy:736,height:132,decx:0,decy:0});
+	barcoordinates.set("bladeswipe1",{offx:11,width:74,offy:626,height:100,decx:-15,decy:0});
+	barcoordinates.set("bladeswipe2",{offx:90,width:54,offy:624,height:103,decx:-10,decy:0});
+	barcoordinates.set("bladeswipe3",{offx:150,width:95,offy:623,height:103,decx:0,decy:0});
+	barcoordinates.set("bladeswipe4",{offx:250,width:43,offy:624,height:102,decx:0,decy:0});
 
     return barcoordinates;
 }

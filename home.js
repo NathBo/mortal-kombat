@@ -2791,6 +2791,21 @@ class IceClone{
 						this.mov = ""; this.movlag=0;
 						other.reoriente(this);
 					}
+					else if(this.perso == "baraka" && this.forward && this.bas==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=100 && other.gettingup==0 && other.y<=30){
+						this.fatality = 60;
+						this.memoryslot=0;
+						other.falling=0;
+						other.y=0;
+						other.x = clip(other.x,this.x + 55*this.orientation,this.x + 80*this.orientation);
+						play_sound_eff("fatal1");
+						this.special=2;
+						this.fatalitytype=1;
+						finishhim = 0;
+						other.invincibilite=1000;
+						fatalitywasdone = true;
+						this.mov = ""; this.movlag=0;
+						other.reoriente(this);
+					}
 					else if(this.perso == "jax" && this.forward+this.back==0 && this.bas==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=60 && other.gettingup==0 && other.y<=30){
 						this.fatality = 120;
 						other.falling=0;
@@ -3989,6 +4004,14 @@ class IceClone{
 					if(this.fatality==a-26){this.hide=true;}
 					if(this.fatality==b){this.hide=false;this.x=other.x;other.explode();play_sound_eff("spithit",0.7);slow_game(4,1.5);add_to_objects_set(new DropBlood(other.x,65,-this.orientation,"hdropblood",0.,3.));}
 					if(entre(this.fatality,b,a-50) && this.fatality%20==5){other.shake_player(6,(a-30-this.fatality)*0.1+6.);play_sound_eff(other.charac.voiceactor+"hurted");}
+				}
+				else if(this.perso=="baraka"){
+					var a = 60; var b = 30;
+					if(this.fatality>=b){this.costume="bladeswipe1";}
+					else if(this.fatality>=b-4){this.costume="bladeswipe2";}
+					else if(this.fatality>=b-8){this.costume="bladeswipe3";}
+					else{this.costume="bladeswipe4";}
+					if(this.fatality==b-5){other.decapitate();play_sound_eff("fan");play_sound_eff("spithit");slow_game(5,1.5);shake_screen(8,5);}
 				}
 			}
 			else if(this.decapitated){
