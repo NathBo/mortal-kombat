@@ -2738,7 +2738,7 @@ class IceClone{
 						this.mov = ""; this.movlag=0;
 						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
 					}
-					else if(this.perso == "reptile" && this.back && this.special==1 && finishhim && entre(Math.abs(this.x-other.x),100,140) && other.gettingup==0 && other.y<=30){
+					else if(this.perso == "reptile" && this.back && this.bas==0 && this.special==1 && finishhim && entre(Math.abs(this.x-other.x),100,140) && other.gettingup==0 && other.y<=30){
 						this.fatality = 120;
 						other.falling=0;
 						other.y=0;
@@ -2747,6 +2747,19 @@ class IceClone{
 						other.x = clip(other.x,this.x + 120*this.orientation,this.x + 130*this.orientation);
 						finishhim = 0;
 						other.invincibilite=1000;
+						fatalitywasdone = true;
+						this.mov = ""; this.movlag=0;
+						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
+					}
+					else if(this.perso == "reptile" && this.bas && this.special==1 && finishhim && Math.abs(this.x-other.x)>160 && other.gettingup==0 && other.y<=30){
+						this.fatality = 120;
+						other.falling=0;
+						other.y=0;
+						play_sound_eff("fatal1");
+						this.special=2;
+						finishhim = 0;
+						other.invincibilite=1000;
+						this.fatalitytype = 1;
 						fatalitywasdone = true;
 						this.mov = ""; this.movlag=0;
 						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
@@ -3967,6 +3980,16 @@ class IceClone{
 					if(this.fatality==b){other.decapitate_nohead();play_sound_eff("spithit");play_sound_eff("hhit");shake_screen(10,10);other.shake_player(9,5);slow_game(10,2.)}
 
 				}
+				else if(this.perso=="reptile"){
+					var a = 120; var b = 10;
+					if(this.fatality>=a-20){this.costume="bomb1";}
+					else if(this.fatality>=a-25){this.costume="bomb2";}
+					else{this.costume="victory2";}
+					if(this.fatality==a-20){add_to_objects_set(new ExploProj(this.x,this.y+60,this.orientation,other,stats,this.skin));play_sound_eff("explosion",0.8);}
+					if(this.fatality==a-26){this.hide=true;}
+					if(this.fatality==b){this.hide=false;this.x=other.x;other.explode();play_sound_eff("spithit",0.7);slow_game(4,1.5);add_to_objects_set(new DropBlood(other.x,65,-this.orientation,"hdropblood",0.,3.));}
+					if(entre(this.fatality,b,a-50) && this.fatality%20==5){other.shake_player(6,(a-30-this.fatality)*0.1+6.);play_sound_eff(other.charac.voiceactor+"hurted");}
+				}
 			}
 			else if(this.decapitated){
 				if(this.decapitated>=2){this.decapitated--;}
@@ -4479,9 +4502,14 @@ class IceClone{
 			}
 
 			if(this.perso=="reptile" && fatalitywasdone && this.fatality==0 && this.pv>0){
+				if(this.fatalitytype==0){
 					this.memoryslot++;
 					var n=15+Math.floor(this.memoryslot/7)%4;
 					this.costume="eat"+n.toString();
+				}
+				else{
+					this.costume="victory2";
+				}
 			}
 
 			if(this.is_legs){this.costume="legs";}
@@ -4685,7 +4713,7 @@ class IceClone{
 				shake_screen(40,15);
 				slow_game(40,2);
 			}
-			play_sound_eff("explosion");
+			play_sound_eff("explosion",1.);
 		}
 
 		burn(){
@@ -5978,7 +6006,7 @@ class IceClone{
 	var score = 0; var matchscore = 0; var roundscore = 0;
 	var old_stats = null; var new_stats = null; var highscore_screen_cpt = 0;
 
-	var fatality_testing = false;
+	var fatality_testing = true;
 
 	
 	function saveStats(){
