@@ -1370,7 +1370,7 @@ class IceClone{
 						this.bounces--;
 						this.tb*=-0.2;
 						this.y=-10+this.tb;
-						play_sound_eff("lhit");
+						play_sound_eff("lhit",0.7);
 					}
 					else{
 						this.y=-10;
@@ -2777,6 +2777,20 @@ class IceClone{
 						this.mov = ""; this.movlag=0;
 						other.reoriente(this);
 					}
+					else if(this.perso == "johnny" && this.forward && this.bas==0 && this.special==1 && finishhim && entre(Math.abs(this.x-other.x),200,400) && other.gettingup==0 && other.y<=30){
+						this.fatality = 80;
+						this.fatalitytype=1;
+						this.memoryslot=0;
+						other.falling=0;
+						other.y=0;
+						play_sound_eff("fatal1");
+						this.special=2;
+						finishhim = 0;
+						other.invincibilite=1000;
+						fatalitywasdone = true;
+						this.mov = ""; this.movlag=0;
+						other.reoriente(this);
+					}
 					else if(this.perso == "baraka" && this.back && this.bas==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=60 && other.gettingup==0 && other.y<=30){
 						this.fatality = 150;
 						this.memoryslot=0;
@@ -4006,12 +4020,22 @@ class IceClone{
 					if(entre(this.fatality,b,a-50) && this.fatality%20==5){other.shake_player(6,(a-30-this.fatality)*0.1+6.);play_sound_eff(other.charac.voiceactor+"hurted");}
 				}
 				else if(this.perso=="baraka"){
-					var a = 60; var b = 30;
+					var b = 30;
 					if(this.fatality>=b){this.costume="bladeswipe1";}
 					else if(this.fatality>=b-4){this.costume="bladeswipe2";}
 					else if(this.fatality>=b-8){this.costume="bladeswipe3";}
 					else{this.costume="bladeswipe4";}
 					if(this.fatality==b-5){other.decapitate();play_sound_eff("fan");play_sound_eff("spithit");slow_game(5,1.5);shake_screen(8,5);}
+				}
+				else if(this.perso=="johnny"){
+					var a = 80; var b = 45;
+					if(this.fatality>=a-3){this.costume="lkick1";}
+					else if(this.fatality>=a-6){this.costume="lkick2";}
+					else if(this.fatality>=a-9){this.costume="lkick3";}
+					else if(Math.abs(this.x-other.x)>65){this.costume="lkick4";}
+					else{this.costume="mkick4";}
+					if(this.memoryslot==0 && this.fatality<=b){this.x+=12*this.orientation;}
+					if(Math.abs(this.x-other.x)<=45 && this.memoryslot==0){this.memoryslot=1;other.become_legs();organexplosion(other.x,65,-this.orientation);}
 				}
 			}
 			else if(this.decapitated){
@@ -4721,6 +4745,12 @@ class IceClone{
 			var torso = new Torso(this.x,this.y+this.charac.height-20,this.orientation,this.skin,this.coordinates);
 			add_to_objects_set(torso);
 			return torso;
+		}
+
+		become_legs(){
+			this.is_legs = true;
+			add_to_objects_set(new Blood(this.x,this.y+this.charac.height-20,this.orientation,"hblood"));
+			add_to_objects_set(new DropBlood(this.x-this.orientation*8,this.y+this.charac.height-15,this.orientation,"hdropblood",0.,1.5));
 		}
 
 		explode(force=5.5){
