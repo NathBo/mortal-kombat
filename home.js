@@ -2636,6 +2636,21 @@ class IceClone{
 						this.mov = ""; this.movlag=0;
 						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
 					}
+					else if(this.perso == "kitana" && this.back && this.special==1 && finishhim && Math.abs(this.x-other.x)<=80 && other.falling==0 && other.gettingup==0 && other.y<=30){
+						this.fatality = 120; this.memoryslot=0;
+						other.x = this.x + 35*this.orientation;
+						this.fatalitytype=1;
+						other.falling=0;
+						other.y=0;
+						play_sound_eff("fatal1");
+						this.memoryslot=0;
+						this.special=2;
+						finishhim = 0;
+						other.invincibilite=1000;
+						fatalitywasdone = true;
+						this.mov = ""; this.movlag=0;
+						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
+					}
 					else if(this.perso == "raiden" && this.forward+this.back==0 && this.bas==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=60 && other.gettingup==0 && other.y<=30){
 						this.fatality = 130;
 						other.falling=0;
@@ -4065,8 +4080,25 @@ class IceClone{
 					else if(this.fatality>=b-11){this.costume="huppercut3";}
 					else{this.costume="huppercut4";}
 					if(this.fatality==a){other.y=20;other.no_costume_control=true;other.costume="hurted2";}
+					if(this.fatality==a+10 && this.pv==this.pvmax){play_sound_eff("67",0.8);}
 					if(entre(this.fatality,b-8,b)){other.y-=1;}
 					if(this.fatality==b-9){other.explode();add_to_objects_set(new DropBlood(this.x+this.orientation*38,85,-this.orientation,"hdropblood",0.,6.));play_sound_eff("hhit");}
+				}
+				else if(this.perso=="kitana"){
+					var a = 120; var b = 90; var c = 3; var d = 30; var e = 5;
+					var n = 1;
+					if(this.fatality>=a-3){n=1;}
+					else if(this.fatality>=a-6){n=2;}
+					else if(this.fatality>=b){n=3;}
+					else if(this.fatality>=b-5*c){
+						n = 4+Math.floor((b-this.fatality)/c);
+					}
+					else if(this.fatality>=d){n=9;}
+					else{n=Math.floor(this.fatality/d*9)+1}
+					if(entre(this.fatality,e,b-5*c-10) && this.fatality%10==0){other.shake_player(5,4.);}
+					if(this.fatality==b-4*c){play_sound_eff("kiss");}
+					if(this.fatality==e){other.explode();play_sound_eff("spithit",0.5);add_to_objects_set(new DropBlood(this.x+this.orientation*38,85,-this.orientation,"hdropblood",0.,4.));}
+					this.costume="kiss"+n.toString();
 				}
 			}
 			else if(this.decapitated){
@@ -5969,6 +6001,8 @@ class IceClone{
 	sounds_eff.set("repcharge",[document.querySelector('#repchargewav')]);
 	sounds_eff.set("chargeball",[document.querySelector('#chargeballwav')]);
 	sounds_eff.set("explcrunch",[document.querySelector('#explcrunchwav')]);
+	sounds_eff.set("kiss",[document.querySelector('#kisswav')]);
+	sounds_eff.set("67",[document.querySelector('#el67wav')]);
 
 	
 

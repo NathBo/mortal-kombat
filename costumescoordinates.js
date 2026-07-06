@@ -113,6 +113,15 @@ function getkitcoordinates(){
 	kitcoordinates.set("fanswipe4",{offx:453,width:45,offy:1504,height:98,decx:0,decy:0});
 	kitcoordinates.set("fanlift1",{offx:15,width:55,offy:1380,height:98,decx:-6,decy:0});
 	kitcoordinates.set("fanlift2",{offx:71,width:55,offy:1380,height:98,decx:-6,decy:0});
+	kitcoordinates.set("kiss1",{offx:15,width:32,offy:1613,height:97,decx:0,decy:0});
+	kitcoordinates.set("kiss2",{offx:57,width:32,offy:1613,height:97,decx:0,decy:0});
+	kitcoordinates.set("kiss3",{offx:100,width:32,offy:1613,height:97,decx:0,decy:0});
+	kitcoordinates.set("kiss4",{offx:142,width:32,offy:1612,height:98,decx:0,decy:0});
+	kitcoordinates.set("kiss5",{offx:315,width:46,offy:1613,height:97,decx:0,decy:0});
+	kitcoordinates.set("kiss6",{offx:371,width:53,offy:1614,height:96,decx:0,decy:0});
+	kitcoordinates.set("kiss7",{offx:434,width:54,offy:1614,height:96,decx:0,decy:0});
+	kitcoordinates.set("kiss8",{offx:500,width:55,offy:1614,height:96,decx:0,decy:0});
+	kitcoordinates.set("kiss9",{offx:567,width:52,offy:1614,height:96,decx:0,decy:0});
     kitcoordinates.set("decapitated1",{offx:530,width:20,offy:1732,height:90,decx:0,decy:0});
     kitcoordinates.set("decapitated2",{offx:558,width:26,offy:1732,height:90,decx:0,decy:0});
     kitcoordinates.set("decapitated3",{offx:589,width:31,offy:1732,height:90,decx:0,decy:0});
