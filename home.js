@@ -5122,8 +5122,8 @@ class IceClone{
 						arcadelevel+=1;
 						if(score>=15000 && j1.special){current_maxpv+=30;current_pv+=30;score-=15000;}
 						if(score>=prix_soigner && j1.poing){current_pv = Math.ceil((current_pv+current_maxpv)/2);score-=prix_soigner;prix_soigner+=10000;}
-						if(score>=5000 && j1.dodge){var hup = current_stats.get("huppercut");hup.degats=Math.round(hup.degats*1.25);score-=5000;}
-						if(score>=5000 && j1.jambe){var hup = current_stats.get("hkick");hup.degats=Math.round(hup.degats*1.25);score-=5000;}
+						if(score>=5000 && j1.dodge){var hup = current_stats.get("huppercut");hup.degats=Math.round(hup.degats+3+Math.sqrt(hup.degats));score-=5000;}
+						if(score>=5000 && j1.jambe){var hup = current_stats.get("hkick");hup.degats=Math.round(hup.degats+2+Math.sqrt(hup.degats));score-=5000;}
 						// if(arcadelevel>8){
 						// 	reset_game(true);
 						// 	if(haschangedchar){gobacktotitlescreen();}
