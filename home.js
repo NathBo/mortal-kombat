@@ -1587,8 +1587,7 @@ class IceClone{
 			}
 			me.charac.coups.forEach(aux);
 			this.grade=grade;
-			if(this.difficulty<4 && arcadelevel>=0 && arcadelevel<=2){this.difficulty-=1;}
-			else if(this.difficulty<3 && arcadelevel==7){this.difficulty+=1;}
+			if(arcadelevel<difficulty_list.length){this.difficulty = difficulty_list[arcadelevel];}else{this.difficulty=3;}
 			switch(this.difficulty){
 				case -1:
 					this.donothingchance = 0.9;
@@ -2152,7 +2151,9 @@ class IceClone{
 			this.droite=0;this.gauche=0;this.haut=0;this.bas=0;
 		}
 		reinit(x,y,perso,n,skin,other,reset_ai=true, allowedmoves = [], behavior = ""){
-			this.charac = characteristics.get(perso);
+			this.charac=characteristics.get(perso);
+			if(arcadelevel>0 && this.n==0){this.charac.coups=current_stats}
+			if(this.n==0){current_stats=this.charac.coups;}
 			this.x = x; this.y = y; this.perso = perso; this.n = n; this.skin = this.charac.png[skin]; this.coordinates = this.charac.coordinates;
 			this.allowedmoves = allowedmoves; this.xinit = x; this.other = other;
 			this.poing=0;this.jambe=0;this.special=0;this.dodge=0; this.jump=0; this.enhance = 0;
@@ -2171,7 +2172,13 @@ class IceClone{
 			this.hurted = 0; this.hurtx = 0; this.invincibilite = 0; this.freeze = 0; this.canthurt = false;
 			this.shaking = 0; this.shakeforce = 0.;
 			this.projectile_invincibility = 0;
-			this.pv = Math.floor(this.charac.pv*1.5); this.pvmax = this.pv; this.pvaff = this.pv;
+			if(this.n==0){
+				if(current_pv==-1){this.pvmax = Math.floor(this.charac.pv*1.5);this.pv = this.pvmax;current_maxpv=this.pvmax;}else{this.pv=current_pv;this.pvmax=current_maxpv;}
+			}
+			else{
+				this.pvmax = Math.floor(this.charac.pv*(0.8+arcadelevel*0.1));this.pv=this.pvmax;
+			}
+			this.pvaff = this.pv;
 			this.pushed = 0;this.pushx = 0;
 			this.blocking = 0; this.falling = 0; this.gettingup = 0; this.grabbing = 0; this.grabbed = 0; this.bouncing = false; this.nutting = false; this.grabtype = "";
 			this.grabbed_object = null;
@@ -2304,12 +2311,12 @@ class IceClone{
 				}
 		}
 
-		affich_combo(percent_deg,hits){
+		affich_combo(percent_deg,hits,degs){
 			this.combo_affich_cpt = 45;
 			this.combo_affich_hits = hits;
 			this.combo_affich_percent = percent_deg;
 			if(arcadelevel>=0 && this.n==0){
-				var score_to_add = (this.combo_affich_hits+5)*this.combo_affich_percent*5;
+				var score_to_add = (this.combo_affich_hits+5)*degs*5;
 				if(this.other.pv<=0){score_to_add*=2;}
 				if (score_to_add<=200){
 					score_to_add = round_of(score_to_add,50);
@@ -2333,7 +2340,7 @@ class IceClone{
 
 		end_of_official_combo(){
 			if (this.combo_hits>1){
-				this.other.affich_combo(Math.round(this.combo_deg/this.pvmax*100),this.combo_hits);
+				this.other.affich_combo(Math.round(this.combo_deg/this.pvmax*100),this.combo_hits,this.combo_deg);
 			}
 			this.combo_deg = 0;
 			this.combo_hits = 0;
@@ -2344,6 +2351,7 @@ class IceClone{
 		}
 
 		miseajour(other){
+			if(this.n==0){current_pv = this.pv;}
 			if(this.perso=="shao_kahn"){this.crouching=0;}
 			if(this.movlag===undefined){this.movlag=0;}
 			if(this.crouching===undefined){this.crouching=0;}
@@ -5039,7 +5047,7 @@ class IceClone{
 
 	function choserandomstage(){
 		chosenstage = Math.floor(Math.random()*numberofstages);
-		if(arcadelevel>=0){chosenstage = arcadestagesorder[arcadelevel];}
+		if(arcadelevel>=0){chosenstage = arcadestagesorder[arcadelevel%arcadestagesorder.length];}
 		ground = grounds[chosenstage];
 		stage_size = stagesizes[chosenstage];
 	}
@@ -5103,37 +5111,45 @@ class IceClone{
 				if(roundwonsj1>=2){matchscore = score;}
 				else if(roundwonsj2>=2){score = Math.max(matchscore-5000,Math.max(round_of(matchscore*0.8,100),0));matchscore = score;}
 				roundscore = score;
-				if(roundwonsj1>=2 || roundwonsj2>=2){
+				if(roundwonsj2>=1){
+					gobacktotitlescreen();
+					return;
+				}
+				else if(roundwonsj1>=2 || roundwonsj2>=2){
 					if(roundwonsj1>=2 && arcadelevel>=0){
 						arcadelevel+=1;
-						if(arcadelevel>8){
-							reset_game(true);
-							if(haschangedchar){gobacktotitlescreen();}
-							else{
-								functiontoexecute = highscore_screen;
-								highscore_screen_cpt = 200;
-							}
-							return;
-						}
+						if(score>=15000 && j1.special){current_maxpv+=30;current_pv+=30;score-=15000;}
+						if(score>=prix_soigner && j1.poing){current_pv = Math.ceil((current_pv+current_maxpv)/2);score-=prix_soigner;prix_soigner+=10000;}
+						if(score>=5000 && j1.dodge){var hup = current_stats.get("huppercut");hup.degats=Math.round(hup.degats*1.25);score-=5000;}
+						if(score>=5000 && j1.jambe){var hup = current_stats.get("hkick");hup.degats=Math.round(hup.degats*1.25);score-=5000;}
+						// if(arcadelevel>8){
+						// 	reset_game(true);
+						// 	if(haschangedchar){gobacktotitlescreen();}
+						// 	else{
+						// 		functiontoexecute = highscore_screen;
+						// 		highscore_screen_cpt = 200;
+						// 	}
+						// 	return;
+						// }
 						var persos = [j1.perso,j2.perso]; var skins = [skinschoisis[0],skinschoisis[1]];
 						roundwonsj1 = 0; roundwonsj2 = 0; camerax = 0;
 						persolocked = [0,0];
-						if(arcadelevel==8){persoschoisis[1] = "shao_kahn"}
-						else{persoschoisis[1] = arcadeorder[arcadelevel];}
+						//if(arcadelevel==8){persoschoisis[1] = "shao_kahn"}
+						persoschoisis[1] = arcadeorder[arcadelevel%(arcadeorder.length)];
 						skinschoisis[1] = randomInt(0,1);
 						choserandomstage();
 						if(persoschoisis[1]==persoschoisis[0]){skinschoisis[1]=(skinschoisis[0]+1)%2;}
 						reset_game(true);
-						if(arcadelevel==1 || arcadelevel==7){		//minigames handle
-							var minigame = new TestYourMight(ctx,j1,score,minigame_music,characteristics.get(persos[0]),characteristics.get(persos[1]),skins);
-							var test_your_might_fun = () => minigame.render();
-							functiontoexecute = test_your_might_fun;
-						}
-						if(arcadelevel == 3 || arcadelevel == 5){
-							var minigame = new GuessBarrel(ctx,j1,score,minigame_music,characteristics.get(persos[0]),skins[0],characteristics.get(persos[1]),skins[1]);
-							var test_your_sight_fun = () => minigame.render();
-							functiontoexecute = test_your_sight_fun;
-						}
+						// if(arcadelevel==1 || arcadelevel==7){		//minigames handle
+						// 	var minigame = new TestYourMight(ctx,j1,score,minigame_music,characteristics.get(persos[0]),characteristics.get(persos[1]),skins);
+						// 	var test_your_might_fun = () => minigame.render();
+						// 	functiontoexecute = test_your_might_fun;
+						// }
+						// if(arcadelevel == 3 || arcadelevel == 5){
+						// 	var minigame = new GuessBarrel(ctx,j1,score,minigame_music,characteristics.get(persos[0]),skins[0],characteristics.get(persos[1]),skins[1]);
+						// 	var test_your_sight_fun = () => minigame.render();
+						// 	functiontoexecute = test_your_sight_fun;
+						// }
 						return;
 					}
 					
@@ -5613,7 +5629,7 @@ class IceClone{
 				if(arcadelevel>=0 && initchar==""){initchar=persoschoisis[0];score=0;}
 				else if(arcadelevel>=0 && initchar!=persoschoisis[0]){haschangedchar=true;}
 				functiontoexecute = loop;
-				menupersoswav.pause();menupersoswav.currentTime=0;
+				menupersoswav.pause();menupersoswav.currentTime=0;current_stats=undefined;
 				return;
 			}
 		}
@@ -5841,7 +5857,7 @@ class IceClone{
 				if(entre(clickx,80/1024,260/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=true;secondplayerisdummy=true;camerax=0;}
 				else if(entre(clickx,380/1024,620/1024)){
 					//var minigame = new GuessBarrel(ctx,j1,0,minigame_music,characteristics.get("liukang"));var test_your_might_fun = () => minigame.render();
-					functiontoexecute = menupersos;secondplayerishuman=false;arcadelevel=0;menupersoswav.play();	//minigamestest
+					functiontoexecute = menupersos;secondplayerishuman=false;arcadelevel=0;current_pv=-1;menupersoswav.play();	//minigamestest
 					arcadeorder.shuffle();
 					if(!persosunlocked.get("reptile")){
 						var i = arcadeorder.indexOf("reptile");
@@ -6155,6 +6171,8 @@ class IceClone{
 	var haschangedchar = false; var initchar = "";
 	var score = 0; var matchscore = 0; var roundscore = 0;
 	var old_stats = null; var new_stats = null; var highscore_screen_cpt = 0;
+	var current_pv = 0; var current_maxpv = 0; var prix_soigner = 10000; var current_stats = undefined;
+	var difficulty_list = [-1,-1,0,0,0,1,1,1,1,2,2,2,2,2,3]
 
 	var fatality_testing = false;
 
