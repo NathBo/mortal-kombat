@@ -1585,7 +1585,7 @@ class IceClone{
 			function aux(val,key,_){
 				grade.set(key,Math.floor(Math.random()*5));
 			}
-			me.charac.coups.forEach(aux);
+			me.coups.forEach(aux);
 			this.grade=grade;
 			if(arcadelevel<difficulty_list.length){this.difficulty = difficulty_list[arcadelevel];}else{this.difficulty=3;}
 			switch(this.difficulty){
@@ -1763,7 +1763,7 @@ class IceClone{
 		}
 
 		movesinrange(d){
-			var coups = this.me.charac.coups;
+			var coups = this.me.coups;
 			var me = this.me;
 			var other = this.other;
 			var thiis = this;
@@ -1804,7 +1804,7 @@ class IceClone{
 		}
 
 		begincoup(m){
-			if(!this.me.charac.coups.has(m)){console.log("Non allowed AI behavior, wanted to use "+m+" but this character doesn't have this move"); return;}
+			if(!this.me.coups.has(m)){console.log("Non allowed AI behavior, wanted to use "+m+" but this character doesn't have this move"); return;}
 			this.me.begincoup(m,this.other,true);
 			this.overshoot = (Math.random()<this.overshootchance);
 			if(this.me.mov == this.desired_move){this.desired_move = "";}
@@ -1819,7 +1819,7 @@ class IceClone{
 			this.grade.set(me.mov,this.grade.get(me.mov)-8);
 			if(me.hurted==0){this.lastmovehitby = other.mov;}
 			if(this.timesinceoki){this.lastmovehitonoki=other.mov;}
-			if(other.crouching&&me.charac.coups.has(me.mov) && me.charac.coups.get(me.mov).hitboxys>=0){this.enviedetaperenbas += 8;}
+			if(other.crouching&&me.coups.has(me.mov) && me.coups.get(me.mov).hitboxys>=0){this.enviedetaperenbas += 8;}
 			if(other.crouching){this.wanttojump+=1;}
 			if(me.y>0){this.wanttojump-=2;}
 			if(other.y>0 && me.y==0){this.enviedantiair-=3;}
@@ -1832,7 +1832,7 @@ class IceClone{
 			var other = this.other;
 			this.grade.set(me.mov,this.grade.get(me.mov)+8);
 			this.enviedegrab = Math.max(this.enviedegrab-2,-10);
-			if(other.crouching&&me.charac.coups.has(me.mov) && me.charac.coups.get(me.mov).hitboxys>=0){this.enviedetaperenbas -= 8;}
+			if(other.crouching&&me.coups.has(me.mov) && me.coups.get(me.mov).hitboxys>=0){this.enviedetaperenbas -= 8;}
 			if(me.y>0){this.wanttojump+=2;}
 			if(other.y>0 && me.y==0){this.enviedantiair+=3;}
 			if(this.combos.has(me.mov)){this.desired_move=this.combos.get(me.mov)}
@@ -1873,7 +1873,7 @@ class IceClone{
 		attack(moves){
 			var me = this.me;
 			var other = this.other;
-			var coups = me.charac.coups;
+			var coups = me.coups;
 			var mywidth = this.other.charac.width;
 			var thiis = this;
 			var reaction_time = this.reaction_time;
@@ -1883,9 +1883,9 @@ class IceClone{
 			
 			var movtodo = "";
 			var limiteup = Math.max(Math.max(other.hurted,other.freeze),this.baserisk+this.currisking+me.pv/10);
-			var c = other.charac.coups.get(other.mov);
-			if(other.charac.coups.has(other.mov) && other.movlag<=c.slag+c.fdur+c.elag-reaction_time && Math.abs(me.x-other.x)<=c.hitboxxe+mywidth/2 && other.movlag>=c.elag-1){
-				limiteup = other.movlag-2-other.charac.coups.get(other.mov).fdur - other.charac.coups.get(other.mov).elag;
+			var c = other.coups.get(other.mov);
+			if(other.coups.has(other.mov) && other.movlag<=c.slag+c.fdur+c.elag-reaction_time && Math.abs(me.x-other.x)<=c.hitboxxe+mywidth/2 && other.movlag>=c.elag-1){
+				limiteup = other.movlag-2-other.coups.get(other.mov).fdur - other.coups.get(other.mov).elag;
 			}
 			if(other.mov == "thundergod" && other.movlag<=c.slag+c.fdur+c.elag-reaction_time && Math.abs(me.x-other.x)<=220 && me.y==0){limiteup= (Math.abs(me.x-other.x)-60)/6;}
 			if(this.behavior=="masher"){limiteup+=40;}
@@ -1908,7 +1908,7 @@ class IceClone{
 			}
 			moves.forEach(aux);
 			if(me.mov != ""){var stats = coups.get(me.mov)}
-			if(moves.has(this.desired_move) && other.hurted>= me.charac.coups.get(this.desired_move).slag && !(this.desired_move=="huppercut" && other.crouching>=4)){movtodo=this.desired_move;}
+			if(moves.has(this.desired_move) && other.hurted>= me.coups.get(this.desired_move).slag && !(this.desired_move=="huppercut" && other.crouching>=4)){movtodo=this.desired_move;}
 			var canceldelay = 1;
 			if(other.hurted || other.falling){canceldelay = this.cancelcombodelay;}
 			else{canceldelay = this.cancelnormaldelay;}
@@ -1973,7 +1973,7 @@ class IceClone{
 				return;
 			}
 			if(other.hurted == 0 && other.falling == 0){this.desired_move = "";}
-			var c = other.charac.coups.get(other.mov);
+			var c = other.coups.get(other.mov);
 			this.attacking = minvalabs(this.attacking+(randomInt(-1,1))*0.5-this.attacking*0.01+this.agressivite+(other.hurted>0)*0.2+(other.freeze>0)*0.5,10);
 			this.currisking = minvalabs(this.currisking+(randomInt(-1,1))*0.5-((this.currisking+10)/20-(me.pv/me.pvmax))*0.05+(this.behavior=="masher")*0.02,10);
 			if(this.crazynesscd<this.crazynessmaxcd){this.crazynesscd++;}
@@ -2024,7 +2024,7 @@ class IceClone{
 					if(this.desired_move=="spear_throw" && (other.tb>4. || Math.abs(-stage_size/2*other.orientation-other.x)<=130)){break block;}
 					if(this.desired_move=="hell_gates" && Math.abs(-stage_size/2*other.orientation-other.x)<=130){break block;}
 					if(this.desired_move=="leg_takedown" && this.wantstoenhance()>0){me.enhance=1;}
-					if((!me.charac.coups.has(me.mov) || me.movlag <= me.charac.coups.get(me.mov).elag+me.charac.coups.get(me.mov).fdur-this.cancelcombodelay)){
+					if((!me.coups.has(me.mov) || me.movlag <= me.coups.get(me.mov).elag+me.coups.get(me.mov).fdur-this.cancelcombodelay)){
 						if(movpriority.get(this.desired_move)>movpriority.get(racine(me.mov))){this.begincoup(this.desired_move);
 					}
 					me.enhance=0;
@@ -2036,19 +2036,19 @@ class IceClone{
 				var moves = this.movesinrange(me.orientation*(other.x-me.x));
 				this.attack(moves);
 			}
-			if(!me.charac.coups.has(me.mov)){
-				if(other.charac.coups.has(other.mov) && other.movlag<=c.slag+c.fdur+c.elag-reaction_time && Math.abs(me.x-other.x)<=c.hitboxxe+me.charac.width/2+me.charac.vitesse*this.commitmentonwalk+5 && other.movlag>=c.elag-1){
+			if(!me.coups.has(me.mov)){
+				if(other.coups.has(other.mov) && other.movlag<=c.slag+c.fdur+c.elag-reaction_time && Math.abs(me.x-other.x)<=c.hitboxxe+me.charac.width/2+me.charac.vitesse*this.commitmentonwalk+5 && other.movlag>=c.elag-1){
 					if(me.perso=="subzero" && other.movlag>c.elag+c.fdur+3 && me.y==0){this.begincoup("icebody");}
 					if(me.perso=="liukang" && other.movlag>c.elag+c.fdur+1 && me.y==0){if(this.wantstoenhance()>2){me.enhance=1;}this.begincoup("cycle");me.enhance=0;}
 					this.pressbackward();
-					if(other.charac.coups.get(other.mov).hitboxys<0 && other.y==0){me.bas = 1;}
+					if(other.coups.get(other.mov).hitboxys<0 && other.y==0){me.bas = 1;}
 					if(other.y>0){me.bas=0;}
 					if(racine(other.mov)=="clapdash"){me.bas=1;}
-					if(["grab","unblockable_projectile_fall"].includes(other.charac.coups.get(other.mov).hiteffect) && me.perso!="shao_kahn"){me.haut=1;}
+					if(["grab","unblockable_projectile_fall"].includes(other.coups.get(other.mov).hiteffect) && me.perso!="shao_kahn"){me.haut=1;}
 					return;
 				}
 				
-				else if(other.charac.coups.has(other.mov) && other.charac.coups.get(other.mov).hitboxye<=0 && other.y==0 && Math.random()*20*difficulte<=this.wanttojump+5){
+				else if(other.coups.has(other.mov) && other.coups.get(other.mov).hitboxye<=0 && other.y==0 && Math.random()*20*difficulte<=this.wanttojump+5){
 					me.haut = 1;this.pressforward;
 				}
 				if(Math.random()*100*(difficulte+1)<this.wanttojump+3){me.haut = 1;}
@@ -2058,7 +2058,7 @@ class IceClone{
 
 			var proj_authorized = (Math.abs(this.attacking*this.rangescaling+Math.abs(me.x-other.x)-idealrange)<=me.charac.vitesse*2+other.movlag*3 && me.y==0 && movpriority.get(racine(me.mov))<70 && Math.random()>this.dontattackchance && !(other.mov == "thundergod" || other.mov == "shadowkick" || other.mov == "boltthrow" || other.mov == "fanthrow" || other.mov=="hell_gates" || other.mov == "spear_throw" || other.mov == "slide" || other.mov == "iceball" || other.mov == "fireball" || other.mov == "flying_kick" || other.mov == "knife_throw" || other.mov == "teleport_drop" || other.mov == "bomb"))
 			if(this.behavior=="zoner"){proj_authorized = me.y==0}
-			if(this.behavior=="masher"){proj_authorized = proj_authorized || (me.y==0 && other.movlag>10 && other.charac.coups.has(other.mov) && other.movlag<=c.slag+c.fdur+c.elag-reaction_time && !(other.mov == "thundergod" || other.mov == "shadowkick" || other.mov == "boltthrow" || other.mov == "fanthrow" || other.mov=="hell_gates" || other.mov == "spear_throw" || other.mov == "slide" || other.mov == "iceball" || other.mov == "fireball" || other.mov == "flying_kick" || other.mov == "knife_throw" || other.mov == "teleport_drop" || other.mov == "bomb"))}
+			if(this.behavior=="masher"){proj_authorized = proj_authorized || (me.y==0 && other.movlag>10 && other.coups.has(other.mov) && other.movlag<=c.slag+c.fdur+c.elag-reaction_time && !(other.mov == "thundergod" || other.mov == "shadowkick" || other.mov == "boltthrow" || other.mov == "fanthrow" || other.mov=="hell_gates" || other.mov == "spear_throw" || other.mov == "slide" || other.mov == "iceball" || other.mov == "fireball" || other.mov == "flying_kick" || other.mov == "knife_throw" || other.mov == "teleport_drop" || other.mov == "bomb"))}
 			if(proj_authorized){
 				if(me.perso=="kitana"){if(Math.abs(me.x-other.x)>100&&me.y==0){if(this.wantstoenhance()>3){me.enhance=1;}this.begincoup("fanthrow");me.enhance=0;}}
 				if(me.perso=="mileena"){if(Math.abs(me.x-other.x)>200&&me.y==0){if(this.wantstoenhance()>4){me.enhance=1}this.begincoup("homing_knife");me.enhance=0;}else if(Math.abs(me.x-other.x)>70&&me.y==0 && other.crouching==0){if(this.wantstoenhance()>4){me.enhance=1}this.begincoup("knifethrow");me.enhance=0;}}
@@ -2152,8 +2152,9 @@ class IceClone{
 		}
 		reinit(x,y,perso,n,skin,other,reset_ai=true, allowedmoves = [], behavior = ""){
 			this.charac=characteristics.get(perso);
-			if(arcadelevel>0 && this.n==0){this.charac.coups=current_stats}
-			if(this.n==0){current_stats=this.charac.coups;}
+			this.coups = structuredClone(this.charac.coups);
+			if(arcadelevel>0 && this.n==0){this.coups=current_stats}
+			if(this.n==0){current_stats=this.coups;}
 			this.x = x; this.y = y; this.perso = perso; this.n = n; this.skin = this.charac.png[skin]; this.coordinates = this.charac.coordinates;
 			this.allowedmoves = allowedmoves; this.xinit = x; this.other = other;
 			this.poing=0;this.jambe=0;this.special=0;this.dodge=0; this.jump=0; this.enhance = 0;
@@ -2197,8 +2198,8 @@ class IceClone{
 		}
 
 		begincoup(s,other,ai_pass=false,follow_up=false){
-			if(!this.charac.coups.has(s)){return;}
-			var stats = this.charac.coups.get(s);
+			if(!this.coups.has(s)){return;}
+			var stats = this.coups.get(s);
 			this.reoriente(other);
 			if(this.hurted || this.falling || this.blocking){return;}
 			if(entre(this.gettingup,1,this.charac.getupfdur-1) || (this.gettingup && !ai_pass)){return;}
@@ -2211,10 +2212,10 @@ class IceClone{
 			if(this.cooldowns[cd] && !follow_up){if(this.cooldowns[cd]>bufferwindow){this.special=2;}return;}
 			else if(cd != -1){this.special=2;}
 			if(movpriority.get(s)==70 && movpriority.get(racine(this.mov))>=70 && !follow_up){return;}
-			if(this.enhance && this.charac.coups.has(s+"#") && this.jauge>=this.jaugemax/2 && !follow_up){
+			if(this.enhance && this.coups.has(s+"#") && this.jauge>=this.jaugemax/2 && !follow_up){
 				s = s+"#";
 				this.jauge-=this.jaugemax/2;
-				stats = this.charac.coups.get(s);
+				stats = this.coups.get(s);
 			}
 			if(racine(s) == "hell_gates"){this.orientation*=-1;}
 			if(racine(s) == "squarepunch"){this.invincibilite=15;this.y=1;this.tb=9;if(s=="squarepunch#"){this.invincibilite+=10;}}
@@ -2415,7 +2416,7 @@ class IceClone{
 				if(this.grabbing==grabfdur){
 					this.end_grab(other);
 					if(this.grabtype == "bouncegrab"){
-						var stats = this.charac.coups.get(this.grabtype);
+						var stats = this.coups.get(this.grabtype);
 						other.y = 1;
 						other.hurted = stats.hitstun;
 						other.x = this.x + this.orientation*38;
@@ -2436,7 +2437,7 @@ class IceClone{
 					}
 				}
 				else if(this.grabtype == "clapdash" && this.grabbing==grabfdur-1){
-					var stats = this.charac.coups.get(this.grabtype);
+					var stats = this.coups.get(this.grabtype);
 					other.y = 1;
 					other.hurted = stats.hitstun;
 					other.x = this.x + this.orientation*38;
@@ -2470,7 +2471,7 @@ class IceClone{
 				}
 				else if(this.grabbing == Math.floor(grabfdur*5/7)){
 					if(this.grabtype == "launch" || this.grabtype == "launch_free"){
-						var stats = this.charac.coups.get("grab");
+						var stats = this.coups.get("grab");
 						other.y = this.y+30;
 						other.grabbed=0;
 						other.falling=10;
@@ -2553,8 +2554,8 @@ class IceClone{
 						this.reoriente(other);
 						if(this.mov == "air_dodge"){this.y=0;this.tb=0;this.movlag = c.landinglag;this.mov = "landing_lag";this.crouching=1;}
 						else if(this.mov == "free_fall"){this.y=0;this.tb=0;this.movlag = c.landinglag;this.mov = "landing_lag";this.xspeed /=2;}
-						else if(this.charac.coups.has(this.mov)){
-							this.y=0;this.tb=0;this.movlag = this.charac.coups.get(this.mov).landinglag;this.mov = "landing_lag";
+						else if(this.coups.has(this.mov)){
+							this.y=0;this.tb=0;this.movlag = this.coups.get(this.mov).landinglag;this.mov = "landing_lag";
 							if(this.movlag===undefined){this.movlag=3;}
 						}
 						else{this.y = 0;this.tb=0;this.xspeed = 0;this.movlag = 0;this.mov = "";}
@@ -3064,7 +3065,7 @@ class IceClone{
 					}
 					else if(this.perso == "kitana" && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0 && this.cooldowns[0]==0){
 						this.begincoup("fanthrow",other);
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						this.cooldowns[0] = this.charac.cds[0];
 						this.movlag=stats.elag+6;
 						this.special = 2;
@@ -3105,7 +3106,7 @@ class IceClone{
 						break;
 
 					case "burst" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						this.xspeed = 0;
 						this.tb=0; this.invincibilite = 3;
 						if(this.movlag==stats.elag+stats.fdur+3){add_to_objects_set(new Burst(this.x,this.y,this));}
@@ -3113,7 +3114,7 @@ class IceClone{
 
 
 					case "fanthrow":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(this.movlag==stats.elag){
 							add_to_objects_set(new Fan(this.x+20*this.orientation,this.y+35,this.orientation,other,stats,this.is_enhanced()));
 						}
@@ -3123,14 +3124,14 @@ class IceClone{
 						break;
 
 					case "fanlift":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(this.movlag==stats.elag+Math.floor(stats.fdur/2)){
 							add_to_objects_set(new Wave(this.x+20*this.orientation,this.y+55,this.orientation,other,stats,this.is_enhanced()));
 						}
 						break;
 
 					case "squarepunch":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						var a = 8;
 						if(this.is_enhanced()){a=11;}
 						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.tb=0;this.xspeed=a*this.orientation;}
@@ -3138,7 +3139,7 @@ class IceClone{
 						break;
 
 					case "teleport":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(this.movlag==stats.elag+7){this.invincibilite=14;}
 						if(this.movlag==stats.elag){
 							this.reoriente(other,true);
@@ -3157,28 +3158,28 @@ class IceClone{
 						break;
 
 					case "boltthrow":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						this.crouching=0;
 						if(this.movlag==stats.elag){
 							add_to_objects_set(new Bolt(this.x+20*this.orientation,this.y+60,this.orientation,other,stats,this.skin,this.is_enhanced()));
 						}
 						break;
 					case "thundergod":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						var a = 6;
 						if(this.is_enhanced()){a=9;}
 						if(this.movlag<=stats.elag+stats.fdur){this.x += a*this.orientation;if(this.movlag==2){this.movlag++;}}
 						if(Math.abs(this.x-camerax)>decalagex-this.charac.width/2){this.movlag=0;this.mov="";this.tb=7;this.xspeed = -this.orientation;this.y=0.1;}
 						break;
 					case "shadowkick":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						var a = 8;
 						if(this.is_enhanced()){a=12;}
 						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.x += a*this.orientation;}
 						if(this.memoryslot && this.movlag>=2){this.movlag--;}
 						break;
 					case "ballthrow":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						this.crouching=0;
 						if(this.movlag==stats.elag){
 							add_to_objects_set(new Ball(this.x+20*this.orientation,this.y+65,this.orientation,other,stats,this.memoryslot,this.is_enhanced()));
@@ -3188,7 +3189,7 @@ class IceClone{
 						}
 						break;
 					case "shadowpunch":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(this.movlag<=stats.fdur-1){
 							this.tb=0; this.xspeed=0;
 							this.y+=5.;
@@ -3196,7 +3197,7 @@ class IceClone{
 						}
 						break;
 					case "hell_gates":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(this.movlag==stats.elag+stats.fdur+stats.slag && this.is_enhanced()){this.invincibilite = 12;}
 						if(this.movlag==stats.elag+stats.fdur){this.tb=6;this.y+=1;fixcamera=30;}
 						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.xspeed=9*this.orientation;}
@@ -3221,25 +3222,25 @@ class IceClone{
 						}
 						break;
 					case "spear_throw" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(this.movlag==stats.elag){
 							add_to_objects_set(new Spear(this.x+20*this.orientation,this.y+73,this.orientation,other,stats,this,this.is_enhanced()));
 						}
 						else if(this.movlag == stats.elag-40+1){this.movlag=0;this.mov="";}
 						break;
 					case "slide":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						var a = 6 + this.is_enhanced()*2;
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.xspeed=a*this.orientation;}
 						break;
 					case "charge":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(this.movlag==stats.elag+stats.fdur+stats.slag-1){this.projectile_invincibility=stats.fdur+stats.slag;}
 						if(this.movlag==stats.elag){this.projectile_invincibility=this.xspeed=0;}
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.xspeed=7*this.orientation;}
 						break;
 					case "shao_tp":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(this.movlag==stats.elag){
 							var x = other.x+this.orientation*70;
 							if(Math.abs(x-camerax)>decalagex-this.charac.width/2){x = other.x+this.orientation*(this.charac.width/2+other.charac.width/2+10);}
@@ -3250,7 +3251,7 @@ class IceClone{
 						break;
 
 					case "arrow":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						this.crouching=0;
 						if(this.movlag==stats.elag){
 							add_to_objects_set(new Arrow(this.x+45*this.orientation,this.y+70,this.orientation,other,stats));
@@ -3258,21 +3259,21 @@ class IceClone{
 						break;
 					
 					case "iceball":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						this.crouching=0;
 						if(this.movlag==stats.elag){
 							add_to_objects_set(new Iceball(this.x+20*this.orientation,this.y+60,this.orientation,other,stats,this.is_enhanced()));
 						}
 						break;
 					case "iceflask" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(this.movlag==1){
 							add_to_objects_set(new IceFlask(this.x+60*this.orientation,this.y-5,this.orientation,other,stats));
 						}
 						break;
 					case "icebody":
 						if(this.is_enhanced()){
-							var stats = this.charac.coups.get(this.mov);
+							var stats = this.coups.get(this.mov);
 							if(this.movlag==stats.elag){
 								add_to_objects_set(new IceClone(this.x,this.y,this.orientation,other,stats));
 								this.xspeed = -4*this.orientation;
@@ -3281,14 +3282,14 @@ class IceClone{
 						}
 						break;
 					case "flying_kick":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						var a = 8;
 						if(last_char(this.mov)=='#'){a=10;}
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.x += a*this.orientation;this.xspeed=0;}
 						if(this.movlag>stats.elag){this.tb=0;}
 						break;
 					case "bicycle":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){
 							this.x += 3*this.orientation;this.xspeed=0;
 							if((stats.elag+stats.fdur-this.movlag)%6==0){this.canthurt=false;}
@@ -3296,7 +3297,7 @@ class IceClone{
 						this.tb=0;
 						break;
 					case "fireball":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						this.crouching=0;
 						if(this.movlag==stats.elag){
 							add_to_objects_set(new Fireball(this.x+25*this.orientation,this.y+70,this.orientation,other,stats));
@@ -3306,13 +3307,13 @@ class IceClone{
 						}
 						break;
 					case "cycle":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(this.is_enhanced()){this.x += 5.5*this.orientation;}
 						else{this.x -= 4.5*this.orientation;}
 						this.xspeed=0;
 						break;
 					case "knifethrow":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						this.crouching=0;
 						if(this.movlag==stats.elag){
 							add_to_objects_set(new Knife(this.x+20*this.orientation,this.y+60,this.orientation,other,stats, 6+this.memoryslot*0.2));
@@ -3322,7 +3323,7 @@ class IceClone{
 						}
 						break;
 					case "homing_knife":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						this.crouching=0;
 						if(this.movlag==stats.elag){
 							var a = 4;
@@ -3331,27 +3332,27 @@ class IceClone{
 						}
 						break;
 					case "ball":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						var a = 6;
 						if(this.is_enhanced() && this.movlag>stats.elag+1){a=9;}
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.xspeed=a*this.orientation;}
 						break;
 					case "spit":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						this.crouching=0;
 						if(this.movlag==stats.elag){
 							add_to_objects_set(new SpitProj(this.x+30*this.orientation,this.y+60,this.orientation,other,stats,this.skin));
 						}
 						break;
 					case "chargeball":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						this.crouching=0;
 						if(this.movlag==stats.elag){
 							add_to_objects_set(new ChargeBall_Ball(this.x+30*this.orientation,this.y+60,this.orientation,other,stats,this.skin));
 						}
 						break;
 					case "charge_chargeball":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(this.movlag==stats.elag){
 							if(this.ressource<this.max_ressource){
 								if(this.special==1){this.special=2;}
@@ -3367,7 +3368,7 @@ class IceClone{
 						if(this.movlag==stats.elag+2){add_to_objects_set(new Ring(this.x+30*this.orientatio,this.y+65,this.orientation,this.skin,0,0));}
 						break;
 					case "bomb":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(this.movlag==stats.elag+5){this.invincibilite=10;}
 						if(this.movlag==stats.elag+stats.slag && this.is_enhanced()){this.invincibilite=10;}
 						if(this.movlag==stats.elag){
@@ -3383,7 +3384,7 @@ class IceClone{
 						if(this.movlag==stats.elag-1){add_to_objects_set(new ExploProj(this.x,this.y+60,this.orientation,other,stats,this.skin));}
 						break;
 					case "spin":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){
 							var a = 4;
 							if(this.is_enhanced()){a=6;}
@@ -3393,21 +3394,21 @@ class IceClone{
 						}
 						break;
 					case "gripe":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){
 							if((stats.elag+stats.fdur-this.movlag)%4==0){this.canthurt=false;}
 							if(this.is_enhanced()){this.x+=this.orientation;}
 						}
 						break;
 					case "slicethrow":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						this.crouching=0;
 						if(this.movlag==stats.elag){
 							add_to_objects_set(new SliceProj(this.x+40*this.orientation,this.y+75,this.orientation,other,stats,this.skin));
 						}
 						break;
 					case "dive":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(this.movlag==stats.elag+stats.fdur+stats.slag && this.is_enhanced()){this.invincibilite = 12;}
 						if(this.movlag==stats.elag+stats.fdur+1){this.tb=4.5;this.y=20;fixcamera=3;this.xspeed=0;}
 						if(this.movlag<=stats.elag+stats.fdur){
@@ -3419,18 +3420,18 @@ class IceClone{
 						}
 						break;
 					case "bouncegrab":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(this.is_enhanced() && this.movlag>stats.elag+1 && this.movlag<=stats.elag+stats.fdur+1){this.xspeed=4*this.orientation;}
 						
 						break;
 					case "groundpound":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(entre(this.movlag,stats.slag-1,stats.elag+stats.fdur+1)){shake_screen(5,5);}
 						if(this.movlag == stats.elag+stats.fdur+2){play_sound_eff("hhit");}
 						
 						break;
 					case "clapdash":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						var a = 7;
 						if(this.is_enhanced()){a=11;}
 						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.x += a*this.orientation;}
@@ -3438,7 +3439,7 @@ class IceClone{
 						if(Math.abs(this.x-other.x)<d && this.y==0 && other.y==0){this.x-=a*this.orientation;}
 						break;
 					case "energywave":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						this.crouching=0;
 						if(this.movlag==stats.elag){
 							add_to_objects_set(new EnergyWave(this.x+25*this.orientation,this.y+70,this.orientation,other,stats,this.is_enhanced()));
@@ -3519,16 +3520,16 @@ class IceClone{
 			if(this.canthurt){return;}
 			if(this.mov=="burst"){
 				if(Math.sqrt((this.x-other.x)**2+(this.y-other.y)**2)<100){
-					other.hurt(this,this.charac.coups.get(this.mov));
+					other.hurt(this,this.coups.get(this.mov));
 				}
 			}
-			else if(this.charac.coups.has(this.mov)){
-				var stats = this.charac.coups.get(this.mov);
+			else if(this.coups.has(this.mov)){
+				var stats = this.coups.get(this.mov);
 				if(this.y==0 && other.y>0 && stats.hitboxys<0 && racine(this.mov) != "slide" && racine(this.mov) != "nutpunch" && racine(this.mov) != "ball"){return;}
 				if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){
 					var hitboxxe = stats.hitboxxe;
-					if(other.charac.coups.has(other.mov)){
-						var stats2 = other.charac.coups.get(other.mov)
+					if(other.coups.has(other.mov)){
+						var stats2 = other.coups.get(other.mov)
 						if(entre(other.movlag,stats2.elag+1,stats2.elag+stats2.fdur)){hitboxxe+=stats2.hitboxxouv;}
 					}
 					if(entre((other.x-this.x)*this.orientation,stats.hitboxxs-other.charac.width/2-10*(other.falling!=0),hitboxxe+other.charac.width/2+10*(other.falling!=0)+stats.hitboxxeyscaling*(other.y-(this.y+stats.hitboxys)))){
@@ -3570,13 +3571,13 @@ class IceClone{
 			if((this.mov=="jumpsquat" || this.y>0) && stats.hiteffect=="grab"){return;}
 			if(racine(other.mov)=="thundergod"){other.movlag=1;other.tb=8;other.xspeed = -1;other.y=0.1;}
 			if(other.mov=="squarepunch"){other.movlag=1;other.tb=0;other.xspeed = -1;}
-			if(racine(other.mov)=="shadowkick"){other.movlag=other.charac.coups.get(other.mov).elag;}
+			if(racine(other.mov)=="shadowkick"){other.movlag=other.coups.get(other.mov).elag;}
 			if(this.invincibilite || end_of_round_countdown){return;}
 			if(this.projectile_invincibility && !this.hiteffect_is_not_projo(stats.hiteffect)){return;}
 			if(racine(other.mov)=="thundergod"){other.y=0;}
 			if(other.mov=="charge"){other.movlag=8;other.xspeed=0;}
 			if(racine(other.mov)=="flying_kick"){other.movlag=13;other.xspeed=0;}
-			if(isGrab(stats.hiteffect) && this.charac.coups.has(this.mov) && isGrab(this.charac.coups.get(this.mov).hiteffect) && this.movlag>=this.charac.coups.get("grab").elag){
+			if(isGrab(stats.hiteffect) && this.coups.has(this.mov) && isGrab(this.coups.get(this.mov).hiteffect) && this.movlag>=this.coups.get("grab").elag){
 				this.pushed = 5;this.pushx = -4*this.orientation;
 				other.pushed = 5;other.pushx = -4*other.orientation;
 				this.movlag=0;this.mov="";
@@ -3586,7 +3587,7 @@ class IceClone{
 			this.bouncing=false; this.nutting=false;
 			var parrywasdone = false;
 			if(this.mov == "icebody" && !["grab","command_grab"].includes(stats.hiteffect)){
-				var s = this.charac.coups.get("icebody");
+				var s = this.coups.get("icebody");
 				if(entre(this.movlag, s.elag+1, s.elag + s.fdur)){this.other.afficher(this);other.freeze=60;other.movlag=0;other.mov="";play_sound_eff("freeze");return;}
 			}
 			if(this.n==1 && !secondplayerishuman && (stats.hiteffect=="projectile" || stats.hiteffect=="spear")){this.ai.ugothitorblockedaprojectile();}
@@ -3864,7 +3865,7 @@ class IceClone{
 							shake_screen(12,6);
 							this.fatality--;
 						}
-						else if(!this.canthurt){other.invincibilite=0;other.hurt(this,this.charac.coups.get("huppercut"));this.fatality=1;}
+						else if(!this.canthurt){other.invincibilite=0;other.hurt(this,this.coups.get("huppercut"));this.fatality=1;}
 					}
 					if(this.fatality==99){play_sound_eff("liummov");}
 					if(this.fatality==58){play_sound_eff("liuhmov");}
@@ -4262,7 +4263,7 @@ class IceClone{
 						}
 						break;
 					case "burst":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.costume = "victory"+(this.charac.vicposframes).toString()}
 						else{this.costume = "victory"+(this.charac.vicposframes-1).toString();}
 						break;
@@ -4274,7 +4275,7 @@ class IceClone{
 					case "leg_takedown" :
 					case "nutpunch" :
 					case "clapdash" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.costume = racine(this.mov)+"3"}
 						else if(entre(this.movlag,0,stats.elag/2)||entre(this.movlag,stats.elag+stats.fdur+stats.slag/2,stats.elag+stats.fdur+stats.slag)){this.costume = racine(this.mov)+"1"}
 						else{this.costume = racine(this.mov)+"2";}
@@ -4286,7 +4287,7 @@ class IceClone{
 						var mov = this.mov;
 						if(racine(mov)=="shadowkick"){mov="lkick"}
 						var nframes = this.charac.kicknframe;
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.costume = mov+nframes.toString()}
 						else if (this.movlag<stats.elag){
 							var a = Math.floor(this.movlag/stats.elag*(nframes-1))+1;
@@ -4305,7 +4306,7 @@ class IceClone{
 						break;
 
 					case "hkick" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						var n = this.charac.hkickstartnframe;
 						var nframes = this.charac.hkickendnframe;
 						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.costume = this.mov+(n+1)}
@@ -4320,7 +4321,7 @@ class IceClone{
 						break;
 
 					case "cycle" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						var n = 9;
 
 						var a = 1+Math.floor(this.movlag/stats.elag*(n));
@@ -4340,7 +4341,7 @@ class IceClone{
 					case "icebody" :
 					case "flying_kick" :
 					case "teleport_drop" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.costume = racine(this.mov)+"2"}
 						else{this.costume = racine(this.mov)+"1";}
 						break;
@@ -4350,7 +4351,7 @@ class IceClone{
 						break;
 
 					case "charge" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						var n = 1;
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){n = "2";}
 						else{n = "1";}
@@ -4359,7 +4360,7 @@ class IceClone{
 						break;
 
 					case "arrow" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(this.movlag>=stats.elag+stats.slag/2){this.costume="arrow1"}
 						else if(this.movlag>=stats.elag){this.costume="arrow2"}
 						else if(this.movlag>=stats.elag/3){this.costume="arrow3"}
@@ -4368,7 +4369,7 @@ class IceClone{
 
 					case "bicycle" :
 					case "bicycle#" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){
 							var n = Math.floor((stats.elag+stats.fdur-this.movlag)/2)%6+1;
 							this.costume = racine(this.mov)+n.toString()
@@ -4377,7 +4378,7 @@ class IceClone{
 						break;
 
 					case "huppercut" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag/3,stats.elag+stats.fdur)){this.costume = this.mov+"4"}
 						else if(this.movlag>=stats.elag+stats.fdur+stats.slag*2/3){this.costume = this.mov+"1"}
 						else if(this.movlag>=stats.elag+stats.fdur+stats.slag/3){this.costume = this.mov+"2"}
@@ -4387,7 +4388,7 @@ class IceClone{
 
 					case "knifethrow" :
 					case "homing_knife" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(this.movlag>=stats.elag+stats.fdur+stats.slag*3/4){this.costume = "knifethrow"+"2"}
 						else if(this.movlag>=stats.elag+stats.fdur+stats.slag/2){this.costume = "knifethrow"+"1"}
 						else if(this.movlag>=stats.elag+stats.fdur){this.costume = "knifethrow"+"2"}
@@ -4395,13 +4396,13 @@ class IceClone{
 						break;
 
 					case "grab" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag/2,stats.elag+stats.fdur)){this.costume = "lpunch2"}
 						else{this.costume ="lpunch1";}
 						break;
 
 					case "fanthrow" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(this.movlag<=stats.elag/4&&this.y==0){this.costume = "huppercut5";}
 						else if(this.movlag<stats.elag){this.costume = "fanthrow4";}
 						else if(this.movlag<=stats.elag+stats.slag/4){this.costume = "fanthrow3";}
@@ -4410,7 +4411,7 @@ class IceClone{
 						break;
 
 					case "fanswipe" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.costume = racine(this.mov)+"3"}
 						else if(entre(this.movlag,stats.elag+stats.fdur+stats.slag/2,stats.elag+stats.fdur+stats.slag)){this.costume = racine(this.mov)+"1"}
 						else if(this.movlag>=stats.elag){this.costume = racine(this.mov)+"2"}
@@ -4418,37 +4419,37 @@ class IceClone{
 						break;
 					
 					case "teleport" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						var n = 4-Math.floor(Math.abs(this.movlag-12)/3)
 						this.costume = "getup"+n;
 						break;
 
 					case "boltthrow" :
 					case "fireball" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(entre(this.movlag,stats.slag,stats.slag+stats.fdur+stats.elag-10)){this.costume = racine(this.mov)+"2"}
 						else{this.costume = racine(this.mov)+"1";}
 						break;
 					case "iceball" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(entre(this.movlag,stats.slag,stats.slag+stats.fdur+stats.elag-10)){this.costume = racine(this.mov)+"3"}
 						else if(entre(this.movlag,stats.slag-5,stats.slag+stats.fdur+stats.elag-5)){this.costume = racine(this.mov)+"2"}
 						else{this.costume = racine(this.mov)+"1";}
 						break;
 					case "squarepunch" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(entre(this.movlag,0,stats.elag+stats.fdur)){this.costume = "jpunch2";}
 						else if(entre(this.movlag,stats.elag+stats.fdur,stats.elag+stats.fdur+2)){this.costume = "jpunch1";}
 						else{this.costume = "jump2";}
 						break;
 
 					case "hell_gates" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.costume="jump2"}
 						break;
 					
 					case "spear_throw" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(this.movlag>stats.elag+stats.fdur){
 							var a = 2-Math.floor(((this.movlag-(stats.elag+stats.fdur))/stats.slag)*2)
 							this.costume = racine(this.mov)+a;
@@ -4460,30 +4461,30 @@ class IceClone{
 						break;
 
 					case "iceflask" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						var a = 7-Math.floor(this.movlag/stats.slag*(7));
 						this.costume = "iceflask" + a.toString();
 						break;
 
 					case "ball" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){this.costume = "roll"+(Math.floor((this.movlag-6)/this.charac.rollspeed)+1).toString()}
 						else{this.costume = "crouching2";}
 						break;
 					case "spit":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag*2/3,stats.elag+stats.fdur)){this.costume = racine(this.mov)+"3"}
 						else if(entre(this.movlag,0,stats.elag/3)||entre(this.movlag,stats.elag+stats.fdur+stats.slag/2,stats.elag+stats.fdur+stats.slag)){this.costume = racine(this.mov)+"1"}
 						else{this.costume = racine(this.mov)+"2";}
 						break;
 					case "charge_chargeball":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(this.movlag==stats.elag){this.costume = "chargeball2";}
 						else if(this.movlag<stats.elag){this.costume = "chargeball7";}
 						else{this.costume = "chargeball1";}
 						break;
 					case "chargeball" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(this.movlag>=stats.elag+stats.fdur+stats.slag*4/5){this.costume = this.mov+"1"}
 						else if(this.movlag>=stats.elag+stats.fdur+stats.slag*3/5){this.costume = this.mov+"2"}
 						else if(this.movlag>=stats.elag+stats.fdur+stats.slag*2/5){this.costume = this.mov+"3"}
@@ -4493,19 +4494,19 @@ class IceClone{
 						else {this.costume = this.mov+"7"}
 						break;
 					case "bomb" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag/2,stats.elag+stats.slag/2)){this.costume = racine(this.mov)+"2";}
 						else{this.costume = racine(this.mov)+"1";}
 						break;
 					case "ballthrow":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(this.movlag<=stats.elag){this.costume = racine(this.mov)+"4";}
 						else if(this.movlag<=stats.elag+stats.slag/3){this.costume = racine(this.mov)+"3";}
 						else if(this.movlag<=stats.elag+stats.slag*2/3){this.costume = racine(this.mov)+"2";}
 						else {this.costume = racine(this.mov)+"1";}
 						break;
 					case "shadowpunch":
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(this.movlag<=stats.fdur){this.costume="shadowpunch1";}
 						else{this.costume="crouching1"}
 						if(this.movlag<=stats.fdur+2){
@@ -4513,7 +4514,7 @@ class IceClone{
 						}
 						break;
 					case "spin" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){
 							var n = Math.floor((stats.elag+stats.fdur-this.movlag)/2)%8+1;
 							this.costume = racine(this.mov)+n.toString()
@@ -4522,7 +4523,7 @@ class IceClone{
 						break;
 					case "gripe" :
 					case "gripe#" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){
 							var n = Math.floor((stats.elag+stats.fdur-this.movlag)/2)%5+1;
 							this.costume = racine(this.mov)+n.toString()
@@ -4530,25 +4531,25 @@ class IceClone{
 						else{this.costume = racine(this.mov)+"1";}
 						break;
 					case "slicethrow" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag*0.4,stats.elag)){this.costume = racine(this.mov)+"3";}
 						else if(entre(this.movlag,stats.elag*0.5,stats.elag+stats.slag*0.5)){this.costume = racine(this.mov)+"2";}
 						else if(entre(this.movlag,stats.elag*0.5,stats.elag+stats.slag)){this.costume = racine(this.mov)+"1";}
 						else{this.costume = racine(this.mov)+"4";}
 						break;
 					case "dive" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur+stats.slag/3)){this.costume = "jpunch2"}
 						else if(this.movlag>=stats.elag+stats.fdur+stats.slag*2/3){this.costume = "jump3";}
 						else{this.costume="roll1";}
 						break;
 					case "bouncegrab" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag/2,stats.elag+stats.fdur)){this.costume = "grabbing2"}
 						else{this.costume ="grabbing1";}
 						break;
 					case "groundpound" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						var n =1;
 						if(entre(this.movlag,stats.elag/2,stats.elag+stats.fdur)){n=6;}
 						else if(entre(this.movlag,0,stats.elag+stats.fdur+stats.slag/5)){n=5;}
@@ -4559,7 +4560,7 @@ class IceClone{
 						this.costume = "groundpound"+n.toString();
 						break;
 					case "energywave" :
-						var stats = this.charac.coups.get(this.mov);
+						var stats = this.coups.get(this.mov);
 						var n =1;
 						if(entre(this.movlag,stats.elag/2,stats.elag+stats.fdur)){n=5;}
 						else if(entre(this.movlag,0,stats.elag+stats.fdur+stats.slag/5)){n=6;}
@@ -4686,7 +4687,7 @@ class IceClone{
 				if(racine(this.mov) == "teleport_drop"){y = -(8+2*this.is_enhanced())*(14-this.movlag)}
 				else if(racine(this.mov) == "ball"){y = -10;}
 				else if(this.mov == "shao_tp"){
-					var stats = this.charac.coups.get(this.mov);
+					var stats = this.coups.get(this.mov);
 					if(this.movlag>=stats.elag){y = -8*(stats.slag-(this.movlag-stats.elag))}
 					else if(this.movlag>stats.jumpf){y += -8*(this.movlag-stats.jumpf)}
 				}
@@ -6269,7 +6270,7 @@ class IceClone{
 
 
 	function shake_screen(frames,force){
-		if(shakeforce>force){force=shakeforce;}
+		if(shakeforce>force && shakeframe>0){force=shakeforce;}
 		if(shakeframe>frames){frames=shakeframe;}
 		shakeforce = force; shakeframe = frames;
 	}
