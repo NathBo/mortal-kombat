@@ -4987,6 +4987,7 @@ class IceClone{
 			ctx.fillStyle = "white";
 			ctx.font = "25px Luminari";
 			ctx.fillText("Score: "+score.toString(),80,22);
+			ctx.fillText(prix_soigner.toString(),5,22);
 		}
 
 		still_draw = false;
