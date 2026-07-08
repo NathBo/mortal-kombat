@@ -5054,6 +5054,42 @@ class IceClone{
 		stage_size = stagesizes[chosenstage];
 	}
 
+	function buyaugment(n){
+		switch (n){
+			case 0 :
+				current_maxpv+=30;current_pv+=30;score-=15000;
+				break;
+			case 1 :
+				var hup = current_stats.get("huppercut");hup.degats=Math.round(hup.degats+3+Math.sqrt(hup.degats));
+				break;
+			case 2 :
+				var hup = current_stats.get("hkick");hup.degats=Math.round(hup.degats+2+Math.sqrt(hup.degats));
+				break;
+			case 3 :
+				var l = ["lpunch","lkick","hpunch","mkick","clkick","clpunch","cmkick"];
+				for (var i =0;i<l.length;i++){
+					let hup = current_stats.get(l[i]);hup.degats=Math.round(hup.degats+2+Math.sqrt(hup.degats));
+				}
+				break;
+			case 4 :
+				var l = ["jpunch","jskick","jkick"];
+				for (var i =0;i<l.length;i++){
+					let hup = current_stats.get(l[i]);hup.degats=Math.round(hup.degats+2+Math.sqrt(hup.degats));
+				}
+				break;
+			case 5 :
+				var hup = current_stats.get("huppercut");hup.slag=Math.ceil(hup.slag*0.7);
+				break;
+			case 6 :
+				var l = ["lpunch","lkick","hpunch","mkick","hkick"];
+				for (var i =0;i<l.length;i++){
+					let hup = current_stats.get(l[i]);hup.degats=Math.round(hup.degats+2+Math.sqrt(hup.degats));
+				}
+				break;
+		}
+
+	}
+
 	function buyphase(){
 		ctx.fillStyle = "black";
 		ctx.fillRect(0,0,890,500);
@@ -5062,21 +5098,30 @@ class IceClone{
 		ctx.fillText("Potion",40,100);
 		ctx.fillText("B ("+prix_soigner.toString()+")",400,100);
 		if(!has_bought_augment){
-			ctx.fillText("Kick",40,200);
-			ctx.fillText("Max HP",40,300);
-			ctx.fillText("Hupp",40,400);
-			ctx.fillText("N (5000)",400,200);
-			ctx.fillText(", (15000)",400,300);
-			ctx.fillText("H (5000)",400,400);
+			ctx.fillText(nom_augments[presented_augments[0]],40,200);
+			ctx.fillText(nom_augments[presented_augments[1]],40,300);
+			ctx.fillText(nom_augments[presented_augments[2]],40,400);
+			ctx.fillText("N ("+prix_presented[0].toString()+")",400,200);
+			ctx.fillText(", ("+prix_presented[1].toString()+")",400,300);
+			ctx.fillText("H ("+prix_presented[2].toString()+")",400,400);
 		}
 		ctx.fillText("HP "+current_pv.toString()+"/"+current_maxpv.toString()+"  Score: "+score.toString(),200,500);
-		if(score>=prix_soigner && j1.poing==1){j1.poing=2;current_pv = Math.ceil((current_pv+current_maxpv)/2);score-=prix_soigner;prix_soigner+=10000;}
+		if(score>=prix_soigner && j1.poing==1){j1.poing=2;current_pv = Math.ceil((current_pv/3+current_maxpv*2/3));score-=prix_soigner;prix_soigner+=10000;}
 		if(!has_bought_augment){
-			if(score>=15000 && j1.special==1){current_maxpv+=30;current_pv+=30;score-=15000;j1.special=2;has_bought_augment=true;}
-			if(score>=5000 && j1.dodge==1){j1.dodge=2;var hup = current_stats.get("huppercut");hup.degats=Math.round(hup.degats+3+Math.sqrt(hup.degats));score-=5000;has_bought_augment=true;}
-			if(score>=5000 && j1.jambe==1){j1.jambe=2;var hup = current_stats.get("hkick");hup.degats=Math.round(hup.degats+2+Math.sqrt(hup.degats));score-=5000;has_bought_augment=true;}
+			if(score>=prix_presented[0] && j1.jambe==1){j1.jambe=2;score-=prix_presented[0];has_bought_augment=true;buyaugment(presented_augments[0]);}
+			if(score>=prix_presented[1] && j1.special==1){j1.special=2;score-=prix_presented[1];has_bought_augment=true;buyaugment(presented_augments[0]);}
+			if(score>=prix_presented[2] && j1.dodge==1){j1.dodge=2;score-=prix_presented[2];has_bought_augment=true;buyaugment(presented_augments[0]);}
 		}
 		if(j1.jump){functiontoexecute = loop;reset_game(true);}
+	}
+
+	function tirer_augments(){
+		presented_augments[0] = randomInt(0,nb_augments-1);
+		presented_augments[1] = randomInt(0,nb_augments-1);
+		while (presented_augments[1]==presented_augments[0]){presented_augments[1] = randomInt(0,nb_augments-1);}
+		presented_augments[2] = randomInt(0,nb_augments-1);
+		while (presented_augments[2]==presented_augments[0] || presented_augments[2]==presented_augments[1]){presented_augments[2] = randomInt(0,nb_augments-1);}
+		for (var i=0;i<3;i++){prix_presented[i]=prix_augments[presented_augments[i]]}
 	}
 
 
@@ -5174,6 +5219,7 @@ class IceClone{
 						// 	var test_your_sight_fun = () => minigame.render();
 						// 	functiontoexecute = test_your_sight_fun;
 						// }
+						tirer_augments();
 						functiontoexecute = buyphase; has_bought_augment = false;
 						return;
 					}
@@ -5882,7 +5928,7 @@ class IceClone{
 				if(entre(clickx,80/1024,260/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=true;secondplayerisdummy=true;camerax=0;}
 				else if(entre(clickx,380/1024,620/1024)){
 					//var minigame = new GuessBarrel(ctx,j1,0,minigame_music,characteristics.get("liukang"));var test_your_might_fun = () => minigame.render();
-					functiontoexecute = menupersos;secondplayerishuman=false;arcadelevel=0;current_pv=-1;menupersoswav.play();	//minigamestest
+					functiontoexecute = menupersos;secondplayerishuman=false;arcadelevel=0;current_pv=-1;prix_soigner=10000;menupersoswav.play();	//minigamestest
 					arcadeorder.shuffle();
 					if(!persosunlocked.get("reptile")){
 						var i = arcadeorder.indexOf("reptile");
@@ -6197,6 +6243,9 @@ class IceClone{
 	var score = 0; var matchscore = 0; var roundscore = 0;
 	var old_stats = null; var new_stats = null; var highscore_screen_cpt = 0;
 	var current_pv = 0; var current_maxpv = 0; var prix_soigner = 10000; var current_stats = undefined; var has_bought_augment = false;
+	var presented_augments = [0,0,0]; var prix_presented = [0,0,0];
+	var prix_augments = [15000,5000,5000,10000,4000,4000,10000]; var nom_augments = ["Max HP","Hupp","Kick","grounds","Air","FastHup","Stands"];
+	var nb_augments = prix_augments.length;
 	var difficulty_list = [-1,-1,0,0,0,1,1,1,1,2,2,2,2,2,3]
 
 	var fatality_testing = false;
