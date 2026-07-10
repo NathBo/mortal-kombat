@@ -1587,7 +1587,7 @@ class IceClone{
 			}
 			me.coups.forEach(aux);
 			this.grade=grade;
-			if(arcadelevel<difficulty_list.length){this.difficulty = difficulty_list[arcadelevel];}else{this.difficulty=3;}
+			this.difficulty = Math.min(difficulty_list[arcadelevel%9]+Math.floor(arcadelevel/9),3);
 			switch(this.difficulty){
 				case -1:
 					this.donothingchance = 0.9;
@@ -2152,15 +2152,17 @@ class IceClone{
 		}
 		reinit(x,y,perso,n,skin,other,reset_ai=true, allowedmoves = [], behavior = ""){
 			this.charac=characteristics.get(perso);
-			this.coups = structuredClone(this.charac.coups);
-			if(arcadelevel>0 && this.n==0){this.coups=current_stats}
+			this.coups = this.charac.coups;
 			if(this.n==0){current_stats=this.coups;}
 			this.x = x; this.y = y; this.perso = perso; this.n = n; this.skin = this.charac.png[skin]; this.coordinates = this.charac.coordinates;
+			if(this.n==0){this.atk = current_atk;}else{this.atk=1.+Math.floor(arcadelevel/9)*0.2+atk_list[arcadelevel%9];}
 			this.allowedmoves = allowedmoves; this.xinit = x; this.other = other;
 			this.poing=0;this.jambe=0;this.special=0;this.dodge=0; this.jump=0; this.enhance = 0;
 			this.forward = 0;this.back = 0;
 			this.did_slowdown = false;
 			this.jaugemax = 60; if(reset_ai){this.jauge=0;}
+			this.speedboost = 1.; this.cdr = 0;
+			if(this.n==0){this.speedboost=current_speedboost;this.cdr=current_cdr;}
 			if (this.n == 0){this.orientation = 1}else{this.orientation = -1}
 			this.costume = "stand1";
 			this.standing = 0;this.walking = 0;this.jumping=0;
@@ -2245,6 +2247,7 @@ class IceClone{
 			if(s == "chargeball"){play_sound_eff("chargeball");}
 			if(s == "boltthrow#"){this.orientation*=-1;}
 			if(stats.coupwav != ""){play_sound_eff(stats.coupwav);}
+			this.cooldowns[cd] = Math.round(this.charac.cds[cd]*100/(100+this.cdr));
 			this.cooldowns[cd] = this.charac.cds[cd];
 			if(movpriority.get(s)==70){this.jauge = Math.min(this.jaugemax,this.jauge+5);}
 			if(this.mov!="run")this.xspeed += stats.movx*this.orientation;
@@ -2426,7 +2429,7 @@ class IceClone{
 						lag_game(8);
 						shake_screen(10,3);
 						play_sound_eff("hhit");
-						var degs = stats.degats;
+						var degs = Math.round(stats.degats*this.atk);
 						other.pv -= degs;
 						other.combo_deg += degs;
 						this.jauge = Math.min(this.jaugemax,this.jauge+Math.round(degs/3));
@@ -2447,7 +2450,7 @@ class IceClone{
 					lag_game(9);
 					shake_screen(10,4);
 					play_sound_eff("hhit");
-					var degs = stats.degats;
+					var degs = Math.round(stats.degats*this.atk);
 					other.pv -= degs;
 					other.combo_deg += degs;
 					this.jauge = Math.min(this.jaugemax,this.jauge+Math.round(degs/3));
@@ -2459,7 +2462,7 @@ class IceClone{
 				}
 				else if(this.grabtype == "clapdash" && this.grabbing==4){play_sound_eff("gotcha");}
 				else if(this.grabbing == grabfdur/2 && this.grabtype == "bouncegrab"){
-					var degs = 10;
+					var degs = Math.round(10*this.atk);
 					other.losepv(degs);
 					other.combo_deg += degs;
 					other.combo_hits += 1;
@@ -3024,12 +3027,12 @@ class IceClone{
 						this.begincoup("energywave",other);
 					}
 					else if(this.forward>=1&&movpriority.get(racine(this.mov))<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
-						this.x+=this.charac.vitesse*this.orientation;this.xspeed = 0;
+						this.x+=this.charac.vitesse*this.orientation*this.speedboost;this.xspeed = 0;
 						let d = (this.charac.width+other.charac.width)/3;
-						if(Math.abs(this.x-other.x)<d && this.y==0 && other.y==0){this.x-=this.charac.vitesse*this.orientation;}
+						if(Math.abs(this.x-other.x)<d && this.y==0 && other.y==0){this.x-=this.charac.vitesse*this.orientation*this.speedboost;}
 					}
 					else if(this.back>=1&&movpriority.get(racine(this.mov))<=0&&this.crouching==0&&-this.xspeed*this.orientation<c.vitesse){
-						this.x-=this.charac.vitesse*this.orientation*c.backmovnerf;this.xspeed = 0;
+						this.x-=this.charac.vitesse*this.orientation*c.backmovnerf*this.speedboost;this.xspeed = 0;
 					}
 					if(this.mov != "forwardash" && this.mov != "backdash"){this.xspeed = signe(this.xspeed)*Math.max(0,Math.abs(this.xspeed) -c.friction);}
 					
@@ -3466,7 +3469,7 @@ class IceClone{
 					else{this.mov = "";}
 				}
 			}
-			this.x += this.xspeed;
+			this.x += this.xspeed*this.speedboost;
 			if(this.pushed>0){this.pushed--;this.x+=this.pushx;}
 			let d = (this.charac.width+other.charac.width)/3;
 			if(Math.abs(this.x-other.x)<d && this.y==0 && other.y==0){
@@ -3687,7 +3690,7 @@ class IceClone{
 					this.hurted = stats.hitstun;
 				this.xspeed = stats.hurtx*other.orientation;
 				this.tb = stats.hurty;
-				var degs = Math.ceil(stats.degats*this.comboscaling)
+				var degs = Math.round(stats.degats*this.comboscaling*this.other.atk);
 				this.pv -= degs;
 				this.combo_deg += degs;
 				this.combo_hits += 1;
@@ -5010,7 +5013,7 @@ class IceClone{
 		if(j2.pv<=0){
 			musiques[chosenstage].pause();
 			j2.pv=0;
-			if(j1.pv>0){roundwonsj1 ++;}
+			if(j1.pv>0){roundwonsj1+=2;}
 			if(roundwonsj1>=2 && finishhim==0 && j2.perso!="shao_kahn"){
 				finishhim = 300;
 			}
@@ -5055,39 +5058,22 @@ class IceClone{
 	}
 
 	function buyaugment(n){
-		switch (n){
-			case 0 :
-				current_maxpv+=30;current_pv+=30;score-=15000;
+		has_bought_augment=true;
+		var b = 1;
+		if(n==boosted){b=1.5;}
+		switch(n){
+			case 0:
+				current_maxpv+=Math.round(50*b);current_pv+=Math.round(50*b);
 				break;
-			case 1 :
-				var hup = current_stats.get("huppercut");hup.degats=Math.round(hup.degats+3+Math.sqrt(hup.degats));
+			case 1:
+				current_atk+=0.3*b;
 				break;
-			case 2 :
-				var hup = current_stats.get("hkick");hup.degats=Math.round(hup.degats+2+Math.sqrt(hup.degats));
-				break;
-			case 3 :
-				var l = ["lpunch","lkick","hpunch","mkick","clkick","clpunch","cmkick"];
-				for (var i =0;i<l.length;i++){
-					let hup = current_stats.get(l[i]);hup.degats=Math.round(hup.degats+2+Math.sqrt(hup.degats));
-				}
-				break;
-			case 4 :
-				var l = ["jpunch","jskick","jkick"];
-				for (var i =0;i<l.length;i++){
-					let hup = current_stats.get(l[i]);hup.degats=Math.round(hup.degats+2+Math.sqrt(hup.degats));
-				}
-				break;
-			case 5 :
-				var hup = current_stats.get("huppercut");hup.slag=Math.ceil(hup.slag*0.7);
-				break;
-			case 6 :
-				var l = ["lpunch","lkick","hpunch","mkick","hkick"];
-				for (var i =0;i<l.length;i++){
-					let hup = current_stats.get(l[i]);hup.degats=Math.round(hup.degats+2+Math.sqrt(hup.degats));
-				}
+			case 2:
+				if(current_weird==0){current_speedboost+=0.3*b;}
+				else if(current_weird==1){current_regen+=Math.round(30*b);current_pv = Math.min(current_pv+Math.round(30*b),current_maxpv)}
+				else if(current_weird==2){current_cdr+=30*b;}
 				break;
 		}
-
 	}
 
 	function buyphase(){
@@ -5097,20 +5083,20 @@ class IceClone{
 		ctx.font = "40px serif";
 		ctx.fillText("Potion",40,100);
 		ctx.fillText("B ("+prix_soigner.toString()+")",400,100);
+		var l2 = ["Speed (H)","Regen (H)","CDR (H)"];
+		var l = ["Max HP (N)","Atk (,)",l2[current_weird]]
 		if(!has_bought_augment){
-			ctx.fillText(nom_augments[presented_augments[0]],40,200);
-			ctx.fillText(nom_augments[presented_augments[1]],40,300);
-			ctx.fillText(nom_augments[presented_augments[2]],40,400);
-			ctx.fillText("N ("+prix_presented[0].toString()+")",400,200);
-			ctx.fillText(", ("+prix_presented[1].toString()+")",400,300);
-			ctx.fillText("H ("+prix_presented[2].toString()+")",400,400);
+			for(var i = 0;i<3;i++){
+				if(boosted==i){ctx.fillStyle = "yellow";}else{ctx.fillStyle = "white";}
+				ctx.fillText(l[i],40,200+i*100);
+			}
 		}
 		ctx.fillText("HP "+current_pv.toString()+"/"+current_maxpv.toString()+"  Score: "+score.toString(),200,500);
-		if(score>=prix_soigner && j1.poing==1){j1.poing=2;current_pv = Math.ceil((current_pv/3+current_maxpv*2/3));score-=prix_soigner;prix_soigner+=10000;}
+		if(score>=prix_soigner && j1.poing==1){j1.poing=2;current_pv = current_maxpv;score-=prix_soigner;prix_soigner+=10000;}
 		if(!has_bought_augment){
-			if(score>=prix_presented[0] && j1.jambe==1){j1.jambe=2;score-=prix_presented[0];has_bought_augment=true;buyaugment(presented_augments[0]);}
-			if(score>=prix_presented[1] && j1.special==1){j1.special=2;score-=prix_presented[1];has_bought_augment=true;buyaugment(presented_augments[0]);}
-			if(score>=prix_presented[2] && j1.dodge==1){j1.dodge=2;score-=prix_presented[2];has_bought_augment=true;buyaugment(presented_augments[0]);}
+			if(j1.jambe==1){j1.jambe=2;buyaugment(0)}
+			if(j1.special==1){j1.special=2;buyaugment(1)}
+			if(j1.dodge==1){j1.dodge=2;buyaugment(2);}
 		}
 		if(j1.jump){functiontoexecute = loop;reset_game(true);}
 	}
@@ -5190,6 +5176,7 @@ class IceClone{
 				else if(roundwonsj1>=2 || roundwonsj2>=2){
 					if(roundwonsj1>=2 && arcadelevel>=0){
 						arcadelevel+=1;
+						current_pv = Math.min(current_maxpv,current_pv+current_regen);
 						
 						// if(arcadelevel>8){
 						// 	reset_game(true);
@@ -5220,7 +5207,7 @@ class IceClone{
 						// 	functiontoexecute = test_your_sight_fun;
 						// }
 						tirer_augments();
-						functiontoexecute = buyphase; has_bought_augment = false;
+						functiontoexecute = buyphase; has_bought_augment = (arcadelevel%2!=0);boosted = randomInt(0,4); current_weird = randomInt(0,2);
 						return;
 					}
 					
@@ -5928,7 +5915,7 @@ class IceClone{
 				if(entre(clickx,80/1024,260/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=true;secondplayerisdummy=true;camerax=0;}
 				else if(entre(clickx,380/1024,620/1024)){
 					//var minigame = new GuessBarrel(ctx,j1,0,minigame_music,characteristics.get("liukang"));var test_your_might_fun = () => minigame.render();
-					functiontoexecute = menupersos;secondplayerishuman=false;arcadelevel=0;current_pv=-1;prix_soigner=10000;menupersoswav.play();	//minigamestest
+					functiontoexecute = menupersos;secondplayerishuman=false;arcadelevel=0;current_pv=-1;current_atk=1.;current_speedboost=1.;current_cdr=0;current_regen=0;prix_soigner=10000;menupersoswav.play();	//minigamestest
 					arcadeorder.shuffle();
 					if(!persosunlocked.get("reptile")){
 						var i = arcadeorder.indexOf("reptile");
@@ -6242,11 +6229,11 @@ class IceClone{
 	var haschangedchar = false; var initchar = "";
 	var score = 0; var matchscore = 0; var roundscore = 0;
 	var old_stats = null; var new_stats = null; var highscore_screen_cpt = 0;
-	var current_pv = 0; var current_maxpv = 0; var prix_soigner = 10000; var current_stats = undefined; var has_bought_augment = false;
-	var presented_augments = [0,0,0]; var prix_presented = [0,0,0];
+	var current_pv = 0; var current_maxpv = 0; var prix_soigner = 10000; var current_stats = undefined; var has_bought_augment = false; var current_atk = 1.; var current_speedboost = 0; var current_cdr = 0; var current_regen = 0; var current_weird = 0;
+	var presented_augments = [0,0,0]; var prix_presented = [0,0,0]; var boosted = 0;
 	var prix_augments = [15000,5000,5000,10000,4000,4000,10000]; var nom_augments = ["Max HP","Hupp","Kick","grounds","Air","FastHup","Stands"];
 	var nb_augments = prix_augments.length;
-	var difficulty_list = [-1,-1,0,0,0,1,1,1,1,2,2,2,2,2,3]
+	var difficulty_list = [-1,-1,0,0,0,1,1,1,1]; var atk_list = [0.,0.,0.,0.,0.1,0.1,0.1,0.1,0.2];
 
 	var fatality_testing = false;
 
