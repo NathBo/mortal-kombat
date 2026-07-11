@@ -2248,7 +2248,7 @@ class IceClone{
 			if(s == "boltthrow#"){this.orientation*=-1;}
 			if(stats.coupwav != ""){play_sound_eff(stats.coupwav);}
 			this.cooldowns[cd] = Math.round(this.charac.cds[cd]*100/(100+this.cdr));
-			this.cooldowns[cd] = this.charac.cds[cd];
+			//this.cooldowns[cd] = this.charac.cds[cd];
 			if(movpriority.get(s)==70){this.jauge = Math.min(this.jaugemax,this.jauge+5);}
 			if(this.mov!="run")this.xspeed += stats.movx*this.orientation;
 			this.mov = s;
@@ -2430,10 +2430,11 @@ class IceClone{
 						shake_screen(10,3);
 						play_sound_eff("hhit");
 						var degs = Math.round(stats.degats*this.atk);
+						var degsjauge = degs*Math.sqrt(other.charac.pv/other.pvmax);
 						other.pv -= degs;
 						other.combo_deg += degs;
-						this.jauge = Math.min(this.jaugemax,this.jauge+Math.round(degs/3));
-						other.jauge = Math.min(other.jaugemax,other.jauge+Math.round(degs*0.7));
+						this.jauge = Math.min(this.jaugemax,this.jauge+Math.round(degsjauge/3));
+						other.jauge = Math.min(other.jaugemax,other.jauge+Math.round(degsjauge*0.7));
 						other.invincibilite=0;
 						other.combo_hits += 1;
 						if(other.pv<=0){other.killanim();}
@@ -2451,10 +2452,11 @@ class IceClone{
 					shake_screen(10,4);
 					play_sound_eff("hhit");
 					var degs = Math.round(stats.degats*this.atk);
+					var degsjauge = degs*Math.sqrt(other.charac.pv/other.pvmax);
 					other.pv -= degs;
 					other.combo_deg += degs;
-					this.jauge = Math.min(this.jaugemax,this.jauge+Math.round(degs/3));
-					other.jauge = Math.min(other.jaugemax,other.jauge+Math.round(degs*0.7));
+					this.jauge = Math.min(this.jaugemax,this.jauge+Math.round(degsjauge/3));
+					other.jauge = Math.min(other.jaugemax,other.jauge+Math.round(degsjauge*0.7));
 					other.invincibilite=0;
 					other.combo_hits += 1;
 					other.orientation = -this.orientation;
@@ -2463,11 +2465,12 @@ class IceClone{
 				else if(this.grabtype == "clapdash" && this.grabbing==4){play_sound_eff("gotcha");}
 				else if(this.grabbing == grabfdur/2 && this.grabtype == "bouncegrab"){
 					var degs = Math.round(10*this.atk);
+					var degsjauge = degs*Math.sqrt(other.charac.pv/other.pvmax);
 					other.losepv(degs);
 					other.combo_deg += degs;
 					other.combo_hits += 1;
-					this.jauge = Math.min(this.jaugemax,this.jauge+Math.round(degs/3));
-					other.jauge = Math.min(other.jaugemax,other.jauge+Math.round(degs*0.7));
+					this.jauge = Math.min(this.jaugemax,this.jauge+Math.round(degsjauge/3));
+					other.jauge = Math.min(other.jaugemax,other.jauge+Math.round(degsjauge*0.7));
 					play_sound_eff("mhit");
 					shake_screen(10,2);
 					lag_game(5);
@@ -3691,11 +3694,12 @@ class IceClone{
 				this.xspeed = stats.hurtx*other.orientation;
 				this.tb = stats.hurty;
 				var degs = Math.round(stats.degats*this.comboscaling*this.other.atk);
+				var degsjauge = degs*Math.sqrt(this.charac.pv/this.pvmax);
 				this.pv -= degs;
 				this.combo_deg += degs;
 				this.combo_hits += 1;
-				this.jauge = Math.min(this.jaugemax,this.jauge+Math.round(degs*0.7));
-				other.jauge = Math.min(other.jaugemax,other.jauge+Math.round(degs/3));
+				this.jauge = Math.min(this.jaugemax,this.jauge+Math.round(degsjauge*0.7));
+				other.jauge = Math.min(other.jaugemax,other.jauge+Math.round(degsjauge/3));
 				if(this.n==1 && secondplayerisdummy && this.pv<=0){this.pv=1;}
 				if(stats.comboscaling!==undefined){this.comboscaling-=stats.comboscaling;}
 				else{this.comboscaling -= 0.05;}
