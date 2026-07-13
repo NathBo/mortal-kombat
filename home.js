@@ -1553,6 +1553,57 @@ class IceClone{
 	}
 
 
+	class SurvivalHandler
+	{
+
+		static difficulty_prog = [-1,-1,-1,0,0,0,0,1,1];
+
+		constructor(){
+			this.currentpv = 0; this.active = false; this.level = -1;
+			this.currentmaxpv = 0;this.order = [...liste_persos];
+		}
+		activate(){
+			console.log("activate");
+			this.active = true;
+			this.level = 0;
+			secondplayerchosescharac = false;
+			this.order.shuffle();
+		}
+		select_char(char){
+			this.currentmaxpv = Math.round(characteristics.get(char).pv*1.5);
+			this.currentpv = this.currentmaxpv;
+		}
+		deactivate(){
+			this.active=false;
+			secondplayerchosescharac=true;
+			this.level=0;
+		}
+		is_active(){
+			return this.active;
+		}
+		get_stage(){
+			return arcadestagesorder[this.level%arcadestagesorder.length];
+		}
+		next_level(){
+			this.level+=1;
+		}
+		get_char_to_fight(){
+			return this.order[this.level%this.order.length];
+		}
+		set_currentpv(pv){
+			this.currentpv=pv;
+		}
+		get_difficulty(){
+			var l = SurvivalHandler.difficulty_prog.length;
+			return Math.floor(this.level/l)+SurvivalHandler.difficulty_prog[this.level%l];
+		}
+	}
+
+	function isinladder(){
+		return arcadelevel>=0 || survival_handler.is_active();
+	}
+
+
 	class AI
 	{
 		constructor(me,other,difficulty,behavior = "normal"){
@@ -1589,6 +1640,7 @@ class IceClone{
 			this.grade=grade;
 			if(this.difficulty<4 && arcadelevel>=0 && arcadelevel<=2){this.difficulty-=1;}
 			else if(this.difficulty<3 && arcadelevel==7){this.difficulty+=1;}
+			if(survival_handler.is_active()){this.difficulty=survival_handler.get_difficulty();}
 			switch(this.difficulty){
 				case -1:
 					this.donothingchance = 0.9;
@@ -2187,6 +2239,10 @@ class IceClone{
 			this.easy_wavedash = true; this.wanttowavedash = false; this.wavedashdir = 1;
 			this.running = 0; this.lastforward = 0; this.lastdir = 0; this.run_buffer = 0;
 			this.no_costume_control = false;
+
+			if(survival_handler.is_active() && this.n==0){
+				this.pvmax = survival_handler.currentmaxpv;this.pv=survival_handler.currentpv;this.pvaff=this.pv;
+			}
 		}
 
 		begincoup(s,other,ai_pass=false,follow_up=false){
@@ -2308,7 +2364,7 @@ class IceClone{
 			this.combo_affich_cpt = 45;
 			this.combo_affich_hits = hits;
 			this.combo_affich_percent = percent_deg;
-			if(arcadelevel>=0 && this.n==0){
+			if(isinladder() && this.n==0){
 				var score_to_add = (this.combo_affich_hits+5)*this.combo_affich_percent*5;
 				if(this.other.pv<=0){score_to_add*=2;}
 				if (score_to_add<=200){
@@ -3541,7 +3597,7 @@ class IceClone{
 
 		losepv(n){
 			this.pv-=n;
-			if(arcadelevel>=0 && this.n==0){damage_taken+=n;}
+			if(isinladder() && this.n==0){damage_taken+=n;}
 			if(this.pv<=0){
 				this.killanim();
 			}
@@ -3662,7 +3718,7 @@ class IceClone{
 				if(this.n==0 && !secondplayerishuman && stats.hiteffect != "projectile" && stats.hiteffect != "spear" && stats.hiteffect != "freeze" && stats.hiteffect != "iceflask" && stats.hiteffect != "projectile_fall" && stats.hiteffect != "unblockable_projectile_fall"){
 					other.ai.ugotahit();
 				}
-				if(this.n==1 && arcadelevel>=0 && !this.did_slowdown){
+				if(this.n==1 && isinladder() && !this.did_slowdown){
 					switch (other.mov){
 						case "huppercut":
 							score+=100;
@@ -4975,7 +5031,7 @@ class IceClone{
 		for(let value of objects_to_loop.values()){
 			if(value.vitesse!=100){value.afficher();}
 		}
-		if (arcadelevel>=0){
+		if (isinladder()){
 			ctx.fillStyle = "white";
 			ctx.font = "25px Luminari";
 			ctx.fillText("Score: "+score.toString(),80,22);
@@ -4988,7 +5044,10 @@ class IceClone{
 		if(j1.pv<=0){
 			musiques[chosenstage].pause();
 			j1.pv=0;
-			if(j2.pv>0){roundwonsj2 ++;}
+			if(j2.pv>0){
+				roundwonsj2 ++;
+				if(survival_handler.is_active()){roundwonsj2 ++;}
+			}
 			if(roundwonsj2>=2 && finishhim==0){
 				finishhim = 300;
 			}
@@ -5000,7 +5059,10 @@ class IceClone{
 		if(j2.pv<=0){
 			musiques[chosenstage].pause();
 			j2.pv=0;
-			if(j1.pv>0){roundwonsj1 ++;}
+			if(j1.pv>0){
+				roundwonsj1 ++;
+				if(survival_handler.is_active()){roundwonsj1 ++;}
+			}
 			if(roundwonsj1>=2 && finishhim==0 && j2.perso!="shao_kahn"){
 				finishhim = 300;
 			}
@@ -5030,6 +5092,7 @@ class IceClone{
 		rounds_lost = 0; damage_taken = 0; time = 0; moves_used = 0;
 		haschangedchar = false; initchar = "";
 		saveStats();
+		survival_handler.deactivate();
 		is_in_charc_screen = true; secondplayerchosescharac=true; secondplayerisdummy=false; youareintutorial = false;
 		reset_game(true);
 		reset_for_charac_screen(0);
@@ -5040,6 +5103,7 @@ class IceClone{
 	function choserandomstage(){
 		chosenstage = Math.floor(Math.random()*numberofstages);
 		if(arcadelevel>=0){chosenstage = arcadestagesorder[arcadelevel];}
+		if(survival_handler.is_active()){chosenstage = survival_handler.get_stage();}
 		ground = grounds[chosenstage];
 		stage_size = stagesizes[chosenstage];
 	}
@@ -5136,6 +5200,27 @@ class IceClone{
 						}
 						return;
 					}
+					else if(survival_handler.is_active()){
+						if(j1.pv<=0){
+							survival_handler.deactivate();
+							reset_game(true);
+							gobacktotitlescreen();
+							return;
+						}
+						else{
+							survival_handler.set_currentpv(j1.pv);
+							survival_handler.next_level();
+							var persos = [j1.perso,j2.perso]; var skins = [skinschoisis[0],skinschoisis[1]];
+							roundwonsj1 = 0; roundwonsj2 = 0; camerax = 0;
+							persolocked = [0,0];
+							persoschoisis[1] = survival_handler.get_char_to_fight();
+							skinschoisis[1] = randomInt(0,1);
+							choserandomstage();
+							if(persoschoisis[1]==persoschoisis[0]){skinschoisis[1]=(skinschoisis[0]+1)%2;}
+							reset_game(true);
+							return;
+						}
+					}
 					
 					if(eligible_reptile_challenge()){
 						secondplayerishuman=false;
@@ -5200,7 +5285,7 @@ class IceClone{
 						new_stats = {beaten : true, best_time : time, least_damage : damage_taken, rounds_lost : rounds_lost, moves_used : moves_used, best_score : score};
 					}
 				}
-				if (arcadelevel>=0 && j1.pv>0 && end_of_round_countdown == 7){
+				if (isinladder() && j1.pv>0 && end_of_round_countdown == 7){
 					timer-=180;
 					score+=30;
 					if(timer>0){
@@ -5210,7 +5295,7 @@ class IceClone{
 						timer=0;
 					}
 				}
-				if(arcadelevel>=0 && j1.pv>0 && entre(end_of_round_countdown,20,80)){
+				if(isinladder() && j1.pv>0 && entre(end_of_round_countdown,20,80)){
 					var score_to_add = round_of(j1.pv/j1.pvmax*1000,50);
 					if(j1.pv==j1.pvmax){score_to_add = 2000+arcadelevel*500;}
 					if(end_of_round_countdown==80){score+=score_to_add}
@@ -5596,9 +5681,10 @@ class IceClone{
 			lockincountdown++;
 			if(lockincountdown>=lockincountdownfdur){
 				lockincountdown=0;
-				persoschoisis = [ordre_persos[persosovered[0][0]][persosovered[0][1]],ordre_persos[persosovered[1][0]][persosovered[1][1]]]
+				persoschoisis = [ordre_persos[persosovered[0][0]][persosovered[0][1]],ordre_persos[persosovered[1][0]][persosovered[1][1]]];
 				if(!secondplayerchosescharac){
-					if(arcadelevel==liste_persos.length){
+					if(survival_handler.is_active()){survival_handler.select_char(persoschoisis[0]);persoschoisis[1]=survival_handler.get_char_to_fight();}
+					else if(arcadelevel==liste_persos.length){
 						persoschoisis[1] = "shao_kahn";
 					}
 					else{
@@ -5787,7 +5873,7 @@ class IceClone{
 		var a = -1;
 		let m = stage_size/2-256;
 		if(entre(clicky,340/500,380/500)){
-			if(entre(clickx,80/1024,280/1024)){a=0;}
+			if(entre(clickx,80/1024,240/1024)){a=0;}
 			else if(entre(clickx,380/1024,610/1024)){a=1;}
 			else if(entre(clickx,740/1024,930/1024)){a=2;}
 		}
@@ -5814,7 +5900,7 @@ class IceClone{
 		ctx.fillStyle = "white";
 		if(a==0){ctx.fillStyle = color}
 		ctx.font = "40px serif";
-		ctx.fillText("Fight CPU",80*0.86,370);
+		ctx.fillText("Survival",80*0.86,370);
 		ctx.fillStyle = "white";
 		if(a==1){ctx.fillStyle = color}
 		ctx.fillText("Versus mode",380*0.86,370);
@@ -5833,7 +5919,7 @@ class IceClone{
 		if(click==1){
 			click=2;
 			if(entre(clicky,340/500,380/500)){
-				if(entre(clickx,80/1024,280/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=false;camerax=0;}
+				if(entre(clickx,80/1024,240/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=false;camerax=0;survival_handler.activate();}
 				else if(entre(clickx,380/1024,610/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=true;camerax=0;}
 				else if(entre(clickx,740/1024,930/1024)){functiontoexecute = parameters_screen;}
 			}
@@ -6157,6 +6243,8 @@ class IceClone{
 	var old_stats = null; var new_stats = null; var highscore_screen_cpt = 0;
 
 	var fatality_testing = false;
+
+	var survival_handler = new SurvivalHandler();
 
 	
 	function saveStats(){
