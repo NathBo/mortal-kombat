@@ -1557,11 +1557,16 @@ class IceClone{
 	{
 
 		static difficulty_prog = [-1,-1,-1,0,0,0,0,1,1];
+		static random_augment_name = ["REGEN","CDR","SPEED"];
 
 		constructor(){
 			this.currentpv = 0; this.active = false; this.level = -1;
 			this.currentmaxpv = 0;this.order = [...liste_persos];
 			this.current_atk = 1.; this.current_regen = 0; this.current_cdr = 0; this.current_speed_boost = 1.;
+			this.option_list_str = ["POTION","MAX HP","ATTACK","CDR","QUIT"];
+			this.selected = 0; this.augment_opened=true; this.isinshop=false;
+			this.prixasoigner = 10000;
+			this.random_augment_choice = 0;
 		}
 		activate(){
 			console.log("activate");
@@ -1570,6 +1575,7 @@ class IceClone{
 			secondplayerchosescharac = false;
 			this.order.shuffle();
 			this.current_atk = 1.; this.current_regen = 0; this.current_cdr = 0; this.current_speed_boost = 1.;
+			this.prixasoigner = 10000;
 		}
 		select_char(char){
 			this.currentmaxpv = Math.round(characteristics.get(char).pv*1.5);
@@ -1579,6 +1585,7 @@ class IceClone{
 			this.active=false;
 			secondplayerchosescharac=true;
 			this.level=0;
+			this.isinshop=false;
 		}
 		is_active(){
 			return this.active;
@@ -1587,7 +1594,11 @@ class IceClone{
 			return arcadestagesorder[this.level%arcadestagesorder.length];
 		}
 		next_level(){
-			this.level+=1;
+			this.level+=1;this.isinshop=true;
+			this.random_augment_choice = randomInt(0,2);
+			this.augment_opened = (this.level%2==0);
+			if(this.augment_opened){this.option_list_str[3]=SurvivalHandler.random_augment_name[this.random_augment_choice];}
+			else{this.option_list_str[3]="???"}
 		}
 		get_char_to_fight(){
 			return this.order[this.level%this.order.length];
@@ -1598,6 +1609,34 @@ class IceClone{
 		get_difficulty(){
 			var l = SurvivalHandler.difficulty_prog.length;
 			return Math.floor(this.level/l)+SurvivalHandler.difficulty_prog[this.level%l];
+		}
+		get_description(){
+			switch(this.selected){
+				case 0:
+					return ["Full Heal","Costs "+this.prixasoigner.toString()+" points"];
+				case 4:
+					return ["U done?"];
+				case 1:
+					if(!this.augment_opened){return ["Unavailable"];}
+					return ["Max HP +40"];
+					break;
+				case 2:
+					if(!this.augment_opened){return ["Unavailable"];}
+					return ["Damage +30%","Currently "+Math.round(this.current_atk*100)+"%"];
+					break;
+				case 3:
+					if(!this.augment_opened){return ["Unavailable"];}
+					if(this.random_augment_choice==0){return ["Regen +30HP","Currently "+this.current_regen+"HP"];}
+					if(this.random_augment_choice==1){return ["+30 Cooldown","Reduction","Currently "+this.current_cdr];}
+					if(this.random_augment_choice==2){return ["Speed +20%","Currently "+Math.round(this.current_speed_boost*100)+"%"];}
+					break;
+			}
+		}
+		get_ennemystats(){
+			var atk = 1.; var hp=1.;
+			hp += this.level*0.1;
+			atk += Math.floor(this.level/9)*0.2+Math.floor(this.level**2/20)*0.05;
+			return {atk : atk, hp : hp};
 		}
 	}
 
@@ -2247,6 +2286,12 @@ class IceClone{
 				this.pvmax = survival_handler.currentmaxpv;this.pv=survival_handler.currentpv;this.pvaff=this.pv;
 				this.atk = survival_handler.current_atk; this.cdr = survival_handler.current_cdr;
 				this.speed_boost = survival_handler.current_speed_boost;
+			}
+			else if(survival_handler.is_active() && this.n==1){
+				var s = survival_handler.get_ennemystats();
+				this.pvmax = Math.round(this.pvmax*s.hp);this.pv=this.pvmax;this.pvaff=this.pv;
+				this.atk = s.atk;
+				console.log(this.pvmax,this.atk);
 			}
 		}
 
@@ -4624,7 +4669,7 @@ class IceClone{
 						break;
 				}
 			}
-			else if (this.y>0 && !is_in_charc_screen){
+			else if (this.y>0 && !is_in_charc_screen && !survival_handler.isinshop){
 				if(this.xspeed == 0){this.costume = "jump2";}
 				else{
 					
@@ -4771,7 +4816,7 @@ class IceClone{
 				ctx.filter = 'none';
 			}
 
-			if(!is_in_charc_screen){this.drawLife();}
+			if(!is_in_charc_screen && !survival_handler.isinshop){this.drawLife();}
 
 
 		
@@ -4953,6 +4998,137 @@ class IceClone{
 		}
 		play_sound_eff("explosion");
 		shake_screen(30,10);
+	}
+
+	function drawRoundedRect(ctx, x, y, width, height, radius) {
+		ctx.beginPath();
+		ctx.roundRect(x, y, width, height, radius);
+	}
+
+	function drawOptionBox(
+		ctx,
+		label,
+		x,
+		y,
+		width,
+		height,
+		selected,
+		available
+	) {
+		ctx.save();
+
+		// Fond
+		if (!available) {
+			ctx.fillStyle = "rgba(35, 30, 28, 0.85)";
+		} else if (selected) {
+			ctx.fillStyle = "rgba(230, 95, 15, 0.95)";
+		} else {
+			ctx.fillStyle = "rgba(20, 12, 8, 0.92)";
+		}
+
+		drawRoundedRect(ctx, x, y, width, height, 8);
+		ctx.fill();
+
+		// Bordure
+		ctx.lineWidth = selected ? 4 : 2;
+
+		if (!available) {
+			ctx.strokeStyle = "#5c4438";
+		} else if (selected) {
+			ctx.strokeStyle = "#ffcc66";
+		} else {
+			ctx.strokeStyle = "#b84b12";
+		}
+
+		ctx.stroke();
+
+		// Texte centré
+		ctx.font = selected
+			? "bold 22px sans-serif"
+			: "22px sans-serif";
+
+		ctx.textAlign = "center";
+		ctx.textBaseline = "middle";
+
+		if (!available) {
+			ctx.fillStyle = "#765f54";
+		} else if (selected) {
+			ctx.fillStyle = "#1a0800";
+		} else {
+			ctx.fillStyle = "#f0b070";
+		}
+
+		ctx.fillText(
+			label,
+			x + width / 2,
+			y + height / 2
+		);
+
+		ctx.restore();
+	}
+
+	function augment_shop(){
+		ctx.fillStyle = "black";
+		ctx.fillRect(0,0,dim_x,576);
+		for(var i=0;i<5;i++){
+			drawOptionBox(ctx,survival_handler.option_list_str[i],320,10+i*100,250,80,i==0 || i==4 || survival_handler.augment_opened,i==survival_handler.selected);
+		}
+		var l = survival_handler.get_description();
+		ctx.fillStyle = "white";
+		ctx.font = "30px serif";
+		for(var j=0;j<l.length;j++){
+			ctx.fillText(l[j],620,200+j*50);
+		}
+		ctx.fillText("Score: "+score.toString(),20,50);
+		ctx.fillText("HP: "+survival_handler.currentpv.toString()+"/"+survival_handler.currentmaxpv.toString(),20,100);
+		ctx.fillText("Next: "+survival_handler.get_char_to_fight(),20,440);
+		ctx.fillText("(round "+(survival_handler.level+1).toString()+")",20,480);
+		j1.y = 50;j1.x=-150;
+		j1.afficher(j2);
+		if(j1.haut==1){j1.haut=2;survival_handler.selected=(survival_handler.selected+4)%5}
+		if(j1.bas==1){j1.bas=2;survival_handler.selected=(survival_handler.selected+1)%5}
+		if(j1.poing==1){
+			j1.poing=2;
+			switch(survival_handler.selected){
+				case 4:
+					functiontoexecute = loop;survival_handler.selected=0;survival_handler.isinshop=false;reset_game(true);return;
+					break;
+				case 0:
+					if(survival_handler.currentpv!=survival_handler.currentmaxpv && score>=survival_handler.prixasoigner){
+						survival_handler.currentpv=survival_handler.currentmaxpv;
+						survival_handler.prixasoigner+=10000;
+					}
+				case 1:
+					if(survival_handler.augment_opened){
+						survival_handler.augment_opened=false;
+						survival_handler.currentmaxpv+=40;
+						survival_handler.currentpv+=40;
+					}
+					break;
+				case 2:
+					if(survival_handler.augment_opened){
+						survival_handler.augment_opened=false;
+						survival_handler.current_atk+=0.3;
+					}
+					break;
+				case 3:
+					if(survival_handler.augment_opened){
+						survival_handler.augment_opened=false;
+						switch(survival_handler.random_augment_choice){
+							case 0:
+								survival_handler.current_regen+=30;
+								break;
+							case 1:
+								survival_handler.current_cdr+=30;
+								break;
+							case 2:
+								survival_handler.current_speed_boost+=0.2;
+								break;
+						}
+					}
+					break;
+			}
+		}
 	}
 
 	function drawStage(){
@@ -5223,7 +5399,8 @@ class IceClone{
 							skinschoisis[1] = randomInt(0,1);
 							choserandomstage();
 							if(persoschoisis[1]==persoschoisis[0]){skinschoisis[1]=(skinschoisis[0]+1)%2;}
-							reset_game(true);
+							functiontoexecute = augment_shop;
+							reset_for_charac_screen(0);reset_for_charac_screen(1);
 							return;
 						}
 					}
