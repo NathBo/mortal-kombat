@@ -5070,9 +5070,11 @@ class IceClone{
 		ctx.restore();
 	}
 
+	
+
 	function augment_shop(){
-		ctx.fillStyle = "black";
-		ctx.fillRect(0,0,dim_x,576);
+		updateShopParticles();
+		drawShopBackground(ctx);
 		for(var i=0;i<5;i++){
 			drawOptionBox(ctx,survival_handler.option_list_str[i],320,10+i*100,250,80,i==0 || i==4 || survival_handler.augment_opened,i==survival_handler.selected);
 		}
@@ -5396,6 +5398,7 @@ class IceClone{
 						else{
 							survival_handler.set_currentpv(j1.pv);
 							survival_handler.next_level();
+							initShopParticles();
 							var persos = [j1.perso,j2.perso]; var skins = [skinschoisis[0],skinschoisis[1]];
 							roundwonsj1 = 0; roundwonsj2 = 0; camerax = 0;
 							persolocked = [0,0];
