@@ -1613,7 +1613,7 @@ class IceClone{
 		get_description(){
 			switch(this.selected){
 				case 0:
-					return ["Full Heal","Costs "+this.prixasoigner.toString()+" points"];
+					return ["Full Heal","Costs "+this.prixasoigner.toString()+" pts"];
 				case 4:
 					return ["U done?"];
 				case 1:
@@ -5075,12 +5075,13 @@ class IceClone{
 	function augment_shop(){
 		updateShopParticles();
 		drawShopBackground(ctx);
+		drawCharacterPlatform(ctx,70,260,140);
 		for(var i=0;i<5;i++){
-			drawOptionBox(ctx,survival_handler.option_list_str[i],320,10+i*100,250,80,i==0 || i==4 || survival_handler.augment_opened,i==survival_handler.selected);
+			drawPixelOptionBox(ctx,survival_handler.option_list_str[i],320,10+i*100,250,80,i==0 || i==4 || survival_handler.augment_opened,i==survival_handler.selected);
 		}
 		var l = survival_handler.get_description();
 		ctx.fillStyle = "white";
-		ctx.font = "30px serif";
+		ctx.font = "30px monospace";
 		for(var j=0;j<l.length;j++){
 			ctx.fillText(l[j],620,200+j*50);
 		}
@@ -5490,7 +5491,8 @@ class IceClone{
 				}
 				if(isinladder() && j1.pv>0 && entre(end_of_round_countdown,20,80)){
 					var score_to_add = round_of(j1.pv/j1.pvmax*1000,50);
-					if(j1.pv==j1.pvmax){score_to_add = 2000+arcadelevel*500;}
+					if(j1.pv==j1.pvmax && arcadelevel>0){score_to_add = 2000+arcadelevel*500;}
+					else if(j1.pv==j1.pvmax && survival_handler.is_active()){score_to_add = 2000+survival_handler.level*500;}
 					if(end_of_round_countdown==80){score+=score_to_add}
 					ctx.fillStyle = "yellow";
 					ctx.font = "30px serif";
