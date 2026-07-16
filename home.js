@@ -2265,13 +2265,12 @@ class IceClone{
 	{
 		constructor()
 		{
-			this.droite=0;this.gauche=0;this.haut=0;this.bas=0;
+			this.droite=0;this.gauche=0;this.haut=0;this.bas=0;this.poing=0;this.jambe=0;this.special=0;this.dodge=0; this.jump=0; this.enhance = 0;
 		}
 		reinit(x,y,perso,n,skin,other,reset_ai=true, allowedmoves = [], behavior = ""){
 			this.charac = characteristics.get(perso);
 			this.x = x; this.y = y; this.perso = perso; this.n = n; this.skin = this.charac.png[skin]; this.coordinates = this.charac.coordinates;
 			this.allowedmoves = allowedmoves; this.xinit = x; this.other = other;
-			this.poing=0;this.jambe=0;this.special=0;this.dodge=0; this.jump=0; this.enhance = 0;
 			this.forward = 0;this.back = 0;
 			this.did_slowdown = false;
 			this.jaugemax = 60; if(reset_ai){this.jauge=0;}
@@ -5116,14 +5115,14 @@ class IceClone{
 		ctx.fillText("(round "+(survival_handler.level+1).toString()+")",20,480);
 		j1.y = 50;j1.x=-150;
 		j1.afficher(j2);
-		if(j1.haut==1){j1.haut=2;survival_handler.selected=(survival_handler.selected+4)%5;play_sound_eff("cursor_move");}
-		if(j1.bas==1){j1.bas=2;survival_handler.selected=(survival_handler.selected+1)%5;play_sound_eff("cursor_move");}
+		if(j1.haut==1){j1.haut=2;survival_handler.selected=(survival_handler.selected+4)%5;play_sound_eff("cursor_move",0.7);}
+		if(j1.bas==1){j1.bas=2;survival_handler.selected=(survival_handler.selected+1)%5;play_sound_eff("cursor_move",0.7);}
 		if(j1.poing==1){
 			j1.poing=2;
 			switch(survival_handler.selected){
 				case 4:
 					functiontoexecute = loop;survival_handler.selected=0;survival_handler.isinshop=false;reset_game(true);
-					minigame_music.pause();
+					shop_music.pause();
 					return;
 					break;
 				case 0:
@@ -5131,42 +5130,47 @@ class IceClone{
 						survival_handler.currentpv=survival_handler.currentmaxpv;
 						score-=survival_handler.prixasoigner;
 						survival_handler.prixasoigner+=10000;
+						play_sound_eff("potion");
 					}
 					break;
 				case 1:
 					if(survival_handler.augment_opened){
 						survival_handler.augment_opened=false;
 						var a = 40;
-						if(survival_handler.boosted==survival_handler.selected){a=Math.round(a*1.5);}
+						if(survival_handler.boosted==survival_handler.selected){a=Math.round(a*1.5);play_sound_eff("compliment");}
 						survival_handler.currentmaxpv+=a;
 						survival_handler.currentpv+=a;
+						j1.vicpose=1;
+						play_sound_eff("powerup");
 					}
 					break;
 				case 2:
 					if(survival_handler.augment_opened){
 						var a = 0.3;
-						if(survival_handler.boosted==survival_handler.selected){a=a*1.5;}
+						if(survival_handler.boosted==survival_handler.selected){a=a*1.5;play_sound_eff("compliment");}
 						survival_handler.augment_opened=false;
 						survival_handler.current_atk+=a;
+						j1.vicpose=1;play_sound_eff("powerup");
 					}
 					break;
 				case 3:
 					if(survival_handler.augment_opened){
 						survival_handler.augment_opened=false;
+						j1.vicpose=1;play_sound_eff("powerup");
 						switch(survival_handler.random_augment_choice){
 							case 0:
 								var a = 30;
-								if(survival_handler.boosted==survival_handler.selected){a=Math.round(a*1.5);}
+								if(survival_handler.boosted==survival_handler.selected){a=Math.round(a*1.5);play_sound_eff("compliment");}
 								survival_handler.current_regen+=a;
 								break;
 							case 1:
 								var a = 30;
-								if(survival_handler.boosted==survival_handler.selected){a=Math.round(a*1.5);}
+								if(survival_handler.boosted==survival_handler.selected){a=Math.round(a*1.5);play_sound_eff("compliment");}
 								survival_handler.current_cdr+=a;
 								break;
 							case 2:
 								var a = 0.2;
-								if(survival_handler.boosted==survival_handler.selected){a=a*1.5;}
+								if(survival_handler.boosted==survival_handler.selected){a=a*1.5;play_sound_eff("compliment");}
 								survival_handler.current_speed_boost+=a;
 								break;
 						}
@@ -5447,7 +5451,7 @@ class IceClone{
 							skinschoisis[1] = randomInt(0,1);
 							choserandomstage();
 							if(persoschoisis[1]==persoschoisis[0]){skinschoisis[1]=(skinschoisis[0]+1)%2;}
-							minigame_music.currentTime=0;minigame_music.play();
+							shop_music.currentTime=0;shop_music.play();
 							functiontoexecute = augment_shop;
 							reset_for_charac_screen(0);reset_for_charac_screen(1);
 							return;
@@ -6340,6 +6344,8 @@ class IceClone{
 
 	sounds_eff.set("cursor_move",[document.querySelector('#cursorwav')]);
 	sounds_eff.set("ding",[document.querySelector('#dingwav')]);
+	sounds_eff.set("powerup",[document.querySelector('#powerupwav')]);
+	sounds_eff.set("potion",[document.querySelector('#potionwav')]);
 	sounds_eff.set("appear",[document.querySelector('#appearwav')]);
 
 	sounds_eff.set("coup",[document.querySelector('#coup1wav'),document.querySelector('#coup2wav'),document.querySelector('#coup3wav'),document.querySelector('#coup4wav'),document.querySelector('#coup5wav')]);
@@ -6365,6 +6371,9 @@ class IceClone{
 
 	var minigame_music = document.querySelector('#battleplanwav');
 	minigame_music.loop = true;
+
+	var shop_music = document.querySelector('#shopwav');
+	shop_music.loop = true;
 
 	var musiques = [document.querySelector('#towerwav'), document.querySelector('#deadpoolwav'), document.querySelector("#wastewav"), document.querySelector("#forestwav"),  document.querySelector("#gorowav"), document.querySelector("#mkwav")];
 	var musiquesalt = [document.querySelector('#toweraltwav'), document.querySelector('#deadpoolaltwav'), document.querySelector("#wastealtwav"), document.querySelector("#forestaltwav"),  document.querySelector("#goroaltwav"), document.querySelector("#mkwav")];
