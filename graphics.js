@@ -84,6 +84,7 @@ function drawPixelShopBackground(ctx, width, height) {
 function drawShopBackground(ctx) {
     drawPixelShopBackground(ctx,dim_x,500);
 
+
     drawShopParticles(ctx);
 }
 
@@ -179,3 +180,84 @@ function drawCharacterPlatform(ctx, x, y, width) {
 }
 
 
+
+const boostParticles = [];
+
+function spawnBoostParticle(x, y, width, height) {
+	const side = Math.floor(Math.random() * 3);
+
+	let px;
+	let py;
+
+	if (side === 0) {
+		// Bord inférieur
+		px = x + Math.random() * width;
+		py = y + height;
+	} else if (side === 1) {
+		// Bord gauche
+		px = x;
+		py = y + Math.random() * height;
+	} else {
+		// Bord droit
+		px = x + width;
+		py = y + Math.random() * height;
+	}
+
+	boostParticles.push({
+		x: Math.round(px),
+		y: Math.round(py),
+
+		vx: (Math.random() - 0.5) * 0.35,
+		vy: -(Math.random() * 0.5 + 0.25),
+
+		lifetime: Math.floor(Math.random() * 18 + 12),
+		maxLifetime: 30,
+
+		size: Math.random() < 0.7 ? 2 : 3
+	});
+}
+
+function updateBoostParticles() {
+	for (let i = boostParticles.length - 1; i >= 0; i--) {
+		const p = boostParticles[i];
+
+		p.x += p.vx;
+		p.y += p.vy;
+		p.lifetime--;
+
+		if (p.lifetime <= 0) {
+			boostParticles.splice(i, 1);
+		}
+	}
+}
+
+function drawBoostParticles(ctx) {
+	for (const p of boostParticles) {
+		const ratio = p.lifetime / p.maxLifetime;
+
+		if (ratio > 0.65) {
+			ctx.fillStyle = "#fff09a";
+		} else if (ratio > 0.35) {
+			ctx.fillStyle = "#ff9d19";
+		} else {
+			ctx.fillStyle = "#d83a00";
+		}
+
+		const size = ratio < 0.35 ? 1 : p.size;
+
+		ctx.fillRect(
+			Math.round(p.x),
+			Math.round(p.y),
+			size,
+			size
+		);
+	}
+}
+
+function updateBoostedButton(x, y, width, height, boosted) {
+	if (!boosted) return;
+
+	if (Math.random() < 0.7) {
+		spawnBoostParticle(x, y, width, height);
+	}
+}

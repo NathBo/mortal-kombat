@@ -1567,6 +1567,7 @@ class IceClone{
 			this.selected = 0; this.augment_opened=true; this.isinshop=false;
 			this.prixasoigner = 10000;
 			this.random_augment_choice = 0;
+			this.boosted = -1;
 		}
 		activate(){
 			console.log("activate");
@@ -1576,6 +1577,7 @@ class IceClone{
 			this.order.shuffle();
 			this.current_atk = 1.; this.current_regen = 0; this.current_cdr = 0; this.current_speed_boost = 1.;
 			this.prixasoigner = 10000;
+			this.boosted = -1;
 		}
 		select_char(char){
 			this.currentmaxpv = Math.round(characteristics.get(char).pv*1.5);
@@ -1597,6 +1599,12 @@ class IceClone{
 			this.level+=1;this.isinshop=true;
 			this.random_augment_choice = randomInt(0,2);
 			this.augment_opened = (this.level%2==0);
+			if(this.augment_opened && Math.random()<0.6){
+				this.boosted = randomInt(1,3);
+			}
+			else{
+				this.boosted=-1;
+			}
 			if(this.augment_opened){this.option_list_str[3]=SurvivalHandler.random_augment_name[this.random_augment_choice];}
 			else{this.option_list_str[3]="???"}
 		}
@@ -1618,17 +1626,32 @@ class IceClone{
 					return ["U done?"];
 				case 1:
 					if(!this.augment_opened){return ["Unavailable"];}
+					else if(this.boosted==1){return ["Max HP +60"]}
 					return ["Max HP +40"];
 					break;
 				case 2:
 					if(!this.augment_opened){return ["Unavailable"];}
-					return ["Damage +30%","Currently "+Math.round(this.current_atk*100)+"%"];
+					var a = "Damage +30%";
+					if(this.boosted==2){a = "Damage +45%"}
+					return [a,"Currently "+Math.round(this.current_atk*100)+"%"];
 					break;
 				case 3:
 					if(!this.augment_opened){return ["Unavailable"];}
-					if(this.random_augment_choice==0){return ["Regen +30HP","Currently "+this.current_regen+"HP"];}
-					if(this.random_augment_choice==1){return ["+30 Cooldown","Reduction","Currently "+this.current_cdr];}
-					if(this.random_augment_choice==2){return ["Speed +20%","Currently "+Math.round(this.current_speed_boost*100)+"%"];}
+					if(this.random_augment_choice==0){
+						var a = "Regen +30HP";
+						if(this.boosted==3){a = "Regen +45HP"}
+						return [a,"Currently "+this.current_regen+"HP"];
+					}
+					if(this.random_augment_choice==1){
+						var a = "+30 Cooldown";
+						if(this.boosted==3){a = "+45 Cooldown"}
+						return [a,"Reduction","Currently "+this.current_cdr];
+					}
+					if(this.random_augment_choice==2){
+						var a = "Speed +20%";
+						if(this.boosted==3){a = "Speed +30%"}
+						return [a,"Currently "+Math.round(this.current_speed_boost*100)+"%"];
+					}
 					break;
 			}
 		}
@@ -5077,8 +5100,11 @@ class IceClone{
 		drawShopBackground(ctx);
 		drawCharacterPlatform(ctx,70,260,140);
 		for(var i=0;i<5;i++){
+			updateBoostedButton(320, 10+i*100, 250, 80, i==survival_handler.boosted);
 			drawPixelOptionBox(ctx,survival_handler.option_list_str[i],320,10+i*100,250,80,i==0 || i==4 || survival_handler.augment_opened,i==survival_handler.selected);
 		}
+		updateBoostParticles();
+    	drawBoostParticles(ctx);
 		var l = survival_handler.get_description();
 		ctx.fillStyle = "white";
 		ctx.font = "20px PixelFont";
@@ -5108,14 +5134,18 @@ class IceClone{
 				case 1:
 					if(survival_handler.augment_opened){
 						survival_handler.augment_opened=false;
-						survival_handler.currentmaxpv+=40;
-						survival_handler.currentpv+=40;
+						var a = 40;
+						if(survival_handler.boosted==survival_handler.selected){a=Math.round(a*1.5);}
+						survival_handler.currentmaxpv+=a;
+						survival_handler.currentpv+=a;
 					}
 					break;
 				case 2:
 					if(survival_handler.augment_opened){
+						var a = 0.3;
+						if(survival_handler.boosted==survival_handler.selected){a=a*1.5;}
 						survival_handler.augment_opened=false;
-						survival_handler.current_atk+=0.3;
+						survival_handler.current_atk+=a;
 					}
 					break;
 				case 3:
@@ -5123,13 +5153,19 @@ class IceClone{
 						survival_handler.augment_opened=false;
 						switch(survival_handler.random_augment_choice){
 							case 0:
-								survival_handler.current_regen+=30;
+								var a = 30;
+								if(survival_handler.boosted==survival_handler.selected){a=Math.round(a*1.5);}
+								survival_handler.current_regen+=a;
 								break;
 							case 1:
-								survival_handler.current_cdr+=30;
+								var a = 30;
+								if(survival_handler.boosted==survival_handler.selected){a=Math.round(a*1.5);}
+								survival_handler.current_cdr+=a;
 								break;
 							case 2:
-								survival_handler.current_speed_boost+=0.2;
+								var a = 0.2;
+								if(survival_handler.boosted==survival_handler.selected){a=a*1.5;}
+								survival_handler.current_speed_boost+=a;
 								break;
 						}
 					}
