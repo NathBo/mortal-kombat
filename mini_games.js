@@ -59,7 +59,7 @@ class MiniGame{
 
     drawScore(){
         this.ctx.fillStyle = "yellow";
-        this.ctx.font = "40px Luminari";
+        this.ctx.font = "25px PixelFont";
         this.ctx.fillText("Score: "+(this.base_score+this.addi_score).toString(),20,42);
         if(this.show_score_cpt){
             this.show_score_cpt--;

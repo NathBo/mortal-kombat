@@ -1613,7 +1613,7 @@ class IceClone{
 		get_description(){
 			switch(this.selected){
 				case 0:
-					return ["Full Heal","Costs "+this.prixasoigner.toString()+" pts"];
+					return ["Full Heal","Costs "+this.prixasoigner.toString()];
 				case 4:
 					return ["U done?"];
 				case 1:
@@ -4882,7 +4882,7 @@ class IceClone{
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
 			ctx.fillStyle = "red";
-			ctx.font = "50px Luminari";
+			ctx.font = "30px PixelFont";
 			var timer_print = Math.max(Math.round(timer/60),0);
 			if (timer_print>=10){ctx.fillText(Math.max(Math.round(timer/60),0).toString(),485*0.86,60);}
 			else{ctx.fillText(Math.max(Math.round(timer/60),0).toString(),500*0.86,60);}
@@ -4890,11 +4890,11 @@ class IceClone{
 			if (this.combo_affich_cpt>0){
 				this.combo_affich_cpt--;
 				ctx.fillStyle = "yellow";
-				ctx.font = "30px Luminari";
+				ctx.font = "18px PixelFont";
 				if (this.combo_affich_cpt<=5){
 					ctx.globalAlpha = this.combo_affich_cpt*0.2;
 				}
-				var a = 46*0.86;var b = 700*0.86;
+				var a = 46*0.86;var b = 650*0.86;
 				var dec = 0;
 				if (this.combo_affich_cpt>=40){
 					dec = (this.combo_affich_cpt-40)*10;
@@ -5081,9 +5081,9 @@ class IceClone{
 		}
 		var l = survival_handler.get_description();
 		ctx.fillStyle = "white";
-		ctx.font = "30px monospace";
+		ctx.font = "20px PixelFont";
 		for(var j=0;j<l.length;j++){
-			ctx.fillText(l[j],620,200+j*50);
+			ctx.fillText(l[j],610,200+j*50);
 		}
 		ctx.fillText("Score: "+score.toString(),20,50);
 		ctx.fillText("HP: "+survival_handler.currentpv.toString()+"/"+survival_handler.currentmaxpv.toString(),20,100);
@@ -5166,9 +5166,9 @@ class IceClone{
 		drawStage();
 		if(fightstartcountdown>=60){
 			if(fightstartcountdown==129){roundswav[roundwonsj1+roundwonsj2].play();}
-			ctx.fillStyle = "red";
-			ctx.font = "50px Luminari";
-			ctx.fillText("Round "+((roundwonsj1+roundwonsj2+1).toString()),423*0.86,220);
+			ctx.fillStyle = "rgb(208, 14, 14)";
+			ctx.font = "35px PixelFont";
+			ctx.fillText("Round "+((roundwonsj1+roundwonsj2+1).toString()),390*0.86,220);
 		}
 		else if(fightstartcountdown){
 			if(fightstartcountdown==50){fightwav.play();}
@@ -5222,7 +5222,7 @@ class IceClone{
 		}
 		if (isinladder()){
 			ctx.fillStyle = "white";
-			ctx.font = "25px Luminari";
+			ctx.font = "15px PixelFont";
 			ctx.fillText("Score: "+score.toString(),80,22);
 		}
 
@@ -5305,10 +5305,10 @@ class IceClone{
 			ctx.fillStyle = "gray";
 			ctx.fillRect(412*0.86,150,200*0.86,60);
 			ctx.fillRect(412*0.86,250,200*0.86,60);
-			ctx.font = "40px serif";
+			ctx.font = "25px PixelFont";
 			ctx.fillStyle = "white";
-			ctx.fillText("Cancel",450*0.86,190);
-			ctx.fillText("Quit",470*0.86,290);
+			ctx.fillText("Cancel",430*0.86,190);
+			ctx.fillText("Quit",455*0.86,290);
 			if(click==1 && entre(clickx,412/1024,612/1034) && entre(clicky,150/500,210/500)){
 				click=2;if(youareintutorial){launchtutorial(currentuto);}else{gamepaused=false;musiques[chosenstage].play();}
 			}
@@ -5495,7 +5495,7 @@ class IceClone{
 					else if(j1.pv==j1.pvmax && survival_handler.is_active()){score_to_add = 2000+survival_handler.level*500;}
 					if(end_of_round_countdown==80){score+=score_to_add}
 					ctx.fillStyle = "yellow";
-					ctx.font = "30px serif";
+					ctx.font = "20px PixelFont";
 					if (end_of_round_countdown<=25){
 						ctx.globalAlpha = (end_of_round_countdown-20)*0.2;
 					}
@@ -5509,7 +5509,7 @@ class IceClone{
 				}
 				
 				if(end_of_round_countdown<=100 && eligible_reptile_challenge()){
-					ctx.font = "40px serif";
+					ctx.font = "25px PixelFont";
 					if((end_of_round_countdown/4)%2<1){
 						ctx.fillStyle = "white";
 					}
@@ -5693,17 +5693,17 @@ class IceClone{
 		if(secondplayerishuman){
 			ctx.drawImage(playericonpng,482*0.86,210);
 		}
-		else{
+		else if(!survival_handler.is_active()){
 			ctx.drawImage(boticonpng,482*0.86,210);
 			ctx.fillStyle = "white";
-			ctx.font = "18px serif";
+			ctx.font = "10px PixelFont";
 			ctx.fillText(difficultynames[difficulte],410*0.86,220);
-			ctx.fillText(" -   +",420*0.86,240);
+			ctx.fillText(" -  +",400*0.86,240);
 		}
 		if(click==1){
 			click=2;
 			if(entre(clickx,482/512,505/512) && entre(clicky,210/250,241/250) && secondplayerchosescharac){secondplayerishuman = !secondplayerishuman}
-			if(!secondplayerishuman && entre(clickx,415/512,435/512) && entre(clicky,230/250,240/250) && arcadelevel<=0){difficulte = Math.max(difficulte-1,0)}
+			if(!secondplayerishuman && entre(clickx,405/512,425/512) && entre(clicky,230/250,240/250) && arcadelevel<=0){difficulte = Math.max(difficulte-1,0)}
 			if(!secondplayerishuman && entre(clickx,440/512,454/512) && entre(clicky,230/250,240/250) && arcadelevel<=0){difficulte = Math.min(difficulte+1,difficultynames.length-1)}
 			if(entre(clickx,400/1024,610/1024) && entre(clicky,450/500,480/500)){persolocked = [0,0]; skinschoisis = [0,0];gobacktotitlescreen();menupersoswav.pause();menupersoswav.currentTime=0;return;}
 		}
@@ -5908,7 +5908,7 @@ class IceClone{
 			var a = statistics.get(ordre_persos[persosovered[0][0]][persosovered[0][1]])[difficulte];
 			if (a.beaten){
 				ctx.fillStyle = "white";
-				ctx.font = "30px serif";
+				ctx.font = "16px PixelFont";
 				var time = Math.round(a.best_time/60*100)/100;
 				var minutes = Math.floor(time/60);
 				var seconds = time%60;
@@ -5924,7 +5924,7 @@ class IceClone{
 			}
 			else{
 				ctx.fillStyle = "red";
-				ctx.font = "30px serif";
+				ctx.font = "12px PixelFont";
 				ctx.fillText("Not yet beaten",820*0.86,400);
 			}
 			if(!haschangedchar && initchar!="" && ordre_persos[persosovered[0][0]][persosovered[0][1]]!=initchar){
@@ -6068,14 +6068,14 @@ class IceClone{
 		var a = -1;
 		let m = stage_size/2-256;
 		if(entre(clicky,340/500,380/500)){
-			if(entre(clickx,80/1024,240/1024)){a=0;}
-			else if(entre(clickx,380/1024,610/1024)){a=1;}
-			else if(entre(clickx,740/1024,930/1024)){a=2;}
+			if(entre(clickx,70/1024,290/1024)){a=0;}
+			else if(entre(clickx,400/1024,600/1024)){a=1;}
+			else if(entre(clickx,740/1024,920/1024)){a=2;}
 		}
 		else if(entre(clicky,400/500,440/500)){
-			if(entre(clickx,80/1024,260/1024)){a=3;}
-			else if(entre(clickx,380/1024,620/1024)){a=4;}
-			else if(entre(clickx,740/1024,910/1024)){a=5;}
+			if(entre(clickx,70/1024,290/1024)){a=3;}
+			else if(entre(clickx,400/1024,600/1024)){a=4;}
+			else if(entre(clickx,730/1024,940/1024)){a=5;}
 		}
 		camerax+=menudirectionx*0.2;
 		if(camerax<-m+10){menudirectionx+=1;}
@@ -6094,45 +6094,42 @@ class IceClone{
 		var color = "red";
 		ctx.fillStyle = "white";
 		if(a==0){ctx.fillStyle = color}
-		ctx.font = "40px serif";
-		ctx.fillText("Survival",80*0.86,370);
+		ctx.font = "25px PixelFont";
+		ctx.fillText("Survival",70*0.86,370);
 		ctx.fillStyle = "white";
 		if(a==1){ctx.fillStyle = color}
-		ctx.fillText("Versus mode",380*0.86,370);
+		ctx.fillText("Versus",420*0.86,370);
 		ctx.fillStyle = "white";
 		if(a==2){ctx.fillStyle = color}
-		ctx.fillText("Parameters",740*0.86,370);
+		ctx.fillText("Params",750*0.86,370);
 		ctx.fillStyle = "white";
 		if(a==4){ctx.fillStyle = color}
-		ctx.fillText("Arcade mode",380*0.86,430);
+		ctx.fillText("Arcade",420*0.86,430);
 		ctx.fillStyle = "white";
 		if(a==3){ctx.fillStyle = color}
-		ctx.fillText("Training",80*0.86,430);
+		ctx.fillText("Training",70*0.86,430);
 		ctx.fillStyle = "white";
 		if(a==5){ctx.fillStyle = color}
-		ctx.fillText("Tutorials",740*0.86,430);
+		ctx.fillText("Tutorial",730*0.86,430);
 		if(click==1){
 			click=2;
-			if(entre(clicky,340/500,380/500)){
-				if(entre(clickx,80/1024,240/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=false;camerax=0;survival_handler.activate();}
-				else if(entre(clickx,380/1024,610/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=true;camerax=0;}
-				else if(entre(clickx,740/1024,930/1024)){functiontoexecute = parameters_screen;}
-			}
-			else if(entre(clicky,400/500,440/500)){
-				if(entre(clickx,80/1024,260/1024)){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=true;secondplayerisdummy=true;camerax=0;}
-				else if(entre(clickx,380/1024,620/1024)){
-					//var minigame = new GuessBarrel(ctx,j1,0,minigame_music,characteristics.get("liukang"));var test_your_might_fun = () => minigame.render();
-					functiontoexecute = menupersos;secondplayerishuman=false;arcadelevel=0;menupersoswav.play();	//minigamestest
-					arcadeorder.shuffle();
-					if(!persosunlocked.get("reptile")){
-						var i = arcadeorder.indexOf("reptile");
-						arcadeorder[i]=arcadeorder[2];
-						arcadeorder[2]="reptile";
-					}
-					secondplayerchosescharac=false;camerax=0;
+			if(a==0){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=false;camerax=0;survival_handler.activate();}
+			else if(a==1){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=true;camerax=0;}
+			else if(a==2){functiontoexecute = parameters_screen;}
+			if(a==3){functiontoexecute = menupersos;menupersoswav.play();secondplayerishuman=true;secondplayerisdummy=true;camerax=0;}
+			else if(a==4){
+				//var minigame = new GuessBarrel(ctx,j1,0,minigame_music,characteristics.get("liukang"));var test_your_might_fun = () => minigame.render();
+				functiontoexecute = menupersos;secondplayerishuman=false;arcadelevel=0;menupersoswav.play();	//minigamestest
+				arcadeorder.shuffle();
+				if(!persosunlocked.get("reptile")){
+					var i = arcadeorder.indexOf("reptile");
+					arcadeorder[i]=arcadeorder[2];
+					arcadeorder[2]="reptile";
 				}
-				else if(entre(clickx,740/1024,910/1024)){youareintutorial=true; secondplayerishuman = false; tutorialscenenumber = 0; functiontoexecute = menututo;}
+				secondplayerchosescharac=false;camerax=0;
 			}
+			else if(a==5){youareintutorial=true; secondplayerishuman = false; tutorialscenenumber = 0; functiontoexecute = menututo;}
+		
 		}
 	}
 
@@ -6210,6 +6207,7 @@ class IceClone{
 			functiontoexecute = loop;
 		}
 	}
+
 
 
 	var screenCanvas = document.getElementById("canvas");

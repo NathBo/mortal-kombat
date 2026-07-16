@@ -147,7 +147,7 @@ function drawPixelOptionBox(
 	ctx.fillRect(x, y + height - 3, 3, 3);
 	ctx.fillRect(x + width - 3, y + height - 3, 3, 3);
 
-	ctx.font = "30px monospace"; // idéalement une vraie police pixel
+	ctx.font = "20px PixelFont"; // idéalement une vraie police pixel
 	ctx.textAlign = "center";
 	ctx.textBaseline = "middle";
 	ctx.fillStyle = text;
