@@ -1656,7 +1656,7 @@ class IceClone{
 			}
 		}
 		get_ennemystats(){
-			var atk = 1.; var hp=1.;
+			var atk = 1.; var hp=0.7;
 			hp += this.level*0.1;
 			atk += Math.floor(this.level/9)*0.2+Math.floor(this.level**2/50)*0.05;
 			return {atk : atk, hp : hp};
@@ -2431,12 +2431,13 @@ class IceClone{
 				}
 		}
 
-		affich_combo(percent_deg,hits){
+		affich_combo(percent_deg,hits,degs){
 			this.combo_affich_cpt = 45;
 			this.combo_affich_hits = hits;
 			this.combo_affich_percent = percent_deg;
 			if(isinladder() && this.n==0){
 				var score_to_add = (this.combo_affich_hits+5)*this.combo_affich_percent*5;
+				if(survival_handler.is_active()){score_to_add=(this.combo_affich_hits+5)*degs*5}
 				if(this.other.pv<=0){score_to_add*=2;}
 				if (score_to_add<=200){
 					score_to_add = round_of(score_to_add,50);
@@ -2460,7 +2461,7 @@ class IceClone{
 
 		end_of_official_combo(){
 			if (this.combo_hits>1){
-				this.other.affich_combo(Math.round(this.combo_deg/this.pvmax*100),this.combo_hits);
+				this.other.affich_combo(Math.round(this.combo_deg/this.pvmax*100),this.combo_hits,this.combo_deg);
 			}
 			this.combo_deg = 0;
 			this.combo_hits = 0;
