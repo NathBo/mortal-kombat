@@ -17,7 +17,7 @@ function drawShopParticles(ctx) {
 		const y = Math.round(p.y);
 
 		ctx.globalAlpha = p.alpha;
-		ctx.fillStyle = p.ember ? "#e86100" : "#9b8d82";
+		ctx.fillStyle = p.ember ? "#00c5e8" : "#9b8d82";
 
 		if (p.ember) {
 			ctx.fillRect(x, y, 2, 1);
@@ -44,7 +44,7 @@ function createShopParticle() {
 
 		alpha: Math.random() * 0.5 + 0.2,
 		ember: Math.random() < 0.4,
-		shape: Math.floor(Math.random() * 5+2)
+		shape: Math.floor(Math.random() * 10+4)
 	};
 }
 
@@ -66,24 +66,18 @@ function updateShopParticles() {
 	}
 }
 
-function drawPixelShopBackground(ctx, width, height) {
-	ctx.fillStyle = "#050303";
-	ctx.fillRect(0, 0, width, height);
 
-	ctx.fillStyle = "#0c0504";
-	ctx.fillRect(0, Math.floor(height * 0.45), width, Math.ceil(height * 0.25));
-
-	ctx.fillStyle = "#160605";
-	ctx.fillRect(0, Math.floor(height * 0.70), width, Math.ceil(height * 0.15));
-
-	ctx.fillStyle = "#200706";
-	ctx.fillRect(0, Math.floor(height * 0.85), width, Math.ceil(height * 0.15));
-}
 
 
 function drawShopBackground(ctx) {
-    drawPixelShopBackground(ctx,dim_x,500);
-
+    ctx.fillStyle="black";
+    ctx.fillRect(0,0,dim_x,500);
+    ctx.scale(2,2);
+    ctx.globalAlpha = 0.5;
+    ctx.drawImage(fountainpng,0,-600);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(1,1);
+    ctx.globalAlpha=1.;
 
     drawShopParticles(ctx);
 }
@@ -114,7 +108,7 @@ function drawPixelOptionBox(
 	if (!available && !selected) {
 		outer = "#3c3c3c";
 		inner = "#17110f";
-		text = "#665047";
+		text = "#564a45";
 	} else if (!available) {
 		outer = "#4b3429";
 		inner = "#17110f";
@@ -124,9 +118,9 @@ function drawPixelOptionBox(
 		inner = "#d94c00";
 		text = "#170900";
 	} else {
-		outer = "#75401f";
+		outer = "#89481f";
 		inner = "#17100d";
-		text = "#b77a50";
+		text = "#b45211";
 	}
 
 	// Bordure extérieure

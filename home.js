@@ -5098,7 +5098,6 @@ class IceClone{
 	function augment_shop(){
 		updateShopParticles();
 		drawShopBackground(ctx);
-		drawCharacterPlatform(ctx,70,260,140);
 		for(var i=0;i<5;i++){
 			updateBoostedButton(320, 10+i*100, 250, 80, i==survival_handler.boosted);
 			drawPixelOptionBox(ctx,survival_handler.option_list_str[i],320,10+i*100,250,80,i==0 || i==4 || survival_handler.augment_opened,i==survival_handler.selected);
@@ -5128,6 +5127,7 @@ class IceClone{
 				case 0:
 					if(survival_handler.currentpv!=survival_handler.currentmaxpv && score>=survival_handler.prixasoigner){
 						survival_handler.currentpv=survival_handler.currentmaxpv;
+						score-=survival_handler.prixasoigner;
 						survival_handler.prixasoigner+=10000;
 					}
 					break;
