@@ -1616,7 +1616,7 @@ class IceClone{
 		}
 		get_difficulty(){
 			var l = SurvivalHandler.difficulty_prog.length;
-			return Math.floor(this.level/l)+SurvivalHandler.difficulty_prog[this.level%l];
+			return Math.min(Math.floor(this.level/l)+SurvivalHandler.difficulty_prog[this.level%l],3);
 		}
 		get_description(){
 			switch(this.selected){
@@ -1658,7 +1658,7 @@ class IceClone{
 		get_ennemystats(){
 			var atk = 1.; var hp=1.;
 			hp += this.level*0.1;
-			atk += Math.floor(this.level/9)*0.2+Math.floor(this.level**2/20)*0.05;
+			atk += Math.floor(this.level/9)*0.2+Math.floor(this.level**2/50)*0.05;
 			return {atk : atk, hp : hp};
 		}
 	}
@@ -3866,7 +3866,7 @@ class IceClone{
 					shake_screen(25,6);lag_game(20);
 				}
 			}
-			musiques[chosenstage].pause();
+			chosenmusic.pause();
 			roundover_musiques[chosenstage].play();
 			if(finishhim){end_of_round_countdown=180;finishhim=0;}
 		}
@@ -5116,13 +5116,15 @@ class IceClone{
 		ctx.fillText("(round "+(survival_handler.level+1).toString()+")",20,480);
 		j1.y = 50;j1.x=-150;
 		j1.afficher(j2);
-		if(j1.haut==1){j1.haut=2;survival_handler.selected=(survival_handler.selected+4)%5}
-		if(j1.bas==1){j1.bas=2;survival_handler.selected=(survival_handler.selected+1)%5}
+		if(j1.haut==1){j1.haut=2;survival_handler.selected=(survival_handler.selected+4)%5;play_sound_eff("cursor_move");}
+		if(j1.bas==1){j1.bas=2;survival_handler.selected=(survival_handler.selected+1)%5;play_sound_eff("cursor_move");}
 		if(j1.poing==1){
 			j1.poing=2;
 			switch(survival_handler.selected){
 				case 4:
-					functiontoexecute = loop;survival_handler.selected=0;survival_handler.isinshop=false;reset_game(true);return;
+					functiontoexecute = loop;survival_handler.selected=0;survival_handler.isinshop=false;reset_game(true);
+					minigame_music.pause();
+					return;
 					break;
 				case 0:
 					if(survival_handler.currentpv!=survival_handler.currentmaxpv && score>=survival_handler.prixasoigner){
@@ -5208,7 +5210,7 @@ class IceClone{
 		}
 		else if(fightstartcountdown){
 			if(fightstartcountdown==50){fightwav.play();}
-			else if(fightstartcountdown==1 && musiqueon){musiques[chosenstage].currentTime=0;musiques[chosenstage].play();}
+			else if(fightstartcountdown==1 && musiqueon){chosenmusic.currentTime=0;chosenmusic.play();}
 			ctx.scale(3,3);
 			if(fightstartcountdown%6>=3){ctx.drawImage(fightrediconpng,117*0.86,50);}
 			else{ctx.drawImage(fightyellowiconpng,117*0.86,50);}
@@ -5267,7 +5269,7 @@ class IceClone{
 
 	function checkforend(){
 		if(j1.pv<=0){
-			musiques[chosenstage].pause();
+			chosenmusic.pause();
 			j1.pv=0;
 			if(j2.pv>0){
 				roundwonsj2 ++;
@@ -5282,7 +5284,7 @@ class IceClone{
 			}
 		}
 		if(j2.pv<=0){
-			musiques[chosenstage].pause();
+			chosenmusic.pause();
 			j2.pv=0;
 			if(j1.pv>0){
 				roundwonsj1 ++;
@@ -5305,6 +5307,8 @@ class IceClone{
 		j1.reinit(-120,0,persoschoisis[0],0,skinschoisis[0],j2,reset_ai);j2.reinit(120,0,persoschoisis[1],1,skinschoisis[1],j1,reset_ai);frame_delay = base_frame_delay;
 		cpt = 0; objects_to_loop.clear();
 		end_of_round_countdown=0;
+		if(survival_handler.is_active()){chosenmusic = musiquesalt[chosenstage];}
+		else{chosenmusic = musiques[chosenstage];}
 		if(introon && !secondplayerisdummy){fightstartcountdown = 130;}else{fightstartcountdown=1;}
 		fatalitywasdone = false; fatalitysreen = 0;
 		if(fatality_testing){roundwonsj1 = 1;j2.pv=1;j2.pvaff=1;fightstartcountdown=1;}
@@ -5337,7 +5341,7 @@ class IceClone{
 	function loop(){
 		resizecanvas();
 		if(gamepaused){
-			if(pausepressed==1){pausepressed=2;gamepaused=false;musiques[chosenstage].play();}
+			if(pausepressed==1){pausepressed=2;gamepaused=false;chosenmusic.play();}
 			ctx.fillStyle = "gray";
 			ctx.fillRect(412*0.86,150,200*0.86,60);
 			ctx.fillRect(412*0.86,250,200*0.86,60);
@@ -5346,13 +5350,13 @@ class IceClone{
 			ctx.fillText("Cancel",430*0.86,190);
 			ctx.fillText("Quit",455*0.86,290);
 			if(click==1 && entre(clickx,412/1024,612/1034) && entre(clicky,150/500,210/500)){
-				click=2;if(youareintutorial){launchtutorial(currentuto);}else{gamepaused=false;musiques[chosenstage].play();}
+				click=2;if(youareintutorial){launchtutorial(currentuto);}else{gamepaused=false;chosenmusic.play();}
 			}
 			else if(click==1 && entre(clickx,412/1024,612/1024) && entre(clicky,250/500,310/500)){click=2;reset_game(true);gobacktotitlescreen();}
 			return;
 		}
 		else{
-			if(pausepressed==1){pausepressed=2;if(j1.pv>0 && j2.pv>0 && fightstartcountdown==0){gamepaused=true;musiques[chosenstage].pause();}}
+			if(pausepressed==1){pausepressed=2;if(j1.pv>0 && j2.pv>0 && fightstartcountdown==0){gamepaused=true;chosenmusic.pause();}}
 		}
 		if(gamefreeze){gamefreeze--;}
 		else{
@@ -5443,6 +5447,7 @@ class IceClone{
 							skinschoisis[1] = randomInt(0,1);
 							choserandomstage();
 							if(persoschoisis[1]==persoschoisis[0]){skinschoisis[1]=(skinschoisis[0]+1)%2;}
+							minigame_music.currentTime=0;minigame_music.play();
 							functiontoexecute = augment_shop;
 							reset_for_charac_screen(0);reset_for_charac_screen(1);
 							return;
@@ -5621,7 +5626,7 @@ class IceClone{
 				ctx.fillStyle = "white";
 				ctx.font = "20px serif";
 				printAtWordWrap(ctx,currentuto.msg, 332*0.86, 140, 22, 360*0.86);
-				if(j1.poing==1){j1.poing=2;fightstartcountdown=0;musiques[chosenstage].play();}
+				if(j1.poing==1){j1.poing=2;fightstartcountdown=0;chosenmusic.play();}
 			}
 			else {fightstartcountdown--;}
 		}
@@ -5924,9 +5929,9 @@ class IceClone{
 					skinschoisis[1] = randomInt(0,1);
 					if(persolocked[0] && persoschoisis[1]==persoschoisis[0]){skinschoisis[1]=(skinschoisis[0]+1)%2;}
 				}
-				reset_game(true);
 				is_in_charc_screen = false;
 				choserandomstage();
+				reset_game(true);
 				if(arcadelevel>=0 && initchar==""){initchar=persoschoisis[0];score=0;}
 				else if(arcadelevel>=0 && initchar!=persoschoisis[0]){haschangedchar=true;}
 				functiontoexecute = loop;
@@ -6362,9 +6367,15 @@ class IceClone{
 	minigame_music.loop = true;
 
 	var musiques = [document.querySelector('#towerwav'), document.querySelector('#deadpoolwav'), document.querySelector("#wastewav"), document.querySelector("#forestwav"),  document.querySelector("#gorowav"), document.querySelector("#mkwav")];
+	var musiquesalt = [document.querySelector('#toweraltwav'), document.querySelector('#deadpoolaltwav'), document.querySelector("#wastealtwav"), document.querySelector("#forestaltwav"),  document.querySelector("#goroaltwav"), document.querySelector("#mkwav")];
 	var roundover_musiques = [document.querySelector('#towerroundoverwav'),document.querySelector('#deadpoolroundoverwav'),document.querySelector("#wasteroundoverwav"), document.querySelector("#forestroundoverwav"),document.querySelector("#forestroundoverwav"), document.querySelector("#forestroundoverwav")];
+
+	var chosenmusic = musiques[0];
 	
 	for (var i=0; i<musiques.length; i++){
+		musiques[i].loop = true;
+	}
+	for (var i=0; i<musiquesalt.length; i++){
 		musiques[i].loop = true;
 	}
 	
