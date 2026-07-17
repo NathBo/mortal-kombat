@@ -2269,10 +2269,12 @@ class IceClone{
 	{
 		constructor()
 		{
-			this.droite=0;this.gauche=0;this.haut=0;this.bas=0;this.poing=0;this.jambe=0;this.special=0;this.dodge=0; this.jump=0; this.enhance = 0;
+			this.droite=0;this.gauche=0;this.haut=0;this.bas=0;
+			this.poing=0;this.jambe=0;this.special=0;this.dodge=0; this.jump=0; this.enhance = 0;
 		}
 		reinit(x,y,perso,n,skin,other,reset_ai=true, allowedmoves = [], behavior = ""){
 			this.charac = characteristics.get(perso);
+			this.poing=0;this.jambe=0;this.special=0;this.dodge=0; this.jump=0; this.enhance = 0;
 			this.x = x; this.y = y; this.perso = perso; this.n = n; this.skin = this.charac.png[skin]; this.coordinates = this.charac.coordinates;
 			this.allowedmoves = allowedmoves; this.xinit = x; this.other = other;
 			this.forward = 0;this.back = 0;
@@ -2885,7 +2887,7 @@ class IceClone{
 						this.canthurt=false;
 						play_sound_eff("fatal1");
 						this.special=2;
-						other.x = this.x + 80*this.orientation;
+						other.x = this.x + 73*this.orientation;
 						finishhim = 0;
 						other.invincibilite=1000;
 						fatalitywasdone = true;
@@ -3343,7 +3345,7 @@ class IceClone{
 								this.x += (2*decalagex+60)*signe(camerax-this.x);
 								this.mov = "";this.movlag=0;
 								if(this.jambe==1){this.mov= "jkick";this.movlag=29;}
-								this.xspeed = 6*this.orientation;
+								this.xspeed = 5.5*this.orientation;
 							}
 						}
 						break;
@@ -5542,7 +5544,7 @@ class IceClone{
 				}
 				if(isinladder() && j1.pv>0 && entre(end_of_round_countdown,20,80)){
 					var score_to_add = round_of(j1.pv/j1.pvmax*1000,50);
-					if(j1.pv==j1.pvmax && arcadelevel>0){score_to_add = 2000+arcadelevel*500;}
+					if(j1.pv==j1.pvmax && arcadelevel>=0){score_to_add = 2000+arcadelevel*500;}
 					else if(j1.pv==j1.pvmax && survival_handler.is_active()){score_to_add = 2000+survival_handler.level*500;}
 					if(end_of_round_countdown==80){score+=score_to_add}
 					ctx.fillStyle = "yellow";
@@ -6438,12 +6440,12 @@ class IceClone{
 	characteristics.set("baraka",{png : barskins,coordinates : barcoordinates, sex : "m", standnframes : 6, standframespeed : 6, rollspeed : 5, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 3,grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : barakaiconpng, namewav : document.querySelector('#barakawav'),
 	width : 35, height : 99,vitesse : 3.1, run_speed : 6.3,jumpxspeed : 3.5,backmovnerf : 0.92, gravity : 0.44, jumpforce : 9.2,jumpsquat : 3, shorthop : 6.2, friction:0.23, hurtcontrol : 0.22, grabtype : "launch_free",
 	airdrift : 0.18, airmaxspeed : 2, airdodgespeed : 6., airdodgefdur : 14, landinglag : 7,coups : baraka_coups, pv : 96, getupfdur : 36, grabfdur : 20, grabdeg : 11, vicposframes : 7, vicposfdur : 36, cds : [130,180,150,210], icons : [spiniconpng,diveiconpng,slicethrowiconpng,gripeiconpng], voiceactor : "male",
-	default_behav : "masher", combos : baraka_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Raiden obtains a state monopoly on electricity production and becomes a multi-billionaire."});
+	default_behav : "masher", combos : baraka_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Baraka becomes a professional Pizza Slicer!"});
 
 	characteristics.set("jax",{png : jaxskins,coordinates : jaxcoordinates, sex : "m", standnframes : 5, standframespeed : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 38, grabydist : 38, stunnframes : 5, walknframes : 9, icon : jaxiconpng, namewav : document.querySelector('#jaxwav'),
 	width : 39, height : 104,vitesse : 2.75, run_speed : 5.8,jumpxspeed : 3.2,backmovnerf : 0.92, gravity : 0.42, jumpforce : 9.15,jumpsquat : 4, shorthop : 6.1, friction:0.24, hurtcontrol : 0.22,grabtype : "launch_free",
 	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : jax_coups, pv : 120, getupfdur : 36, grabfdur : 20, grabdeg : 11, vicposframes : 6, vicposfdur : 32, cds : [150,210,150,300], icons : [bouncegrabiconpng,clapdashiconpng,energywaveiconpng,groundpoundiconpng], voiceactor : "male",
-	default_behav : "grabber", combos : jax_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Reptile resurrects the dinosaurs and imposes a reptilian dictatorship!"});
+	default_behav : "grabber", combos : jax_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Jax starrs in Rocky V: Return of the Avengers, and becomes famous worlwide!"});
 
 
 	characteristics.set("shao_kahn",{png : shaoskins,coordinates : shaocoordinates, sex : "m", standnframes : 6, standframespeed : 5, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 5,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 8, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),

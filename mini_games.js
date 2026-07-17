@@ -210,8 +210,8 @@ class TestYourMight extends MiniGame{
         if(this.has_reached){meters=this.goalheady;}
         meters = Math.floor(meters/40)*50;
         this.ctx.fillStyle = "grey";
-        this.ctx.font = "50px Luminari";
-        this.ctx.fillText(meters.toString()+"m",770,45);
+        this.ctx.font = "30px PixelFont";
+        this.ctx.fillText(meters.toString()+"m",760,45);
 
         if(this.global_cpt==show_score){
             this.addScore(meters*10);
@@ -226,8 +226,8 @@ class TestYourMight extends MiniGame{
         if(this.global_cpt<=start_punch-10){
             if(this.global_cpt%6<3){this.ctx.fillStyle = "white";}
             else{this.ctx.fillStyle = "red";}
-            this.ctx.font = "50px Luminari";
-            this.ctx.fillText("Test Your Might!",280,100);
+            this.ctx.font = "30px PixelFont";
+            this.ctx.fillText("Test Your\nMight!",215,110);
         }
 
         if(this.has_reached || this.global_cpt<=decap+10){this.global_cpt++;}
