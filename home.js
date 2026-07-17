@@ -1570,14 +1570,14 @@ class IceClone{
 			this.boosted = -1;
 		}
 		activate(){
-			console.log("activate");
 			this.active = true;
 			this.level = 0;
 			secondplayerchosescharac = false;
 			this.order.shuffle();
 			this.current_atk = 1.; this.current_regen = 0; this.current_cdr = 0; this.current_speed_boost = 1.;
-			this.prixasoigner = 10000;
+			this.prixasoigner = 5000;
 			this.boosted = -1;
+			this.random_augment_choice=randomInt(0,2);
 		}
 		select_char(char){
 			this.currentmaxpv = Math.round(characteristics.get(char).pv*1.5);
@@ -1597,8 +1597,12 @@ class IceClone{
 		}
 		next_level(){
 			this.level+=1;this.isinshop=true;
-			this.random_augment_choice = randomInt(0,2);
 			this.augment_opened = (this.level%2==0);
+			if(this.augment_opened){
+				var last_random = this.random_augment_choice;
+				this.random_augment_choice = randomInt(0,2);
+				if(this.random_augment_choice==last_random){this.random_augment_choice = randomInt(0,2);}
+			}
 			if(this.augment_opened && Math.random()<0.6){
 				this.boosted = randomInt(1,3);
 			}
@@ -1638,8 +1642,8 @@ class IceClone{
 				case 3:
 					if(!this.augment_opened){return ["Unavailable"];}
 					if(this.random_augment_choice==0){
-						var a = "Regen +30HP";
-						if(this.boosted==3){a = "Regen +45HP"}
+						var a = "Regen +20HP";
+						if(this.boosted==3){a = "Regen +30HP"}
 						return [a,"Currently "+this.current_regen+"HP"];
 					}
 					if(this.random_augment_choice==1){
@@ -5130,7 +5134,8 @@ class IceClone{
 					if(survival_handler.currentpv!=survival_handler.currentmaxpv && score>=survival_handler.prixasoigner){
 						survival_handler.currentpv=survival_handler.currentmaxpv;
 						score-=survival_handler.prixasoigner;
-						survival_handler.prixasoigner+=10000;
+						if(survival_handler.prixasoigner<10000){survival_handler.prixasoigner=10000;}
+						else{survival_handler.prixasoigner+=10000;}
 						play_sound_eff("potion");
 					}
 					break;
@@ -5160,7 +5165,7 @@ class IceClone{
 						j1.vicpose=1;play_sound_eff("powerup");
 						switch(survival_handler.random_augment_choice){
 							case 0:
-								var a = 30;
+								var a = 20;
 								if(survival_handler.boosted==survival_handler.selected){a=Math.round(a*1.5);play_sound_eff("compliment");}
 								survival_handler.current_regen+=a;
 								break;
