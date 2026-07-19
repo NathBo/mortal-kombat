@@ -1597,6 +1597,7 @@ class IceClone{
 		}
 		next_level(){
 			this.level+=1;this.isinshop=true;
+			if(this.level>survival_stats.get(j1.perso)){survival_stats.set(j1.perso,this.level);savesurvistats();}
 			this.augment_opened = (this.level%2==0);
 			if(this.augment_opened){
 				var last_random = this.random_augment_choice;
@@ -5120,6 +5121,7 @@ class IceClone{
 		ctx.fillText("HP: "+survival_handler.currentpv.toString()+"/"+survival_handler.currentmaxpv.toString(),20,100);
 		ctx.fillText("Next: "+survival_handler.get_char_to_fight(),20,440);
 		ctx.fillText("(round "+(survival_handler.level+1).toString()+")",20,480);
+		if(survival_handler.level>=survival_stats.get(j1.perso)){ctx.fillStyle="yellow";ctx.fillText("Best",220,480);}
 		j1.y = 50;j1.x=-150;
 		j1.afficher(j2);
 		if(j1.haut==1){j1.haut=2;survival_handler.selected=(survival_handler.selected+4)%5;play_sound_eff("cursor_move",0.7);}
@@ -5986,6 +5988,14 @@ class IceClone{
 				ctx.fillText("Changing character will make the records unavailable for this run", 250*0.86,80);
 			}
 		}
+		else if(survival_handler.is_active()){
+			var a = survival_stats.get(ordre_persos[persosovered[0][0]][persosovered[0][1]]);
+			if(a==0){a=-1;}
+			ctx.fillStyle = "white";
+			ctx.font = "20px PixelFont";
+			ctx.fillText("Last Round",720*0.86,180)
+			ctx.fillText("Reached: "+(a+1).toString(),720*0.86,210);
+		}
 
 		if(!persosunlocked.get(ordre_persos[persosovered[0][0]][persosovered[0][1]])){
 			ctx.fillStyle = "red";
@@ -6107,7 +6117,7 @@ class IceClone{
 			if(entre(clickx,400/dim_x,610/dim_x) && entre(clicky,450/500,480/500)){functiontoexecute = titlescreen; skinschoisis = [0,0];}
 			else if(entre(clickx,120/dim_x,1020/dim_x)&&entre(clicky,10/500,40/500)){controlafaire=Math.floor((clickx-120/dim_x)/(100/dim_x));}
 			else if(entre(clickx,120/dim_x,1020/dim_x)&&entre(clicky,110/500,140/500)){controlafaire=9+Math.floor((clickx-120/dim_x)/(100/dim_x));}
-			else if(entre(clickx, 0, 180/dim_x) && entre(clicky, 180/500, 210/500)){statistics = newArcadeStats();gobacktotitlescreen();}
+			else if(entre(clickx, 0, 180/dim_x) && entre(clicky, 180/500, 210/500)){statistics = newArcadeStats();survival_stats=new_survival_stats();gobacktotitlescreen();}
 			else if(entre(clickx, 250/dim_x, 480/dim_x) && entre(clicky, 180/500, 210/500)){
 				persosunlocked.set("liukang",true);
 				persosunlocked.set("kitana",true);
@@ -6508,7 +6518,12 @@ class IceClone{
 		localStorage.setItem("statistics",JSON.stringify(Object.fromEntries(statistics)));
 		localStorage.setItem("persosunlocked",JSON.stringify(Object.fromEntries(persosunlocked)));
 		localStorage.setItem("version",VERSION);
-		localStorage.setItem("difficulte",difficulte)
+		localStorage.setItem("difficulte",difficulte);
+		localStorage.setItem("survival",JSON.stringify(Object.fromEntries(survival_stats)));
+	}
+
+	function savesurvistats(){
+		localStorage.setItem("survival",JSON.stringify(Object.fromEntries(survival_stats)));
 	}
 
 	function loadStats(){
@@ -6517,9 +6532,11 @@ class IceClone{
 		var a = localStorage.getItem("statistics");
 		var b = localStorage.getItem("persosunlocked");
 		var c = localStorage.getItem("difficulte");
+		var d = localStorage.getItem("survival");
 		if(a===null || b===null || local_version != VERSION){
 			console.log("Reset saves");
 			statistics = newArcadeStats();
+			survival_stats = new_survival_stats();
 			if(local_version>=last_OK_version){
 				persosunlocked = new Map(Object.entries(JSON.parse(b)));
 				for(i=0;i<liste_persos.length;i++){
@@ -6530,6 +6547,8 @@ class IceClone{
 			saveStats();
 		}
 		else{
+			if(d===null){survival_stats = new_survival_stats();}
+			else{survival_stats = new Map(Object.entries(JSON.parse(d)));}
 			statistics = new Map(Object.entries(JSON.parse(a)));
 			persosunlocked = new Map(Object.entries(JSON.parse(b)));
 			if(c != null){difficulte = parseInt(c);}
@@ -6556,6 +6575,15 @@ class IceClone{
 		return rep;
 	}
 
+	function new_survival_stats(){
+		var s = new Map();
+
+		for (var i=0; i<liste_persos.length; i++){
+			s.set(liste_persos[i], 0);
+		}
+		return s;
+	}
+
 	function newArcadeStats(){
 		var statistics = new Map();
 
@@ -6579,6 +6607,7 @@ class IceClone{
 	
 	var statistics = new Map();
 	var persosunlocked = new Map();
+	var survival_stats = new Map();
 	var unlock_clues = new Map();
 	unlock_clues.set("liukang","Win as Raiden");
 	unlock_clues.set("kitana","Win as Mileena");
