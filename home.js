@@ -5140,7 +5140,9 @@ class IceClone{
 						survival_handler.currentpv=survival_handler.currentmaxpv;
 						score-=survival_handler.prixasoigner;
 						if(survival_handler.prixasoigner<10000){survival_handler.prixasoigner=10000;}
-						else{survival_handler.prixasoigner+=10000;}
+						else if(survival_handler.prixasoigner<50000){survival_handler.prixasoigner+=10000;}
+						else if(survival_handler.prixasoigner<100000){survival_handler.prixasoigner+=25000;}
+						else{survival_handler.prixasoigner+=50000;}
 						play_sound_eff("potion");
 					}
 					break;
