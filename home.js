@@ -5760,8 +5760,8 @@ class IceClone{
 		if(click==1){
 			click=2;
 			if(entre(clickx,482/512,505/512) && entre(clicky,210/250,241/250) && secondplayerchosescharac){secondplayerishuman = !secondplayerishuman}
-			if(!secondplayerishuman && entre(clickx,405/512,425/512) && entre(clicky,230/250,240/250) && arcadelevel<=0){difficulte = Math.max(difficulte-1,0)}
-			if(!secondplayerishuman && entre(clickx,440/512,454/512) && entre(clicky,230/250,240/250) && arcadelevel<=0){difficulte = Math.min(difficulte+1,difficultynames.length-1)}
+			if(!secondplayerishuman && entre(clickx,405/512,425/512) && entre(clicky,230/250,240/250) && arcadelevel<=0){difficulte = Math.max(difficulte-1,0);savedifficulte();}
+			if(!secondplayerishuman && entre(clickx,440/512,454/512) && entre(clicky,230/250,240/250) && arcadelevel<=0){difficulte = Math.min(difficulte+1,difficultynames.length-2);savedifficulte();}
 			if(entre(clickx,300/1024,710/1024) && entre(clicky,450/500,480/500)){persolocked = [0,0]; skinschoisis = [0,0];gobacktotitlescreen();menupersoswav.pause();menupersoswav.currentTime=0;return;}
 		}
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -6513,6 +6513,10 @@ class IceClone{
 
 	function savesurvistats(){
 		localStorage.setItem("survival",JSON.stringify(Object.fromEntries(survival_stats)));
+	}
+
+	function savedifficulte(){
+		localStorage.setItem("difficulte",difficulte);
 	}
 
 	function loadStats(){
