@@ -2297,7 +2297,7 @@ class IceClone{
 			this.pushed = 0;this.pushx = 0;
 			this.blocking = 0; this.falling = 0; this.gettingup = 0; this.grabbing = 0; this.grabbed = 0; this.bouncing = false; this.nutting = false; this.grabtype = "";
 			this.grabbed_object = null;
-			this.comboscaling = 1;
+			this.comboscaling = 1; this.freezetimes = 0;
 			this.vicpose = 0;
 			this.cooldowns = [0,0,0,0];
 			this.fatality = 0; this.decapitated = 0; this.electrocuted = 0; this.hide = 0; this.burning = 0; this.fatalitytype = 0; this.is_legs = false;
@@ -2425,6 +2425,7 @@ class IceClone{
 
 		end_of_combo(){
 			this.comboscaling=1;
+			this.freezetimes = 0;
 				if((secondplayerisdummy || (this.n==1 && youareintutorial && currentuto.regenerate && this.pv>0))){
 					if(difficulte==-1){
 						this.x=this.xinit;
@@ -3830,7 +3831,7 @@ class IceClone{
 				if(stats.hiteffect != "projectile"  && stats.hiteffect != "projectile_fall" && stats.hiteffect != "unblockable_projectile_fall"){lag_game(stats.hitlag);}
 				play_sound_eff(stats.hitsound);
 				shake_screen(stats.hitlag+2,stats.degats/4);
-				if(stats.hiteffect=="freeze"){this.hurted=0;this.freeze=stats.hitstun;}
+				if(stats.hiteffect=="freeze"){this.hurted=0;this.freeze=Math.max(stats.hitstun-15*this.freezetimes,10);this.freezetimes++;}
 				else if(stats.blood=="electrocute"){this.electrocuted = 10;}
 				else if(this.y==0 && this.crouching<=3 && (other.y>0 || stats.hitboxys >=0)){
 					if(stats.blood!=""){add_to_objects_set(new Blood(this.x,this.charac.height-20+stats.blood_height,-this.orientation,stats.blood));}
