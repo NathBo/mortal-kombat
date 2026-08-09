@@ -966,6 +966,73 @@ class IceClone{
 		}
 	}
 
+
+	class Hat{
+		constructor(owner,other){
+			this.owner=owner;this.other=other;
+			this.dangerous=false;
+			this.active=false;
+		}
+
+		throw(x,y,orientation,stats,enhanced=false){
+			this.x = x; this.y = y; this.orientation = orientation;
+			this.width=28;
+			this.height=15;
+			this.totdur = 70;this.vitesse=8+enhanced;
+			this.stats = stats;
+			this.dur = this.totdur;
+			this.num = cpt;
+			this.dangerous = true;this.active=true;this.hasgoneback=false;
+			
+		}
+
+		goback(){
+			if(!this.hasgoneback){this.hasgoneback=true;this.dangerous=true;this.totdur=70;this.orientation=-this.orientation;}
+		}
+
+		loop(){
+			if(!this.active){return;}
+			this.x += this.orientation*this.vitesse;
+			var other=this.owner;
+			//signe(this.x-other.x)==-this.orientation
+			console.log(this.owner.x-this.x);
+			if(entre((other.x-this.x)*this.orientation,-20,20)){
+				if(other.y==0){
+					if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.cooldowns[0]=Math.floor(other.cooldowns[0]/2);this.dangerous=false;this.active=false;}
+				}
+				else{
+					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){other.cooldowns[0]=Math.floor(other.cooldowns[0]/2);this.dangerous=false;this.active=false;}
+				}
+			}
+			if(!this.dangerous){return;}
+			var stats = this.stats; other = this.other;
+			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
+				if(other.y==0){
+					if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dangerous=false;lag_game(3);if(this.other.blocking){this.orientation*=-1;}}
+				}
+				else{
+					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){other.hurt(this,stats);this.dangerous=false;lag_game(3);}
+				}
+			}
+		}
+
+		afficher(){
+			if(!this.active){return;}
+			this.costume = "hat";
+			ctx.scale(2*this.orientation,2);
+			var coords = kuncoordinates.get(this.costume);
+			ctx.drawImage(kunglaopng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			if(gamefreeze==0){this.dur--;}
+			if(this.dur==0){this.dangerous=false;this.active=false;return;}
+		}
+
+		delete(){
+			objects_to_loop.delete(this.num);
+		}
+	}
+
 	class Ball{
 		constructor(x,y,orientation,other,stats,mem,enhanced){
 			this.x = x; this.y = y; this.orientation = orientation;
@@ -2309,6 +2376,7 @@ class IceClone{
 			this.easy_wavedash = true; this.wanttowavedash = false; this.wavedashdir = 1;
 			this.running = 0; this.lastforward = 0; this.lastdir = 0; this.run_buffer = 0;
 			this.no_costume_control = false;
+			if(this.perso=="kunglao"){this.pet=new Hat(this,other);add_to_objects_set(this.pet);}else{this.pet=null;}
 
 			this.atk = 1.;this.cdr = 1.;this.speed_boost = 1.;
 			if(survival_handler.is_active() && this.n==0){
@@ -3154,6 +3222,10 @@ class IceClone{
 					else if(this.perso == "jax" && this.back>=1 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
 						this.begincoup("energywave",other);
 					}
+					else if(this.perso == "kunglao" && this.back==0 && this.bas==0 && this.forward==0 && this.special==1 &&end_of_round_countdown==0){
+						if(this.pet.active){this.pet.goback();}
+						if(movpriority.get(racine(this.mov))<70){this.begincoup("hatthrow",other);}
+					}
 					else if(this.forward>=1&&movpriority.get(racine(this.mov))<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
 						this.x+=this.charac.vitesse*this.orientation*this.speed_boost;this.xspeed = 0;
 						let d = (this.charac.width+other.charac.width)/3;
@@ -3210,6 +3282,9 @@ class IceClone{
 					}
 					else if(this.perso == "mileena" && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
 						this.begincoup("knifethrow",other);
+					}
+					else if(this.perso == "kunglao" && this.back==0 && this.bas==0 && this.forward==0 && this.special==1 &&end_of_round_countdown==0){
+						if(this.pet.active){this.pet.goback();}
 					}
 					this.y+=this.tb;
 					if(this.droite&&this.xspeed<c.airmaxspeed){this.xspeed+=c.airdrift}else if(this.gauche && this.xspeed>-c.airmaxspeed){this.xspeed-=c.airdrift}
@@ -3574,6 +3649,13 @@ class IceClone{
 						this.crouching=0;
 						if(this.movlag==stats.elag){
 							add_to_objects_set(new EnergyWave(this.x+25*this.orientation,this.y+70,this.orientation,other,stats,this.is_enhanced()));
+						}
+						break;
+					case "hatthrow":
+						var stats = this.charac.coups.get(this.mov);
+						this.crouching=0;
+						if(this.movlag==stats.elag){
+							this.pet.throw(this.x+25*this.orientation,this.y+70,this.orientation,stats,this.is_enhanced());
 						}
 						break;
 					}
@@ -4702,6 +4784,14 @@ class IceClone{
 						else{n=1;}
 						this.costume = "energywave"+n.toString();
 						break;
+
+					case "hatthrow" :
+						var stats = this.charac.coups.get(this.mov);
+						var n =1;
+						if(this.movlag>=stats.slag/2+stats.elag){n=1;}
+						else if(this.movlag>=stats.elag){n=2;}
+						else{n=10-Math.floor(this.movlag/stats.elag*8);}
+						this.costume = "hatthrow"+n.toString();
 				}
 			}
 			else if (this.y>0 && !is_in_charc_screen && !survival_handler.isinshop){
@@ -5322,8 +5412,8 @@ class IceClone{
 		timer = timer_init;
 		gamepaused = false;
 		if(reset_ai){roundwonsj1=0;roundwonsj2=0;is_challenge_match = false;}
-		j1.reinit(-120,0,persoschoisis[0],0,skinschoisis[0],j2,reset_ai);j2.reinit(120,0,persoschoisis[1],1,skinschoisis[1],j1,reset_ai);frame_delay = base_frame_delay;
 		cpt = 0; objects_to_loop.clear();
+		j1.reinit(-120,0,persoschoisis[0],0,skinschoisis[0],j2,reset_ai);j2.reinit(120,0,persoschoisis[1],1,skinschoisis[1],j1,reset_ai);frame_delay = base_frame_delay;
 		end_of_round_countdown=0;
 		if(survival_handler.is_active()){chosenmusic = musiquesalt[chosenstage];}
 		else{chosenmusic = musiques[chosenstage];}
@@ -6464,7 +6554,7 @@ class IceClone{
 	
 	characteristics.set("kunglao",{png : kunglaoskins,coordinates : kuncoordinates, sex : "m", standnframes : 6, standframespeed : 5, rollspeed : 5, hkickstartnframe : 2, hkickendnframe : 2, kicknframe : 4,grabxdist : 34, grabydist : 36, stunnframes : 6, walknframes : 9, icon : kunglaoiconpng, namewav : document.querySelector('#kunglaowav'),
 	width : 41, height : 101,vitesse : 3.1, run_speed : 6.1,jumpxspeed : 3.4,backmovnerf : 0.9, gravity : 0.42, jumpforce : 8.8,jumpsquat : 3, shorthop : 5.8, friction:0.24, hurtcontrol : 0.2, grabtype : "poser",
-	airdrift : 0.1, airmaxspeed : 1.8, airdodgespeed : 5.9, airdodgefdur : 13, landinglag : 9,coups : kunglao_coups, pv : 100, getupfdur : 28, grabfdur : 30, grabdeg : 12, vicposframes : 6, vicposfdur : 30, cds : [150,150,240,270], icons : [knifeiconpng,balliconpng,fanlifticonpng,teleport_dropiconpng], voiceactor : "male",
+	airdrift : 0.1, airmaxspeed : 1.8, airdodgespeed : 5.9, airdodgefdur : 13, landinglag : 9,coups : kunglao_coups, pv : 100, getupfdur : 28, grabfdur : 30, grabdeg : 12, vicposframes : 6, vicposfdur : 30, cds : [240,150,240,270], icons : [fireballiconpng,balliconpng,fanlifticonpng,teleport_dropiconpng], voiceactor : "male",
 	default_behav : "normal", combos : kunglao_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Mileena attends fashion week and finally buys shampoo for her hair, because, and I quote, 'You're a girl, you don't have shampoo, it's like you're a girl, you don't have hair'."});
 	
 

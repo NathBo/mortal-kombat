@@ -334,6 +334,7 @@ kunglao_coups.set("jkick",{slag : 8, fdur : 25, elag : 4, degats : 10, hitstun :
 kunglao_coups.set("jskick",{slag : 7, fdur : 15, elag : 7, degats : 13, hitstun : 32, hurtx : 0.8, hurty : 0, hitboxxs : 10, hitboxxe : 33,hitboxys : -20, hitboxye : 30, hitboxxouv : 12, blood_height : 0, landinglag : 8, blockstun : 10, blockx : 1.3, hiteffect : "none", hitboxxeyscaling : 0, hitlag : 8, hitsound : "hhit", blood : "lblood", damageonblock : 1, disponibility : "air", voiceline : "mmov", movx : 0, coupwav : "coup"});
 kunglao_coups.set("jpunch",{slag : 5, fdur : 10, elag : 10, degats : 8, hitstun : 22, hurtx : 1.5, hurty : 0, hitboxxs : 15, hitboxxe : 50,hitboxys : -40, hitboxye : -40, hitboxxouv : 32, blood_height : 0, landinglag : 8, blockstun : 12, blockx : 2.5, hiteffect : "none", hitboxxeyscaling : -0.2, hitlag : 7, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "air", voiceline : "mmov", movx : 0, coupwav : "coup"});
 kunglao_coups.set("grab",{slag : 5, fdur : 3, elag : 12, degats : 12, hitstun : 22, hurtx : 0.9, hurty : 0, hitboxxs : 5, hitboxxe : 38,hitboxys : 0, hitboxye : -1, hitboxxouv : 15, blood_height : 0, blockstun : 12, blockx : 1.7, hiteffect : "grab", hitboxxeyscaling : 0, hitlag : 5, hitsound : "lhit", blood : "lblood", damageonblock : 1, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : "coup"});
+kunglao_coups.set("hatthrow",{slag : 12, fdur : 0, elag : 25, degats : 6, hitstun : 28, hurtx : 1.3, hurty : 6., hitboxxs : -12, hitboxxe : 12,hitboxys : -6, hitboxye : 15, hitboxxouv : 5, blood_height : 0, blockstun : 10, blockx : 1.5, hiteffect : "projectile_fall", hitboxxeyscaling : 0, hitlag : 7, hitsound : "fan", blood : "lblood", damageonblock : 2,landinglag : 12, disponibility : "stand", voiceline : "lmov", movx : 0, coupwav : ""});
 kunglao_coups.set("burst",get_burst_stats());
 
 var kunglao_combos = get_default_combos();
@@ -412,6 +413,7 @@ movpriority.set("bouncegrab",70);
 movpriority.set("groundpound",70);
 movpriority.set("clapdash",70);
 movpriority.set("energywave",70);
+movpriority.set("hatthrow",70);
 movpriority.set("air_dodge",100);
 movpriority.set("landing_lag",100);
 movpriority.set("jumpsquat",100);
@@ -479,3 +481,4 @@ cd_dependance.set("bouncegrab",0);
 cd_dependance.set("groundpound",3);
 cd_dependance.set("clapdash",1);
 cd_dependance.set("energywave",2);
+cd_dependance.set("hatthrow",0);
