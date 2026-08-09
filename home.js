@@ -2636,6 +2636,7 @@ class IceClone{
 						other.combo_deg += this.charac.grabdeg;
 						other.combo_hits += 1;
 						if(other.pv<=0){other.killanim();}
+						if(this.perso=="kunglao"){this.movlag=0;this.mov="";}
 					}
 				}
 				return;
@@ -6461,9 +6462,9 @@ class IceClone{
 	airdrift : 0.14, airmaxspeed : 2.1, airdodgespeed : 6, airdodgefdur : 13, landinglag : 8,coups : liukang_coups, pv : 95, getupfdur : 36, grabfdur : 15, grabdeg : 11, vicposframes : 6, vicposfdur : 30, cds : [150,70,90,180], icons : [fireballiconpng,flying_kickiconpng,bicycleiconpng,cycleiconpng], voiceactor : "liu",
 	default_behav : "rush", combos : liukang_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Liu Kang retires to Larzac with a Buddhist monk to raise goats."});
 	
-	characteristics.set("kunglao",{png : kunglaoskins,coordinates : kuncoordinates, sex : "m", standnframes : 6, standframespeed : 5, rollspeed : 5, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 9, icon : kunglaoiconpng, namewav : document.querySelector('#kunglaowav'),
+	characteristics.set("kunglao",{png : kunglaoskins,coordinates : kuncoordinates, sex : "m", standnframes : 6, standframespeed : 5, rollspeed : 5, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 6, walknframes : 9, icon : kunglaoiconpng, namewav : document.querySelector('#kunglaowav'),
 	width : 41, height : 101,vitesse : 3, run_speed : 6.,jumpxspeed : 3.3,backmovnerf : 0.9, gravity : 0.42, jumpforce : 8.8,jumpsquat : 3, shorthop : 5.8, friction:0.22, hurtcontrol : 0.2, grabtype : "poser",
-	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.85, airdodgefdur : 13, landinglag : 9,coups : mileena_coups, pv : 92, getupfdur : 32, grabfdur : 35, grabdeg : 12, vicposframes : 6, vicposfdur : 30, cds : [150,150,240,270], icons : [knifeiconpng,balliconpng,fanlifticonpng,teleport_dropiconpng], voiceactor : "male",
+	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.85, airdodgefdur : 13, landinglag : 9,coups : mileena_coups, pv : 92, getupfdur : 24, grabfdur : 30, grabdeg : 12, vicposframes : 6, vicposfdur : 30, cds : [150,150,240,270], icons : [knifeiconpng,balliconpng,fanlifticonpng,teleport_dropiconpng], voiceactor : "male",
 	default_behav : "normal", combos : mileena_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Mileena attends fashion week and finally buys shampoo for her hair, because, and I quote, 'You're a girl, you don't have shampoo, it's like you're a girl, you don't have hair'."});
 	
 

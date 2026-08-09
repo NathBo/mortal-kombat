@@ -1574,6 +1574,52 @@ function getkuncoordinates(){
 	kuncoordinates.set("roll5",{offx:821,width:33,offy:181,height:69,decx:0,decy:0});
 	kuncoordinates.set("roll6",{offx:865,width:53,offy:208,height:42,decx:0,decy:0});
 	kuncoordinates.set("roll7",{offx:928,width:40,offy:195,height:55,decx:0,decy:0});
+
+	kuncoordinates.set("hurted1",{offx:15,width:48,offy:1069,height:106,decx:0,decy:0});
+	kuncoordinates.set("hurted2",{offx:73,width:49,offy:1074,height:101,decx:0,decy:0});
+	kuncoordinates.set("falling1",{offx:553,width:92,offy:1188,height:115,decx:0,decy:0});
+	kuncoordinates.set("falling2",{offx:654,width:99,offy:1211,height:92,decx:0,decy:0});
+	kuncoordinates.set("falling3",{offx:764,width:93,offy:1247,height:56,decx:0,decy:0});
+	kuncoordinates.set("grounded1",{offx:867,width:72,offy:1242,height:61,decx:0,decy:-10});
+	kuncoordinates.set("grounded2",{offx:347,width:88,offy:1385,height:42,decx:0,decy:-10});
+	kuncoordinates.set("getup1",{offx:347,width:88,offy:1385,height:42,decx:0,decy:-10});
+	kuncoordinates.set("getup2",{offx:347,width:88,offy:1385,height:42,decx:0,decy:-10});
+	kuncoordinates.set("getup3",{offx:459,width:46,offy:1359,height:68,decx:0,decy:0});
+	kuncoordinates.set("getup4",{offx:516,width:30,offy:1314,height:113,decx:0,decy:0});
+	kuncoordinates.set("blocking1",{offx:390,width:38,offy:19,height:103,decx:0,decy:0});
+	kuncoordinates.set("blocking2",{offx:438,width:43,offy:19,height:103,decx:0,decy:0});
+	kuncoordinates.set("cblocking1",{offx:724,width:49,offy:48,height:74,decx:0,decy:0});
+	kuncoordinates.set("cblocking2",{offx:783,width:51,offy:46,height:76,decx:0,decy:0});
+	kuncoordinates.set("churted1",{offx:730,width:43,offy:1100,height:75,decx:0,decy:0});
+	kuncoordinates.set("churted2",{offx:783,width:49,offy:1103,height:72,decx:0,decy:0});
+
+	kuncoordinates.set("decapitated1",{offx:15,width:33,offy:2072,height:96,decx:0,decy:0});
+	kuncoordinates.set("decapitated2",{offx:59,width:41,offy:2087,height:81,decx:0,decy:0});
+	kuncoordinates.set("decapitated3",{offx:111,width:42,offy:2100,height:68,decx:0,decy:0});
+	kuncoordinates.set("decapitated4",{offx:164,width:45,offy:2102,height:66,decx:0,decy:0});
+	kuncoordinates.set("decapitated5",{offx:219,width:69,offy:2124,height:44,decx:0,decy:0});
+	kuncoordinates.set("decapitated6",{offx:300,width:78,offy:2146,height:22,decx:0,decy:0});
+	kuncoordinates.set("head",{offx:391,width:16,offy:2144,height:24,decx:0,decy:0});
+	kuncoordinates.set("legs",{offx:454,width:32,offy:1972,height:77,decx:0,decy:0});
+	kuncoordinates.set("torso",{offx:497,width:41,offy:1986,height:63,decx:0,decy:0});
+	kuncoordinates.set("torso2",{offx:756,width:53,offy:2007,height:42,decx:0,decy:0});
+	kuncoordinates.set("stunned1",{offx:692,width:37,offy:1318,height:109,decx:0,decy:0});
+	kuncoordinates.set("stunned2",{offx:740,width:37,offy:1319,height:108,decx:0,decy:0});
+	kuncoordinates.set("stunned3",{offx:787,width:37,offy:1321,height:106,decx:0,decy:0});
+	kuncoordinates.set("stunned4",{offx:835,width:40,offy:1323,height:104,decx:0,decy:0});
+	kuncoordinates.set("stunned5",{offx:884,width:37,offy:1322,height:105,decx:0,decy:0});
+	kuncoordinates.set("stunned6",{offx:931,width:37,offy:1322,height:105,decx:0,decy:0});
+	kuncoordinates.set("ballshurt",{offx:572,width:30,offy:1367,height:60,decx:0,decy:0});
+
+	kuncoordinates.set("grabbed1",{offx:15,width:38,offy:1327,height:100,decx:0,decy:0});
+	kuncoordinates.set("grabbed2",{offx:61,width:71,offy:1358,height:69,decx:0,decy:0});
+	kuncoordinates.set("grabbed3",{offx:141,width:43,offy:1348,height:79,decx:0,decy:0});
+	kuncoordinates.set("grabbed4",{offx:193,width:57,offy:1339,height:88,decx:0,decy:0});
+	kuncoordinates.set("grabbing1",{offx:546,width:65,offy:495,height:104,decx:0,decy:0});
+	kuncoordinates.set("grabbing2",{offx:479,width:57,offy:501,height:98,decx:0,decy:0});
+	kuncoordinates.set("grabbing3",{offx:479,width:57,offy:501,height:98,decx:0,decy:0});
+	kuncoordinates.set("grabbing4",{offx:385,width:85,offy:539,height:60,decx:0,decy:0});
+	kuncoordinates.set("grabbing5",{offx:385,width:85,offy:539,height:60,decx:0,decy:0});
 	
 
     return kuncoordinates;
