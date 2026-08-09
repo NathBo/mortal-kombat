@@ -5592,6 +5592,7 @@ class IceClone{
 					if(perso=="baraka" && !persosunlocked.get("jax")){a = "jax";}
 					if(!secondplayerishuman && j2.perso=="reptile" && !persosunlocked.get("")){a="reptile";}
 					if(fatalitywasdone && !persosunlocked.get("johnny")){a="johnny";}
+					if(survival_handler.is_active() && survival_handler.level==4){a="kunglao";}
 					if(!(a=="" || persosunlocked.get(a))){
 						ctx.fillStyle = "gray";
 						ctx.fillRect(312*0.86,100,400*0.86,300);
@@ -5604,6 +5605,7 @@ class IceClone{
 						if(a=="reptile"){b = "Reptile";}
 						if(a=="johnny"){b = "Johnny Cage";}
 						if(a=="jax"){b = "Jax";}
+						if(a=="kunglao"){b = "Kung Lao";}
 						printAtWordWrap(ctx,b+" unlocked!", 332*0.86, 140, 22, 360);
 						ctx.scale(3,3);
 						ctx.drawImage(characteristics.get(a).icon,160*0.86,70);
@@ -6007,7 +6009,7 @@ class IceClone{
 		if(!persosunlocked.get(ordre_persos[persosovered[0][0]][persosovered[0][1]])){
 			ctx.fillStyle = "red";
 			ctx.font = "20px serif";
-			ctx.fillText(unlock_clues.get(ordre_persos[persosovered[0][0]][persosovered[0][1]]),110,400);
+			ctx.fillText(unlock_clues.get(ordre_persos[persosovered[0][0]][persosovered[0][1]]),100,400);
 		}
 		if(!persosunlocked.get(ordre_persos[persosovered[1][0]][persosovered[1][1]])){
 			ctx.fillStyle = "red";
@@ -6459,6 +6461,11 @@ class IceClone{
 	airdrift : 0.14, airmaxspeed : 2.1, airdodgespeed : 6, airdodgefdur : 13, landinglag : 8,coups : liukang_coups, pv : 95, getupfdur : 36, grabfdur : 15, grabdeg : 11, vicposframes : 6, vicposfdur : 30, cds : [150,70,90,180], icons : [fireballiconpng,flying_kickiconpng,bicycleiconpng,cycleiconpng], voiceactor : "liu",
 	default_behav : "rush", combos : liukang_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Liu Kang retires to Larzac with a Buddhist monk to raise goats."});
 	
+	characteristics.set("kunglao",{png : milskins,coordinates : milcoordinates, sex : "m", standnframes : 10, standframespeed : 5, rollspeed : 3, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : kunglaoiconpng, namewav : document.querySelector('#kunglaowav'),
+	width : 34, height : 97,vitesse : 3, run_speed : 6.,jumpxspeed : 3.3,backmovnerf : 0.9, gravity : 0.42, jumpforce : 8.8,jumpsquat : 3, shorthop : 5.8, friction:0.22, hurtcontrol : 0.2, grabtype : "poser",
+	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.85, airdodgefdur : 13, landinglag : 9,coups : mileena_coups, pv : 92, getupfdur : 32, grabfdur : 35, grabdeg : 12, vicposframes : 10, vicposfdur : 40, cds : [150,150,240,270], icons : [knifeiconpng,balliconpng,fanlifticonpng,teleport_dropiconpng], voiceactor : "male",
+	default_behav : "normal", combos : mileena_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Mileena attends fashion week and finally buys shampoo for her hair, because, and I quote, 'You're a girl, you don't have shampoo, it's like you're a girl, you don't have hair'."});
+	
 
 
 
@@ -6483,9 +6490,9 @@ class IceClone{
 	var finishhim = 0; var fatalitywasdone = false; var fatalitysreen = 0;
 	var persoschoisis = ["kitana","raiden"]; var skinschoisis = [0,0]; var persolocked = [0,0]; var persosovered = [[0,0],[0,3]];
 	var introon = true; var timer = 0; var timer_init = 60*60;
-	var liste_persos = ["baraka","mileena","scorpion","johnny","liukang", "kitana", "subzero","reptile","raiden","jax"];
+	var liste_persos = ["baraka","mileena","scorpion","johnny","liukang", "kitana", "subzero","reptile","raiden","jax","kunglao"];
 	var persos_tuto = ["raiden","mileena","scorpion","liukang", "kitana", "subzero"];
-	var ordre_persos = [["raiden","mileena","scorpion","baraka"],
+	var ordre_persos = [["kunglao","mileena","scorpion","baraka"],
 						["liukang", "kitana", "subzero","jax"],
 						["","johnny","reptile",""]];7
 	var unlocked_default_persos = ["raiden","mileena","scorpion","baraka"];
@@ -6606,6 +6613,7 @@ class IceClone{
 	unlock_clues.set("jax","Win as Baraka");
 	unlock_clues.set("reptile","Find and defeat Reptile");
 	unlock_clues.set("johnny","Do a fatality");
+	unlock_clues.set("kunglao","Round 5 in Survival");
 
 	loadStats();
 

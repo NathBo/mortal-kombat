@@ -31,6 +31,9 @@ var barskins = [barpng,bar2png];
 var jaxpng = new Image();jaxpng.src = 'ressource/characters/jax.png';
 var jax2png = new Image();jax2png.src = 'ressource/characters/jax2.png';
 var jaxskins = [jaxpng,jax2png];
+var kunglaopng = new Image();kunglaopng.src = 'ressource/characters/kunglao.png';
+var kunglao2png = new Image();kunglao2png.src = 'ressource/characters/kunglao.png';
+var kunglaoskins = [kunglaopng,kunglao2png];
 var shaopng = new Image();shaopng.src = 'ressource/characters/shaokahn.png';
 var shaoskins = [shaopng,shaopng];
 
@@ -119,6 +122,7 @@ var liukangiconpng=new Image();liukangiconpng.src = 'ressource/icons/liukang.png
 var johnnyiconpng=new Image();johnnyiconpng.src = 'ressource/icons/johnny.png';
 var barakaiconpng=new Image();barakaiconpng.src = 'ressource/icons/baraka.png';
 var jaxiconpng=new Image();jaxiconpng.src = 'ressource/icons/jax.png';
+var kunglaoiconpng=new Image();kunglaoiconpng.src = 'ressource/icons/kunglao.png';
 var lockediconpng=new Image();lockediconpng.src = 'ressource/icons/locked.png';
 var boticonpng=new Image();boticonpng.src = 'ressource/icons/bot.png';
 var playericonpng=new Image();playericonpng.src = 'ressource/icons/player.png';
