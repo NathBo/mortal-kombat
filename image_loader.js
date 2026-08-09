@@ -146,6 +146,7 @@ var johcoordinates = getjohcoordinates();
 var shaocoordinates = getshaocoordinates();
 var barcoordinates = getbarcoordinates();
 var jaxcoordinates = getjaxcoordinates();
+var kuncoordinates = getkuncoordinates();
 
 var bloodcoordinates = getbloodcoordinates();
 

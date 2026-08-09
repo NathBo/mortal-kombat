@@ -1536,6 +1536,50 @@ function getjaxcoordinates(){
 }
 
 
+function getkuncoordinates(){
+    var kuncoordinates = new Map();
+	var a = 2;
+	kuncoordinates.set("stand1",{offx:75,width:39,offy:20,height:102,decx:a,decy:0});
+	kuncoordinates.set("stand2",{offx:124,width:39,offy:20,height:102,decx:a,decy:0});
+	kuncoordinates.set("stand3",{offx:173,width:41,offy:18,height:104,decx:a-2,decy:0});
+	kuncoordinates.set("stand4",{offx:223,width:43,offy:16,height:106,decx:a-4,decy:0});
+	kuncoordinates.set("stand5",{offx:276,width:42,offy:17,height:105,decx:a-3,decy:0});
+	kuncoordinates.set("stand6",{offx:327,width:41,offy:19,height:103,decx:a-2,decy:0});
+	kuncoordinates.set("victory1",{offx:15,width:36,offy:269,height:99,decx:0,decy:0});
+	kuncoordinates.set("victory2",{offx:60,width:42,offy:281,height:87,decx:0,decy:0});
+	kuncoordinates.set("victory3",{offx:113,width:39,offy:272,height:96,decx:0,decy:0});
+	kuncoordinates.set("victory4",{offx:162,width:40,offy:268,height:100,decx:0,decy:0});
+	kuncoordinates.set("victory5",{offx:211,width:41,offy:261,height:107,decx:0,decy:0});
+	kuncoordinates.set("victory6",{offx:263,width:36,offy:260,height:108,decx:0,decy:0});
+	a=-2;
+	kuncoordinates.set("walk1",{offx:15,width:48,offy:144,height:106,decx:-7,decy:a});
+	kuncoordinates.set("walk2",{offx:72,width:42,offy:144,height:106,decx:-1,decy:a});
+	kuncoordinates.set("walk3",{offx:123,width:39,offy:143,height:107,decx:2,decy:a-1});
+	kuncoordinates.set("walk4",{offx:171,width:39,offy:143,height:107,decx:2,decy:a-1});
+	kuncoordinates.set("walk5",{offx:219,width:39,offy:145,height:105,decx:2,decy:a+1});
+	kuncoordinates.set("walk6",{offx:268,width:39,offy:144,height:106,decx:2,decy:a});
+	kuncoordinates.set("walk7",{offx:315,width:39,offy:144,height:106,decx:2,decy:a});
+	kuncoordinates.set("walk8",{offx:363,width:39,offy:143,height:107,decx:2,decy:a-1});
+	kuncoordinates.set("walk9",{offx:411,width:41,offy:144,height:106,decx:2,decy:a});
+
+	kuncoordinates.set("crouching1",{offx:611,width:40,offy:49,height:73,decx:0,decy:0});
+	kuncoordinates.set("crouching2",{offx:660,width:40,offy:66,height:56,decx:0,decy:0});
+	kuncoordinates.set("jump1",{offx:475,width:39,offy:136,height:114,decx:0,decy:0});
+	kuncoordinates.set("jump2",{offx:524,width:35,offy:176,height:74,decx:0,decy:0});
+	kuncoordinates.set("jump3",{offx:578,width:29,offy:133,height:117,decx:0,decy:0});
+	kuncoordinates.set("roll1",{offx:619,width:31,offy:185,height:65,decx:0,decy:0});
+	kuncoordinates.set("roll2",{offx:659,width:40,offy:194,height:56,decx:0,decy:0});
+	kuncoordinates.set("roll3",{offx:709,width:51,offy:204,height:46,decx:0,decy:0});
+	kuncoordinates.set("roll4",{offx:770,width:40,offy:195,height:55,decx:0,decy:0});
+	kuncoordinates.set("roll5",{offx:821,width:33,offy:181,height:69,decx:0,decy:0});
+	kuncoordinates.set("roll6",{offx:865,width:53,offy:208,height:42,decx:0,decy:0});
+	kuncoordinates.set("roll7",{offx:928,width:40,offy:195,height:55,decx:0,decy:0});
+	
+
+    return kuncoordinates;
+}
+
+
 
 
 
