@@ -6463,8 +6463,8 @@ class IceClone{
 	default_behav : "rush", combos : liukang_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Liu Kang retires to Larzac with a Buddhist monk to raise goats."});
 	
 	characteristics.set("kunglao",{png : kunglaoskins,coordinates : kuncoordinates, sex : "m", standnframes : 6, standframespeed : 5, rollspeed : 5, hkickstartnframe : 2, hkickendnframe : 2, kicknframe : 4,grabxdist : 34, grabydist : 36, stunnframes : 6, walknframes : 9, icon : kunglaoiconpng, namewav : document.querySelector('#kunglaowav'),
-	width : 41, height : 101,vitesse : 3, run_speed : 6.,jumpxspeed : 3.3,backmovnerf : 0.9, gravity : 0.42, jumpforce : 8.8,jumpsquat : 3, shorthop : 5.8, friction:0.22, hurtcontrol : 0.2, grabtype : "poser",
-	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.85, airdodgefdur : 13, landinglag : 9,coups : kunglao_coups, pv : 100, getupfdur : 24, grabfdur : 30, grabdeg : 12, vicposframes : 6, vicposfdur : 30, cds : [150,150,240,270], icons : [knifeiconpng,balliconpng,fanlifticonpng,teleport_dropiconpng], voiceactor : "male",
+	width : 41, height : 101,vitesse : 3.1, run_speed : 6.1,jumpxspeed : 3.4,backmovnerf : 0.9, gravity : 0.42, jumpforce : 8.8,jumpsquat : 3, shorthop : 5.8, friction:0.24, hurtcontrol : 0.2, grabtype : "poser",
+	airdrift : 0.1, airmaxspeed : 1.8, airdodgespeed : 5.9, airdodgefdur : 13, landinglag : 9,coups : kunglao_coups, pv : 100, getupfdur : 28, grabfdur : 30, grabdeg : 12, vicposframes : 6, vicposfdur : 30, cds : [150,150,240,270], icons : [knifeiconpng,balliconpng,fanlifticonpng,teleport_dropiconpng], voiceactor : "male",
 	default_behav : "normal", combos : kunglao_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Mileena attends fashion week and finally buys shampoo for her hair, because, and I quote, 'You're a girl, you don't have shampoo, it's like you're a girl, you don't have hair'."});
 	
 
