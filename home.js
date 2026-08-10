@@ -2405,7 +2405,7 @@ class IceClone{
 			var cd = cd_dependance.get(s);
 			if(this.cooldowns[cd] && !follow_up){if(this.cooldowns[cd]>bufferwindow){this.special=2;}return;}
 			else if(cd != -1){this.special=2;}
-			if(movpriority.get(s)==70 && movpriority.get(racine(this.mov))>=70 && !follow_up){return;}
+			if(movpriority.get(s)==70 && movpriority.get(racine(this.mov))>=70 && !(follow_up || (this.mov=="hatthrow" && s=="teleport_hat"))){return;}
 			if(this.enhance && this.charac.coups.has(s+"#") && this.jauge>=this.jaugemax/2 && !follow_up){
 				s = s+"#";
 				this.jauge-=this.jaugemax/2;
@@ -3226,6 +3226,9 @@ class IceClone{
 						if(this.pet.active){this.pet.goback();}
 						if(movpriority.get(racine(this.mov))<70){this.begincoup("hatthrow",other);}
 					}
+					else if(this.perso == "kunglao" && this.bas>=1 && this.special==1 && (movpriority.get(racine(this.mov))<70 || racine(this.mov)=="hatthrow")&&end_of_round_countdown==0){
+						this.begincoup("teleport_hat",other);
+					}
 					else if(this.forward>=1&&movpriority.get(racine(this.mov))<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
 						this.x+=this.charac.vitesse*this.orientation*this.speed_boost;this.xspeed = 0;
 						let d = (this.charac.width+other.charac.width)/3;
@@ -3664,6 +3667,18 @@ class IceClone{
 							this.tb=0;this.xspeed=0;
 							if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.x+=this.orientation*7;this.y-=6;}
 						}
+						break;
+					case "teleport_hat":
+						var stats = this.charac.coups.get(this.mov);
+						if(this.movlag==stats.elag+7){this.invincibilite=14;}
+						if(this.movlag==stats.elag){
+							this.reoriente(other,true);
+							var x = other.x-this.orientation*(this.charac.width/2+other.charac.width/2+10);
+							if(Math.abs(x-camerax)>decalagex-this.charac.width/2){x = other.x-this.orientation*(this.charac.width/2+other.charac.width/2+10);}
+							if(this.pet.active){x=this.pet.x;this.movlag-=4;this.cooldowns[0]=0;}
+							this.x = x;this.y=0;
+						}
+						if(this.movlag>stats.elag){this.y+=15;this.xspeed=0;}
 						break;
 					}
 				this.movlag--;
@@ -4570,6 +4585,12 @@ class IceClone{
 					case "shao_tp" :
 						this.costume = "shao_tp";
 						break;
+					case "teleport_hat" :
+						this.costume="jump1";
+						var stats = this.charac.coups.get(this.mov);
+						if(this.movlag>stats.elag){add_to_objects_set(new Double(this.x,this.y-20,this.orientation,this.skin,0,this.costume,this.coordinates,2));}
+						
+						break;
 
 					case "charge" :
 						var stats = this.charac.coups.get(this.mov);
@@ -4914,6 +4935,7 @@ class IceClone{
 			else if(this.hide==0){
 				var y = this.y;
 				if(racine(this.mov) == "teleport_drop"){y = -(8+2*this.is_enhanced())*(14-this.movlag)}
+				if(racine(this.mov) == "teleport_hat" && this.movlag<=12){y = -(8+2*this.is_enhanced())*this.movlag}
 				else if(racine(this.mov) == "ball"){y = -10;}
 				else if(this.mov == "shao_tp"){
 					var stats = this.charac.coups.get(this.mov);
