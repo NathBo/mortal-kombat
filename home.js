@@ -1023,9 +1023,11 @@ class IceClone{
 		loop(){
 			if(!this.active){return;}
 			this.x += this.orientation*this.vitesse;
-			var other=this.owner;
+			var other = this.other;
+			if(other.hurted && other.tb<0 && other.y-Math.abs(this.x-other.x)/4<=60 && signe(this.x-other.x)==this.orientation && !this.dangerous){this.goback();}
+			other=this.owner;
 			//signe(this.x-other.x)==-this.orientation
-			if(entre((other.x-this.x)*this.orientation,-20,20)){
+			if(entre((other.x-this.x)*this.orientation,-20,20) && this.hasgonebackcharge==0){
 				if(other.y==0){
 					if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.cooldowns[0]=Math.floor(other.cooldowns[0]/2);this.dangerous=false;this.active=false;}
 				}
@@ -3252,7 +3254,7 @@ class IceClone{
 						this.begincoup("energywave",other);
 					}
 					else if(this.perso == "kunglao" && this.back==0 && this.bas==0 && this.forward==0 && this.special==1 &&end_of_round_countdown==0){
-						if(this.pet.active){this.pet.goback();}
+						//if(this.pet.active){this.pet.goback();}
 						if(movpriority.get(racine(this.mov))<70){this.begincoup("hatthrow",other);}
 					}
 					else if(this.perso == "kunglao" && this.bas>=1 && this.special==1 && (movpriority.get(racine(this.mov))<70 || racine(this.mov)=="hatthrow")&&end_of_round_countdown==0){
@@ -3710,7 +3712,7 @@ class IceClone{
 							this.reoriente(other,true);
 							var x = other.x-this.orientation*(this.charac.width/2+other.charac.width/2+10);
 							if(Math.abs(x-camerax)>decalagex-this.charac.width/2){x = other.x-this.orientation*(this.charac.width/2+other.charac.width/2+10);}
-							if(this.pet.active){x=this.pet.x;this.movlag-=4;this.cooldowns[0]=0;}
+							if(this.pet.active){x=this.pet.x;this.movlag-=4;this.cooldowns[0]=0;this.pet.hasgonebackcharge=0;}
 							this.x = x;this.y=0;
 						}
 						if(this.movlag>stats.elag){this.y+=15;this.xspeed=0;}
