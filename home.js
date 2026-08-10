@@ -3712,13 +3712,20 @@ class IceClone{
 							this.reoriente(other,true);
 							var x = other.x-this.orientation*(this.charac.width/2+other.charac.width/2+10);
 							if(Math.abs(x-camerax)>decalagex-this.charac.width/2){x = other.x-this.orientation*(this.charac.width/2+other.charac.width/2+10);}
-							if(this.pet.active){x=this.pet.x;this.movlag-=4;this.cooldowns[0]=0;this.pet.hasgonebackcharge=0;}
+							if(this.is_enhanced()){
+								x = other.x+this.orientation*(this.charac.width/2+other.charac.width/2+10);
+							}
+							else if(this.pet.active){
+								x=this.pet.x;this.movlag-=4;this.cooldowns[0]=0;
+								this.pet.hasgonebackcharge=0;
+							}
 							this.x = x;this.y=0;
 						}
 						if(this.movlag>stats.elag){this.y+=15;this.xspeed=0;}
 						break;
 					case "whirlwind":
 						var stats = this.charac.coups.get(this.mov);
+						if(this.is_enhanced() && this.movlag==stats.elag+stats.fdur+stats.slag){this.invincibilite=10;}
 						if(this.movlag==stats.elag+stats.fdur+1){add_to_objects_set(new WhirlWindEffect(this.x-this.orientation*5,this.y,this));}
 						break;
 					}
