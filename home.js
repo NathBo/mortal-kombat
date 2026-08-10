@@ -1011,12 +1011,13 @@ class IceClone{
 			this.stats = stats;
 			this.dur = this.totdur;
 			this.num = cpt;
-			this.dangerous = true;this.active=true;this.hasgoneback=false;
+			this.dangerous = true;this.active=true;this.hasgonebackcharge=1+enhanced*2;
 			
 		}
 
 		goback(){
-			if(!this.hasgoneback){this.hasgoneback=true;this.dangerous=true;this.totdur=70;this.orientation=-this.orientation;}
+			console.log(this.hasgonebackcharge);
+			if(this.hasgonebackcharge){this.hasgonebackcharge--;this.dangerous=true;this.dur=70;this.orientation=-this.orientation;}
 		}
 
 		loop(){
@@ -1036,7 +1037,7 @@ class IceClone{
 			var stats = this.stats; other = this.other;
 			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
 				if(other.y==0){
-					if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dangerous=false;lag_game(3);if(this.other.blocking && !this.hasgoneback){this.orientation*=-1;this.hasgoneback=true;}}
+					if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dangerous=false;lag_game(3);if(this.other.blocking && this.hasgonebackcharge){this.orientation*=-1;this.hasgonebackcharge--;}}
 				}
 				else{
 					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){other.hurt(this,stats);this.dangerous=false;lag_game(3);}
@@ -3260,6 +3261,9 @@ class IceClone{
 					else if(this.perso == "kunglao" && this.back>=1 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
 						this.begincoup("whirlwind",other);
 					}
+					else if(this.perso == "kunglao" && this.forward>=1 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
+						this.begincoup("hatslice",other);
+					}
 					else if(this.forward>=1&&movpriority.get(racine(this.mov))<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
 						this.x+=this.charac.vitesse*this.orientation*this.speed_boost;this.xspeed = 0;
 						let d = (this.charac.width+other.charac.width)/3;
@@ -4670,6 +4674,15 @@ class IceClone{
 						else if(this.movlag>=stats.elag+stats.fdur+stats.slag/3){this.costume = this.mov+"2"}
 						else if(this.movlag>=stats.elag+stats.fdur){this.costume = this.mov+"3"}
 						else {this.costume = this.mov+"5"}
+						break;
+
+					case "hatslice" :
+						var stats = this.charac.coups.get(racine(this.mov));
+						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.costume = racine(this.mov)+"4"}
+						else if(this.movlag>=stats.elag+stats.fdur+stats.slag*2/3){this.costume = racine(this.mov)+"1"}
+						else if(this.movlag>=stats.elag+stats.fdur+stats.slag/3){this.costume = racine(this.mov)+"2"}
+						else if(this.movlag>=stats.elag+stats.fdur){this.costume = racine(this.mov)+"3"}
+						else {this.costume = racine(this.mov)+"5"}
 						break;
 
 					case "knifethrow" :

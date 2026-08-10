@@ -1682,6 +1682,11 @@ function getkuncoordinates(){
 	kuncoordinates.set("whirlwindeffect2",{offx:317,width:57,offy:1550,height:111,decx:0,decy:0});
 	kuncoordinates.set("whirlwindeffect3",{offx:383,width:63,offy:1550,height:111,decx:0,decy:0});
 	kuncoordinates.set("whirlwindeffect4",{offx:455,width:67,offy:1550,height:111,decx:0,decy:0});
+	kuncoordinates.set("hatslice1",{offx:15,width:41,offy:1681,height:126,decx:0,decy:0});
+	kuncoordinates.set("hatslice2",{offx:66,width:53,offy:1671,height:136,decx:0,decy:0});
+	kuncoordinates.set("hatslice3",{offx:130,width:92,offy:1671,height:136,decx:0,decy:0});
+	kuncoordinates.set("hatslice4",{offx:231,width:96,offy:1693,height:114,decx:0,decy:0});
+	kuncoordinates.set("hatslice5",{offx:338,width:71,offy:1718,height:89,decx:0,decy:0});
 	
 
     return kuncoordinates;
