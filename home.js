@@ -1008,7 +1008,7 @@ class IceClone{
 			var stats = this.stats; other = this.other;
 			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
 				if(other.y==0){
-					if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dangerous=false;lag_game(3);if(this.other.blocking){this.orientation*=-1;}}
+					if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dangerous=false;lag_game(3);if(this.other.blocking && !this.hasgoneback){this.orientation*=-1;this.hasgoneback=true;}}
 				}
 				else{
 					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){other.hurt(this,stats);this.dangerous=false;lag_game(3);}
@@ -3656,6 +3656,13 @@ class IceClone{
 						this.crouching=0;
 						if(this.movlag==stats.elag){
 							this.pet.throw(this.x+25*this.orientation,this.y+70,this.orientation,stats,this.is_enhanced());
+						}
+						break;
+					case "jkick" :
+						if(this.perso=="kunglao"){
+							var stats = this.charac.coups.get(this.mov);
+							this.tb=0;this.xspeed=0;
+							if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.x+=this.orientation*7;this.y-=6;}
 						}
 						break;
 					}
