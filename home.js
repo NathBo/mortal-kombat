@@ -353,12 +353,14 @@ function main(){
 	class WhirlWindEffect{
 		constructor(x,y,joueur){
 			this.x = x; this.y = y; this.joueur=joueur;
+			this.skin = this.joueur.skin;
 			this.totdur = 18; this.dur = this.totdur-1; 
 			this.num = cpt;
 			this.orientation=1;
 		}
 		loop(){
 			this.x = this.joueur.x-this.joueur.orientation*5;
+			if(this.joueur.hurted){this.delete();}
 		}
 
 		afficher(){
@@ -367,7 +369,7 @@ function main(){
 			ctx.scale(2*this.orientation,2);
 			var coords = kuncoordinates.get(this.costume);
 			this.width=coords.width;this.height=coords.height;
-			ctx.drawImage(kunglaopng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
 			if(gamefreeze==0){this.dur--;}
@@ -1001,6 +1003,7 @@ class IceClone{
 			this.owner=owner;this.other=other;
 			this.dangerous=false;
 			this.active=false;
+			this.skin = this.owner.skin;
 		}
 
 		throw(x,y,orientation,stats,enhanced=false){
@@ -1052,7 +1055,7 @@ class IceClone{
 			this.costume = "hat";
 			ctx.scale(2*this.orientation,2);
 			var coords = kuncoordinates.get(this.costume);
-			ctx.drawImage(kunglaopng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
 			if(gamefreeze==0){this.dur--;}
@@ -6649,7 +6652,7 @@ class IceClone{
 	
 	characteristics.set("kunglao",{png : kunglaoskins,coordinates : kuncoordinates, sex : "m", standnframes : 6, standframespeed : 5, rollspeed : 5, hkickstartnframe : 2, hkickendnframe : 2, kicknframe : 4,grabxdist : 34, grabydist : 36, stunnframes : 6, walknframes : 9, icon : kunglaoiconpng, namewav : document.querySelector('#kunglaowav'),
 	width : 41, height : 101,vitesse : 3.1, run_speed : 6.1,jumpxspeed : 3.4,backmovnerf : 0.9, gravity : 0.42, jumpforce : 8.8,jumpsquat : 3, shorthop : 5.8, friction:0.24, hurtcontrol : 0.2, grabtype : "poser",
-	airdrift : 0.1, airmaxspeed : 1.8, airdodgespeed : 5.9, airdodgefdur : 13, landinglag : 9,coups : kunglao_coups, pv : 100, getupfdur : 28, grabfdur : 30, grabdeg : 12, vicposframes : 6, vicposfdur : 30, cds : [240,150,240,270], icons : [fireballiconpng,balliconpng,fanlifticonpng,teleport_dropiconpng], voiceactor : "male",
+	airdrift : 0.1, airmaxspeed : 1.8, airdodgespeed : 6, airdodgefdur : 13, landinglag : 9,coups : kunglao_coups, pv : 100, getupfdur : 28, grabfdur : 30, grabdeg : 12, vicposframes : 6, vicposfdur : 30, cds : [240,150,240,270], icons : [hatthrowiconpng,hatsliceiconpng,whirlwindiconpng,teleporthaticonpng], voiceactor : "male",
 	default_behav : "normal", combos : kunglao_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Mileena attends fashion week and finally buys shampoo for her hair, because, and I quote, 'You're a girl, you don't have shampoo, it's like you're a girl, you don't have hair'."});
 	
 

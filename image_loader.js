@@ -32,7 +32,7 @@ var jaxpng = new Image();jaxpng.src = 'ressource/characters/jax.png';
 var jax2png = new Image();jax2png.src = 'ressource/characters/jax2.png';
 var jaxskins = [jaxpng,jax2png];
 var kunglaopng = new Image();kunglaopng.src = 'ressource/characters/kunglao.png';
-var kunglao2png = new Image();kunglao2png.src = 'ressource/characters/kunglao.png';
+var kunglao2png = new Image();kunglao2png.src = 'ressource/characters/kunglao2.png';
 var kunglaoskins = [kunglaopng,kunglao2png];
 var shaopng = new Image();shaopng.src = 'ressource/characters/shaokahn.png';
 var shaoskins = [shaopng,shaopng];
@@ -85,6 +85,11 @@ var bouncegrabiconpng=new Image();bouncegrabiconpng.src = 'ressource/icons/bounc
 var clapdashiconpng=new Image();clapdashiconpng.src = 'ressource/icons/clapdash_icon.png';
 var energywaveiconpng=new Image();energywaveiconpng.src = 'ressource/icons/energywave_icon.png';
 var groundpoundiconpng=new Image();groundpoundiconpng.src = 'ressource/icons/groundpound_icon.png';
+var hatthrowiconpng=new Image();hatthrowiconpng.src = 'ressource/icons/hatthrow_icon.png';
+var hatsliceiconpng=new Image();hatsliceiconpng.src = 'ressource/icons/hatslice_icon.png';
+var whirlwindiconpng=new Image();whirlwindiconpng.src = 'ressource/icons/whirlwind_icon.png';
+var teleporthaticonpng=new Image();teleporthaticonpng.src = 'ressource/icons/teleport_hat_icon.png';
+
 
 var bloodpng = new Image();bloodpng.src = 'ressource/visual_effects/blood.png';
 var burstpng = new Image();burstpng.src = 'ressource/visual_effects/burst2.png'
