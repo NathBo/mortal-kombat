@@ -1672,6 +1672,16 @@ function getkuncoordinates(){
 	kuncoordinates.set("hatthrow9",{offx:676,width:78,offy:1447,height:93,decx:a,decy:0});
 	kuncoordinates.set("hatthrow10",{offx:764,width:78,offy:1445,height:95,decx:a,decy:0});
 	kuncoordinates.set("hat",{offx:969,width:31,offy:1525,height:15,decx:-2,decy:0});
+	kuncoordinates.set("whirlwind1",{offx:15,width:36,offy:1550,height:111,decx:0,decy:0});
+	kuncoordinates.set("whirlwind2",{offx:61,width:36,offy:1550,height:111,decx:0,decy:0});
+	kuncoordinates.set("whirlwind3",{offx:109,width:20,offy:1554,height:107,decx:0,decy:0});
+	kuncoordinates.set("whirlwind4",{offx:139,width:36,offy:1553,height:108,decx:0,decy:0});
+	kuncoordinates.set("whirlwind5",{offx:182,width:36,offy:1553,height:108,decx:0,decy:0});
+	kuncoordinates.set("whirlwind6",{offx:228,width:20,offy:1554,height:107,decx:0,decy:0});
+	kuncoordinates.set("whirlwindeffect1",{offx:259,width:49,offy:1550,height:111,decx:0,decy:0});
+	kuncoordinates.set("whirlwindeffect2",{offx:317,width:57,offy:1550,height:111,decx:0,decy:0});
+	kuncoordinates.set("whirlwindeffect3",{offx:383,width:63,offy:1550,height:111,decx:0,decy:0});
+	kuncoordinates.set("whirlwindeffect4",{offx:455,width:67,offy:1550,height:111,decx:0,decy:0});
 	
 
     return kuncoordinates;

@@ -350,6 +350,35 @@ function main(){
 		}
 	}
 
+	class WhirlWindEffect{
+		constructor(x,y,joueur){
+			this.x = x; this.y = y; this.joueur=joueur;
+			this.totdur = 18; this.dur = this.totdur-1; 
+			this.num = cpt;
+			this.orientation=1;
+		}
+		loop(){
+			this.x = this.joueur.x-this.joueur.orientation*5;
+		}
+
+		afficher(){
+			this.costume = "whirlwindeffect"+(4-Math.floor(this.dur/this.totdur*4)).toString();
+			console.log(this.costume);
+			ctx.scale(2*this.orientation,2);
+			var coords = kuncoordinates.get(this.costume);
+			this.width=coords.width;this.height=coords.height;
+			ctx.drawImage(kunglaopng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			if(gamefreeze==0){this.dur--;}
+			if(this.dur==0){this.delete();return;}
+		}
+
+		delete(){
+			objects_to_loop.delete(this.num);
+		}
+	}
+
 	class Fan{
 		constructor(x,y,orientation,other,stats,enhanced=false){
 			this.x = x; this.y = y; this.orientation = orientation;
@@ -995,7 +1024,6 @@ class IceClone{
 			this.x += this.orientation*this.vitesse;
 			var other=this.owner;
 			//signe(this.x-other.x)==-this.orientation
-			console.log(this.owner.x-this.x);
 			if(entre((other.x-this.x)*this.orientation,-20,20)){
 				if(other.y==0){
 					if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.cooldowns[0]=Math.floor(other.cooldowns[0]/2);this.dangerous=false;this.active=false;}
@@ -3229,6 +3257,9 @@ class IceClone{
 					else if(this.perso == "kunglao" && this.bas>=1 && this.special==1 && (movpriority.get(racine(this.mov))<70 || racine(this.mov)=="hatthrow")&&end_of_round_countdown==0){
 						this.begincoup("teleport_hat",other);
 					}
+					else if(this.perso == "kunglao" && this.back>=1 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
+						this.begincoup("whirlwind",other);
+					}
 					else if(this.forward>=1&&movpriority.get(racine(this.mov))<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
 						this.x+=this.charac.vitesse*this.orientation*this.speed_boost;this.xspeed = 0;
 						let d = (this.charac.width+other.charac.width)/3;
@@ -3679,6 +3710,10 @@ class IceClone{
 							this.x = x;this.y=0;
 						}
 						if(this.movlag>stats.elag){this.y+=15;this.xspeed=0;}
+						break;
+					case "whirlwind":
+						var stats = this.charac.coups.get(this.mov);
+						if(this.movlag==stats.elag+stats.fdur+1){add_to_objects_set(new WhirlWindEffect(this.x-this.orientation*5,this.y,this));}
 						break;
 					}
 				this.movlag--;
@@ -4611,6 +4646,15 @@ class IceClone{
 
 					case "bicycle" :
 					case "bicycle#" :
+						var stats = this.charac.coups.get(this.mov);
+						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){
+							var n = Math.floor((stats.elag+stats.fdur-this.movlag)/2)%6+1;
+							this.costume = racine(this.mov)+n.toString()
+						}
+						else{this.costume = racine(this.mov)+"1";}
+						break;
+
+					case "whirlwind" :
 						var stats = this.charac.coups.get(this.mov);
 						if(entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){
 							var n = Math.floor((stats.elag+stats.fdur-this.movlag)/2)%6+1;
