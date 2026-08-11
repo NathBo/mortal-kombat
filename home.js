@@ -1257,6 +1257,55 @@ class IceClone{
 		}
 	}
 
+	class HatFata{
+		constructor(x,y,orientation,other,skin){
+			this.x = x; this.y = y; this.orientation = orientation;
+			this.other = other;
+			this.skin=skin;
+			this.width=18;
+			this.height=30;
+			this.totdur = 70;this.vitesse=10;
+			this.costcpt = 0;
+			this.framepercost = 3;
+			this.dur = this.totdur;
+			this.num = cpt;
+			this.dangerous = false;
+			this.hasdecap = false;
+			
+		}
+
+		loop(){
+			this.x += this.orientation*this.vitesse;
+			this.y = Math.min(85,this.y+1);
+			var other = this.other;
+			if(!this.hasdecap && entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/3,this.width/2+other.charac.width/3)){
+				other.decapitate(2,-4);this.hasdecap=true;this.vitesse=8;
+				play_sound_eff("spithit");play_sound_eff("fan");play_sound_eff("mhit");
+				slow_game(6,2);shake_screen(8,6);other.shake_player(5,3);
+			}
+		}
+
+		afficher(){
+			if(this.dur>0){
+				this.costume = "hat";
+				ctx.scale(2*this.orientation,2);
+				var coords = kuncoordinates.get(this.costume);
+				ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+				ctx.setTransform(1, 0, 0, 1, 0, 0);
+				ctx.scale(1,1);
+				if(gamefreeze==0){this.dur--;}
+				if(this.dur==0){this.delete();return;}
+			}
+			else{
+				if(this.dur==0){this.delete();return;}
+			}
+		}
+
+		delete(){
+			objects_to_loop.delete(this.num);
+		}
+	}
+
 
 	class Spear{
 		constructor(x,y,orientation,other,stats,owner,enhanced=false){
@@ -1413,7 +1462,7 @@ class IceClone{
 			this.height=44;
 			this.width=18;this.height = 25;
 			this.num = cpt;
-			this.rotation = 0; this.rotationspeed = 16;
+			this.rotation = 0; this.rotationspeed = 16+2*Math.abs(vitesse);
 			this.gravity = 0.15;
 			this.tb=Math.random()*2+power;
 			this.vitesse = vitesse-Math.random();
@@ -3148,6 +3197,18 @@ class IceClone{
 						this.mov = ""; this.movlag=0;
 						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
 					}
+					else if(this.perso == "kunglao" && this.forward+this.back==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)>=150 && other.y<=30 && other.gettingup==0){
+						this.fatality = 60;
+						play_sound_eff("fatal1");
+						other.y=0;other.reoriente(this);
+						this.special=2;
+						other.falling=0;other.hurted=0;
+						finishhim = 0;
+						other.invincibilite=1000;
+						fatalitywasdone = true;
+						this.mov = ""; this.movlag=0;
+						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
+					}
 					else if(this.perso == "kitana" && this.forward>=1 && this.special==1 && this.bas==0 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
 						this.begincoup("fanswipe",other);
 					}
@@ -4310,6 +4371,18 @@ class IceClone{
 						add_to_objects_set(new DropBlood(this.x-this.orientation*38,55,-this.orientation,"hdropblood",0.,2.));
 					}
 					if(this.fatality==b){other.no_costume_control=true;}
+				}
+				else if(this.perso=="kunglao"){
+					var a = 35;
+					var b = 3;
+					var n = 1;
+					if(this.fatality>=a){n=1;}
+					else if(this.fatality>a-9*b){n=2+Math.floor((a-this.fatality)/b);}
+					this.costume = "hatthrow"+n.toString();
+					if(this.fatality==a-5){add_to_objects_set(new HatFata(this.x+30*this.orientation,70,this.orientation,this.other,this.skin));}
+					if(this.fatality==57){play_sound_eff(this.charac.voiceactor+"lmov");}
+					if(this.fatality==a+3){play_sound_eff(this.charac.voiceactor+"hmov");play_sound_eff("coup");}
+
 				}
 			}
 			else if(this.fatality && this.fatalitytype==1){
