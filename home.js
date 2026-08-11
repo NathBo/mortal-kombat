@@ -1313,7 +1313,7 @@ class IceClone{
 			this.skin=skin;
 			this.width=8;
 			this.height=25;
-			this.totdur = 70;this.vitesse=8;
+			this.totdur = 80;this.vitesse=8;
 			this.costcpt = 0;
 			this.framepercost = 3;
 			this.dur = this.totdur;
@@ -1347,9 +1347,10 @@ class IceClone{
 			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex+this.shake_x)*this.orientation,ground-this.y-coords.height-coords.decy+shakey+this.shake_y,coords.width,coords.height);
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
-			if(Math.abs(other.x-camerax)>decalagex-other.charac.width/2){other.hide=true;}
+			if(Math.abs(other.x-camerax)>decalagex+other.charac.width/2){other.hide=true;}
 			if(gamefreeze==0){this.dur--;}
-			if(this.dur==0){organexplosion(other.x+this.orientation*20,0,this.orientation);this.delete();return;}
+			if(this.dur==5){play_sound_eff("spithit");play_sound_eff("fan");}
+			if(this.dur==0){other.hide=true;add_to_objects_set(new Head(other.x+this.orientation*25,other.y+other.charac.height,other.orientation,other.skin,other.coordinates, 1,2));this.delete();return;}
 		}
 
 		delete(){
@@ -3898,7 +3899,7 @@ class IceClone{
 				this.xspeed=0;
 				if(this.mov=="run"){this.mov="";this.movlag=0;}
 			}
-			if(Math.abs(this.x-camerax)>decalagex-this.charac.width/2){this.x = signe(this.x-camerax)*(decalagex+signe(this.x-camerax)*camerax-this.charac.width/2);}
+			if(Math.abs(this.x-camerax)>decalagex-this.charac.width/2 && !other.fatality){this.x = signe(this.x-camerax)*(decalagex+signe(this.x-camerax)*camerax-this.charac.width/2);}
 		}
 		else
 		{
