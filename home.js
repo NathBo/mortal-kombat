@@ -1280,7 +1280,7 @@ class IceClone{
 			var other = this.other;
 			if(!this.hasdecap && entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/3,this.width/2+other.charac.width/3)){
 				other.decapitate(2,-4);this.hasdecap=true;this.vitesse=8;
-				play_sound_eff("spithit");play_sound_eff("fan");play_sound_eff("mhit");
+				play_sound_eff("spithit");play_sound_eff("fan");
 				slow_game(6,2);shake_screen(8,6);other.shake_player(5,3);
 			}
 		}
@@ -1313,7 +1313,7 @@ class IceClone{
 			this.skin=skin;
 			this.width=8;
 			this.height=25;
-			this.totdur = 80;this.vitesse=8;
+			this.totdur = 90;this.vitesse=8;
 			this.costcpt = 0;
 			this.framepercost = 3;
 			this.dur = this.totdur;
@@ -1349,7 +1349,7 @@ class IceClone{
 			ctx.scale(1,1);
 			if(Math.abs(other.x-camerax)>decalagex+other.charac.width/2){other.hide=true;}
 			if(gamefreeze==0){this.dur--;}
-			if(this.dur==5){play_sound_eff("spithit");play_sound_eff("fan");}
+			if(this.dur==25){play_sound_eff("spithit");play_sound_eff("fan");}
 			if(this.dur==0){other.hide=true;add_to_objects_set(new Head(other.x+this.orientation*25,other.y+other.charac.height,other.orientation,other.skin,other.coordinates, 1,2));this.delete();return;}
 		}
 
@@ -4447,6 +4447,7 @@ class IceClone{
 					if(this.fatality==a-5){add_to_objects_set(new HatFata(this.x+30*this.orientation,70,this.orientation,this.other,this.skin));}
 					if(this.fatality==57){play_sound_eff(this.charac.voiceactor+"lmov");}
 					if(this.fatality==a+3){play_sound_eff(this.charac.voiceactor+"hmov");play_sound_eff("coup");}
+					if(this.fatality==a+8){play_sound_eff("grapple");}
 
 				}
 			}
@@ -6733,6 +6734,7 @@ class IceClone{
 	sounds_eff.set("kiss",[document.querySelector('#kisswav')]);
 	sounds_eff.set("67",[document.querySelector('#el67wav')]);
 	sounds_eff.set("jumpscare",[document.querySelector('#jumpscarewav')]);
+	sounds_eff.set("whirlwind",[document.querySelector('#whirlwindwav')]);
 
 	var friendshipwav = document.querySelector('#friendshipwav');
 
