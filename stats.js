@@ -497,6 +497,6 @@ cd_dependance.set("groundpound",3);
 cd_dependance.set("clapdash",1);
 cd_dependance.set("energywave",2);
 cd_dependance.set("hatthrow",0);
-cd_dependance.set("teleport_hat",3);
-cd_dependance.set("whirlwind",2);
+cd_dependance.set("teleport_hat",2);
+cd_dependance.set("whirlwind",3);
 cd_dependance.set("hatslice",1);

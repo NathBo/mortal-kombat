@@ -365,7 +365,6 @@ function main(){
 
 		afficher(){
 			this.costume = "whirlwindeffect"+(4-Math.floor(this.dur/this.totdur*4)).toString();
-			console.log(this.costume);
 			ctx.scale(2*this.orientation,2);
 			var coords = kuncoordinates.get(this.costume);
 			this.width=coords.width;this.height=coords.height;
@@ -1019,7 +1018,6 @@ class IceClone{
 		}
 
 		goback(){
-			console.log(this.hasgonebackcharge);
 			if(this.hasgonebackcharge){this.hasgonebackcharge--;this.dangerous=true;this.dur=70;this.orientation=-this.orientation;}
 		}
 
@@ -2251,7 +2249,7 @@ class IceClone{
 					if(this.desired_move=="hatthrow#"){if(other.tb>50){break block;}else{this.desired_move="hatthrow";}}
 					if(this.desired_move=="spear_throw" && (other.tb>4. || Math.abs(-stage_size/2*other.orientation-other.x)<=130)){break block;}
 					if(this.desired_move=="hell_gates" && Math.abs(-stage_size/2*other.orientation-other.x)<=130){break block;}
-					if(this.desired_move=="huppercut" && ((other.y>0 && other.tb>-7) || Math.abs(me.x-other.x)>60)){break block;}
+					if(this.desired_move=="huppercut" && ((other.y>0 && other.tb>-7) || Math.abs(me.x-other.x)>60|| me.y>0)){break block;}
 					if(this.desired_move=="leg_takedown" && this.wantstoenhance()>0){me.enhance=1;}
 					if((!me.charac.coups.has(me.mov) || me.movlag <= me.charac.coups.get(me.mov).elag+me.charac.coups.get(me.mov).fdur-this.cancelcombodelay)){
 						if(movpriority.get(this.desired_move)>movpriority.get(racine(me.mov))){this.begincoup(this.desired_move);
@@ -2356,7 +2354,7 @@ class IceClone{
 				{if(this.wantstoenhance()>3){me.enhance=1;}this.begincoup("spin");me.enhance=0;}
 			else if(me.perso=="baraka" && this.currisking>=2 && Math.abs(Math.abs(me.x-other.x-other.xspeed*10)-140)<=40 && me.y==0 && (other.y>0 || this.behavior=="masher") && me.crouching==0 && movpriority.get(racine(me.mov))<70 && other.tb<=0 && me.cooldowns[1]==0)
 				{if(this.wantstoenhance()>5){me.enhance=1;}this.begincoup("dive");me.enhance=0;}
-			else if(me.perso=="jax" && this.currisking>=-3 && Math.abs(Math.abs(me.x-other.x-other.xspeed*10)-110)<=30 && me.y==0 && other.y==0 && other.crouching!=6 && movpriority.get(racine(me.mov))<70 && me.cooldowns[1]==0)
+			else if(me.perso=="jax" && this.currisking>=-3 && Math.abs(Math.abs(me.x-other.x-other.xspeed*10)-110)<=30 && me.y==0 && other.y==0 && other.crouching!=6 && other.invincibilite<=10 && movpriority.get(racine(me.mov))<70 && me.cooldowns[1]==0)
 				{if(this.wantstoenhance()>5){me.enhance=1;}this.begincoup("clapdash");me.enhance=0;}
 			else if(me.perso=="jax" && this.currisking>=-5 && Math.abs(Math.abs(me.x-other.x-other.xspeed*10)-170)<=100 && me.y==0 && other.y==0 && movpriority.get(racine(me.mov))<70 && me.cooldowns[3]==0 && other.invincibilite<5)
 				{if(this.wantstoenhance()>2 && other.crouching>0){me.enhance=1;}this.begincoup("groundpound");me.enhance=0;}
@@ -3276,10 +3274,10 @@ class IceClone{
 						if(movpriority.get(racine(this.mov))<70){this.begincoup("hatthrow",other);}
 					}
 					else if(this.perso == "kunglao" && this.bas>=1 && this.special==1 && (movpriority.get(racine(this.mov))<70 || racine(this.mov)=="hatthrow")&&end_of_round_countdown==0){
-						this.begincoup("teleport_hat",other);
+						this.begincoup("whirlwind",other);
 					}
 					else if(this.perso == "kunglao" && this.back>=1 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
-						this.begincoup("whirlwind",other);
+						this.begincoup("teleport_hat",other);
 					}
 					else if(this.perso == "kunglao" && this.forward>=1 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
 						this.begincoup("hatslice",other);
@@ -6313,7 +6311,6 @@ class IceClone{
 				ctx.fillText(controls[Math.floor(controlafaire/10)][controlafaire%10],120+(controlafaire%10)*dec,55+100*(controlafaire>=10));
 			}
 		}
-		console.log(controlafaire);
 		if(click==1){
 			click=2;
 			if(entre(clickx,400/dim_x,610/dim_x) && entre(clicky,450/500,480/500)){functiontoexecute = titlescreen; skinschoisis = [0,0];}
@@ -6667,7 +6664,7 @@ class IceClone{
 	
 	characteristics.set("kunglao",{png : kunglaoskins,coordinates : kuncoordinates, sex : "m", standnframes : 6, standframespeed : 5, rollspeed : 5, hkickstartnframe : 2, hkickendnframe : 2, kicknframe : 4,grabxdist : 34, grabydist : 36, stunnframes : 6, walknframes : 9, icon : kunglaoiconpng, namewav : document.querySelector('#kunglaowav'),
 	width : 41, height : 101,vitesse : 3.1, run_speed : 6.1,jumpxspeed : 3.4,backmovnerf : 0.9, gravity : 0.42, jumpforce : 8.8,jumpsquat : 3, shorthop : 5.8, friction:0.24, hurtcontrol : 0.2, grabtype : "poser",
-	airdrift : 0.1, airmaxspeed : 1.8, airdodgespeed : 6, airdodgefdur : 13, landinglag : 9,coups : kunglao_coups, pv : 100, getupfdur : 28, grabfdur : 30, grabdeg : 12, vicposframes : 6, vicposfdur : 30, cds : [240,150,240,270], icons : [hatthrowiconpng,hatsliceiconpng,whirlwindiconpng,teleporthaticonpng], voiceactor : "male",
+	airdrift : 0.1, airmaxspeed : 1.8, airdodgespeed : 6, airdodgefdur : 13, landinglag : 9,coups : kunglao_coups, pv : 100, getupfdur : 28, grabfdur : 30, grabdeg : 12, vicposframes : 6, vicposfdur : 30, cds : [240,150,270,240], icons : [hatthrowiconpng,hatsliceiconpng,teleporthaticonpng,whirlwindiconpng], voiceactor : "male",
 	default_behav : "normal", combos : kunglao_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Mileena attends fashion week and finally buys shampoo for her hair, because, and I quote, 'You're a girl, you don't have shampoo, it's like you're a girl, you don't have hair'."});
 	
 
@@ -6766,6 +6763,7 @@ class IceClone{
 			for(i=0;i<liste_persos.length;i++){
 				if(!persosunlocked.has(liste_persos[i])){persosunlocked.set(liste_persos[i],false);}
 				if(!statistics.has(liste_persos[i])){statistics.set(liste_persos[i],newCharacStats())}
+				if(!survival_stats.has(liste_persos[i])){survival_stats.set(liste_persos[i],0)}
 			}
 			saveStats();
 		}
