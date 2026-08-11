@@ -1929,6 +1929,7 @@ class IceClone{
 			if(me.perso=="johnny"){this.idealrange=100;this.reversalmove="shadowpunch";this.optionssonoki[0]+=0.1;}
 			if(me.perso=="mileena"){this.rangescaling=4;this.reversalmove="teleport_drop";this.optionssonoki[0]+=0.4;this.reversaldist=200;}
 			if(me.perso=="baraka"){this.reversalmove="gripe";}
+			if(me.perso=="kunglao"){this.reversalmove="whirlwind";}
 			//if(youareintutorial && !me.allowedmoves.includes("block")){this.agressivite+=0.01;}	//pour l'instant ca ferait ca tout le temps
 			if(this.behavior=="zoner"){this.agressivite-=0.01;}
 			if(this.behavior=="masher"){this.wanttojump+=2;this.overshootchance=0.2;this.crazynessmaxcd-=60;}
@@ -2019,6 +2020,7 @@ class IceClone{
 				else if((me.movlag || me.y>0) && val.disponibility=="crouch"){}
 				else if(!(me.crouching<=3 && me.y==0) && val.disponibility=="stand"){}
 				else if(val.disponibility == "none"){}
+				else if(val.slag+val.fdur<=other.invincibilite){}
 				else if(val.hitboxxe+width/2>=newd && d>=val.hitboxxs-width/2 && val.hiteffect != "projectile" && (other.y==0 || me.y>0)){rep.add(key);}
 				else if(other.y>0 && me.y==0 && val.hitboxxe+width/2>=newd+10){rep.add(key);}
 			}
@@ -2123,6 +2125,7 @@ class IceClone{
 				if(coups.get(m).slag<=other.hurted){conviction = -100+movpriority.get(m); conviction -= coups.get(m).degats/2;}
 				if(m=="huppercut" && other.y>0){conviction -= 0;}
 				if(racine(m)=="slide"){return;}
+				if(m=="hatslice" && other.hurted){return;}
 				if(me.y>0 && me.tb<0){conviction-=40;}
 				conviction += thiis.inconsistency*Math.random();
 				conviction-=thiis.grade.get(m);
@@ -2244,8 +2247,11 @@ class IceClone{
 					if(this.desired_move=="fireball" && other.tb>0){break block;}
 					if(this.desired_move=="slicethrow" && other.tb>1.8){break block;}
 					if(this.desired_move=="energywave" && other.tb>2.5){break block;}
+					if(this.desired_move=="hatthrow" && other.y<100 && other.tb>0){break block;}
+					if(this.desired_move=="hatthrow#"){if(other.tb>50){break block;}else{this.desired_move="hatthrow";}}
 					if(this.desired_move=="spear_throw" && (other.tb>4. || Math.abs(-stage_size/2*other.orientation-other.x)<=130)){break block;}
 					if(this.desired_move=="hell_gates" && Math.abs(-stage_size/2*other.orientation-other.x)<=130){break block;}
+					if(this.desired_move=="huppercut" && ((other.y>0 && other.tb>-7) || Math.abs(me.x-other.x)>60)){break block;}
 					if(this.desired_move=="leg_takedown" && this.wantstoenhance()>0){me.enhance=1;}
 					if((!me.charac.coups.has(me.mov) || me.movlag <= me.charac.coups.get(me.mov).elag+me.charac.coups.get(me.mov).fdur-this.cancelcombodelay)){
 						if(movpriority.get(this.desired_move)>movpriority.get(racine(me.mov))){this.begincoup(this.desired_move);
@@ -2294,6 +2300,7 @@ class IceClone{
 				if(me.perso == "johnny" && entre(Math.abs(me.x-other.x),90,200) && this.wantstoenhance()>0){me.enhance=1;this.begincoup("ballthrow");me.enhance=0;this.attacking+=4;}
 				if(me.perso=="baraka"){if(Math.abs(me.x-other.x)>100&&me.y==0){if(this.wantstoenhance()>7){me.enhance=1;}this.begincoup("slicethrow");me.enhance=0;}}
 				if(me.perso=="jax"){if(Math.abs(me.x-other.x)>100&&me.y==0){if(this.wantstoenhance()>7){me.enhance=1;}this.begincoup("energywave");me.enhance=0;}}
+				if(me.perso=="kunglao"){if(Math.abs(me.x-other.x)>120&&me.y==0){if(this.wantstoenhance()>4){me.enhance=1}this.begincoup("hatthrow");me.enhance=0;}}
 			}
 
 			if(me.perso=="raiden" && this.currisking>=-2 && Math.abs(Math.abs(me.x-other.x-other.xspeed*10)-120)<=40 && me.y==0 && (other.y>0 || this.behavior=="masher") && me.crouching==0 && movpriority.get(racine(me.mov))<70 && other.tb<0 && me.cooldowns[1]==0)
@@ -2353,6 +2360,14 @@ class IceClone{
 				{if(this.wantstoenhance()>5){me.enhance=1;}this.begincoup("clapdash");me.enhance=0;}
 			else if(me.perso=="jax" && this.currisking>=-5 && Math.abs(Math.abs(me.x-other.x-other.xspeed*10)-170)<=100 && me.y==0 && other.y==0 && movpriority.get(racine(me.mov))<70 && me.cooldowns[3]==0 && other.invincibilite<5)
 				{if(this.wantstoenhance()>2 && other.crouching>0){me.enhance=1;}this.begincoup("groundpound");me.enhance=0;}
+
+			else if(me.perso=="kunglao" && me.y==0 && Math.abs(me.x-other.x)>=60 && Math.abs(-stage_size/2*me.orientation-me.x)<=130 && other.y>=40 && other.hurted==0 && me.cooldowns[3]<=5 && movpriority.get(racine(me.mov))<70 && this.wantstoenhancedef()>5)
+				{me.enhance=1;this.begincoup("teleport_hat");me.enhance=0;}
+
+			else if(me.perso=="kunglao" && me.y==0 && Math.abs(me.x-other.x)<=60 && other.y>0 && other.tb<0 && me.cooldowns[2]<=5 && movpriority.get(racine(me.mov))<70)
+				{if(this.wantstoenhance()>5){me.enhance=1;}this.begincoup("whirlwind");me.enhance=0;}
+
+			if(me.perso=="kunglao" && other.hurted && me.pet.active){this.attacking=10;}
 
 			if(me.mov == "" && me.y==0 && me.jauge>me.jaugemax/2 && Math.abs(Math.abs(me.x-other.x))>=this.distancetorun && idealrange<=100 && this.behavior!="zoner" && !(this.behavior=="turtle" && this.attacking<=2) && Math.random()<=this.chancetorun && this.currisking>0){this.begin_run();}
 
