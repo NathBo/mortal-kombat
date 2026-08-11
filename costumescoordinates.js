@@ -1687,6 +1687,19 @@ function getkuncoordinates(){
 	kuncoordinates.set("hatslice3",{offx:130,width:92,offy:1671,height:136,decx:0,decy:0});
 	kuncoordinates.set("hatslice4",{offx:231,width:96,offy:1693,height:114,decx:0,decy:0});
 	kuncoordinates.set("hatslice5",{offx:338,width:71,offy:1718,height:89,decx:0,decy:0});
+
+	kuncoordinates.set("rabbittrick1",{offx:15,width:39,offy:1851,height:78,decx:0,decy:0});
+	kuncoordinates.set("rabbittrick2",{offx:64,width:45,offy:1858,height:71,decx:0,decy:0});
+	kuncoordinates.set("rabbittrick3",{offx:119,width:46,offy:1823,height:106,decx:0,decy:0});
+	kuncoordinates.set("rabbittrick4",{offx:175,width:39,offy:1822,height:107,decx:0,decy:0});
+	kuncoordinates.set("rabbittrick5",{offx:226,width:39,offy:1829,height:100,decx:0,decy:0});
+	kuncoordinates.set("rabbittrick6",{offx:276,width:39,offy:1821,height:108,decx:0,decy:0});
+	kuncoordinates.set("rabbittrick7",{offx:345,width:46,offy:1818,height:111,decx:0,decy:0});
+	kuncoordinates.set("rabbittrick8",{offx:402,width:49,offy:1818,height:111,decx:0,decy:0});
+	kuncoordinates.set("rabbittrick9",{offx:461,width:46,offy:1818,height:111,decx:0,decy:0});
+	kuncoordinates.set("rabbittrick10",{offx:518,width:49,offy:1818,height:111,decx:0,decy:0});
+	kuncoordinates.set("rabbittrick11",{offx:593,width:49,offy:1818,height:111,decx:0,decy:0});
+	kuncoordinates.set("rabbit",{offx:577,width:8,offy:1823,height:25,decx:0,decy:0});
 	
 
     return kuncoordinates;

@@ -1306,6 +1306,57 @@ class IceClone{
 		}
 	}
 
+	class Rabbit{
+		constructor(x,y,orientation,other,skin){
+			this.x = x; this.y = y; this.orientation = orientation;
+			this.other = other;
+			this.skin=skin;
+			this.width=8;
+			this.height=25;
+			this.totdur = 70;this.vitesse=8;
+			this.costcpt = 0;
+			this.framepercost = 3;
+			this.dur = this.totdur;
+			this.num = cpt;
+			this.dangerous = false;
+			this.hashit = false;
+			
+		}
+
+		loop(){
+			this.x += this.orientation*this.vitesse;
+			var other = this.other;
+			if(entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/3,this.width/2+other.charac.width/3)){
+				if(!this.hashit){this.hashit=true;play_sound_eff(other.charac.voiceactor+"bighurted");}
+				other.hurted=1+this.dur%10;other.x=this.x+this.orientation*10;
+				if(this.dur%5==0){
+					add_to_objects_set(new Blood(this.x+10*this.orientation,80,-this.orientation,"lblood"));
+					lag_game(1);
+					play_sound_eff("lhit");
+				}
+				fixcamera = 1000;
+			}
+		}
+
+		afficher(){
+			this.costume = "rabbit";
+			ctx.scale(2*this.orientation,2);
+			var coords = kuncoordinates.get(this.costume);
+			var other = this.other;
+			this.shake_x = -2+Math.random()*4; this.shake_y = -2+Math.random()*4;
+			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex+this.shake_x)*this.orientation,ground-this.y-coords.height-coords.decy+shakey+this.shake_y,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			if(Math.abs(other.x-camerax)>decalagex-other.charac.width/2){other.hide=true;}
+			if(gamefreeze==0){this.dur--;}
+			if(this.dur==0){organexplosion(other.x+this.orientation*20,0,this.orientation);this.delete();return;}
+		}
+
+		delete(){
+			objects_to_loop.delete(this.num);
+		}
+	}
+
 
 	class Spear{
 		constructor(x,y,orientation,other,stats,owner,enhanced=false){
@@ -2647,7 +2698,7 @@ class IceClone{
 			if(this.perso=="shao_kahn"){this.crouching=0;}
 			if(this.movlag===undefined){this.movlag=0;}
 			if(this.crouching===undefined){this.crouching=0;}
-			if((this.perso=="raiden" || this.perso=="subzero") && finishhim && this.bas==1){this.bas=2;this.memoryslot++;}
+			if((this.perso=="raiden" || this.perso=="subzero" || this.perso=="kunglao") && finishhim && this.bas==1){this.bas=2;this.memoryslot++;}
 			if(this.perso=="scorpion" && finishhim && this.mov=="hell_gates" && this.special==1){this.special=2;this.memoryslot++;}
 			if(this.perfectblock>1){this.perfectblock--;}
 			else if(this.perfectblock==1){if(this.back==0){this.perfectblock=0;}}
@@ -3209,6 +3260,19 @@ class IceClone{
 						this.mov = ""; this.movlag=0;
 						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
 					}
+					else if(this.perso == "kunglao" && this.bas && this.special==1 && finishhim && entre(Math.abs(this.x-other.x),80,140) && other.y<=30 && other.gettingup==0 && this.memoryslot>=4){
+						this.fatality = 150;
+						play_sound_eff("fatal1");
+						other.y=0;other.reoriente(this);
+						this.special=2;
+						other.falling=0;other.hurted=0;
+						finishhim = 0;
+						other.invincibilite=1000;
+						this.fatalitytype=1;
+						fatalitywasdone = true;
+						this.mov = ""; this.movlag=0; this.crouching=0;
+						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
+					}
 					else if(this.perso == "kitana" && this.forward>=1 && this.special==1 && this.bas==0 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
 						this.begincoup("fanswipe",other);
 					}
@@ -3334,10 +3398,10 @@ class IceClone{
 						//if(this.pet.active){this.pet.goback();}
 						if(movpriority.get(racine(this.mov))<70){this.begincoup("hatthrow",other);}
 					}
-					else if(this.perso == "kunglao" && this.bas>=1 && this.special==1 && (movpriority.get(racine(this.mov))<70 || racine(this.mov)=="hatthrow")&&end_of_round_countdown==0){
+					else if(this.perso == "kunglao" && this.bas>=1 && this.special==1 && movpriority.get(racine(this.mov))<70 &&end_of_round_countdown==0){
 						this.begincoup("whirlwind",other);
 					}
-					else if(this.perso == "kunglao" && this.back>=1 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
+					else if(this.perso == "kunglao" && this.back>=1 && this.special==1 && (movpriority.get(racine(this.mov))<70 || (racine(this.mov)=="hatthrow" && this.movlag<15)) &&end_of_round_countdown==0){
 						this.begincoup("teleport_hat",other);
 					}
 					else if(this.perso == "kunglao" && this.forward>=1 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
@@ -4514,6 +4578,27 @@ class IceClone{
 					if(this.fatality==b-3*c){play_sound_eff("repspit",0.6);}
 					if(this.fatality==a){play_sound_eff("teleport");}
 				}
+				else if(this.perso=="kunglao"){
+					var n = 1;
+					var a = 150; var b = 3; var c = 120; var d = 5; var e = 50;
+					if(this.fatality>=a-b){n=1;}
+					else if(this.fatality>=a-2*b){n=2;}
+					else if(this.fatality>=c){n=3;}
+					else if(this.fatality>=c-d){n=4;}
+					else if(this.fatality>=c-3*d){n=5;}
+					else if(this.fatality>=c-4*d){n=6;}
+					else if(this.fatality>=e){n=7+(Math.floor(this.fatality/5)%4)}
+					else{n=11;}
+					if(this.fatality==e){
+						add_to_objects_set(new Rabbit(this.x+30*this.orientation,80,this.orientation,this.other,this.skin));
+						play_sound_eff("jumpscare",0.7);
+						friendshipwav.pause();
+						friendshipwav.currentTime=0;
+					}
+					if(this.fatality==c+10){friendshipwav.play();}
+					this.costume = "rabbittrick"+n.toString();
+					console.log(this.costume);
+				}
 			}
 			else if(this.decapitated){
 				if(this.decapitated>=2){this.decapitated--;}
@@ -5602,7 +5687,7 @@ class IceClone{
 		if(survival_handler.is_active()){chosenmusic = musiquesalt[chosenstage];}
 		else{chosenmusic = musiques[chosenstage];}
 		if(introon && !secondplayerisdummy){fightstartcountdown = 130;}else{fightstartcountdown=1;}
-		fatalitywasdone = false; fatalitysreen = 0;
+		fatalitywasdone = false; fatalitysreen = 0;fixcamera=0;
 		if(fatality_testing){roundwonsj1 = 1;j2.pv=1;j2.pvaff=1;fightstartcountdown=1;}
 	}
 
@@ -6646,6 +6731,9 @@ class IceClone{
 	sounds_eff.set("explcrunch",[document.querySelector('#explcrunchwav')]);
 	sounds_eff.set("kiss",[document.querySelector('#kisswav')]);
 	sounds_eff.set("67",[document.querySelector('#el67wav')]);
+	sounds_eff.set("jumpscare",[document.querySelector('#jumpscarewav')]);
+
+	var friendshipwav = document.querySelector('#friendshipwav');
 
 	
 
