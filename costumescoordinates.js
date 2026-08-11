@@ -1600,8 +1600,8 @@ function getkuncoordinates(){
 	kuncoordinates.set("decapitated5",{offx:219,width:69,offy:2124,height:44,decx:0,decy:0});
 	kuncoordinates.set("decapitated6",{offx:300,width:78,offy:2146,height:22,decx:0,decy:0});
 	kuncoordinates.set("head",{offx:391,width:16,offy:2144,height:24,decx:0,decy:0});
-	kuncoordinates.set("legs",{offx:454,width:32,offy:1972,height:77,decx:0,decy:0});
-	kuncoordinates.set("torso",{offx:497,width:41,offy:1986,height:63,decx:5,decy:0});
+	kuncoordinates.set("legs",{offx:454,width:32,offy:1972,height:77,decx:3,decy:0});
+	kuncoordinates.set("torso",{offx:497,width:41,offy:1986,height:63,decx:0,decy:0});
 	kuncoordinates.set("torso2",{offx:756,width:53,offy:2007,height:42,decx:0,decy:0});
 	kuncoordinates.set("stunned1",{offx:692,width:37,offy:1318,height:109,decx:0,decy:0});
 	kuncoordinates.set("stunned2",{offx:740,width:37,offy:1319,height:108,decx:0,decy:0});

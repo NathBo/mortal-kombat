@@ -2350,7 +2350,7 @@ class IceClone{
 					if(this.desired_move=="hatthrow#"){if(other.tb>50){break block;}else{this.desired_move="hatthrow";}}
 					if(this.desired_move=="spear_throw" && (other.tb>4. || Math.abs(-stage_size/2*other.orientation-other.x)<=130)){break block;}
 					if(this.desired_move=="hell_gates" && Math.abs(-stage_size/2*other.orientation-other.x)<=130){break block;}
-					if(this.desired_move=="huppercut" && ((other.y>0 && other.tb>-7) || Math.abs(me.x-other.x)>60|| me.y>0)){break block;}
+					if(this.desired_move=="huppercut" && me.perso=="kunglao" && ((other.y>0 && other.tb>-7) || Math.abs(me.x-other.x)>60|| me.y>0)){break block;}
 					if(this.desired_move=="leg_takedown" && this.wantstoenhance()>0){me.enhance=1;}
 					if((!me.charac.coups.has(me.mov) || me.movlag <= me.charac.coups.get(me.mov).elag+me.charac.coups.get(me.mov).fdur-this.cancelcombodelay)){
 						if(movpriority.get(this.desired_move)>movpriority.get(racine(me.mov))){this.begincoup(this.desired_move);
