@@ -6857,9 +6857,9 @@ class IceClone{
 	var introon = true; var timer = 0; var timer_init = 60*60;
 	var liste_persos = ["baraka","mileena","scorpion","johnny","liukang", "kitana", "subzero","reptile","raiden","jax","kunglao"];
 	var persos_tuto = ["raiden","mileena","scorpion","liukang", "kitana", "subzero"];
-	var ordre_persos = [["kunglao","mileena","scorpion","baraka"],
+	var ordre_persos = [["raiden","mileena","scorpion","baraka"],
 						["liukang", "kitana", "subzero","jax"],
-						["","johnny","reptile",""]];7
+						["kunglao","johnny","reptile",""]];7
 	var unlocked_default_persos = ["raiden","mileena","scorpion","baraka"];
 	var chartimer = 0; var chartimercycle = 3; var difficultynames = ["Easy","Normal","Hard","Insane","Terminator"];
 	var is_in_charc_screen = true; var lockincountdown = 0; var lockincountdownfdur = 40; var controlafaire = -1; var key = "";
@@ -6979,7 +6979,7 @@ class IceClone{
 	unlock_clues.set("jax","Win as Baraka");
 	unlock_clues.set("reptile","Find and defeat Reptile");
 	unlock_clues.set("johnny","Do a fatality");
-	unlock_clues.set("kunglao","Round 5 in Survival");
+	unlock_clues.set("kunglao","Beat round 5 in Survival");
 
 	loadStats();
 
