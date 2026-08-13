@@ -252,13 +252,13 @@ function main(){
 		afficher(decrement=true){
 			if(this.dur==0){this.delete();return;}
 			this.drawSkin();
-			if(decrement){this.dur--;}
+			if(decrement && gamefreeze==0){this.dur--;}
 		}
 
 		afficherRota(rotation,decrement=true){
 			if(this.dur==0){this.delete();return;}
 			this.drawSkinRota(rotation);
-			if(decrement){this.dur--;}
+			if(decrement && gamefreeze==0){this.dur--;}
 		}
 
 		drawSkin(){
@@ -419,7 +419,7 @@ function main(){
 					if((other.crouching<=3 || this.can_hit_crouch) && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){return true;}
 				}
 				else{
-					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){true;}
+					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){return true;}
 				}
 			}
 			return false;
@@ -535,34 +535,19 @@ function main(){
 		}
 	}
 
-	class SliceProj{
-		constructor(x,y,orientation,other,stats,skin=reppng){
-			this.x = x; this.y = y; this.orientation = orientation;
-			this.other = other; this.skin = skin;
-			this.width=40;
-			this.height=17;
-			this.totdur = 40;this.vitesse=8.5;
+	class SliceProj extends Projectile{
+		constructor(x,y,orientation,other,stats,skin){
+			super(x,y,orientation,other,stats,skin,barcoordinates,40,40,17,"",false);
+			this.vitesse=8.5;
 			this.costcpt = 0;
 			this.framepercost = 3;
-			this.stats = stats;
-			this.dur = this.totdur;
-			this.num = cpt;
-			this.dangerous = true;
 			this.dying = 0;
 		}
 
 		loop(){
 			if(this.dying==0){
 				this.x += this.orientation*this.vitesse;
-				var stats = this.stats; var other = this.other;
-				if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
-					if(other.y==0){
-						if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
-					}
-					else{
-						if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/4,this.height/2+other.charac.height/4)){other.hurt(this,stats);this.dur=1;}
-					}
-				}
+				this.check_hit_routine();
 			}
 			else{
 				this.dying--;
@@ -578,49 +563,26 @@ function main(){
 			else if(this.dying>=4){this.costume = "slicethrowcont2";}
 			else if(this.dying>=2){this.costume = "slicethrowcont3";}
 			else{this.costume = "slicethrowcont4";}
-			this.rotation = (this.rotation+this.rotationspeed)%360;
-			ctx.scale(2*this.orientation,2);
-			var coords = barcoordinates.get(this.costume);
-			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
+			this.drawSkin();
 			if(gamefreeze==0){this.dur--;}
 			if(this.dur==0){this.dying=8;return;}
 		}
-
-		delete(){
-			objects_to_loop.delete(this.num);
-		}
 	}
 
-	class SpitProj{
+	class SpitProj extends Projectile{
 		constructor(x,y,orientation,other,stats,skin=reppng){
-			this.x = x; this.y = y; this.orientation = orientation;
-			this.other = other; this.skin = skin;
-			this.width=40;
-			this.height=17;
-			this.totdur = 40;this.vitesse=10;
+			super(x,y,orientation,other,stats,skin,repcoordinates,40,40,17,"",false);
+			this.vitesse=10;
 			this.costcpt = 0;
 			this.framepercost = 3;
-			this.stats = stats;
-			this.dur = this.totdur;
-			this.num = cpt;
-			this.dangerous = true;
+			
 			this.dying = 0;
 		}
 
 		loop(){
 			if(this.dying==0){
 				this.x += this.orientation*this.vitesse;
-				var stats = this.stats; var other = this.other;
-				if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
-					if(other.y==0){
-						if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
-					}
-					else{
-						if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/4,this.height/2+other.charac.height/4)){other.hurt(this,stats);this.dur=1;}
-					}
-				}
+				this.check_hit_routine();
 			}
 			else{
 				this.dying--;
@@ -635,63 +597,33 @@ function main(){
 			else if(this.dying>=3){this.costume = "spitproj_cont1";}
 			else{this.costume = "spitproj_cont2";}
 			this.rotation = (this.rotation+this.rotationspeed)%360;
-			ctx.scale(2*this.orientation,2);
-			var coords = repcoordinates.get(this.costume);
-			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
+			this.drawSkin();
 			if(gamefreeze==0){this.dur--;}
 			if(this.dur==0){this.dying=5;return;}
 		}
-
-		delete(){
-			objects_to_loop.delete(this.num);
-		}
 	}
 
-	class ExploProj{
+	class ExploProj extends Projectile{
 		constructor(x,y,orientation,other,stats,skin=reppng){
-			this.x = x; this.y = y; this.orientation = orientation;
-			this.other = other; this.skin = skin;
-			this.width=40;
-			this.height=40;
+			super(x,y,orientation,other,stats,skin,repcoordinates,38,40,40,"",true);
 			this.costcpt = 0;
 			this.framepercost = 3;
 			this.totdur = 13*this.framepercost-1;
-			this.stats = stats;
-			this.dur = this.totdur;
-			this.num = cpt;
-			this.dangerous = true;
 			this.dying = 0;
 			this.hashit = false;
 		}
 
 		loop(){
-			var stats = this.stats; var other = this.other;
-			if(other.invincibilite==0 && other.projectile_invincibility==0 && !this.hashit &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2) && (this.costume == "expl3" || this.costume == "expl4" || this.costume == "expl5")){
-				if(other.y==0){
-					if(entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.hashit=true;}
-				}
-				else{
-					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){other.hurt(this,stats);this.hashit=true;}
-				}
+			console.log(this.stats);
+			if(this.can_hit_other() && !this.hashit && (this.costume == "expl3" || this.costume == "expl4" || this.costume == "expl5")){
+				this.other.hurt(this,this.stats);this.hashit=true;
 			}
 
 		}
 
 		afficher(){
 			this.costume = "expl"+(13-Math.floor(this.dur/this.framepercost)).toString();
-			ctx.scale(2*this.orientation,2);
-			var coords = repcoordinates.get(this.costume);
-			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-			if(gamefreeze==0){this.dur--;}
-			if(this.dur==0){this.delete();return;}
-		}
-
-		delete(){
-			objects_to_loop.delete(this.num);
+			super.afficher();
 		}
 	}
 
