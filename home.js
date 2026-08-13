@@ -236,31 +236,76 @@ function main(){
 		still_draw = true;
 	}
 
-	class Blood
+	class VisualObject
+	{
+		constructor(x,y,orientation,skin,costume,coordinates,dur){
+			this.x = x; this.y = y; this.orientation = orientation;
+			this.skin = skin; this.costume = costume; this.coordinates = coordinates;
+			this.num = cpt; this.totdur = dur; this.dur = dur;
+			this.dangerous = false;
+		}
+
+		loop(){
+
+		}
+
+		afficher(decrement=true){
+			if(this.dur==0){this.delete();return;}
+			this.drawSkin();
+			if(decrement){this.dur--;}
+		}
+
+		afficherRota(rotation,decrement=true){
+			if(this.dur==0){this.delete();return;}
+			this.drawSkinRota(rotation);
+			if(decrement){this.dur--;}
+		}
+
+		drawSkin(){
+			ctx.scale(2*this.orientation,2);
+			var coords = this.coordinates.get(this.costume);
+			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*coords.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+    	}
+
+		drawSkinRota(rotation){
+			var coords = this.coordinates.get(this.costume);
+			var orientation = this.orientation;
+			if(coords.flip==true){orientation*=-1;}
+			var x = (this.x+decalagex-camerax+coords.decx*orientation-orientation*coords.width/2+shakex)*orientation;
+			var y = ground-this.y-coords.height-coords.decy+shakey;
+			ctx.scale(2*orientation,2);
+			ctx.translate(x+coords.width/2,y+coords.height/2);
+			ctx.rotate(Math.PI*rotation/180);
+			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,-coords.width/2,-coords.height/2,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+			ctx.restore();
+		}
+
+		delete(){
+			objects_to_loop.delete(this.num);
+		}
+	}
+
+	class Blood extends VisualObject
 	{
 		constructor(x,y,orientation,bloodtype){
-			this.x = x; this.y = y; this.orientation = orientation;
+			super(x,y,orientation,bloodpng,"",bloodcoordinates,10);
 			this.bloodtype = bloodtype;
 			if(this.bloodtype=="lblood"){this.totdur = 18;this.nframes = 6;this.vitesse=0.8;}
 			else if(this.bloodtype=="mblood"){this.totdur = 28;this.nframes = 7;this.vitesse=0.1;}
 			else if(this.bloodtype=="hblood"){this.totdur = 20;this.nframes = 6;this.vitesse=0;}
 			this.dur = this.totdur;
-			this.num = cpt;
-			this.dangerous = false;
 		}
 
 		loop(){}
 
 		afficher(){
-			if(this.dur==0){this.delete();return;}
 			let n = Math.floor((this.totdur - this.dur)/this.totdur*this.nframes)+1;
-			let cost = this.bloodtype+n;
-			let coords = bloodcoordinates.get(cost);
-			ctx.scale(2*this.orientation,2);
-			ctx.drawImage(bloodpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*coords.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-			this.dur--;
+			this.costume = this.bloodtype+n;
+			super.afficher();
 			this.x-=this.vitesse*this.orientation;
 		}
 
@@ -269,10 +314,10 @@ function main(){
 		}
 	}
 
-	class DropBlood
+	class DropBlood extends VisualObject
 	{
 		constructor(x,y,orientation,bloodtype,vitesse=2.,tb=3.){
-			this.x = x; this.y = y; this.orientation = orientation;
+			super(x,y,orientation,bloodpng,"",bloodcoordinates,10);
 			this.bloodtype = bloodtype;this.dec = 1;
 			if(this.bloodtype=="dropblood"){this.totdur = 20+Math.floor(tb*4);this.nframes = 9;}
 			else if(this.bloodtype=="ldropblood"){this.bloodtype="hdropblood";this.totdur = 20+Math.floor(tb*4);this.nframes = 5;this.dec=6;}
@@ -280,22 +325,14 @@ function main(){
 			this.vitesse=vitesse;
 			this.tb = tb; this.gravity = 0.25;
 			this.dur = this.totdur;
-			this.num = cpt;
-			this.dangerous = false;
 		}
 
 		loop(){}
 
 		afficher(){
-			if(this.dur==0){this.delete();return;}
 			let n = Math.floor((this.totdur - this.dur)/this.totdur*this.nframes)+this.dec;
-			let cost = this.bloodtype+n;
-			let coords = bloodcoordinates.get(cost);
-			ctx.scale(2*this.orientation,2);
-			ctx.drawImage(bloodpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*coords.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-			this.dur--;
+			this.costume = this.bloodtype+n;
+			super.afficher();
 			if(this.y>0){
 				this.x-=this.vitesse*this.orientation;
 				this.y += this.tb;
@@ -309,7 +346,7 @@ function main(){
 				}
 			}
 			else if(fatalitywasdone){
-				this.dur = Math.max(this.dur,1);
+				this.dur = Math.max(this.dur,2);
 			}
 		}
 
@@ -350,13 +387,11 @@ function main(){
 		}
 	}
 
-	class WhirlWindEffect{
+	class WhirlWindEffect extends VisualObject{
 		constructor(x,y,joueur){
-			this.x = x; this.y = y; this.joueur=joueur;
-			this.skin = this.joueur.skin;
-			this.totdur = 18; this.dur = this.totdur-1; 
-			this.num = cpt;
-			this.orientation=1;
+			super(x,y,1,joueur.skin,"whirlwindeffect1",kuncoordinates,18);
+			this.joueur=joueur;
+			this.dur--;
 		}
 		loop(){
 			this.x = this.joueur.x-this.joueur.orientation*5;
@@ -365,18 +400,7 @@ function main(){
 
 		afficher(){
 			this.costume = "whirlwindeffect"+(4-Math.floor(this.dur/this.totdur*4)).toString();
-			ctx.scale(2*this.orientation,2);
-			var coords = kuncoordinates.get(this.costume);
-			this.width=coords.width;this.height=coords.height;
-			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-			if(gamefreeze==0){this.dur--;}
-			if(this.dur==0){this.delete();return;}
-		}
-
-		delete(){
-			objects_to_loop.delete(this.num);
+			super.afficher();
 		}
 	}
 
@@ -1418,18 +1442,14 @@ class IceClone{
 		}
 	}
 
-	class ScorpionFlame{
+	class ScorpionFlame extends VisualObject{
 		constructor(x,y,orientation,other,stats){
-			this.x = x; this.y = y; this.orientation = orientation;
+			super(x,y,orientation,scopng,"",scocoordinates,31);
 			this.other = other;
 			this.width=22;
 			this.height=44;
-			this.totdur = 31;this.vitesse=6;
+			this.vitesse=6;
 			this.stats = stats;
-			this.dur = this.totdur;
-			this.num = cpt;
-			this.rotation = 0; this.rotationspeed = 16;
-			this.dangerous = false;
 			this.explosion = 0;
 			
 		}
@@ -1440,15 +1460,10 @@ class IceClone{
 		}
 
 		afficher(){
-			ctx.scale(2*this.orientation,2);
 			if(this.explosion==1){this.other.burn();this.other.shake_player(100,3.);}
 			if(this.explosion==0){this.costume = "flame";this.width=14;}
 			else{this.costume = "flame_explosion"+(Math.floor(this.explosion/4)+1).toString();this.width=50;}
-			var coords = scocoordinates.get(this.costume);
-			ctx.drawImage(scopng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-			if(this.dur==0){this.delete();return;}
+			super.afficher(false);
 		}
 
 		delete(){
@@ -1507,18 +1522,16 @@ class IceClone{
 		}
 	}
 
-	class Head{
+	class Head extends VisualObject{
 		constructor(x,y,orientation,skin,coords, power=2, vitesse = -1){
-			this.x = x; this.y = y; this.orientation = orientation; this.skin = skin; this.coords = coords;
+			super(x,y,orientation,skin,"head",coords,10);
 			this.width=22;
 			this.height=44;
 			this.width=18;this.height = 25;
-			this.num = cpt;
 			this.rotation = 0; this.rotationspeed = 16+2*Math.abs(vitesse);
 			this.gravity = 0.15;
 			this.tb=Math.random()*2+power;
 			this.vitesse = vitesse-Math.random();
-			this.dangerous = false;
 			
 		}
 
@@ -1531,32 +1544,18 @@ class IceClone{
 		}
 
 		afficher(){
-			this.costume = "head";
-			var coords = this.coords.get(this.costume);
-			var orientation = this.orientation;
-			if(coords.flip==true){orientation*=-1;}
-			var x = (this.x+decalagex-camerax+coords.decx*orientation-orientation*this.width/2+shakex)*orientation;
-			var y = ground-this.y-coords.height-coords.decy+shakey;
-			ctx.scale(2*orientation,2);
-			ctx.translate(x+coords.width/2,y+coords.height/2);
-			ctx.rotate(Math.PI*this.rotation/180);
-			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,-coords.width/2,-coords.height/2,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-			ctx.restore();
+			this.afficherRota(this.rotation,false);
 		}
 
 	}
 
-	class Torso{
+	class Torso extends VisualObject{
 		constructor(x,y,orientation,skin,coords){
-			this.x = x; this.y = y; this.orientation = orientation; this.skin = skin; this.coords = coords;
+			super(x,y,orientation,skin,"torso",coords,10);
 			this.width=35;
 			this.height=40;
 			this.width=18;this.height = 25;
-			this.num = cpt;
 			this.rotation = 0;
-			this.dangerous = false;
 			this.liberated = false;
 			this.bounces = 1;
 			this.vitesse=-1.5;
@@ -1586,31 +1585,16 @@ class IceClone{
 		}
 
 		afficher(){
-			this.costume = "torso";
 			if(this.liberated){this.costume="torso2";}
-			var coords = this.coords.get(this.costume);
-			var x = (this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation;
-			var y = ground-this.y-coords.height-coords.decy+shakey;
-			ctx.scale(2*this.orientation,2);
-			ctx.translate(x+coords.width/2,y+coords.height/2);
-			ctx.rotate(Math.PI*this.rotation/180);
-			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,-coords.width/2,-coords.height/2,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-			ctx.restore();
+			this.afficherRota(this.rotation,false);
 		}
 
 	}
 
-	class EatenHead{
+	class EatenHead extends VisualObject{
 		constructor(x,y,orientation,skin,coords, dur, vitesse){
-			this.x = x; this.y = y; this.orientation = orientation; this.skin = skin; this.coords = coords;
-			this.width=18;this.height = 25;
-			this.num = cpt;
-			this.dur = dur;
-			this.gravity = 0.15;
+			super(x,y,orientation,skin,"head",coords,dur);
 			this.vitesse = vitesse;
-			this.dangerous = false;
 			
 		}
 
@@ -1619,29 +1603,15 @@ class IceClone{
 		}
 
 		afficher(){
-			this.dur--;
-			this.costume = "head";
-			ctx.scale(2*this.orientation,2);
-			var coords = this.coords.get(this.costume);
-			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*coords.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-			if(this.dur==0){this.delete();}
-		}
-		delete(){
-			objects_to_loop.delete(this.num);
+			super.afficher();
 		}
 
 	}
 
-	class Double{
+	class Double extends VisualObject{
 		constructor(x,y,orientation,skin,vitesse,costume,coordinates,dur){
-			this.x = x; this.y = y; this.orientation = orientation; this.skin = skin;
-			this.costume = costume; this.coordinates = coordinates;
-			this.num = cpt;
-			this.dur = dur;
+			super(x,y,orientation,skin,costume,coordinates,dur);
 			this.vitesse = vitesse;
-			this.dangerous = false;
 		}
 
 		loop(){
@@ -1649,31 +1619,19 @@ class IceClone{
 		}
 
 		afficher(){
-			this.dur--;
-			ctx.scale(2*this.orientation,2);
-			var coords = this.coordinates.get(this.costume);
 			ctx.globalAlpha = 0.3;
-			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*coords.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
+			super.afficher();
 			ctx.globalAlpha = 1.;
-			if(this.dur==0){this.delete();}
-		}
-
-		delete(){
-			objects_to_loop.delete(this.num);
 		}
 
 	}
 
-	class Ring{
+	class Ring extends VisualObject{
 		constructor(x,y,orientation,skin,vitesse,vitesseincr){
-			this.x = x; this.y = y; this.orientation = orientation; this.skin = skin;
-			this.num = cpt;
+			super(x,y,orientation,skin,"",repcoordinates,12);
+			this.dur--;
 			this.framepercost = 2;
-			this.dur = this.framepercost*6
 			this.vitesse = vitesse;this.vitesseincr = vitesseincr;
-			this.dangerous = false;
 		}
 
 		loop(){
@@ -1682,35 +1640,21 @@ class IceClone{
 		}
 
 		afficher(){
-			this.dur--;
 			this.costume = "ring"+(6-Math.floor(this.dur/this.framepercost)).toString();
-			ctx.scale(2*this.orientation,2);
-			var coords = repcoordinates.get(this.costume);
-			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*coords.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-			if(this.dur==0){this.delete();}
-		}
-
-		delete(){
-			objects_to_loop.delete(this.num);
+			super.afficher();
 		}
 
 	}
 
-	class Organ{
+	class Organ extends VisualObject{
 		constructor(x,y,orientation, burning=false){
-			this.x = x; this.y = y; this.orientation = orientation;
-			if(burning){this.coords = bloodcoordinates.get("burningorgan"+(Math.floor(Math.random()*3)+1));}
-			else{this.coords = bloodcoordinates.get("organ"+(Math.floor(Math.random()*6)+1));}
-			this.width=this.coords.width;
-			this.height=this.coords.height;
-			this.num = cpt;
+			super(x,y,orientation,bloodpng,"",bloodcoordinates,10);
+			if(burning){this.costume = "burningorgan"+(Math.floor(Math.random()*3)+1).toString();}
+			else{this.costume = "organ"+(Math.floor(Math.random()*6)+1).toString();}
 			this.rotation = 0; this.rotationspeed = 16;
 			this.gravity = 0.2;
 			this.tb=Math.random()*4.5+3.5;
 			this.vitesse = -2+Math.random()*4;
-			this.dangerous = false;
 			
 		}
 
@@ -1723,16 +1667,7 @@ class IceClone{
 		}
 
 		afficher(){
-			var coords = this.coords;
-			var x = (this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation;
-			var y = ground-this.y-coords.height-coords.decy+shakey;
-			ctx.scale(2*this.orientation,2);
-			ctx.translate(x+coords.width/2,y+coords.height/2);
-			ctx.rotate(Math.PI*this.rotation/180);
-			ctx.drawImage(bloodpng,coords.offx,coords.offy,coords.width,coords.height,-coords.width/2,-coords.height/2,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-			ctx.restore();
+			super.afficherRota(this.rotation,false);
 		}
 
 	}
@@ -3868,7 +3803,7 @@ class IceClone{
 					case "whirlwind":
 						var stats = this.charac.coups.get(this.mov);
 						if(this.is_enhanced() && this.movlag==stats.elag+stats.fdur+stats.slag){this.invincibilite=10;}
-						if(this.movlag==stats.elag+stats.fdur+1){add_to_objects_set(new WhirlWindEffect(this.x-this.orientation*5,this.y,this));}
+						if(this.movlag==stats.elag+stats.fdur+1){add_to_objects_set(new WhirlWindEffect(this.x,this.y,this));}
 						break;
 					}
 				this.movlag--;
@@ -3899,7 +3834,6 @@ class IceClone{
 				this.xspeed=0;
 				if(this.mov=="run"){this.mov="";this.movlag=0;}
 			}
-			if(this.n==0){console.log(signe(this.xspeed),signe(this.x-camerax))}
 			if(Math.abs(this.x-camerax)>borderx-this.charac.width/2 && !other.fatality && this.mov != "hell_gates" && !(signe(this.xspeed)==-signe(this.x-camerax) && this.y>0)){this.x = signe(this.x-camerax)*(borderx+signe(this.x-camerax)*camerax-this.charac.width/2);}
 		}
 		else
@@ -6900,7 +6834,7 @@ class IceClone{
 	var score = 0; var matchscore = 0; var roundscore = 0;
 	var old_stats = null; var new_stats = null; var highscore_screen_cpt = 0;
 
-	var fatality_testing = false;
+	var fatality_testing = true;
 
 	var survival_handler = new SurvivalHandler();
 
