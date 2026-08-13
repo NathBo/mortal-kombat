@@ -111,10 +111,10 @@ var stagesstruct = [towerstructurepng, deadpoolpng, wastestructurepng, forestgro
 var stagesground = [towergroundpng, null, wastegroundpng, null, null, null];
 var stagesbackground = [towerbackgroundpng, null, wastebackgroundpng, forestbackgroundpng, gorobackgroundpng, kahnbackgroundpng];
 var grounds = [240, 220, 240, 240, 230, 240];
-var stagesizes = [714,650, 710,760, 735, 690];
+var stagesizes = [754,690, 750,800, 775, 730];
 var backgroundscroll = [0.2,0,0,0.2, 0.5, 0.4];
 var backgrounddecal = [0,0,0,0,0,-20];
-var structdecal = [0,0,0,0,0,0];
+var structdecal = [10,10,10,10,10,10];
 
 var characterscreenpng = new Image();characterscreenpng.src = 'ressource/stages/character_screen.png';
 var raideniconpng=new Image();raideniconpng.src = 'ressource/icons/raiden.png';
