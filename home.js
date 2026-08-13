@@ -265,6 +265,7 @@ function main(){
 			ctx.scale(2*this.orientation,2);
 			var coords = this.coordinates.get(this.costume);
 			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*coords.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			//console.log((this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*coords.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,this.costume);
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
     	}
@@ -404,6 +405,31 @@ function main(){
 		}
 	}
 
+	class Projectile extends VisualObject{
+		constructor(x,y,orientation,other,stats,skin,coordinates,dur,width,height,costume,can_hit_crouch){
+			super(x,y,orientation,skin,costume,coordinates,dur);
+			this.other = other; this.width = width; this.height = height;
+			this.dangerous = true; this.can_hit_crouch = can_hit_crouch; this.stats = stats;
+		}
+
+		can_hit_other(){
+			var other = this.other;
+			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
+				if(other.y==0){
+					if((other.crouching<=3 || this.can_hit_crouch) && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){return true;}
+				}
+				else{
+					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){true;}
+				}
+			}
+			return false;
+		}
+
+		check_hit_routine(){
+			if(this.can_hit_other() && this.dur>0){this.other.hurt(this,this.stats);this.dur=1;}
+		}
+	}
+
 	class Fan{
 		constructor(x,y,orientation,other,stats,enhanced=false){
 			this.x = x; this.y = y; this.orientation = orientation;
@@ -483,21 +509,14 @@ function main(){
 	}
 
 
-	class Bolt{
+	class Bolt extends Projectile{
 		constructor(x,y,orientation,other,stats,skin=raipng,enhanced = false){
-			this.x = x; this.y = y; this.orientation = orientation; this.skin = skin;
-			this.other = other;
-			this.width=40;
-			this.height=17;
-			this.totdur = 40*(1+enhanced);this.vitesse=8;
+			super(x,y,orientation,other,stats,skin,raicoordinates,40*(1+enhanced),40,17,"",false);
 			this.costcpt = 0;
 			this.framepercost = 3;
-			this.stats = stats;
-			this.dur = this.totdur;
-			this.num = cpt;
-			this.dangerous = true;
 			this.enhanced = enhanced;
 			this.bloup = 0 + this.enhanced;
+			this.vitesse = 8;
 		}
 
 		loop(){
@@ -506,32 +525,13 @@ function main(){
 				if(this.bloup){this.bloup--;this.x += this.orientation*-2*(borderx+30);}
 				else{this.delete()}
 			}
-			var stats = this.stats; var other = this.other;
-			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
-				if(other.y==0){
-					if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
-				}
-				else{
-					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){other.hurt(this,stats);this.dur=1;}
-				}
-			}
+			this.check_hit_routine();
 		}
 
 		afficher(){
 			this.costcpt = (this.costcpt+1)%(4*this.framepercost);
 			this.costume = "bolt"+(Math.floor(this.costcpt/this.framepercost)+1);
-			this.rotation = (this.rotation+this.rotationspeed)%360;
-			ctx.scale(2*this.orientation,2);
-			var coords = raicoordinates.get(this.costume);
-			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-			if(gamefreeze==0){this.dur--;}
-			if(this.dur==0){this.delete();return;}
-		}
-
-		delete(){
-			objects_to_loop.delete(this.num);
+			super.afficher();
 		}
 	}
 
