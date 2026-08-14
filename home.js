@@ -614,7 +614,6 @@ function main(){
 		}
 
 		loop(){
-			console.log(this.stats);
 			if(this.can_hit_other() && !this.hashit && (this.costume == "expl3" || this.costume == "expl4" || this.costume == "expl5")){
 				this.other.hurt(this,this.stats);this.hashit=true;
 			}
@@ -627,752 +626,1098 @@ function main(){
 		}
 	}
 
-	class ChargeBall_Ball{
-		constructor(x,y,orientation,other,stats,skin=reppng){
-			this.x = x; this.y = y; this.orientation = orientation; this.skin = skin;
-			this.other = other;
-			this.width=40;
-			this.height=17;
-			this.totdur = 50;this.vitesse=4;
-			this.costcpt = 0;
-			this.framepercost = 3;
-			this.stats = stats;
-			this.dur = this.totdur;
-			this.num = cpt;
-			this.dangerous = true;
+	class ChargeBall_Ball extends Projectile {
+		constructor(x, y, orientation, other, stats, skin = reppng) {
+			super(
+				x,
+				y,
+				orientation,
+				other,
+				stats,
+				skin,
+				repcoordinates,
+				50,
+				40,
+				17,
+				"chargeball_ball1",
+				true
+			);
+
+			this.vitesse = 4;
 			this.vitesseincr = 0.1;
-			
-		}
-
-		loop(){
-			this.x += this.orientation*this.vitesse;
-			this.vitesse+=this.vitesseincr;
-			var stats = this.stats; var other = this.other;
-			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
-				if(other.y==0){
-					if(entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
-				}
-				else{
-					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){other.hurt(this,stats);this.dur=1;}
-				}
-			}
-			if(this.dur%10==0){add_to_objects_set(new Ring(this.x,this.y,this.orientation,this.skin,this.vitesse,this.vitesseincr));}
-		}
-
-		afficher(){
-			this.costcpt = (this.costcpt+1)%(2*this.framepercost);
-			this.costume = "chargeball_ball"+(Math.floor(this.costcpt/this.framepercost)+1);
-			this.rotation = (this.rotation+this.rotationspeed)%360;
-			ctx.scale(2*this.orientation,2);
-			var coords = repcoordinates.get(this.costume);
-			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-			if(gamefreeze==0){this.dur--;}
-			if(this.dur==0){this.delete();return;}
-		}
-
-		delete(){
-			objects_to_loop.delete(this.num);
-		}
-	}
-
-	class Knife{
-		constructor(x,y,orientation,other,stats, vitesse = 6){
-			this.x = x; this.y = y; this.orientation = orientation;
-			this.other = other;
-			this.width=40;
-			this.height=17;
-			this.totdur = 40;this.vitesse=vitesse;
 			this.costcpt = 0;
 			this.framepercost = 3;
-			this.stats = stats;
-			this.dur = this.totdur;
-			this.num = cpt;
-			this.dangerous = true;
-			
 		}
 
-		loop(){
-			this.x += this.orientation*this.vitesse;
-			knife_stats.hurty = this.vitesse-2; var other = this.other;
-			knife_stats.degats = Math.floor(this.vitesse);
-			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
-				if(other.y==0){
-					if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,knife_stats);this.dur=1;}
-				}
-				else{
-					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){other.hurt(this,knife_stats);this.dur=1;}
-				}
+		loop() {
+			this.x += this.orientation * this.vitesse;
+			this.vitesse += this.vitesseincr;
+
+			this.check_hit_routine();
+
+			if (this.dur % 10 == 0) {
+				add_to_objects_set(
+					new Ring(
+						this.x,
+						this.y,
+						this.orientation,
+						this.skin,
+						this.vitesse,
+						this.vitesseincr
+					)
+				);
 			}
 		}
 
-		afficher(){
-			this.costcpt = (this.costcpt+1)%(4*this.framepercost);
-			this.costume = "knife"
-			this.rotation = (this.rotation+this.rotationspeed)%360;
-			ctx.scale(2*this.orientation,2);
-			var coords = milcoordinates.get(this.costume);
-			ctx.drawImage(milpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-			if(gamefreeze==0){this.dur--;}
-			if(this.dur==0){this.delete();return;}
-		}
+		afficher() {
+			this.costcpt = (this.costcpt + 1) % (2 * this.framepercost);
+			this.costume =
+				"chargeball_ball" +
+				(Math.floor(this.costcpt / this.framepercost) + 1);
 
-		delete(){
-			objects_to_loop.delete(this.num);
+			super.afficher();
 		}
 	}
 
-	class HomingKnife{
-		constructor(x,y,orientation,other,stats, vitesse = 4){
-			this.x = x; this.y = y; this.orientation = orientation;
-			this.other = other;
-			this.width=40;
-			this.height=19;
-			this.totdur = 320/vitesse;this.vitesse=vitesse; this.vitessey = 1;
+	class Knife extends Projectile {
+		constructor(x, y, orientation, other, stats, vitesse = 6) {
+			super(
+				x,
+				y,
+				orientation,
+				other,
+				stats,
+				milpng,
+				milcoordinates,
+				40,
+				40,
+				17,
+				"knife",
+				false
+			);
+
+			this.vitesse = vitesse;
 			this.costcpt = 0;
 			this.framepercost = 3;
-			this.stats = stats;
-			this.dur = this.totdur;
-			this.num = cpt;
-			this.dangerous = true;
-			
 		}
 
-		loop(){
-			this.x += this.orientation*this.vitesse;
-			var stats = this.stats; var other = this.other;
-			if(Math.abs(other.y-this.y)>10){
-				this.y+=this.vitessey*signe(other.y-this.y);
-			}
-			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
-				if(other.y==0){
-					if(entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3*(other.crouching<=3),this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
-				}
-				else{
-					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){other.hurt(this,stats);this.dur=1;}
-				}
-			}
+		loop() {
+			this.x += this.orientation * this.vitesse;
+
+			this.stats.hurty = this.vitesse - 2;
+			this.stats.degats = Math.floor(this.vitesse);
+
+			this.check_hit_routine();
 		}
 
-		afficher(){
-			this.costcpt = (this.costcpt+1)%(4*this.framepercost);
-			this.costume = "knife"
-			this.rotation = (this.rotation+this.rotationspeed)%360;
-			ctx.scale(2*this.orientation,2);
-			var coords = milcoordinates.get(this.costume);
-			ctx.drawImage(milpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-			if(gamefreeze==0){this.dur--;}
-			if(this.dur==0){this.delete();return;}
-		}
+		afficher() {
+			this.costcpt = (this.costcpt + 1) % (4 * this.framepercost);
+			this.costume = "knife";
 
-		delete(){
-			objects_to_loop.delete(this.num);
+			super.afficher();
 		}
 	}
 
+	class HomingKnife extends Projectile {
+		constructor(x, y, orientation, other, stats, vitesse = 4) {
+			super(
+				x,
+				y,
+				orientation,
+				other,
+				stats,
+				milpng,
+				milcoordinates,
+				320 / vitesse,
+				40,
+				19,
+				"knife",
+				true
+			);
 
-
-
-	class Iceball{
-		constructor(x,y,orientation,other,stats,enhanced){
-			this.x = x; this.y = y; this.orientation = orientation;
-			this.other = other;
-			this.width=60;
-			this.height=20;
-			this.totdur = 50;this.vitesse=5;
-			if(enhanced){this.vitesse=2;this.totdur=150;}
-			this.stats = stats;
-			this.dur = this.totdur;
-			this.num = cpt;
-			this.dangerous = true;
-			
+			this.vitesse = vitesse;
+			this.vitessey = 1;
 		}
 
-		loop(){
-			this.x += this.orientation*this.vitesse;
-			var stats = this.stats; var other = this.other;
-			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
-				if(other.y==0){
-					if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
-				}
-				else{
-					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){other.hurt(this,stats);this.dur=1;}
-				}
-			}
-		}
-
-		afficher(){
-			this.costume = "iceball";
-			ctx.scale(2*this.orientation,2);
-			var coords = subcoordinates.get(this.costume);
-			ctx.drawImage(subpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-			if(gamefreeze==0){this.dur--;}
-			if(this.dur==0){this.delete();return;}
-		}
-
-		delete(){
-			objects_to_loop.delete(this.num);
-		}
-	}
-
-class IceClone{
-		constructor(x,y,orientation,other,stats){
-			this.x = x; this.y = y; this.orientation = orientation;
-			this.other = other;
-			this.width=37;
-			this.height=103;
-			this.totdur = 150;
-			this.stats = stats;this.vitesse=0;
-			this.dur = this.totdur;
-			this.num = cpt;
-			this.dangerous = true;
-			
-		}
-
-		loop(){
-			var stats = this.stats; var other = this.other;
-			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
-				if(other.y==0){
-					if(entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
-				}
-				else{
-					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height*0.8+other.charac.height/6)){other.hurt(this,stats);this.dur=1;}
-				}
-			}
-		}
-
-		afficher(){
-			this.costume = "icebody2";
-			ctx.scale(2*this.orientation,2);
-			var coords = subcoordinates.get(this.costume);
-			ctx.drawImage(subpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-			if(gamefreeze==0){this.dur--;}
-			if(this.dur==0){this.delete();return;}
-		}
-
-		delete(){
-			objects_to_loop.delete(this.num);
-		}
-	}
-
-
-
-	class Fireball{
-		constructor(x,y,orientation,other,stats){
-			this.x = x; this.y = y; this.orientation = orientation;
-			this.other = other;
-			this.width=30;
-			this.height=16;
-			this.totdur = 50;this.vitesse=7;
-			this.stats = stats;
-			this.dur = this.totdur;
-			this.num = cpt;
-			this.dangerous = true;
-			
-		}
-
-		loop(){
-			this.x += this.orientation*this.vitesse;
-			var stats = this.stats; var other = this.other;
-			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
-				if(other.y==0){
-					if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
-				}
-				else{
-					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){other.hurt(this,stats);this.dur=1;}
-				}
-			}
-		}
-
-		afficher(){
-			this.costume = "fireball";
-			ctx.scale(2*this.orientation,2);
-			var coords = liucoordinates.get(this.costume);
-			ctx.drawImage(liupng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-			if(gamefreeze==0){this.dur--;}
-			if(this.dur==0){this.delete();return;}
-		}
-
-		delete(){
-			objects_to_loop.delete(this.num);
-		}
-	}
-
-	class EnergyWave{
-		constructor(x,y,orientation,other,stats,enhanced=false){
-			this.x = x; this.y = y; this.orientation = orientation;
-			this.other = other;
-			this.width=57;
-			this.height=27;
-			this.totdur = 40;this.vitesse=8+enhanced;
-			this.stats = stats;
-			this.dur = this.totdur;
-			this.num = cpt;
-			this.dangerous = true;
-			
-		}
-
-		loop(){
-			this.x += this.orientation*this.vitesse;
-			var stats = this.stats; var other = this.other;
-			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
-				if(other.y==0){
-					if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
-				}
-				else{
-					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){other.hurt(this,stats);this.dur=1;}
-				}
-			}
-		}
-
-		afficher(){
-			this.costume = "energywave";
-			ctx.scale(2*this.orientation,2);
-			var coords = jaxcoordinates.get(this.costume);
-			ctx.drawImage(jaxpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-			if(gamefreeze==0){this.dur--;}
-			if(this.dur==0){this.delete();return;}
-		}
-
-		delete(){
-			objects_to_loop.delete(this.num);
-		}
-	}
-
-
-	class Hat{
-		constructor(owner,other){
-			this.owner=owner;this.other=other;
-			this.dangerous=false;
-			this.active=false;
-			this.skin = this.owner.skin;
-		}
-
-		throw(x,y,orientation,stats,enhanced=false){
-			this.x = x; this.y = y; this.orientation = orientation;
-			this.width=28;
-			this.height=15;
-			this.totdur = 70;this.vitesse=8+enhanced;
-			this.stats = stats;
-			this.dur = this.totdur;
-			this.num = cpt;
-			this.dangerous = true;this.active=true;this.hasgonebackcharge=1+enhanced*2;
-			
-		}
-
-		goback(){
-			if(this.hasgonebackcharge){this.hasgonebackcharge--;this.dangerous=true;this.dur=70;this.orientation=-this.orientation;}
-		}
-
-		loop(){
-			if(!this.active){return;}
-			this.x += this.orientation*this.vitesse;
+		can_hit_other() {
 			var other = this.other;
-			if(other.hurted && other.tb<0 && other.y-Math.abs(this.x-other.x)/4<=60 && signe(this.x-other.x)==this.orientation && !this.dangerous){this.goback();}
-			other=this.owner;
-			//signe(this.x-other.x)==-this.orientation
-			if(entre((other.x-this.x)*this.orientation,-20,20) && this.hasgonebackcharge==0){
-				if(other.y==0){
-					if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.cooldowns[0]=Math.floor(other.cooldowns[0]/2);this.dangerous=false;this.active=false;}
+
+			if (
+				other.invincibilite == 0 &&
+				other.projectile_invincibility == 0 &&
+				entre(
+					(other.x - this.x) * this.orientation,
+					-this.width / 2 - other.charac.width / 2,
+					this.width / 2 + other.charac.width / 2
+				)
+			) {
+				if (other.y == 0) {
+					return entre(
+						other.y + other.charac.height / 2 - this.y,
+						-this.height / 2 -
+							(other.charac.height / 3) * (other.crouching <= 3),
+						this.height / 2 + other.charac.height / 3
+					);
 				}
-				else{
-					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){other.cooldowns[0]=Math.floor(other.cooldowns[0]/2);this.dangerous=false;this.active=false;}
-				}
+
+				return entre(
+					other.y + other.charac.height / 3 - this.y,
+					-this.height / 2 - other.charac.height / 6,
+					this.height / 2 + other.charac.height / 6
+				);
 			}
-			if(!this.dangerous){return;}
-			var stats = this.stats; other = this.other;
-			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
-				if(other.y==0){
-					if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dangerous=false;lag_game(3);if(this.other.blocking && this.hasgonebackcharge){this.orientation*=-1;this.hasgonebackcharge--;}}
-				}
-				else{
-					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){other.hurt(this,stats);this.dangerous=false;lag_game(3);}
-				}
-			}
+
+			return false;
 		}
 
-		afficher(){
-			if(!this.active){return;}
-			this.costume = "hat";
-			ctx.scale(2*this.orientation,2);
-			var coords = kuncoordinates.get(this.costume);
-			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-			if(gamefreeze==0){this.dur--;}
-			if(this.dur==0){this.dangerous=false;this.active=false;return;}
-		}
+		loop() {
+			this.x += this.orientation * this.vitesse;
 
-		delete(){
-			objects_to_loop.delete(this.num);
+			if (Math.abs(this.other.y - this.y) > 10) {
+				this.y += this.vitessey * signe(this.other.y - this.y);
+			}
+
+			this.check_hit_routine();
 		}
 	}
 
-	class Ball{
-		constructor(x,y,orientation,other,stats,mem,enhanced){
-			this.x = x; this.y = y; this.orientation = orientation;
-			this.other = other;
-			this.width=17;
-			this.height=21;
-			this.totdur = 60;this.vitesse=7+mem*0.2;this.tb=8.+mem*0.05;this.gravity=-.5;
+
+	class Iceball extends Projectile {
+		constructor(x, y, orientation, other, stats, enhanced) {
+			var vitesse = enhanced ? 2 : 5;
+			var dur = enhanced ? 150 : 50;
+
+			super(
+				x,
+				y,
+				orientation,
+				other,
+				stats,
+				subpng,
+				subcoordinates,
+				dur,
+				60,
+				20,
+				"iceball",
+				false
+			);
+
+			this.vitesse = vitesse;
+		}
+
+		loop() {
+			this.x += this.orientation * this.vitesse;
+			this.check_hit_routine();
+		}
+	}
+
+
+	class IceClone extends Projectile {
+		constructor(x, y, orientation, other, stats) {
+			super(
+				x,
+				y,
+				orientation,
+				other,
+				stats,
+				subpng,
+				subcoordinates,
+				150,
+				37,
+				103,
+				"icebody2",
+				true
+			);
+
+			this.vitesse = 0;
+		}
+
+		can_hit_other() {
+			var other = this.other;
+
+			if (
+				other.invincibilite == 0 &&
+				other.projectile_invincibility == 0 &&
+				entre(
+					(other.x - this.x) * this.orientation,
+					-this.width / 2 - other.charac.width / 2,
+					this.width / 2 + other.charac.width / 2
+				)
+			) {
+				if (other.y == 0) {
+					return entre(
+						other.y + other.charac.height / 2 - this.y,
+						-this.height / 2 - other.charac.height / 3,
+						this.height / 2 + other.charac.height / 3
+					);
+				}
+
+				return entre(
+					other.y + other.charac.height / 3 - this.y,
+					-this.height / 2 - other.charac.height / 6,
+					this.height * 0.8 + other.charac.height / 6
+				);
+			}
+
+			return false;
+		}
+
+		loop() {
+			this.check_hit_routine();
+		}
+	}
+
+
+	class Fireball extends Projectile {
+		constructor(x, y, orientation, other, stats) {
+			super(
+				x,
+				y,
+				orientation,
+				other,
+				stats,
+				liupng,
+				liucoordinates,
+				50,
+				30,
+				16,
+				"fireball",
+				false
+			);
+
+			this.vitesse = 7;
+		}
+
+		loop() {
+			this.x += this.orientation * this.vitesse;
+			this.check_hit_routine();
+		}
+	}
+
+
+	class EnergyWave extends Projectile {
+		constructor(x, y, orientation, other, stats, enhanced = false) {
+			super(
+				x,
+				y,
+				orientation,
+				other,
+				stats,
+				jaxpng,
+				jaxcoordinates,
+				40,
+				57,
+				27,
+				"energywave",
+				false
+			);
+
+			this.vitesse = 8 + enhanced;
+		}
+
+		loop() {
+			this.x += this.orientation * this.vitesse;
+			this.check_hit_routine();
+		}
+	}
+
+
+	class Hat extends Projectile {
+		constructor(owner, other) {
+			super(
+				owner.x,
+				owner.y,
+				owner.orientation,
+				other,
+				null,
+				owner.skin,
+				kuncoordinates,
+				0,
+				28,
+				15,
+				"hat",
+				false
+			);
+
+			this.owner = owner;
+			this.active = false;
+			this.dangerous = false;
+			this.vitesse = 0;
+			this.hasgonebackcharge = 0;
+		}
+
+		throw(x, y, orientation, stats, enhanced = false) {
+			this.x = x;
+			this.y = y;
+			this.orientation = orientation;
+
+			this.width = 28;
+			this.height = 15;
+
+			this.totdur = 70;
+			this.dur = this.totdur;
+
+			this.vitesse = 8 + enhanced;
+			this.stats = stats;
+
+			this.num = cpt;
+			this.dangerous = true;
+			this.active = true;
+
+			this.hasgonebackcharge = 1 + enhanced * 2;
+		}
+
+		goback() {
+			if (this.hasgonebackcharge) {
+				this.hasgonebackcharge--;
+				this.dangerous = true;
+				this.dur = 70;
+				this.orientation = -this.orientation;
+			}
+		}
+
+		can_hit_owner() {
+			var owner = this.owner;
+
+			if (
+				!entre(
+					(owner.x - this.x) * this.orientation,
+					-20,
+					20
+				)
+			) {
+				return false;
+			}
+
+			if (owner.y == 0) {
+				return (
+					owner.crouching <= 3 &&
+					entre(
+						owner.y + owner.charac.height / 2 - this.y,
+						-this.height / 2 - owner.charac.height / 3,
+						this.height / 2 + owner.charac.height / 3
+					)
+				);
+			}
+
+			return entre(
+				owner.y + owner.charac.height / 3 - this.y,
+				-this.height / 2 - owner.charac.height / 6,
+				this.height / 2 + owner.charac.height / 6
+			);
+		}
+
+		catch_by_owner() {
+			this.owner.cooldowns[0] = Math.floor(
+				this.owner.cooldowns[0] / 2
+			);
+
+			this.dangerous = false;
+			this.active = false;
+		}
+
+		loop() {
+			if (!this.active) {
+				return;
+			}
+
+			this.x += this.orientation * this.vitesse;
+
+			var other = this.other;
+
+			if (
+				other.hurted &&
+				other.tb < 0 &&
+				other.y - Math.abs(this.x - other.x) / 4 <= 60 &&
+				signe(this.x - other.x) == this.orientation &&
+				!this.dangerous
+			) {
+				this.goback();
+			}
+
+			if (
+				this.hasgonebackcharge == 0 &&
+				this.can_hit_owner()
+			) {
+				this.catch_by_owner();
+			}
+
+			if (!this.dangerous) {
+				return;
+			}
+
+			if (this.can_hit_other()) {
+				this.other.hurt(this, this.stats);
+				this.dangerous = false;
+
+				lag_game(3);
+
+				if (
+					this.other.y == 0 &&
+					this.other.blocking &&
+					this.hasgonebackcharge
+				) {
+					this.orientation *= -1;
+					this.hasgonebackcharge--;
+				}
+			}
+		}
+
+		afficher() {
+			if (!this.active) {
+				return;
+			}
+
+			this.drawSkin();
+
+			if (gamefreeze == 0) {
+				this.dur--;
+			}
+
+			if (this.dur == 0) {
+				this.dangerous = false;
+				this.active = false;
+			}
+		}
+	}
+
+
+	class Ball extends Projectile {
+		constructor(x, y, orientation, other, stats, mem, enhanced) {
+			var projectileStats = JSON.parse(JSON.stringify(stats));
+
+			projectileStats.hurty += mem * 0.2;
+			projectileStats.degats += Math.round(mem * 0.4);
+
+			super(
+				x,
+				y,
+				orientation,
+				other,
+				projectileStats,
+				johpng,
+				johcoordinates,
+				60,
+				17,
+				21,
+				"ball",
+				true
+			);
+
 			this.mem = mem;
-			this.stats = JSON.parse(JSON.stringify(stats));
-			this.stats.hurty += mem*0.2;
-			this.stats.degats += Math.round(mem*0.4);
-			this.dur = this.totdur;
-			this.num = cpt;
-			this.dangerous = enhanced;
 			this.enhanced = enhanced;
-			if(this.enhanced){this.gravity = -.5;this.vitesse=9;}
-			
-		}
 
-		loop(){
-			this.x += this.orientation*this.vitesse;
-			if(this.enhanced){this.vitesse-=0.3;this.stats.hurtx = this.vitesse/2;}
-			else{
-				this.y+=this.tb;
-				this.tb+=this.gravity;
-			}
-			var stats = this.stats; var other = this.other;
-			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
-				if(other.y==0){
-					if(entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3*(other.crouching<=3),this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
-				}
-				else{
-					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){other.hurt(this,stats);this.dur=1;}
-				}
+			this.vitesse = 7 + mem * 0.2;
+			this.tb = 8 + mem * 0.05;
+			this.gravity = -0.5;
+
+			this.dangerous = enhanced;
+
+			if (this.enhanced) {
+				this.gravity = -0.5;
+				this.vitesse = 9;
 			}
 		}
 
-		afficher(){
-			this.costume = "ball";
-			ctx.scale(2*this.orientation,2);
-			var coords = johcoordinates.get(this.costume);
-			ctx.drawImage(johpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-			if(gamefreeze==0){this.dur--;}
-			if(this.dur==0){this.delete();return;}
-		}
+		can_hit_other() {
+			var other = this.other;
 
-		delete(){
-			objects_to_loop.delete(this.num);
-		}
-	}
-
-	class Arrow{
-		constructor(x,y,orientation,other,stats){
-			this.x = x; this.y = y; this.orientation = orientation;
-			this.other = other;
-			this.width=80;
-			this.height=10;
-			this.totdur = 50;this.vitesse=10;
-			this.stats = stats;
-			this.dur = this.totdur;
-			this.num = cpt;
-			this.dangerous = true;
-			
-		}
-
-		loop(){
-			this.x += this.orientation*this.vitesse;
-			var stats = this.stats; var other = this.other;
-			if(other.invincibilite==0 && other.projectile_invincibility==0 &&entre((other.x-this.x)*this.orientation,-other.charac.width/2,this.width/2+other.charac.width/2)){
-				if(other.y==0){
-					if(other.crouching<=3 && entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){other.hurt(this,stats);this.dur=1;}
+			if (
+				other.invincibilite == 0 &&
+				other.projectile_invincibility == 0 &&
+				entre(
+					(other.x - this.x) * this.orientation,
+					-this.width / 2 - other.charac.width / 2,
+					this.width / 2 + other.charac.width / 2
+				)
+			) {
+				if (other.y == 0) {
+					return entre(
+						other.y + other.charac.height / 2 - this.y,
+						-this.height / 2 -
+							(other.charac.height / 3) * (other.crouching <= 3),
+						this.height / 2 + other.charac.height / 3
+					);
 				}
-				else{
-					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){other.hurt(this,stats);this.dur=1;}
-				}
+
+				return entre(
+					other.y + other.charac.height / 3 - this.y,
+					-this.height / 2 - other.charac.height / 6,
+					this.height / 2 + other.charac.height / 6
+				);
 			}
+
+			return false;
 		}
 
-		afficher(){
-			this.costume = "arrow_proj";
-			ctx.scale(2*this.orientation,2);
-			var coords = shaocoordinates.get(this.costume);
-			ctx.drawImage(shaopng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-			if(gamefreeze==0){this.dur--;}
-			if(this.dur==0){this.delete();return;}
-		}
+		loop() {
+			this.x += this.orientation * this.vitesse;
 
-		delete(){
-			objects_to_loop.delete(this.num);
+			if (this.enhanced) {
+				this.vitesse -= 0.3;
+				this.stats.hurtx = this.vitesse / 2;
+			} else {
+				this.y += this.tb;
+				this.tb += this.gravity;
+			}
+
+			this.check_hit_routine();
 		}
 	}
 
 
-	class IceFlask{
-		constructor(x,y,orientation,other,stats){
-			this.x = x; this.y = y; this.orientation = orientation;
-			this.other = other;
-			this.width=64;
-			this.height=20;
-			this.totdur = 120;this.vitesse=0;
-			this.stats = stats;
-			this.dur = this.totdur;
-			this.num = cpt;
-			this.dangerous = true;
-			
+	class Arrow extends Projectile {
+		constructor(x, y, orientation, other, stats) {
+			super(
+				x,
+				y,
+				orientation,
+				other,
+				stats,
+				shaopng,
+				shaocoordinates,
+				50,
+				80,
+				10,
+				"arrow_proj",
+				false
+			);
+
+			this.vitesse = 10;
 		}
 
-		loop(){
-			var stats = this.stats; var other = this.other;
-			if(other.invincibilite==0 && other.projectile_invincibility==0 && this.dangerous &&entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
-				if(other.y==0){
-					other.hurt(this,stats);this.dur=20;
+		can_hit_other() {
+			var other = this.other;
+
+			if (
+				other.invincibilite == 0 &&
+				other.projectile_invincibility == 0 &&
+				entre(
+					(other.x - this.x) * this.orientation,
+					-other.charac.width / 2,
+					this.width / 2 + other.charac.width / 2
+				)
+			) {
+				if (other.y == 0) {
+					return (
+						other.crouching <= 3 &&
+						entre(
+							other.y + other.charac.height / 2 - this.y,
+							-this.height / 2 - other.charac.height / 3,
+							this.height / 2 + other.charac.height / 3
+						)
+					);
 				}
+
+				return entre(
+					other.y + other.charac.height / 3 - this.y,
+					-this.height / 2 - other.charac.height / 6,
+					this.height / 2 + other.charac.height / 6
+				);
+			}
+
+			return false;
+		}
+
+		loop() {
+			this.x += this.orientation * this.vitesse;
+			this.check_hit_routine();
+		}
+	}
+
+
+	class IceFlask extends Projectile {
+		constructor(x, y, orientation, other, stats) {
+			super(
+				x,
+				y,
+				orientation,
+				other,
+				stats,
+				subpng,
+				subcoordinates,
+				120,
+				64,
+				20,
+				"oiceflask1",
+				true
+			);
+
+			this.vitesse = 0;
+		}
+
+		can_hit_other() {
+			var other = this.other;
+
+			return (
+				this.dangerous &&
+				other.invincibilite == 0 &&
+				other.projectile_invincibility == 0 &&
+				other.y == 0 &&
+				entre(
+					(other.x - this.x) * this.orientation,
+					-this.width / 2 - other.charac.width / 2,
+					this.width / 2 + other.charac.width / 2
+				)
+			);
+		}
+
+		loop() {
+			if (this.can_hit_other()) {
+				this.other.hurt(this, this.stats);
+				this.dur = 20;
 			}
 		}
 
-		afficher(){
-			if(this.dur<=3){
+		afficher() {
+			if (this.dur <= 3) {
 				this.costume = "oiceflask3";
 			}
-			if(this.dur<=6){
-				this.dangerous=false;
+
+			if (this.dur <= 6) {
+				this.dangerous = false;
 				this.costume = "oiceflask2";
-			}
-			else{
+			} else {
 				this.costume = "oiceflask1";
 			}
-			ctx.scale(2*this.orientation,2);
-			var coords = subcoordinates.get(this.costume);
-			ctx.drawImage(subpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-			if(gamefreeze==0){this.dur--;}
-			if(this.dur==0){this.delete();return;}
-		}
 
-		delete(){
-			objects_to_loop.delete(this.num);
+			super.afficher();
 		}
 	}
 
-	class IceGrenade{
-		constructor(x,y,orientation,other,stats){
-			this.x = x; this.y = y; this.orientation = orientation;
-			this.other = other;
-			this.width=18;
-			this.height=30;
-			this.totdur = 70;this.vitesse=7;
+		class IceGrenade extends Projectile {
+		constructor(x, y, orientation, other, stats) {
+			super(
+				x,
+				y,
+				orientation,
+				other,
+				stats,
+				subpng,
+				subcoordinates,
+				70,
+				18,
+				30,
+				"oicegrenade1",
+				true
+			);
+
+			this.vitesse = 7;
 			this.costcpt = 0;
 			this.framepercost = 3;
-			this.stats = stats;
-			this.dur = this.totdur;
-			this.num = cpt;
 			this.dangerous = false;
-			
 		}
 
-		loop(){
-			this.x += this.orientation*this.vitesse;
+		can_hit_other() {
 			var other = this.other;
-			if(entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/2,this.width/2+other.charac.width/2)){
-				if(entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3,this.height/2+other.charac.height/3)){this.dur=-20;shake_screen(10,6);}
+
+			return (
+				entre(
+					(other.x - this.x) * this.orientation,
+					-this.width / 2 - other.charac.width / 2,
+					this.width / 2 + other.charac.width / 2
+				) &&
+				entre(
+					other.y + other.charac.height / 2 - this.y,
+					-this.height / 2 - other.charac.height / 3,
+					this.height / 2 + other.charac.height / 3
+				)
+			);
+		}
+
+		loop() {
+			this.x += this.orientation * this.vitesse;
+
+			if (this.can_hit_other()) {
+				this.dur = -20;
+				shake_screen(10, 6);
 			}
 		}
 
-		afficher(){
-			if(this.dur>0){
-				this.costcpt = (this.costcpt+1)%(2*this.framepercost);
-				this.costume = "oicegrenade"+(Math.floor(this.costcpt/this.framepercost)+1);
-				ctx.scale(2*this.orientation,2);
-				var coords = subcoordinates.get(this.costume);
-				ctx.drawImage(subpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
-				ctx.setTransform(1, 0, 0, 1, 0, 0);
-				ctx.scale(1,1);
-				if(gamefreeze==0){this.dur--;}
-				if(this.dur==0){this.delete();return;}
-			}
-			else{
-				if(gamefreeze==0){this.dur++;}
-				if(this.dur==0){this.other.explode();this.delete();return;}
-			}
-		}
+		afficher() {
+			if (this.dur > 0) {
+				this.costcpt = (this.costcpt + 1) % (2 * this.framepercost);
+				this.costume =
+					"oicegrenade" +
+					(Math.floor(this.costcpt / this.framepercost) + 1);
 
-		delete(){
-			objects_to_loop.delete(this.num);
+				this.drawSkin();
+
+				if (gamefreeze == 0) {
+					this.dur--;
+				}
+
+				if (this.dur == 0) {
+					this.delete();
+				}
+
+				return;
+			}
+
+			if (gamefreeze == 0) {
+				this.dur++;
+			}
+
+			if (this.dur == 0) {
+				this.other.explode();
+				this.delete();
+			}
 		}
 	}
 
-	class HatFata{
-		constructor(x,y,orientation,other,skin){
-			this.x = x; this.y = y; this.orientation = orientation;
-			this.other = other;
-			this.skin=skin;
-			this.width=18;
-			this.height=30;
-			this.totdur = 70;this.vitesse=10;
-			this.costcpt = 0;
-			this.framepercost = 3;
-			this.dur = this.totdur;
-			this.num = cpt;
+
+	class HatFata extends Projectile {
+		constructor(x, y, orientation, other, skin) {
+			super(
+				x,
+				y,
+				orientation,
+				other,
+				null,
+				skin,
+				kuncoordinates,
+				70,
+				18,
+				30,
+				"hat",
+				true
+			);
+
+			this.vitesse = 10;
 			this.dangerous = false;
 			this.hasdecap = false;
-			
 		}
 
-		loop(){
-			this.x += this.orientation*this.vitesse;
-			this.y = Math.min(85,this.y+1);
+		can_hit_other() {
 			var other = this.other;
-			if(!this.hasdecap && entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/3,this.width/2+other.charac.width/3)){
-				other.decapitate(2,-4);this.hasdecap=true;this.vitesse=8;
-				play_sound_eff("spithit");play_sound_eff("fan");
-				slow_game(6,2);shake_screen(8,6);other.shake_player(5,3);
-			}
+
+			return (
+				!this.hasdecap &&
+				entre(
+					(other.x - this.x) * this.orientation,
+					-this.width / 2 - other.charac.width / 3,
+					this.width / 2 + other.charac.width / 3
+				)
+			);
 		}
 
-		afficher(){
-			if(this.dur>0){
-				this.costume = "hat";
-				ctx.scale(2*this.orientation,2);
-				var coords = kuncoordinates.get(this.costume);
-				ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
-				ctx.setTransform(1, 0, 0, 1, 0, 0);
-				ctx.scale(1,1);
-				if(gamefreeze==0){this.dur--;}
-				if(this.dur==0){this.delete();return;}
+		loop() {
+			this.x += this.orientation * this.vitesse;
+			this.y = Math.min(85, this.y + 1);
+
+			if (!this.can_hit_other()) {
+				return;
 			}
-			else{
-				if(this.dur==0){this.delete();return;}
-			}
+
+			this.other.decapitate(2, -4);
+
+			this.hasdecap = true;
+			this.vitesse = 8;
+
+			play_sound_eff("spithit");
+			play_sound_eff("fan");
+
+			slow_game(6, 2);
+			shake_screen(8, 6);
+			this.other.shake_player(5, 3);
 		}
 
-		delete(){
-			objects_to_loop.delete(this.num);
+		afficher() {
+			this.drawSkin();
+
+			if (gamefreeze == 0) {
+				this.dur--;
+			}
+
+			if (this.dur <= 0) {
+				this.delete();
+			}
 		}
 	}
 
-	class Rabbit{
-		constructor(x,y,orientation,other,skin){
-			this.x = x; this.y = y; this.orientation = orientation;
-			this.other = other;
-			this.skin=skin;
-			this.width=8;
-			this.height=25;
-			this.totdur = 90;this.vitesse=8;
-			this.costcpt = 0;
-			this.framepercost = 3;
-			this.dur = this.totdur;
-			this.num = cpt;
+
+	class Rabbit extends Projectile {
+		constructor(x, y, orientation, other, skin) {
+			super(
+				x,
+				y,
+				orientation,
+				other,
+				null,
+				skin,
+				kuncoordinates,
+				90,
+				8,
+				25,
+				"rabbit",
+				true
+			);
+
+			this.vitesse = 8;
 			this.dangerous = false;
 			this.hashit = false;
-			
 		}
 
-		loop(){
-			this.x += this.orientation*this.vitesse;
+		can_hit_other() {
 			var other = this.other;
-			if(entre((other.x-this.x)*this.orientation,-this.width/2-other.charac.width/3,this.width/2+other.charac.width/3)){
-				if(!this.hashit){this.hashit=true;play_sound_eff(other.charac.voiceactor+"bighurted");}
-				other.hurted=1+this.dur%10;other.x=this.x+this.orientation*10;
-				if(this.dur%5==0){
-					add_to_objects_set(new Blood(this.x+10*this.orientation,80,-this.orientation,"lblood"));
-					lag_game(1);
-					play_sound_eff("lhit");
-				}
-				fixcamera = 1000;
+
+			return entre(
+				(other.x - this.x) * this.orientation,
+				-this.width / 2 - other.charac.width / 3,
+				this.width / 2 + other.charac.width / 3
+			);
+		}
+
+		loop() {
+			this.x += this.orientation * this.vitesse;
+
+			if (!this.can_hit_other()) {
+				return;
 			}
-		}
 
-		afficher(){
-			this.costume = "rabbit";
-			ctx.scale(2*this.orientation,2);
-			var coords = kuncoordinates.get(this.costume);
 			var other = this.other;
-			this.shake_x = -2+Math.random()*4; this.shake_y = -2+Math.random()*4;
-			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex+this.shake_x)*this.orientation,ground-this.y-coords.height-coords.decy+shakey+this.shake_y,coords.width,coords.height);
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-			if(Math.abs(other.x-camerax)>decalagex+other.charac.width/2){other.hide=true;}
-			if(gamefreeze==0){this.dur--;}
-			if(this.dur==25){play_sound_eff("spithit");play_sound_eff("fan");}
-			if(this.dur==0){other.hide=true;add_to_objects_set(new Head(other.x+this.orientation*25,other.y+other.charac.height,other.orientation,other.skin,other.coordinates, 1,2));this.delete();return;}
+
+			if (!this.hashit) {
+				this.hashit = true;
+				play_sound_eff(other.charac.voiceactor + "bighurted");
+			}
+
+			other.hurted = 1 + this.dur % 10;
+			other.x = this.x + this.orientation * 10;
+
+			if (this.dur % 5 == 0) {
+				add_to_objects_set(
+					new Blood(
+						this.x + 10 * this.orientation,
+						80,
+						-this.orientation,
+						"lblood"
+					)
+				);
+
+				lag_game(1);
+				play_sound_eff("lhit");
+			}
+
+			fixcamera = 1000;
 		}
 
-		delete(){
-			objects_to_loop.delete(this.num);
+		afficher() {
+			var coords = this.coordinates.get(this.costume);
+			var other = this.other;
+
+			this.shake_x = -2 + Math.random() * 4;
+			this.shake_y = -2 + Math.random() * 4;
+
+			ctx.scale(2 * this.orientation, 2);
+
+			ctx.drawImage(
+				this.skin,
+				coords.offx,
+				coords.offy,
+				coords.width,
+				coords.height,
+				(
+					this.x +
+					decalagex -
+					camerax +
+					coords.decx * this.orientation -
+					this.orientation * this.width / 2 +
+					shakex +
+					this.shake_x
+				) * this.orientation,
+				ground -
+					this.y -
+					coords.height -
+					coords.decy +
+					shakey +
+					this.shake_y,
+				coords.width,
+				coords.height
+			);
+
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1, 1);
+
+			if (
+				Math.abs(other.x - camerax) >
+				decalagex + other.charac.width / 2
+			) {
+				other.hide = true;
+			}
+
+			if (gamefreeze == 0) {
+				this.dur--;
+			}
+
+			if (this.dur == 25) {
+				play_sound_eff("spithit");
+				play_sound_eff("fan");
+			}
+
+			if (this.dur == 0) {
+				other.hide = true;
+
+				add_to_objects_set(
+					new Head(
+						other.x + this.orientation * 25,
+						other.y + other.charac.height,
+						other.orientation,
+						other.skin,
+						other.coordinates,
+						1,
+						2
+					)
+				);
+
+				this.delete();
+			}
 		}
 	}
 
 
-	class Spear{
-		constructor(x,y,orientation,other,stats,owner,enhanced=false){
-			this.x = x; this.y = y; this.orientation = orientation; this.owner = owner;
-			this.other = other;
-			this.width=25;
-			this.height=8;
-			this.totdur = 60;this.vitesse=8+enhanced*2.5;
-			this.stats = stats;
-			this.dur = this.totdur;
-			this.num = cpt;
-			this.dangerous = true;
-			
+	class Spear extends Projectile {
+		constructor(x, y, orientation, other, stats, owner, enhanced = false) {
+			super(
+				x,
+				y,
+				orientation,
+				other,
+				stats,
+				scopng,
+				scocoordinates,
+				60,
+				25,
+				8,
+				"spear",
+				true
+			);
+
+			this.owner = owner;
+			this.vitesse = 8 + enhanced * 2.5;
 		}
 
-		loop(){
-			if(this.dangerous){this.x += this.orientation*this.vitesse;}
-			else{this.x -= this.orientation*8;}
-			var stats = this.stats; var other = this.other;
-			if(other.invincibilite==0 && other.projectile_invincibility==0 && this.dangerous &&entre((other.x-this.x)*this.orientation,-other.charac.width/2,this.width/2+other.charac.width/2)){
-				if(other.y==0){
-					if(entre((other.y+other.charac.height/2-this.y),-this.height/2-other.charac.height/3*(other.crouching<=3),this.height/2+other.charac.height/3)){
-						if(racine(this.owner.mov) == "spear_throw"){spear_stats.hitstun = this.totdur-this.dur + 25;this.owner.movlag = stats.elag-40;other.hurt(this,spear_stats);this.dur=Math.max(this.totdur-10-this.dur,1);this.x=other.x-this.orientation*16;this.dangerous=false;}
-						else{other.hurt(this,stats);this.dur=1;}
-					}
-				}
-				else{
-					if(entre((other.y+other.charac.height/3-this.y),-this.height/2-other.charac.height/6,this.height/2+other.charac.height/6)){
-						if(racine(this.owner.mov) == "spear_throw"){spear_stats.hitstun = this.totdur-this.dur + 25;this.owner.movlag = stats.elag-40;other.hurt(this,spear_stats);this.dur=Math.max(this.totdur-10-this.dur,1);this.x=other.x-this.orientation*16;this.dangerous=false;}
-						else{other.hurt(this,stats);this.dur=1;}
-					}
-				}
+		can_hit_other() {
+			var other = this.other;
+
+			if (
+				!this.dangerous ||
+				other.invincibilite != 0 ||
+				other.projectile_invincibility != 0 ||
+				!entre(
+					(other.x - this.x) * this.orientation,
+					-other.charac.width / 2,
+					this.width / 2 + other.charac.width / 2
+				)
+			) {
+				return false;
+			}
+
+			if (other.y == 0) {
+				return entre(
+					other.y + other.charac.height / 2 - this.y,
+					-this.height / 2 -
+						(other.charac.height / 3) * (other.crouching <= 3),
+					this.height / 2 + other.charac.height / 3
+				);
+			}
+
+			return entre(
+				other.y + other.charac.height / 3 - this.y,
+				-this.height / 2 - other.charac.height / 6,
+				this.height / 2 + other.charac.height / 6
+			);
+		}
+
+		hit_other() {
+			if (racine(this.owner.mov) != "spear_throw") {
+				this.other.hurt(this, this.stats);
+				this.dur = 1;
+				return;
+			}
+
+			spear_stats.hitstun = this.totdur - this.dur + 25;
+			this.owner.movlag = this.stats.elag - 40;
+
+			this.other.hurt(this, spear_stats);
+
+			this.dur = Math.max(
+				this.totdur - 10 - this.dur,
+				1
+			);
+
+			this.x = this.other.x - this.orientation * 16;
+			this.dangerous = false;
+		}
+
+		loop() {
+			if (this.dangerous) {
+				this.x += this.orientation * this.vitesse;
+			} else {
+				this.x -= this.orientation * 8;
+			}
+
+			if (this.can_hit_other()) {
+				this.hit_other();
 			}
 		}
 
-		afficher(){
-			this.costcpt = (this.costcpt+1)%(4*this.framepercost);
-			if(this.dangerous){this.costume = "spear";}
-			else{this.costume = "spear_nohead";}
-			this.rotation = (this.rotation+this.rotationspeed)%360;
-			ctx.scale(2*this.orientation,2);
-			var coords = scocoordinates.get(this.costume);
-			if(racine(this.owner.mov) == "spear_throw"){
-				ctx.fillStyle = "rgb(230,170,140)";
-				ctx.fillRect((this.owner.x+this.owner.orientation*(45+10*this.dangerous)+decalagex-camerax)*this.orientation,ground-this.y-5,Math.abs(this.x-this.owner.x)-50-10*this.dangerous,1);
-				ctx.fillStyle = "rgb(140,114,82)";
-				ctx.fillRect(this.owner.x+this.owner.orientation*(45+10*this.dangerous)+decalagex-camerax,ground-this.y-4,Math.abs(this.x-this.owner.x)-50-10*this.dangerous,1);	
+		draw_rope() {
+			if (racine(this.owner.mov) != "spear_throw") {
+				return;
 			}
-			ctx.drawImage(scopng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+
+			ctx.scale(2 * this.orientation, 2);
+
+			ctx.fillStyle = "rgb(230,170,140)";
+			ctx.fillRect(
+				(
+					this.owner.x +
+					this.owner.orientation * (45 + 10 * this.dangerous) +
+					decalagex -
+					camerax
+				) * this.orientation,
+				ground - this.y - 5,
+				Math.abs(this.x - this.owner.x) -
+					50 -
+					10 * this.dangerous,
+				1
+			);
+
+			ctx.fillStyle = "rgb(140,114,82)";
+			ctx.fillRect(
+				this.owner.x +
+					this.owner.orientation * (45 + 10 * this.dangerous) +
+					decalagex -
+					camerax,
+				ground - this.y - 4,
+				Math.abs(this.x - this.owner.x) -
+					50 -
+					10 * this.dangerous,
+				1
+			);
+
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-			if(gamefreeze==0){this.dur--;}
-			if(this.dur<=0){this.delete();return;}
 		}
 
-		delete(){
-			objects_to_loop.delete(this.num);
+		afficher() {
+			this.costume = this.dangerous
+				? "spear"
+				: "spear_nohead";
+
+			this.draw_rope();
+			this.drawSkin();
+
+			if (gamefreeze == 0) {
+				this.dur--;
+			}
+
+			if (this.dur <= 0) {
+				this.delete();
+			}
 		}
 	}
+
 
 	class ScorpionFlame extends VisualObject{
 		constructor(x,y,orientation,other,stats){
@@ -6766,7 +7111,7 @@ class IceClone{
 	var score = 0; var matchscore = 0; var roundscore = 0;
 	var old_stats = null; var new_stats = null; var highscore_screen_cpt = 0;
 
-	var fatality_testing = true;
+	var fatality_testing = false;
 
 	var survival_handler = new SurvivalHandler();
 
