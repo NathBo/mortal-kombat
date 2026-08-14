@@ -628,19 +628,7 @@ function main(){
 
 	class ChargeBall_Ball extends Projectile {
 		constructor(x, y, orientation, other, stats, skin = reppng) {
-			super(
-				x,
-				y,
-				orientation,
-				other,
-				stats,
-				skin,
-				repcoordinates,
-				50,
-				40,
-				17,
-				"chargeball_ball1",
-				true
+			super(x,y,orientation,other,stats,skin,repcoordinates,50,40,17,"chargeball_ball1",true
 			);
 
 			this.vitesse = 4;
@@ -2907,6 +2895,23 @@ function main(){
 			return this.n==0 || secondplayerishuman
 		}
 
+		begin_fatality(fata_type,dur){
+			var other = this.other;
+			this.reoriente(other,true);
+			other.reoriente(this,true);
+			this.fatality = dur;
+			other.falling=0;
+			other.hurted = 0;
+			other.y=0;
+			play_sound_eff("fatal1");
+			this.fatalitytype = fata_type;
+			this.special=2;
+			finishhim = 0;
+			other.invincibilite=1000;
+			fatalitywasdone = true;
+			this.mov = ""; this.movlag=0;
+		}
+
 		miseajour(other){
 			if(this.perso=="shao_kahn"){this.crouching=0;}
 			if(this.movlag===undefined){this.movlag=0;}
@@ -3192,59 +3197,21 @@ function main(){
 						this.begincoup("fanthrow",other);
 					}
 					else if(this.perso == "kitana" && this.forward>=1 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=80 && other.falling==0 && other.gettingup==0 && other.y<=30){
-						this.fatality = 90; this.memoryslot=0;
-						other.x = clip(other.x,this.x + 45*this.orientation,this.x + 70*this.orientation);
-						other.falling=0;
-						other.y=0;
-						play_sound_eff("fatal1");
+						this.begin_fatality(0,90);
 						this.memoryslot=0;
-						this.special=2;
-						finishhim = 0;
-						other.invincibilite=1000;
-						fatalitywasdone = true;
-						this.mov = ""; this.movlag=0;
-						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
+						other.x = clip(other.x,this.x + 45*this.orientation,this.x + 70*this.orientation);
 					}
 					else if(this.perso == "kitana" && this.back && this.special==1 && finishhim && Math.abs(this.x-other.x)<=80 && other.falling==0 && other.gettingup==0 && other.y<=30){
-						this.fatality = 120; this.memoryslot=0;
+						this.begin_fatality(1,120);
 						other.x = this.x + 35*this.orientation;
-						this.fatalitytype=1;
-						other.falling=0;
-						other.y=0;
-						play_sound_eff("fatal1");
-						this.memoryslot=0;
-						this.special=2;
-						finishhim = 0;
-						other.invincibilite=1000;
-						fatalitywasdone = true;
-						this.mov = ""; this.movlag=0;
-						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
 					}
 					else if(this.perso == "raiden" && this.forward+this.back==0 && this.bas==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=60 && other.gettingup==0 && other.y<=30){
-						this.fatality = 130;
-						other.falling=0;
-						other.y=0;
-						play_sound_eff("fatal1");
-						this.special=2;
+						this.begin_fatality(0,130);
 						other.x = this.x + 35*this.orientation;
-						finishhim = 0;
-						other.invincibilite=1000;
-						fatalitywasdone = true;
-						this.mov = ""; this.movlag=0;
-						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
 					}
 					else if(this.perso == "raiden" && this.forward+this.back==0 && this.bas && this.special==1 && finishhim && Math.abs(this.x-other.x)<=60 && other.gettingup==0 && other.y<=30 && this.memoryslot>=4){
-						this.fatality = 60;
-						this.fatalitytype=1;
-						other.falling=0;
-						other.y=0;
-						play_sound_eff("fatal1");
-						this.special=2;
-						finishhim = 0;
-						other.invincibilite=1000;
-						fatalitywasdone = true;
-						this.mov = ""; this.movlag=0;
-						if(this.x<other.x){this.orientation = -1;}else{this.orientation = 1;}
+						this.begin_fatality(1,60);
+						this.orientation*=-1;
 					}
 					else if(this.perso == "shao_kahn" && this.forward && this.bas==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=60 && other.gettingup==0 && other.y<=30){
 						this.fatality = 70;
@@ -3260,17 +3227,8 @@ function main(){
 						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
 					}
 					else if(this.perso == "scorpion" && this.forward && this.special==1 && finishhim && entre(Math.abs(this.x-other.x),75,125) && other.gettingup==0 && other.y<=30){
-						this.fatality = 180;
-						other.falling=0;
-						other.y=0;
-						play_sound_eff("fatal1");
-						this.special=2;
+						this.begin_fatality(0,180);
 						other.x = clip(other.x,this.x + 90*this.orientation,this.x + 110*this.orientation);
-						finishhim = 0;
-						other.invincibilite=1000;
-						fatalitywasdone = true;
-						this.mov = ""; this.movlag=0;
-						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
 					}
 					else if(this.perso == "subzero" && this.forward+this.back==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)>=200 && other.y<=80 && other.gettingup==0){
 						this.fatality = 100;
@@ -3283,208 +3241,62 @@ function main(){
 						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
 					}
 					else if(this.perso == "subzero" && this.forward+this.back==0 && this.bas && this.special==1 && finishhim && Math.abs(this.x-other.x)<=60 && other.gettingup==0 && other.y<=30 && this.memoryslot>=4){
-						this.fatality = 170;
-						this.fatalitytype=1;
-						other.falling=0;
-						other.y=0;
-						play_sound_eff("fatal1");
-						this.special=2;
-						finishhim = 0;
-						other.invincibilite=1000;
-						fatalitywasdone = true;
-						this.mov = ""; this.movlag=0;
-						if(this.x<other.x){this.orientation = 1;}else{this.orientation = -1;}
+						this.begin_fatality(1,170);
 					}
 					else if(this.perso == "liukang" && this.bas && this.special==1 && finishhim && entre(Math.abs(this.x-other.x),130,190) && other.gettingup==0 && other.y<=30){
-						this.fatality = 99;
-						other.falling=0;
-						other.y=0;
+						this.begin_fatality(0,99);
 						this.canthurt=false;
-						play_sound_eff("fatal1");
-						this.special=2;
 						other.x = clip(other.x,this.x + 155*this.orientation,this.x + 165*this.orientation);
-						finishhim = 0;
-						other.invincibilite=1000;
-						fatalitywasdone = true;
-						this.mov = ""; this.movlag=0;
-						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
 					}
 					else if(this.perso == "liukang" && this.back+this.forward==0 && this.bas==0 && this.special==1 && finishhim && entre(Math.abs(this.x-other.x),50,110) && other.gettingup==0 && other.y<=30){
-						this.fatality = 180;
-						other.falling=0;
-						other.y=0;
-						other.hurted = 0;
-						this.fatalitytype=1;
-						this.canthurt=false;
-						play_sound_eff("fatal1");
-						this.special=2;
+						this.begin_fatality(1,180);
 						other.x = this.x + 73*this.orientation;
-						finishhim = 0;
-						other.invincibilite=1000;
-						fatalitywasdone = true;
-						this.mov = ""; this.movlag=0;
-						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
 					}
 					else if(this.perso == "mileena" && this.bas && this.special==1 && finishhim &&  other.gettingup==0 && other.y<=30 && Math.abs(this.x-other.x)>90){
-						this.fatality = 60;
-						other.falling=0;
-						other.y=0;
-						this.canthurt=false;
-						play_sound_eff("fatal1");
-						this.special=2;
-						finishhim = 0;
-						other.invincibilite=1000;
-						fatalitywasdone = true;
-						this.mov = ""; this.movlag=0;
-						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
+						this.begin_fatality(0,60);
 					}
 					else if(this.perso == "mileena" && this.back && this.bas==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=60 && other.gettingup==0 && other.y<=30){
-						this.fatality = 120;
-						this.fatalitytype=1;
-						other.falling=0;
-						other.y=0;
+						this.begin_fatality(1,120);
 						other.x = this.x+35*this.orientation;
-						play_sound_eff("fatal1");
-						this.special=2;
-						finishhim = 0;
-						other.invincibilite=1000;
-						fatalitywasdone = true;
-						this.mov = ""; this.movlag=0;
-						other.reoriente(this);
 					}
 					else if(this.perso == "reptile" && this.back && this.bas==0 && this.special==1 && finishhim && entre(Math.abs(this.x-other.x),100,140) && other.gettingup==0 && other.y<=30){
-						this.fatality = 120;
-						other.falling=0;
-						other.y=0;
-						play_sound_eff("fatal1");
-						this.special=2;
+						this.begin_fatality(0,120);
 						other.x = clip(other.x,this.x + 120*this.orientation,this.x + 130*this.orientation);
-						finishhim = 0;
-						other.invincibilite=1000;
-						fatalitywasdone = true;
-						this.mov = ""; this.movlag=0;
-						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
 					}
 					else if(this.perso == "reptile" && this.bas && this.special==1 && finishhim && Math.abs(this.x-other.x)>160 && other.gettingup==0 && other.y<=30){
-						this.fatality = 120;
-						other.falling=0;
-						other.y=0;
-						play_sound_eff("fatal1");
-						this.special=2;
-						finishhim = 0;
-						other.invincibilite=1000;
-						this.fatalitytype = 1;
-						fatalitywasdone = true;
-						this.mov = ""; this.movlag=0;
-						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
+						this.begin_fatality(1,120);
 					}
 					else if(this.perso == "johnny" && this.back && this.bas==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=60 && other.gettingup==0 && other.y<=30){
-						this.fatality = 110;
-						other.falling=0;
-						other.y=0;
+						this.begin_fatality(0,110);
 						other.x = this.x+36*this.orientation;
-						play_sound_eff("fatal1");
-						this.special=2;
-						finishhim = 0;
-						other.invincibilite=1000;
-						fatalitywasdone = true;
-						this.mov = ""; this.movlag=0;
-						other.reoriente(this);
 					}
 					else if(this.perso == "johnny" && this.forward && this.bas==0 && this.special==1 && finishhim && entre(Math.abs(this.x-other.x),200,400) && other.gettingup==0 && other.y<=30){
-						this.fatality = 80;
-						this.fatalitytype=1;
+						this.begin_fatality(1,80);
 						this.memoryslot=0;
-						other.falling=0;
-						other.y=0;
-						play_sound_eff("fatal1");
-						this.special=2;
-						finishhim = 0;
-						other.invincibilite=1000;
-						fatalitywasdone = true;
-						this.mov = ""; this.movlag=0;
-						other.reoriente(this);
 					}
 					else if(this.perso == "baraka" && this.back && this.bas==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=60 && other.gettingup==0 && other.y<=30){
-						this.fatality = 150;
+						this.begin_fatality(0,150);
 						this.memoryslot=0;
-						other.falling=0;
-						other.y=0;
 						other.x = this.x+36*this.orientation;
-						play_sound_eff("fatal1");
-						this.special=2;
-						finishhim = 0;
-						other.invincibilite=1000;
-						fatalitywasdone = true;
-						this.mov = ""; this.movlag=0;
-						other.reoriente(this);
 					}
 					else if(this.perso == "baraka" && this.forward && this.bas==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=100 && other.gettingup==0 && other.y<=30){
-						this.fatality = 60;
-						this.memoryslot=0;
-						other.falling=0;
-						other.y=0;
+						this.begin_fatality(1,60);
 						other.x = clip(other.x,this.x + 55*this.orientation,this.x + 80*this.orientation);
-						play_sound_eff("fatal1");
-						this.special=2;
-						this.fatalitytype=1;
-						finishhim = 0;
-						other.invincibilite=1000;
-						fatalitywasdone = true;
-						this.mov = ""; this.movlag=0;
-						other.reoriente(this);
 					}
 					else if(this.perso == "jax" && this.forward+this.back==0 && this.bas==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=60 && other.gettingup==0 && other.y<=30){
-						this.fatality = 120;
-						other.falling=0;
-						other.y=0;
-						play_sound_eff("fatal1");
-						this.special=2;
+						this.begin_fatality(0,120);
 						other.x = this.x + 39*this.orientation;
-						finishhim = 0;
-						other.invincibilite=1000;
-						fatalitywasdone = true;
-						this.mov = ""; this.movlag=0;
-						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
 					}
 					else if(this.perso == "jax" && this.forward && this.bas==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=60 && other.gettingup==0 && other.y<=30){
-						this.fatality = 60;
-						this.fatalitytype = 1;
-						other.falling=0;
-						other.y=0;
-						play_sound_eff("fatal1");
-						this.special=2;
+						this.begin_fatality(1,60);
 						other.x = this.x + 39*this.orientation;
 						finishhim = 0;
-						other.invincibilite=1000;
-						fatalitywasdone = true;
-						this.mov = ""; this.movlag=0;
-						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
 					}
 					else if(this.perso == "kunglao" && this.forward+this.back==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)>=150 && other.y<=30 && other.gettingup==0){
-						this.fatality = 60;
-						play_sound_eff("fatal1");
-						other.y=0;other.reoriente(this);
-						this.special=2;
-						other.falling=0;other.hurted=0;
-						finishhim = 0;
-						other.invincibilite=1000;
-						fatalitywasdone = true;
-						this.mov = ""; this.movlag=0;
-						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
+						this.begin_fatality(0,60);
 					}
 					else if(this.perso == "kunglao" && this.bas && this.special==1 && finishhim && entre(Math.abs(this.x-other.x),80,140) && other.y<=30 && other.gettingup==0 && this.memoryslot>=4){
-						this.fatality = 150;
-						play_sound_eff("fatal1");
-						other.y=0;other.reoriente(this);
-						this.special=2;
-						other.falling=0;other.hurted=0;
-						finishhim = 0;
-						other.invincibilite=1000;
-						this.fatalitytype=1;
-						fatalitywasdone = true;
-						this.mov = ""; this.movlag=0; this.crouching=0;
-						if(this.x<other.x){other.orientation = -1;}else{other.orientation = 1;}
+						this.begin_fatality(1,150);
 					}
 					else if(this.perso == "kitana" && this.forward>=1 && this.special==1 && this.bas==0 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
 						this.begincoup("fanswipe",other);
@@ -3803,15 +3615,7 @@ function main(){
 						if(entre(this.movlag,stats.elag,stats.elag+stats.fdur)){this.xspeed=9*this.orientation;}
 						if(Math.abs(this.x+this.xspeed-camerax)>decalagex-this.charac.width/2){
 							if(finishhim && other.falling==0 && other.gettingup==0 && this.memoryslot>=2){
-								this.fatality=110;
-								play_sound_eff("fatal1");
-								finishhim = 0;
-								other.invincibilite=1000;
-								fatalitywasdone = true;
-								this.fatalitytype = 1;
-								this.mov = ""; this.movlag=0; 
-								fixcamera = 90;
-								if(this.x<other.x){this.orientation = 1;}else{this.orientation = -1;}
+								this.begin_fatality(1,110);
 							}
 							else{
 								this.x += (2*decalagex)*signe(camerax-this.x);
@@ -4721,8 +4525,8 @@ function main(){
 					else if(this.fatality>=a-25){this.costume="bomb2";}
 					else{this.costume="victory2";}
 					if(this.fatality==a-20){add_to_objects_set(new ExploProj(this.x,this.y+60,this.orientation,other,stats,this.skin));play_sound_eff("explosion",0.8);}
-					if(this.fatality==a-26){this.hide=true;}
-					if(this.fatality==b){this.hide=false;this.x=other.x;other.explode();play_sound_eff("spithit",0.7);slow_game(4,1.5);add_to_objects_set(new DropBlood(other.x,65,-this.orientation,"hdropblood",0.,3.));}
+					if(this.fatality==a-26){this.hide=true;this.x=other.x;}
+					if(this.fatality==b){this.hide=false;other.explode();play_sound_eff("spithit",0.7);slow_game(4,1.5);add_to_objects_set(new DropBlood(other.x,65,-this.orientation,"hdropblood",0.,3.));}
 					if(entre(this.fatality,b,a-50) && this.fatality%20==5){other.shake_player(6,(a-30-this.fatality)*0.1+6.);play_sound_eff(other.charac.voiceactor+"hurted");}
 				}
 				else if(this.perso=="baraka"){
@@ -5867,7 +5671,7 @@ function main(){
 				if(survival_handler.is_active()){roundwonsj2 ++;}
 			}
 			if(roundwonsj2>=2 && finishhim==0){
-				finishhim = 300;end_of_round_countdown=120;
+				finishhim = 300;
 			}
 			else{
 				end_of_round_countdown = 180;
@@ -5898,6 +5702,7 @@ function main(){
 		cpt = 0; objects_to_loop.clear();
 		j1.reinit(-100,0,persoschoisis[0],0,skinschoisis[0],j2,reset_ai);j2.reinit(100,0,persoschoisis[1],1,skinschoisis[1],j1,reset_ai);frame_delay = base_frame_delay;
 		end_of_round_countdown=0;
+		finishhim = 0; fatalitywasdone = false;
 		if(survival_handler.is_active()){chosenmusic = musiquesalt[chosenstage];}
 		else{chosenmusic = musiques[chosenstage];}
 		if(introon && !secondplayerisdummy){fightstartcountdown = 130;}else{fightstartcountdown=1;}
@@ -6530,7 +6335,7 @@ function main(){
 				persoschoisis = [ordre_persos[persosovered[0][0]][persosovered[0][1]],ordre_persos[persosovered[1][0]][persosovered[1][1]]];
 				if(!secondplayerchosescharac){
 					if(survival_handler.is_active()){survival_handler.select_char(persoschoisis[0]);persoschoisis[1]=survival_handler.get_char_to_fight();}
-					else if(arcadelevel==liste_persos.length){
+					else if(arcadelevel==8){
 						persoschoisis[1] = "shao_kahn";
 					}
 					else{
@@ -7066,7 +6871,7 @@ function main(){
 	characteristics.set("kunglao",{png : kunglaoskins,coordinates : kuncoordinates, sex : "m", standnframes : 6, standframespeed : 5, rollspeed : 5, hkickstartnframe : 2, hkickendnframe : 2, kicknframe : 4,grabxdist : 34, grabydist : 36, stunnframes : 6, walknframes : 9, icon : kunglaoiconpng, namewav : document.querySelector('#kunglaowav'),
 	width : 41, height : 101,vitesse : 3.1, run_speed : 6.1,jumpxspeed : 3.4,backmovnerf : 0.9, gravity : 0.42, jumpforce : 8.8,jumpsquat : 3, shorthop : 5.8, friction:0.24, hurtcontrol : 0.2, grabtype : "poser",
 	airdrift : 0.1, airmaxspeed : 1.8, airdodgespeed : 6, airdodgefdur : 13, landinglag : 9,coups : kunglao_coups, pv : 100, getupfdur : 28, grabfdur : 30, grabdeg : 12, vicposframes : 6, vicposfdur : 30, cds : [240,150,270,240], icons : [hatthrowiconpng,hatsliceiconpng,teleporthaticonpng,whirlwindiconpng], voiceactor : "male",
-	default_behav : "normal", combos : kunglao_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Mileena attends fashion week and finally buys shampoo for her hair, because, and I quote, 'You're a girl, you don't have shampoo, it's like you're a girl, you don't have hair'."});
+	default_behav : "normal", combos : kunglao_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Kung Lao becomes the best magician EarthRealm has ever seen and is loved by all!"});
 	
 
 
