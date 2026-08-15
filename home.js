@@ -1968,6 +1968,7 @@ function main(){
 			this.prixasoigner = 10000;
 			this.random_augment_choice = 0;
 			this.boosted = -1;
+			this.has_benediction = false;
 		}
 		activate(){
 			this.active = true;
@@ -1978,6 +1979,8 @@ function main(){
 			this.prixasoigner = 5000;
 			this.boosted = -1;
 			this.random_augment_choice=randomInt(0,2);
+			this.has_benediction = false;
+			this.lastbuy = ""; this.buystreak = 0;
 		}
 		select_char(char){
 			this.currentmaxpv = Math.round(characteristics.get(char).pv*1.5);
@@ -2012,6 +2015,8 @@ function main(){
 			}
 			if(this.augment_opened){this.option_list_str[3]=SurvivalHandler.random_augment_name[this.random_augment_choice];}
 			else{this.option_list_str[3]="???"}
+			if(this.augment_opened && this.can_buy_bene()){this.option_list_str[1]="BENEDICTION";if(this.boosted==1){this.boosted=-1;}}
+			else{this.option_list_str[1]="MAX HP";}
 		}
 		get_char_to_fight(){
 			return this.order[this.level%this.order.length];
@@ -2031,6 +2036,7 @@ function main(){
 					return ["U done?"];
 				case 1:
 					if(!this.augment_opened){return ["Unavailable"];}
+					else if(this.can_buy_bene()){return ["Restores 70%HP","when below 30%"];}
 					else if(this.boosted==1){return ["Max HP +60"]}
 					return ["Max HP +40"];
 					break;
@@ -2059,12 +2065,23 @@ function main(){
 					}
 					break;
 			}
+
 		}
 		get_ennemystats(){
 			var atk = 1.; var hp=0.7;
 			hp += this.level*0.1;
 			atk += Math.floor(this.level/9)*0.2+Math.floor(this.level**2/50)*0.05;
 			return {atk : atk, hp : hp};
+		}
+
+		has_bought(buy_type){
+				if(buy_type==this.lastbuy){this.buystreak++;}
+				else{this.buystreak=1;this.lastbuy=buy_type;}
+				console.log(this.lastbuy,this.buystreak);
+		}
+
+		can_buy_bene(){
+			return this.lastbuy=="Health" && this.buystreak>=2 && !this.has_benediction;
 		}
 	}
 
@@ -4135,6 +4152,7 @@ function main(){
 				this.combo_hits += 1;
 				this.jauge = Math.min(this.jaugemax,this.jauge+Math.round(degsjauge*0.7));
 				other.jauge = Math.min(other.jaugemax,other.jauge+Math.round(degsjauge/3));
+				if(this.n==0 && survival_handler.is_active() && this.pv<=this.pvmax*0.3 && survival_handler.has_benediction){this.pv=this.pvmax;survival_handler.has_benediction=false;}
 				if(this.n==1 && secondplayerisdummy && this.pv<=0){this.pv=1;}
 				if(stats.comboscaling!==undefined){this.comboscaling-=stats.comboscaling;}
 				else{this.comboscaling -= 0.05;}
@@ -5496,6 +5514,7 @@ function main(){
 		for(var j=0;j<l.length;j++){
 			ui_ctx.fillText(l[j],610,200+j*50);
 		}
+		if(survival_handler.has_benediction){ui_ctx.fillText("Blessed",610,440);}
 		ui_ctx.fillText("Score: "+score.toString(),20,50);
 		ui_ctx.fillText("HP: "+survival_handler.currentpv.toString()+"/"+survival_handler.currentmaxpv.toString(),20,100);
 		ui_ctx.fillText("Next: "+survival_handler.get_char_to_fight(),20,440);
@@ -5526,13 +5545,23 @@ function main(){
 					break;
 				case 1:
 					if(survival_handler.augment_opened){
-						survival_handler.augment_opened=false;
-						var a = 40;
-						if(survival_handler.boosted==survival_handler.selected){a=Math.round(a*1.5);play_sound_eff("compliment");}
-						survival_handler.currentmaxpv+=a;
-						survival_handler.currentpv+=a;
-						j1.vicpose=1;
-						play_sound_eff("powerup");
+						if(survival_handler.can_buy_bene()){
+							survival_handler.augment_opened=false;
+							survival_handler.has_benediction=true;
+							j1.vicpose=1;
+							play_sound_eff("potion");
+							survival_handler.has_bought("Benediction");
+						}
+						else{
+							survival_handler.augment_opened=false;
+							var a = 40;
+							if(survival_handler.boosted==survival_handler.selected){a=Math.round(a*1.5);play_sound_eff("compliment");}
+							survival_handler.currentmaxpv+=a;
+							survival_handler.currentpv+=a;
+							j1.vicpose=1;
+							play_sound_eff("powerup");
+							survival_handler.has_bought("Health");
+						}
 					}
 					break;
 				case 2:
@@ -5542,6 +5571,7 @@ function main(){
 						survival_handler.augment_opened=false;
 						survival_handler.current_atk+=a;
 						j1.vicpose=1;play_sound_eff("powerup");
+						survival_handler.has_bought("Attack");
 					}
 					break;
 				case 3:
@@ -5553,16 +5583,19 @@ function main(){
 								var a = 20;
 								if(survival_handler.boosted==survival_handler.selected){a=Math.round(a*1.5);play_sound_eff("compliment");}
 								survival_handler.current_regen+=a;
+								survival_handler.has_bought("Regen");
 								break;
 							case 1:
 								var a = 30;
 								if(survival_handler.boosted==survival_handler.selected){a=Math.round(a*1.5);play_sound_eff("compliment");}
 								survival_handler.current_cdr+=a;
+								survival_handler.has_bought("CDR");
 								break;
 							case 2:
 								var a = 0.2;
 								if(survival_handler.boosted==survival_handler.selected){a=a*1.5;play_sound_eff("compliment");}
 								survival_handler.current_speed_boost+=a;
+								survival_handler.has_bought("Speed");
 								break;
 						}
 					}
