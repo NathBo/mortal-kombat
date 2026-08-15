@@ -1968,7 +1968,7 @@ function main(){
 			this.prixasoigner = 10000;
 			this.random_augment_choice = 0;
 			this.boosted = -1;
-			this.has_benediction = false;
+			this.has_benediction = false; this.has_curse = false;
 		}
 		activate(){
 			this.active = true;
@@ -1980,7 +1980,7 @@ function main(){
 			this.boosted = -1;
 			this.random_augment_choice=randomInt(0,2);
 			this.has_benediction = false;
-			this.lastbuy = ""; this.buystreak = 0;
+			this.lastbuy = ""; this.buystreak = 0; this.has_curse = false;
 		}
 		select_char(char){
 			this.currentmaxpv = Math.round(characteristics.get(char).pv*1.5);
@@ -2017,6 +2017,8 @@ function main(){
 			else{this.option_list_str[3]="???"}
 			if(this.augment_opened && this.can_buy_bene()){this.option_list_str[1]="BENEDICTION";if(this.boosted==1){this.boosted=-1;}}
 			else{this.option_list_str[1]="MAX HP";}
+			if(this.augment_opened && this.can_buy_curse()){this.option_list_str[2]="CURSE";if(this.boosted==2){this.boosted=-1;}}
+			else{this.option_list_str[2]="ATTACK";}
 		}
 		get_char_to_fight(){
 			return this.order[this.level%this.order.length];
@@ -2042,6 +2044,7 @@ function main(){
 					break;
 				case 2:
 					if(!this.augment_opened){return ["Unavailable"];}
+					else if(this.can_buy_curse()){return ["+50% Total Dmg","Loses hp when","HP>=70%"];}
 					var a = "Damage +30%";
 					if(this.boosted==2){a = "Damage +45%"}
 					return [a,"Currently "+Math.round(this.current_atk*100)+"%"];
@@ -2082,6 +2085,9 @@ function main(){
 
 		can_buy_bene(){
 			return this.lastbuy=="Health" && this.buystreak>=2 && !this.has_benediction;
+		}
+		can_buy_curse(){
+			return this.lastbuy=="Attack" && this.buystreak>=2 && !this.has_curse;
 		}
 	}
 
@@ -2984,6 +2990,9 @@ function main(){
 				else if(this.cooldowns[0]==0 && this.ressource<this.max_ressource){this.cooldowns[0] = this.charac.cds[0];}
 			}
 			if(this.vicpose){return;}
+			if(survival_handler.is_active()){
+				if(survival_handler.has_curse && timer%60==0 && this.pv>=this.pvmax*0.7 && this.n==0){this.pv--;}
+			}
 			if(this.grabbing&&this.hurted==0&&this.grabbed==0){
 				this.invincibilite = 1;
 				this.grabbing++;
@@ -3005,6 +3014,7 @@ function main(){
 						play_sound_eff("hhit");
 						var degs = Math.round(stats.degats*this.atk);
 						var degsjauge = degs/Math.sqrt(other.pvmax/other.charac.pv);
+						if(this.n==0 && survival_handler.is_active() && survival_handler.has_curse){degs = Math.floor(degs*1.5);}
 						other.pv -= degs;
 						other.combo_deg += degs;
 						this.jauge = Math.min(this.jaugemax,this.jauge+Math.round(degsjauge/3));
@@ -3027,6 +3037,7 @@ function main(){
 					play_sound_eff("hhit");
 					var degs = Math.round(stats.degats*this.atk);
 					var degsjauge = degs/Math.sqrt(other.pvmax/other.charac.pv);
+					if(this.n==0 && survival_handler.is_active() && survival_handler.has_curse){degs = Math.floor(degs*1.5);}
 					other.pv -= degs;
 					other.combo_deg += degs;
 					this.jauge = Math.min(this.jaugemax,this.jauge+Math.round(degsjauge/3));
@@ -3040,6 +3051,7 @@ function main(){
 				else if(this.grabbing == grabfdur/2 && this.grabtype == "bouncegrab"){
 					var degs = Math.round(10*this.atk);
 					var degsjauge = degs/Math.sqrt(other.pvmax/other.charac.pv);
+					if(this.n==0 && survival_handler.is_active() && survival_handler.has_curse){degs = Math.floor(degs*1.5);}
 					other.losepv(degs);
 					other.combo_deg += degs;
 					other.combo_hits += 1;
@@ -4147,6 +4159,7 @@ function main(){
 				this.tb = stats.hurty;
 				var degs = Math.round(stats.degats*this.comboscaling*this.other.atk);
 				var degsjauge = degs/Math.sqrt(this.pvmax/this.charac.pv);
+				if(this.n==1 && survival_handler.is_active() && survival_handler.has_curse){degs = Math.floor(degs*1.5);}
 				this.pv -= degs;
 				this.combo_deg += degs;
 				this.combo_hits += 1;
@@ -5514,6 +5527,7 @@ function main(){
 		for(var j=0;j<l.length;j++){
 			ui_ctx.fillText(l[j],610,200+j*50);
 		}
+		if(survival_handler.lastbuy!="" && survival_handler.augment_opened){ui_ctx.fillText("Last: "+survival_handler.lastbuy,610,400);}
 		if(survival_handler.has_benediction){ui_ctx.fillText("Blessed",610,440);}
 		ui_ctx.fillText("Score: "+score.toString(),20,50);
 		ui_ctx.fillText("HP: "+survival_handler.currentpv.toString()+"/"+survival_handler.currentmaxpv.toString(),20,100);
@@ -5566,12 +5580,21 @@ function main(){
 					break;
 				case 2:
 					if(survival_handler.augment_opened){
-						var a = 0.3;
-						if(survival_handler.boosted==survival_handler.selected){a=a*1.5;play_sound_eff("compliment");}
-						survival_handler.augment_opened=false;
-						survival_handler.current_atk+=a;
-						j1.vicpose=1;play_sound_eff("powerup");
-						survival_handler.has_bought("Attack");
+						if(survival_handler.can_buy_curse()){
+							survival_handler.augment_opened=false;
+							survival_handler.has_curse=true;
+							j1.vicpose=1;
+							play_sound_eff("fata1");
+							survival_handler.has_bought("Curse");
+						}
+						else{
+							var a = 0.3;
+							if(survival_handler.boosted==survival_handler.selected){a=a*1.5;play_sound_eff("compliment");}
+							survival_handler.augment_opened=false;
+							survival_handler.current_atk+=a;
+							j1.vicpose=1;play_sound_eff("powerup");
+							survival_handler.has_bought("Attack");
+						}
 					}
 					break;
 				case 3:
