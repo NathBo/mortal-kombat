@@ -1968,7 +1968,7 @@ function main(){
 			this.prixasoigner = 10000;
 			this.random_augment_choice = 0;
 			this.boosted = -1;
-			this.has_benediction = false; this.has_curse = false;
+			this.has_benediction = false; this.has_curse = false; this.has_cdrtotem = false; this.has_regentotem = false; this.has_speed_totem = false;
 		}
 		activate(){
 			this.active = true;
@@ -1980,7 +1980,7 @@ function main(){
 			this.boosted = -1;
 			this.random_augment_choice=randomInt(0,2);
 			this.has_benediction = false;
-			this.lastbuy = ""; this.buystreak = 0; this.has_curse = false;
+			this.lastbuy = ""; this.buystreak = 0; this.has_curse = false; this.has_cdrtotem = false; this.has_regentotem = false; this.has_speed_totem = false;
 		}
 		select_char(char){
 			this.currentmaxpv = Math.round(characteristics.get(char).pv*1.5);
@@ -2005,7 +2005,7 @@ function main(){
 			if(this.augment_opened){
 				var last_random = this.random_augment_choice;
 				this.random_augment_choice = randomInt(0,2);
-				if(this.random_augment_choice==last_random){this.random_augment_choice = randomInt(0,2);}
+				//if(this.random_augment_choice==last_random){this.random_augment_choice = randomInt(0,2);}
 			}
 			if(this.augment_opened && Math.random()<0.6){
 				this.boosted = randomInt(1,3);
@@ -2019,6 +2019,9 @@ function main(){
 			else{this.option_list_str[1]="MAX HP";}
 			if(this.augment_opened && this.can_buy_curse()){this.option_list_str[2]="CURSE";if(this.boosted==2){this.boosted=-1;}}
 			else{this.option_list_str[2]="ATTACK";}
+			if(this.augment_opened && this.can_buy_cdtotem()){this.option_list_str[3]="CD TOTEM";this.random_augment_choice=1;if(this.boosted==3){this.boosted=-1;}}
+			if(this.augment_opened && this.can_buy_regentotem()){this.option_list_str[3]="REGEN TOTEM";this.random_augment_choice=0;if(this.boosted==3){this.boosted=-1;}}
+			if(this.augment_opened && this.can_buy_speedtotem()){this.option_list_str[3]="SPEED TOTEM";this.random_augment_choice=2;if(this.boosted==3){this.boosted=-1;}}
 		}
 		get_char_to_fight(){
 			return this.order[this.level%this.order.length];
@@ -2051,6 +2054,9 @@ function main(){
 					break;
 				case 3:
 					if(!this.augment_opened){return ["Unavailable"];}
+					else if(this.can_buy_regentotem()){return ["+15% LifeSteal"];}
+					else if(this.can_buy_cdtotem()){return ["Enemy Jauge","Gener° -40%"];}
+					else if(this.can_buy_speedtotem()){return ["Enemy -40%","move speed"];}
 					if(this.random_augment_choice==0){
 						var a = "Regen +20HP";
 						if(this.boosted==3){a = "Regen +30HP"}
@@ -2088,6 +2094,15 @@ function main(){
 		}
 		can_buy_curse(){
 			return this.lastbuy=="Attack" && this.buystreak>=2 && !this.has_curse;
+		}
+		can_buy_cdtotem(){
+			return this.lastbuy=="CDR" && this.buystreak>=2 && !this.has_cdrtotem;
+		}
+		can_buy_regentotem(){
+			return this.lastbuy=="Regen" && this.buystreak>=2 && !this.has_regentotem;
+		}
+		can_buy_speedtotem(){
+			return this.lastbuy=="Speed" && this.buystreak>=2 && !this.has_speed_totem;
 		}
 	}
 
@@ -2759,6 +2774,8 @@ function main(){
 				var s = survival_handler.get_ennemystats();
 				this.pvmax = Math.round(this.pvmax*s.hp);this.pv=this.pvmax;this.pvaff=this.pv;
 				this.atk = s.atk;
+				if(survival_handler.has_cdrtotem){this.jaugemax+=40;}
+				if(survival_handler.has_speed_totem){this.speed_boost=0.6;}
 			}
 		}
 
@@ -3015,6 +3032,7 @@ function main(){
 						var degs = Math.round(stats.degats*this.atk);
 						var degsjauge = degs/Math.sqrt(other.pvmax/other.charac.pv);
 						if(this.n==0 && survival_handler.is_active() && survival_handler.has_curse){degs = Math.floor(degs*1.5);}
+						if(this.n==0 && survival_handler.is_active() && survival_handler.has_regentotem){this.pv+=Math.floor(degs*0.15);}
 						other.pv -= degs;
 						other.combo_deg += degs;
 						this.jauge = Math.min(this.jaugemax,this.jauge+Math.round(degsjauge/3));
@@ -3038,6 +3056,7 @@ function main(){
 					var degs = Math.round(stats.degats*this.atk);
 					var degsjauge = degs/Math.sqrt(other.pvmax/other.charac.pv);
 					if(this.n==0 && survival_handler.is_active() && survival_handler.has_curse){degs = Math.floor(degs*1.5);}
+					if(this.n==0 && survival_handler.is_active() && survival_handler.has_regentotem){this.pv+=Math.floor(degs*0.15);}
 					other.pv -= degs;
 					other.combo_deg += degs;
 					this.jauge = Math.min(this.jaugemax,this.jauge+Math.round(degsjauge/3));
@@ -3052,6 +3071,7 @@ function main(){
 					var degs = Math.round(10*this.atk);
 					var degsjauge = degs/Math.sqrt(other.pvmax/other.charac.pv);
 					if(this.n==0 && survival_handler.is_active() && survival_handler.has_curse){degs = Math.floor(degs*1.5);}
+					if(this.n==0 && survival_handler.is_active() && survival_handler.has_regentotem){this.pv+=Math.floor(degs*0.15);}
 					other.losepv(degs);
 					other.combo_deg += degs;
 					other.combo_hits += 1;
@@ -4160,6 +4180,7 @@ function main(){
 				var degs = Math.round(stats.degats*this.comboscaling*this.other.atk);
 				var degsjauge = degs/Math.sqrt(this.pvmax/this.charac.pv);
 				if(this.n==1 && survival_handler.is_active() && survival_handler.has_curse){degs = Math.floor(degs*1.5);}
+				if(this.n==1 && survival_handler.is_active() && survival_handler.has_regentotem){this.other.gainpv(Math.floor(degs*0.15));}
 				this.pv -= degs;
 				this.combo_deg += degs;
 				this.combo_hits += 1;
@@ -5584,7 +5605,7 @@ function main(){
 							survival_handler.augment_opened=false;
 							survival_handler.has_curse=true;
 							j1.vicpose=1;
-							play_sound_eff("fata1");
+							play_sound_eff("fatal1");
 							survival_handler.has_bought("Curse");
 						}
 						else{
@@ -5603,22 +5624,46 @@ function main(){
 						j1.vicpose=1;play_sound_eff("powerup");
 						switch(survival_handler.random_augment_choice){
 							case 0:
-								var a = 20;
-								if(survival_handler.boosted==survival_handler.selected){a=Math.round(a*1.5);play_sound_eff("compliment");}
-								survival_handler.current_regen+=a;
-								survival_handler.has_bought("Regen");
+								if(survival_handler.can_buy_regentotem()){
+									survival_handler.augment_opened=false;
+									survival_handler.has_regentotem=true;
+									j1.vicpose=1;
+									survival_handler.has_bought("CD tot");
+								}
+								else{
+									var a = 20;
+									if(survival_handler.boosted==survival_handler.selected){a=Math.round(a*1.5);play_sound_eff("compliment");}
+									survival_handler.current_regen+=a;
+									survival_handler.has_bought("Regen");
+								}
 								break;
 							case 1:
-								var a = 30;
-								if(survival_handler.boosted==survival_handler.selected){a=Math.round(a*1.5);play_sound_eff("compliment");}
-								survival_handler.current_cdr+=a;
-								survival_handler.has_bought("CDR");
+								if(survival_handler.can_buy_cdtotem()){
+									survival_handler.augment_opened=false;
+									survival_handler.has_cdrtotem=true;
+									j1.vicpose=1;
+									survival_handler.has_bought("Reg Tot");
+								}
+								else{
+									var a = 30;
+									if(survival_handler.boosted==survival_handler.selected){a=Math.round(a*1.5);play_sound_eff("compliment");}
+									survival_handler.current_cdr+=a;
+									survival_handler.has_bought("CDR");
+								}
 								break;
 							case 2:
-								var a = 0.2;
-								if(survival_handler.boosted==survival_handler.selected){a=a*1.5;play_sound_eff("compliment");}
-								survival_handler.current_speed_boost+=a;
-								survival_handler.has_bought("Speed");
+								if(survival_handler.can_buy_speedtotem()){
+									survival_handler.augment_opened=false;
+									survival_handler.has_speed_totem=true;
+									j1.vicpose=1;
+									survival_handler.has_bought("Spd Tot");
+								}
+								else{
+									var a = 0.2;
+									if(survival_handler.boosted==survival_handler.selected){a=a*1.5;play_sound_eff("compliment");}
+									survival_handler.current_speed_boost+=a;
+									survival_handler.has_bought("Speed");
+								}
 								break;
 						}
 					}
