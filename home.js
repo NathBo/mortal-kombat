@@ -238,11 +238,11 @@ function main(){
 
 	class VisualObject
 	{
-		constructor(x,y,orientation,skin,costume,coordinates,dur){
+		constructor(x,y,orientation,skin,costume,coordinates,dur,z_index=1){
 			this.x = x; this.y = y; this.orientation = orientation;
 			this.skin = skin; this.costume = costume; this.coordinates = coordinates;
 			this.num = cpt; this.totdur = dur; this.dur = dur;
-			this.dangerous = false;
+			this.dangerous = false; this.z_index = z_index;
 		}
 
 		loop(){
@@ -263,9 +263,10 @@ function main(){
 
 		drawSkin(){
 			ctx.scale(2*this.orientation,2);
+			//console.log(this.costume,this.coordinates);
 			var coords = this.coordinates.get(this.costume);
+			//console.log((this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*coords.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey);
 			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*coords.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
-			//console.log((this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*coords.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,this.costume);
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
     	}
@@ -290,10 +291,30 @@ function main(){
 		}
 	}
 
+	class AcidParticles extends VisualObject{
+		static costpercpt = 8;
+		constructor(){
+			super(-3,28,1,propspng,"acidpoolparticles1",propscoordinates,10,-1);
+			this.costcpt = 0;
+		}
+		afficher(){
+			this.costcpt = (this.costcpt+1)%(AcidParticles.costpercpt*3);
+			this.costume ="acidpoolparticles"+(Math.floor(this.costcpt/AcidParticles.costpercpt)+1).toString();
+			this.drawSkin();
+		}
+	}
+
+	class Chain extends VisualObject{
+		constructor(x,y,orientation,type,z_index){
+			super(x,y,orientation,propspng,"backgroundchain"+type.toString(),propscoordinates,10,z_index);
+		}
+		afficher(){this.drawSkin();}
+	}
+
 	class Blood extends VisualObject
 	{
 		constructor(x,y,orientation,bloodtype){
-			super(x,y,orientation,bloodpng,"",bloodcoordinates,10);
+			super(x,y,orientation,bloodpng,"",bloodcoordinates,10,-1);
 			this.bloodtype = bloodtype;
 			if(this.bloodtype=="lblood"){this.totdur = 18;this.nframes = 6;this.vitesse=0.8;}
 			else if(this.bloodtype=="mblood"){this.totdur = 28;this.nframes = 7;this.vitesse=0.1;}
@@ -363,7 +384,7 @@ function main(){
 			this.x = x; this.y = y; this.joueur=joueur;
 			this.dur = 24;
 			this.num = cpt;
-			this.orientation=1;
+			this.orientation=1; this.z_index = 1;
 		}
 		loop(){
 			this.x = this.joueur.x;
@@ -444,7 +465,7 @@ function main(){
 			this.dangerous = true; this.canthurt = 0;
 			this.enhanced = enhanced;
 			this.tb = 0;
-			this.phase = "normal";
+			this.phase = "normal"; this.z_index = 1;
 		}
 
 		touch(){
@@ -1729,10 +1750,6 @@ function main(){
 			else{this.costume = "flame_explosion"+(Math.floor(this.explosion/4)+1).toString();this.width=50;}
 			super.afficher(false);
 		}
-
-		delete(){
-			objects_to_loop.delete(this.num);
-		}
 	}
 
 
@@ -1779,10 +1796,6 @@ function main(){
 			ctx.scale(1,1);
 			if(gamefreeze==0){this.dur--;}
 			if(this.dur==0){this.delete();return;}
-		}
-
-		delete(){
-			objects_to_loop.delete(this.num);
 		}
 	}
 
@@ -3963,7 +3976,7 @@ function main(){
 				this.xspeed=0;
 				if(this.mov=="run"){this.mov="";this.movlag=0;}
 			}
-			if(Math.abs(this.x-camerax)>borderx-this.charac.width/2 && !other.fatality && this.mov != "hell_gates" && !(signe(this.xspeed)==-signe(this.x-camerax) && this.y>0)){this.x = signe(this.x-camerax)*(borderx+signe(this.x-camerax)*camerax-this.charac.width/2);}
+			if(Math.abs(this.x-camerax)>borderx-this.charac.width/2 && !other.fatality && racine(this.mov) != "hell_gates" && !(signe(this.xspeed)==-signe(this.x-camerax) && this.y>0)){this.x = signe(this.x-camerax)*(borderx+signe(this.x-camerax)*camerax-this.charac.width/2);}
 		}
 		else
 		{
@@ -5712,9 +5725,11 @@ function main(){
 			ui_ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ui_ctx.scale(1,1);
 		}
-		// for(let value of objects_to_loop.values()){
-		// 	if(value.vitesse==0){value.afficher();}
-		// }
+		if(fatalitywasdone || fatalitysreen){ctx.filter = 'brightness(0.5)';}
+		for(let value of objects_to_loop.values()){
+			if(value.z_index==-1){value.afficher();}
+		}
+		ctx.filter="none";
 		if(j2.hurted || j2.pv<=0){
 			j2.afficher(j1);
 			j1.afficher(j2);
@@ -5751,7 +5766,7 @@ function main(){
 			if(fatalitysreen==40){play_sound_eff("fatal2");}
 		}
 		for(let value of objects_to_loop.values()){
-			if(value.vitesse!=100){value.afficher();}
+			if(value.z_index==1){value.afficher();}
 		}
 		if (isinladder()){
 			ui_ctx.fillStyle = "white";
@@ -5805,6 +5820,7 @@ function main(){
 		finishhim = 0; fatalitywasdone = false;
 		if(survival_handler.is_active()){chosenmusic = musiquesalt[chosenstage];}
 		else{chosenmusic = musiques[chosenstage];}
+		prepare_stage_props();
 		if(introon && !secondplayerisdummy){fightstartcountdown = 130;}else{fightstartcountdown=1;}
 		fatalitywasdone = false; fatalitysreen = 0;fixcamera=0;
 		if(fatality_testing){roundwonsj1 = 1;j2.pv=1;j2.pvaff=1;fightstartcountdown=1;}
@@ -5829,8 +5845,22 @@ function main(){
 		chosenstage = Math.floor(Math.random()*numberofstages);
 		if(arcadelevel>=0){chosenstage = arcadestagesorder[arcadelevel];}
 		if(survival_handler.is_active()){chosenstage = survival_handler.get_stage();}
+		//chosenstage = 1;
 		ground = grounds[chosenstage];
 		stage_size = stagesizes[chosenstage];
+	}
+
+	function prepare_stage_props(){
+		if(chosenstage==1){
+			add_to_objects_set(new AcidParticles());
+			for(var i=0;i<3;i++){
+				add_to_objects_set(new Chain(-230+i*150+Math.random()*40+(i==2)*90,55+Math.random()*10,-1+randomInt(0,1)*2,1,-1));
+			}
+			add_to_objects_set(new Chain(-160,30,1,2,1));
+			add_to_objects_set(new Chain(130,-30,1,3,1));
+			add_to_objects_set(new Chain(240,70,1,1,-1));
+			
+		}
 	}
 
 

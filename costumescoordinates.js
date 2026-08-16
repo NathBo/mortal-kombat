@@ -1888,4 +1888,15 @@ function getbarellcoordinates(){
     return barellcoordinates;
 }
 
+function getpropscoordinates(){
+	var propscoordinates = new Map();
+	propscoordinates.set("acidpoolparticles1",{offx:20,width:481,offy:20,height:16,decx:0,decy:0});
+	propscoordinates.set("acidpoolparticles2",{offx:20,width:481,offy:52,height:16,decx:0,decy:0});
+	propscoordinates.set("acidpoolparticles3",{offx:20,width:481,offy:84,height:16,decx:0,decy:0});
+	propscoordinates.set("backgroundchain1",{offx:520,width:12,offy:8,height:144,decx:0,decy:0});
+	propscoordinates.set("backgroundchain2",{offx:546,width:82,offy:5,height:200,decx:0,decy:0});
+	propscoordinates.set("backgroundchain3",{offx:639,width:8,offy:5,height:256,decx:0,decy:0});
+	return propscoordinates;
+}
+
 

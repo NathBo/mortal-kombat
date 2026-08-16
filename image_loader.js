@@ -116,6 +116,12 @@ var backgroundscroll = [0.2,0,0,0.2, 0.5, 0.4];
 var backgrounddecal = [0,0,0,0,0,-20];
 var structdecal = [10,10,10,10,10,10];
 
+
+var propspng = new Image();propspng.src = 'ressource/stages/props.png';
+var propscoordinates = getpropscoordinates();
+
+
+
 var characterscreenpng = new Image();characterscreenpng.src = 'ressource/stages/character_screen.png';
 var raideniconpng=new Image();raideniconpng.src = 'ressource/icons/raiden.png';
 var kitanaiconpng=new Image();kitanaiconpng.src = 'ressource/icons/kitana.png';
