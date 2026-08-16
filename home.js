@@ -263,7 +263,7 @@ function main(){
 
 		drawSkin(){
 			ctx.scale(2*this.orientation,2);
-			//console.log(this.costume,this.coordinates);
+			//console.log(this.costume);
 			var coords = this.coordinates.get(this.costume);
 			//console.log((this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*coords.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey);
 			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*coords.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
@@ -284,6 +284,14 @@ function main(){
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
 			ctx.restore();
+		}
+
+		drawSkincolleLeft(width){
+			ctx.scale(2*this.orientation,2);
+			var coords = this.coordinates.get(this.costume);
+			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
 		}
 
 		delete(){
@@ -309,6 +317,34 @@ function main(){
 			super(x,y,orientation,propspng,"backgroundchain"+type.toString(),propscoordinates,10,z_index);
 		}
 		afficher(){this.drawSkin();}
+	}
+
+	class ShadowGuy extends VisualObject{
+		static costpercpt = 8;
+		static hautbasphase = 300;
+		constructor(){
+			super(-4,80,1,propspng,"shadowguy1",propscoordinates,10,-1);
+			this.costcpt = 0; this.hautbas = 0;
+			this.basey = this.y;
+		}
+		afficher(){
+			this.costcpt = (this.costcpt+1)%(ShadowGuy.costpercpt*11); this.hautbas = (this.hautbas+1)%ShadowGuy.hautbasphase;
+			this.costume ="shadowguy"+(Math.floor(this.costcpt/ShadowGuy.costpercpt)+1).toString();
+			this.y = this.basey+5*Math.sin(this.hautbas*2*Math.PI/ShadowGuy.hautbasphase);
+			this.drawSkincolleLeft(32);
+		}
+	}
+
+	class SkyMoving extends VisualObject{
+		constructor(faux_x){
+			super(0,40,1,propspng,"sky",propscoordinates,10,-2);
+			this.faux_x = faux_x;
+		}
+		afficher(){
+			this.faux_x = (this.faux_x+1.5)%1024;
+			this.x = this.faux_x-400;
+			this.drawSkin();
+		}
 	}
 
 	class Blood extends VisualObject
@@ -5709,6 +5745,11 @@ function main(){
 		let m = stage_size/2-decalagex;
 		if(camerax<-m){camerax=-m}
 		if(camerax>m){camerax=m}
+		if(fatalitywasdone || fatalitysreen){ctx.filter = 'brightness(0.5)';}
+		for(let value of objects_to_loop.values()){
+			if(value.z_index==-2){value.afficher();}
+		}
+		ctx.filter="none";
 		drawStage();
 		if(fightstartcountdown>=60){
 			if(fightstartcountdown==129){roundswav[roundwonsj1+roundwonsj2].play();}
@@ -5757,6 +5798,9 @@ function main(){
 			if((j1.pv==0 && j1.charac.sex == "f") || (j2.pv==0 && j2.charac.sex == "f")){play_sound_eff("finishher");}
 			else{play_sound_eff("finishhim");}
 		}
+		for(let value of objects_to_loop.values()){
+			if(value.z_index==1){value.afficher();}
+		}
 		if(fatalitysreen){
 			if(fatalitysreen%8==1 && fatalitysreen>30){add_to_objects_set(new DropBlood(randomInt(-90,90)+camerax,-128+ground,1,"ldropblood",0.,0.));}
 			ctx.scale(4,4);
@@ -5764,9 +5808,6 @@ function main(){
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
 			if(fatalitysreen==40){play_sound_eff("fatal2");}
-		}
-		for(let value of objects_to_loop.values()){
-			if(value.z_index==1){value.afficher();}
 		}
 		if (isinladder()){
 			ui_ctx.fillStyle = "white";
@@ -5845,7 +5886,7 @@ function main(){
 		chosenstage = Math.floor(Math.random()*numberofstages);
 		if(arcadelevel>=0){chosenstage = arcadestagesorder[arcadelevel];}
 		if(survival_handler.is_active()){chosenstage = survival_handler.get_stage();}
-		//chosenstage = 1;
+		//chosenstage = 0;
 		ground = grounds[chosenstage];
 		stage_size = stagesizes[chosenstage];
 	}
@@ -5860,6 +5901,11 @@ function main(){
 			add_to_objects_set(new Chain(130,-30,1,3,1));
 			add_to_objects_set(new Chain(240,70,1,1,-1));
 			
+		}
+		else if(chosenstage==0){
+			add_to_objects_set(new ShadowGuy());
+			add_to_objects_set(new SkyMoving(0));
+			add_to_objects_set(new SkyMoving(512));
 		}
 	}
 

@@ -1896,6 +1896,18 @@ function getpropscoordinates(){
 	propscoordinates.set("backgroundchain1",{offx:520,width:12,offy:8,height:144,decx:0,decy:0});
 	propscoordinates.set("backgroundchain2",{offx:546,width:82,offy:5,height:200,decx:0,decy:0});
 	propscoordinates.set("backgroundchain3",{offx:639,width:8,offy:5,height:256,decx:0,decy:0});
+	propscoordinates.set("shadowguy1",{offx:19,width:32,offy:118,height:64,decx:0,decy:0});
+	propscoordinates.set("shadowguy2",{offx:59,width:32,offy:118,height:64,decx:0,decy:0});
+	propscoordinates.set("shadowguy3",{offx:99,width:32,offy:118,height:64,decx:0,decy:0});
+	propscoordinates.set("shadowguy4",{offx:139,width:31,offy:118,height:64,decx:0,decy:0});
+	propscoordinates.set("shadowguy5",{offx:179,width:30,offy:118,height:64,decx:0,decy:0});
+	propscoordinates.set("shadowguy6",{offx:219,width:30,offy:118,height:64,decx:0,decy:0});
+	propscoordinates.set("shadowguy7",{offx:259,width:31,offy:118,height:64,decx:0,decy:0});
+	propscoordinates.set("shadowguy8",{offx:299,width:32,offy:118,height:64,decx:0,decy:0});
+	propscoordinates.set("shadowguy9",{offx:339,width:32,offy:118,height:64,decx:0,decy:0});
+	propscoordinates.set("shadowguy10",{offx:379,width:32,offy:118,height:64,decx:0,decy:0});
+	propscoordinates.set("shadowguy11",{offx:419,width:32,offy:118,height:64,decx:0,decy:0});
+	propscoordinates.set("sky",{offx:11,width:512,offy:193,height:168,decx:0,decy:0});
 	return propscoordinates;
 }
 
