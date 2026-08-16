@@ -650,8 +650,7 @@ function main(){
 						this.y,
 						this.orientation,
 						this.skin,
-						this.vitesse,
-						this.vitesseincr
+						this
 					)
 				);
 			}
@@ -1892,16 +1891,15 @@ function main(){
 	}
 
 	class Ring extends VisualObject{
-		constructor(x,y,orientation,skin,vitesse,vitesseincr){
+		constructor(x,y,orientation,skin,owner){
 			super(x,y,orientation,skin,"",repcoordinates,12);
 			this.dur--;
 			this.framepercost = 2;
-			this.vitesse = vitesse;this.vitesseincr = vitesseincr;
+			this.owner=owner;
 		}
 
 		loop(){
-			this.x+=this.orientation*this.vitesse;
-			this.vitesse+=this.vitesseincr;
+			if(this.owner!=null){this.x=this.owner.x+this.orientation*19;}
 		}
 
 		afficher(){
@@ -1980,7 +1978,7 @@ function main(){
 			this.boosted = -1;
 			this.random_augment_choice=randomInt(0,2);
 			this.has_benediction = false;
-			this.lastbuy = ""; this.buystreak = 0; this.has_curse = false; this.has_cdrtotem = false; this.has_regentotem = false; this.has_speed_totem = false;
+			this.lastbuy = ""; this.buystreak = 0; this.skipstreak = 0; this.has_curse = false; this.has_cdrtotem = false; this.has_regentotem = false; this.has_speed_totem = false;
 		}
 		select_char(char){
 			this.currentmaxpv = Math.round(characteristics.get(char).pv*1.5);
@@ -2005,9 +2003,10 @@ function main(){
 			if(this.augment_opened){
 				var last_random = this.random_augment_choice;
 				this.random_augment_choice = randomInt(0,2);
-				//if(this.random_augment_choice==last_random){this.random_augment_choice = randomInt(0,2);}
+				if(this.random_augment_choice==last_random && (this.lastbuy=="Attack" || this.lastbuy=="Health")){this.random_augment_choice = randomInt(0,2);}
+				while(this.random_augment_choice==last_random && this.skipstreak){this.random_augment_choice = randomInt(0,2);}
 			}
-			if(this.augment_opened && Math.random()<0.6){
+			if(this.augment_opened && (Math.random()<0.6 || this.skipstreak)){
 				this.boosted = randomInt(1,3);
 			}
 			else{
@@ -2086,7 +2085,7 @@ function main(){
 		has_bought(buy_type){
 				if(buy_type==this.lastbuy){this.buystreak++;}
 				else{this.buystreak=1;this.lastbuy=buy_type;}
-				console.log(this.lastbuy,this.buystreak);
+				this.skipstreak = 0;
 		}
 
 		can_buy_bene(){
@@ -3814,11 +3813,11 @@ function main(){
 									this.movlag++;
 									if(this.ressource<this.max_ressource-1 && this.is_enhanced()){this.ressource+=2;}
 								}
-								if(this.ressource%11==0){add_to_objects_set(new Ring(this.x+30*this.orientation,this.y+65,this.orientation,this.skin,0,0));}
+								if(this.ressource%11==0){add_to_objects_set(new Ring(this.x+30*this.orientation,this.y+65,this.orientation,this.skin));}
 								if(this.ressource%7==0){play_sound_eff("repcharge");}
 							}
 						}
-						if(this.movlag==stats.elag+2){add_to_objects_set(new Ring(this.x+30*this.orientatio,this.y+65,this.orientation,this.skin,0,0));}
+						if(this.movlag==stats.elag+2){add_to_objects_set(new Ring(this.x+30*this.orientatio,this.y+65,this.orientation,this.skin));}
 						break;
 					case "bomb":
 						var stats = this.charac.coups.get(this.mov);
@@ -4667,7 +4666,6 @@ function main(){
 					}
 					if(this.fatality==c+10){friendshipwav.play();}
 					this.costume = "rabbittrick"+n.toString();
-					console.log(this.costume);
 				}
 			}
 			else if(this.decapitated){
@@ -5555,7 +5553,7 @@ function main(){
 		ui_ctx.fillText("Next: "+survival_handler.get_char_to_fight(),20,440);
 		ui_ctx.fillText("(round "+(survival_handler.level+1).toString()+")",20,480);
 		if(survival_handler.level>=survival_stats.get(j1.perso)){ui_ctx.fillStyle="yellow";ui_ctx.fillText("Best",220,480);}
-		j1.y = 40;j1.x=-125;
+		j1.y = ground-200;j1.x=-125;
 		j1.afficher(j2);
 		if(j1.haut==1){j1.haut=2;survival_handler.selected=(survival_handler.selected+4)%5;play_sound_eff("cursor_move",0.7);}
 		if(j1.bas==1){j1.bas=2;survival_handler.selected=(survival_handler.selected+1)%5;play_sound_eff("cursor_move",0.7);}
@@ -5563,6 +5561,7 @@ function main(){
 			j1.poing=2;
 			switch(survival_handler.selected){
 				case 4:
+					if(survival_handler.augment_opened){survival_handler.skipstreak++;}
 					functiontoexecute = loop;survival_handler.selected=0;survival_handler.isinshop=false;reset_game(true);
 					shop_music.pause();
 					return;
@@ -5628,7 +5627,7 @@ function main(){
 									survival_handler.augment_opened=false;
 									survival_handler.has_regentotem=true;
 									j1.vicpose=1;
-									survival_handler.has_bought("CD tot");
+									survival_handler.has_bought("Reg tot");
 								}
 								else{
 									var a = 20;
@@ -5642,7 +5641,7 @@ function main(){
 									survival_handler.augment_opened=false;
 									survival_handler.has_cdrtotem=true;
 									j1.vicpose=1;
-									survival_handler.has_bought("Reg Tot");
+									survival_handler.has_bought("CD Tot");
 								}
 								else{
 									var a = 30;
@@ -5945,7 +5944,7 @@ function main(){
 							skinschoisis[1] = randomInt(0,1);
 							choserandomstage();
 							if(persoschoisis[1]==persoschoisis[0]){skinschoisis[1]=(skinschoisis[0]+1)%2;}
-							shop_music.currentTime=0;shop_music.play();
+							shop_music.currentTime=0;shop_music.play(); fatalitywasdone=false;
 							functiontoexecute = augment_shop;
 							reset_for_charac_screen(0);reset_for_charac_screen(1);
 							return;
