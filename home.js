@@ -1789,49 +1789,136 @@ function main(){
 	}
 
 
-	class Wave{
-		constructor(x,y,orientation,other,stats,enhanced=false){
-			this.x = x; this.y = y; this.orientation = orientation;
-			this.other = other;
-			this.width=22;
-			this.height=44;
-			this.totdur = 60;this.vitesse=6;
-			this.width=32;this.height = 38;
-			this.stats = stats;
-			this.dur = this.totdur;
-			this.num = cpt;
-			this.rotation = 0; this.rotationspeed = 16;
-			this.dangerous = enhanced;
+	class Wave extends Projectile {
+		constructor(x, y, orientation, other, stats, enhanced = false) {
+			super(
+				x,
+				y,
+				orientation,
+				other,
+				stats,
+				kitpng,
+				kitcoordinates,
+				60,
+				32,
+				38,
+				"wave",
+				true
+			);
+
+			this.vitesse = 6;
+			this.rotation = 0;
+			this.rotationspeed = 16;
+
 			this.enhanced = enhanced;
+			this.dangerous = enhanced;
+
 			this.phase = 5;
+			this.z_index = 1;
 		}
 
-		loop(){
-			this.x += this.orientation*this.vitesse;
-			if(!this.enhanced){this.y += this.vitesse;}
-			else{
-				if(this.phase<15){this.y += this.vitesse;}
-				else{this.y-=this.vitesse}
-				this.phase = (this.phase+1)%30
+		can_hit_other() {
+			var other = this.other;
+			var stats = this.stats;
+
+			if (
+				other.invincibilite != 0 ||
+				(other.y <= 0 && !this.enhanced)
+			) {
+				return false;
 			}
-			var stats = this.stats; var other = this.other;
-			if(other.invincibilite==0 && (other.y>0 || this.enhanced) &&entre((other.x-this.x)*this.orientation,stats.hitboxxs-other.charac.width/2,stats.hitboxxe+other.charac.width/2+stats.hitboxxeyscaling*(other.y-(this.y+stats.hitboxys)))){
-				if(entre((other.y+other.charac.height/3-this.y),stats.hitboxys-other.charac.height/6-(other.crouching==0 && other.y==0)*other.charac.height/2,stats.hitboxxe+other.charac.height/6)){other.hurt(this,stats);this.dur=1;}
+
+			if (
+				!entre(
+					(other.x - this.x) * this.orientation,
+					stats.hitboxxs - other.charac.width / 2,
+					stats.hitboxxe +
+						other.charac.width / 2 +
+						stats.hitboxxeyscaling *
+							(other.y - (this.y + stats.hitboxys))
+				)
+			) {
+				return false;
 			}
+
+			return entre(
+				other.y + other.charac.height / 3 - this.y,
+				stats.hitboxys -
+					other.charac.height / 6 -
+					(other.crouching == 0 && other.y == 0) *
+						other.charac.height / 2,
+				stats.hitboxxe + other.charac.height / 6
+			);
 		}
 
-		afficher(){
-			this.costume = "wave";
-			this.rotation = (this.rotation+this.rotationspeed)%360;
-			var a = 1;
-			if(this.phase<15){ctx.scale(2*this.orientation,2);}
-			else{ctx.scale(2*this.orientation,-2);a=-1;}
-			var coords = kitcoordinates.get(this.costume);
-			ctx.drawImage(kitpng,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*this.width/2+shakex)*this.orientation,(ground-this.y-coords.height*a-coords.decy+shakey)*a,coords.width,coords.height);
+		loop() {
+			this.x += this.orientation * this.vitesse;
+
+			if (!this.enhanced) {
+				this.y += this.vitesse;
+			} else {
+				if (this.phase < 15) {
+					this.y += this.vitesse;
+				} else {
+					this.y -= this.vitesse;
+				}
+
+				this.phase = (this.phase + 1) % 30;
+			}
+
+			this.check_hit_routine();
+		}
+
+		afficher() {
+			this.rotation =
+				(this.rotation + this.rotationspeed) % 360;
+
+			var verticalOrientation = 1;
+
+			if (this.phase < 15) {
+				ctx.scale(2 * this.orientation, 2);
+			} else {
+				ctx.scale(2 * this.orientation, -2);
+				verticalOrientation = -1;
+			}
+
+			var coords = this.coordinates.get(this.costume);
+
+			ctx.drawImage(
+				this.skin,
+				coords.offx,
+				coords.offy,
+				coords.width,
+				coords.height,
+				(
+					this.x +
+					decalagex -
+					camerax +
+					coords.decx * this.orientation -
+					this.orientation * this.width / 2 +
+					shakex
+				) * this.orientation,
+				(
+					ground -
+					this.y -
+					coords.height * verticalOrientation -
+					coords.decy +
+					shakey
+				) * verticalOrientation,
+				coords.width,
+				coords.height
+			);
+
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.scale(1,1);
-			if(gamefreeze==0){this.dur--;}
-			if(this.dur==0){this.delete();return;}
+			ctx.scale(1, 1);
+
+			if (gamefreeze == 0) {
+				this.dur--;
+			}
+
+			if (this.dur == 0) {
+				this.delete();
+			}
 		}
 	}
 

@@ -10,4 +10,6 @@
 - Maybe Visuals (take inspiration from MK2 remix)
 - Decent Parameters Screen
 - Visuals for totems
+- Decent Visuals for end of Arcade
+- Pre-anim for some projectiles (like raiden bolt or liu fire)
 
