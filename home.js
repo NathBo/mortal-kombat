@@ -294,6 +294,16 @@ function main(){
 			ctx.scale(1,1);
 		}
 
+		drawSkinBackground(ratio){
+			ctx.scale(2*this.orientation,2);
+			//console.log(this.costume);
+			var coords = this.coordinates.get(this.costume);
+			//console.log((this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*coords.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey);
+			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax*ratio+coords.decx*this.orientation-this.orientation*coords.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.scale(1,1);
+    	}
+
 		delete(){
 			objects_to_loop.delete(this.num);
 		}
@@ -388,6 +398,24 @@ function main(){
 			}
 		}
 	}
+
+	class EyesLurking extends VisualObject{
+		constructor(x,y){
+			super(x,y,1,propspng,"eyes",propscoordinates,10,-2);
+			this.cost_cpt = randomInt(200,1000); this.phase_cpt = randomInt(500,700);
+		}
+		afficher(){
+			this.cost_cpt--;
+			if(this.cost_cpt<0){this.cost_cpt+=this.phase_cpt;}
+			if(this.cost_cpt<120){
+				if(this.cost_cpt>=100){ctx.globalAlpha = (120-this.cost_cpt)*0.05}
+				else if(this.cost_cpt<=20){ctx.globalAlpha = this.cost_cpt*0.05;}
+				this.drawSkinBackground(backgroundscroll[chosenstage]);
+				ctx.globalAlpha = 1.;
+			}
+		}
+	}
+
 
 	class Blood extends VisualObject
 	{
@@ -6016,7 +6044,7 @@ function main(){
 		chosenstage = Math.floor(Math.random()*numberofstages);
 		if(arcadelevel>=0){chosenstage = arcadestagesorder[arcadelevel];}
 		if(survival_handler.is_active()){chosenstage = survival_handler.get_stage();}
-		//chosenstage = 3;
+		//chosenstage = 4;
 		ground = grounds[chosenstage];
 		stage_size = stagesizes[chosenstage];
 	}
@@ -6042,6 +6070,15 @@ function main(){
 			add_to_objects_set(new TreeGrimace(-190,59,600));
 			add_to_objects_set(new TreeGrimace(162,59,800));
 			add_to_objects_set(new SecretCoucou());
+		}
+		else if(chosenstage==4){
+			add_to_objects_set(new EyesLurking(110,90));
+			add_to_objects_set(new EyesLurking(140,100));
+			add_to_objects_set(new EyesLurking(-40,90));
+			add_to_objects_set(new EyesLurking(-70,80));
+			add_to_objects_set(new EyesLurking(0,88));
+			add_to_objects_set(new EyesLurking(-180,85));
+			add_to_objects_set(new EyesLurking(-220,95));
 		}
 	}
 

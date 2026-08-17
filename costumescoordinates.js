@@ -1917,6 +1917,7 @@ function getpropscoordinates(){
 	propscoordinates.set("treegrimace7",{offx:122,width:46,offy:441,height:64,decx:0,decy:0});
 	propscoordinates.set("smokecoucou",{offx:178,width:14,offy:441,height:56,decx:0,decy:0});
 	propscoordinates.set("jadecoucou",{offx:208,width:15,offy:441,height:57,decx:0,decy:0});
+	propscoordinates.set("eyes",{offx:468,width:14,offy:124,height:1,decx:0,decy:0});
 	return propscoordinates;
 }
 
