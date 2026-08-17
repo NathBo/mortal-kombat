@@ -416,6 +416,15 @@ function main(){
 		}
 	}
 
+	class WasteStruct extends VisualObject{
+		constructor(){
+			super(0,10,1,propspng,"wastestruct",propscoordinates,10,-2);
+		}
+		afficher(){
+			this.drawSkinBackground(0.4);
+		}
+	}
+
 
 	class Blood extends VisualObject
 	{
@@ -6044,7 +6053,7 @@ function main(){
 		chosenstage = Math.floor(Math.random()*numberofstages);
 		if(arcadelevel>=0){chosenstage = arcadestagesorder[arcadelevel];}
 		if(survival_handler.is_active()){chosenstage = survival_handler.get_stage();}
-		//chosenstage = 4;
+		//chosenstage = 2;
 		ground = grounds[chosenstage];
 		stage_size = stagesizes[chosenstage];
 	}
@@ -6079,6 +6088,9 @@ function main(){
 			add_to_objects_set(new EyesLurking(0,88));
 			add_to_objects_set(new EyesLurking(-180,85));
 			add_to_objects_set(new EyesLurking(-220,95));
+		}
+		else if(chosenstage==2){
+			add_to_objects_set(new WasteStruct());
 		}
 	}
 

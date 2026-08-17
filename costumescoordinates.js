@@ -1918,6 +1918,7 @@ function getpropscoordinates(){
 	propscoordinates.set("smokecoucou",{offx:178,width:14,offy:441,height:56,decx:0,decy:0});
 	propscoordinates.set("jadecoucou",{offx:208,width:15,offy:441,height:57,decx:0,decy:0});
 	propscoordinates.set("eyes",{offx:468,width:14,offy:124,height:1,decx:0,decy:0});
+	propscoordinates.set("wastestruct",{offx:236,width:512,offy:367,height:152,decx:0,decy:0});
 	return propscoordinates;
 }
 

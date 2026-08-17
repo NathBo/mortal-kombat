@@ -107,7 +107,7 @@ var gorobackgroundpng = new Image();gorobackgroundpng.src = 'ressource/stages/go
 var gorostructurepng = new Image();gorostructurepng.src = 'ressource/stages/gorostructure.png';
 var kahnstructurepng = new Image();kahnstructurepng.src = 'ressource/stages/kahnstructure.png';
 var kahnbackgroundpng = new Image();kahnbackgroundpng.src = 'ressource/stages/kahnbackground.png';
-var stagesstruct = [towerstructurepng, deadpoolpng, wastestructurepng, forestgroundpng, gorostructurepng, kahnstructurepng];
+var stagesstruct = [towerstructurepng, deadpoolpng, null, forestgroundpng, gorostructurepng, kahnstructurepng];
 var stagesground = [towergroundpng, null, wastegroundpng, null, null, null];
 var stagesbackground = [towerbackgroundpng, null, wastebackgroundpng, forestbackgroundpng, gorobackgroundpng, kahnbackgroundpng];
 var grounds = [240, 220, 240, 240, 230, 240];
