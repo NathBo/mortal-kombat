@@ -1908,6 +1908,15 @@ function getpropscoordinates(){
 	propscoordinates.set("shadowguy10",{offx:379,width:32,offy:118,height:64,decx:0,decy:0});
 	propscoordinates.set("shadowguy11",{offx:419,width:32,offy:118,height:64,decx:0,decy:0});
 	propscoordinates.set("sky",{offx:11,width:512,offy:193,height:168,decx:0,decy:0});
+	propscoordinates.set("treegrimace1",{offx:9,width:47,offy:369,height:64,decx:0,decy:0});
+	propscoordinates.set("treegrimace2",{offx:65,width:47,offy:369,height:64,decx:0,decy:0});
+	propscoordinates.set("treegrimace3",{offx:121,width:47,offy:369,height:64,decx:0,decy:0});
+	propscoordinates.set("treegrimace4",{offx:177,width:47,offy:369,height:64,decx:0,decy:0});
+	propscoordinates.set("treegrimace5",{offx:9,width:47,offy:441,height:64,decx:0,decy:0});
+	propscoordinates.set("treegrimace6",{offx:65,width:47,offy:441,height:64,decx:0,decy:0});
+	propscoordinates.set("treegrimace7",{offx:122,width:46,offy:441,height:64,decx:0,decy:0});
+	propscoordinates.set("smokecoucou",{offx:178,width:14,offy:441,height:56,decx:0,decy:0});
+	propscoordinates.set("jadecoucou",{offx:208,width:15,offy:441,height:57,decx:0,decy:0});
 	return propscoordinates;
 }
 

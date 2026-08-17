@@ -347,6 +347,48 @@ function main(){
 		}
 	}
 
+	class TreeGrimace extends VisualObject{
+		static total_phase = 600;
+		constructor(x,y,init_cost_cpt){
+			super(x,y,1,propspng,"treegrimace1",propscoordinates,10,-1);
+			this.cost_cpt = init_cost_cpt;
+		}
+		afficher(){
+			this.cost_cpt--;
+			if(this.cost_cpt<0){this.cost_cpt+=TreeGrimace.total_phase;}
+			var n = 1;
+			if(this.cost_cpt>=100){n=1;}
+			else if(entre(this.cost_cpt,20,80)){n=6+Math.floor(this.cost_cpt/5)%2;}
+			else if(entre(this.cost_cpt,15,85)){n=5;}
+			else if(entre(this.cost_cpt,10,90)){n=4;}
+			else if(entre(this.cost_cpt,5,95)){n=3;}
+			else{n=2;}
+			this.costume = "treegrimace" + n.toString();
+			this.drawSkin();
+		}
+	}
+
+	class SecretCoucou extends VisualObject{
+		constructor(){
+			super(0,50,1,propspng,"smokecoucou",propscoordinates,10,-2);
+			this.cost_cpt = randomInt(800,2000);
+			this.decide_cost();
+		}
+		decide_cost(){
+			this.costume = ["smokecoucou","jadecoucou"][randomInt(0,1)];
+		}
+		afficher(){
+			this.cost_cpt--;
+			if(this.cost_cpt<0){this.cost_cpt+=randomInt(1200,2000);this.decide_cost();}
+			if(this.cost_cpt>50){}
+			else{
+				if(this.cost_cpt>42){this.x+=2;}
+				else if(this.cost_cpt<8){this.x-=2;}
+				this.drawSkin();
+			}
+		}
+	}
+
 	class Blood extends VisualObject
 	{
 		constructor(x,y,orientation,bloodtype){
@@ -5811,6 +5853,12 @@ function main(){
 		if(fatalitywasdone || fatalitysreen){ctx.filter = 'brightness(0.5)';}
 		ctx.scale(2,2);
 		if(stagesbackground[chosenstage] != null){ctx.drawImage(stagesbackground[chosenstage],backgrounddecal[chosenstage]-90*backgroundscroll[chosenstage]-camerax*backgroundscroll[chosenstage],0);}
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		ctx.scale(1,1);
+		for(let value of objects_to_loop.values()){
+			if(value.z_index==-2){value.afficher();}
+		}
+		ctx.scale(2,2);
 		if(stagesstruct[chosenstage] != null){ctx.drawImage(stagesstruct[chosenstage],structdecal[chosenstage]-camerax+decalagex-18-stage_size/2+shakex,shakey);}
 		if(stagesground[chosenstage] != null){ctx.drawImage(stagesground[chosenstage],structdecal[chosenstage]-camerax+decalagex-stage_size/2+shakex,178+shakey);}
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -5832,11 +5880,6 @@ function main(){
 		let m = stage_size/2-decalagex;
 		if(camerax<-m){camerax=-m}
 		if(camerax>m){camerax=m}
-		if(fatalitywasdone || fatalitysreen){ctx.filter = 'brightness(0.5)';}
-		for(let value of objects_to_loop.values()){
-			if(value.z_index==-2){value.afficher();}
-		}
-		ctx.filter="none";
 		drawStage();
 		if(fightstartcountdown>=60){
 			if(fightstartcountdown==129){roundswav[roundwonsj1+roundwonsj2].play();}
@@ -5973,7 +6016,7 @@ function main(){
 		chosenstage = Math.floor(Math.random()*numberofstages);
 		if(arcadelevel>=0){chosenstage = arcadestagesorder[arcadelevel];}
 		if(survival_handler.is_active()){chosenstage = survival_handler.get_stage();}
-		//chosenstage = 0;
+		//chosenstage = 3;
 		ground = grounds[chosenstage];
 		stage_size = stagesizes[chosenstage];
 	}
@@ -5993,6 +6036,12 @@ function main(){
 			add_to_objects_set(new ShadowGuy());
 			add_to_objects_set(new SkyMoving(0));
 			add_to_objects_set(new SkyMoving(512));
+		}
+		else if(chosenstage==3){
+			add_to_objects_set(new TreeGrimace(-13,59,400));
+			add_to_objects_set(new TreeGrimace(-190,59,600));
+			add_to_objects_set(new TreeGrimace(162,59,800));
+			add_to_objects_set(new SecretCoucou());
 		}
 	}
 
