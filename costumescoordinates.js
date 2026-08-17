@@ -1919,6 +1919,9 @@ function getpropscoordinates(){
 	propscoordinates.set("jadecoucou",{offx:208,width:15,offy:441,height:57,decx:0,decy:0});
 	propscoordinates.set("eyes",{offx:468,width:14,offy:124,height:1,decx:0,decy:0});
 	propscoordinates.set("wastestruct",{offx:236,width:512,offy:367,height:152,decx:0,decy:0});
+	propscoordinates.set("crowd1",{offx:13,width:64,offy:518,height:24,decx:0,decy:0});
+	propscoordinates.set("crowd2",{offx:13,width:64,offy:550,height:24,decx:0,decy:0});
+	propscoordinates.set("crowd3",{offx:13,width:64,offy:582,height:24,decx:0,decy:0});
 	return propscoordinates;
 }
 

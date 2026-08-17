@@ -299,7 +299,7 @@ function main(){
 			//console.log(this.costume);
 			var coords = this.coordinates.get(this.costume);
 			//console.log((this.x+decalagex-camerax+coords.decx*this.orientation-this.orientation*coords.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey);
-			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax*ratio+coords.decx*this.orientation-this.orientation*coords.width/2+shakex)*this.orientation,ground-this.y-coords.height-coords.decy+shakey,coords.width,coords.height);
+			ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,(this.x+decalagex-camerax*ratio+coords.decx*this.orientation-this.orientation*coords.width/2)*this.orientation,ground-this.y-coords.height-coords.decy,coords.width,coords.height);
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.scale(1,1);
     	}
@@ -422,6 +422,18 @@ function main(){
 		}
 		afficher(){
 			this.drawSkinBackground(0.4);
+		}
+	}
+
+	class CrowdShao extends VisualObject{
+		constructor(x,y){
+			super(x,y,1,propspng,"crowd1",propscoordinates,10,-2);
+			this.cost_cpt = randomInt(0,10);
+		}
+		afficher(){
+			this.cost_cpt=(this.cost_cpt+1)%18;
+			this.costume = "crowd"+(Math.floor(this.cost_cpt/6)+1).toString();
+			this.drawSkinBackground(backgroundscroll[chosenstage]);
 		}
 	}
 
@@ -6053,7 +6065,7 @@ function main(){
 		chosenstage = Math.floor(Math.random()*numberofstages);
 		if(arcadelevel>=0){chosenstage = arcadestagesorder[arcadelevel];}
 		if(survival_handler.is_active()){chosenstage = survival_handler.get_stage();}
-		//chosenstage = 2;
+		//chosenstage = 5;
 		ground = grounds[chosenstage];
 		stage_size = stagesizes[chosenstage];
 	}
@@ -6091,6 +6103,11 @@ function main(){
 		}
 		else if(chosenstage==2){
 			add_to_objects_set(new WasteStruct());
+		}
+		else if(chosenstage==numberofstages){
+			for(var i=-3;i<5;i++){
+				add_to_objects_set(new CrowdShao(-30+71*i,59));
+			}
 		}
 	}
 
