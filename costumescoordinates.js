@@ -1922,6 +1922,17 @@ function getpropscoordinates(){
 	propscoordinates.set("crowd1",{offx:13,width:64,offy:518,height:24,decx:0,decy:0});
 	propscoordinates.set("crowd2",{offx:13,width:64,offy:550,height:24,decx:0,decy:0});
 	propscoordinates.set("crowd3",{offx:13,width:64,offy:582,height:24,decx:0,decy:0});
+	propscoordinates.set("sonyachains1",{offx:105,width:76,offy:642,height:47,decx:-1,decy:0});
+	propscoordinates.set("sonyachains2",{offx:210,width:75,offy:642,height:47,decx:0,decy:0});
+	propscoordinates.set("sonyachains3",{offx:314,width:75,offy:642,height:47,decx:0,decy:0});
+	propscoordinates.set("sonyachains4",{offx:417,width:76,offy:642,height:47,decx:-1,decy:0});
+	propscoordinates.set("kanochains1",{offx:99,width:76,offy:530,height:47,decx:0,decy:0});
+	propscoordinates.set("kanochains2",{offx:203,width:75,offy:531,height:46,decx:0,decy:0});
+	propscoordinates.set("kanochains3",{offx:307,width:75,offy:530,height:47,decx:0,decy:0});
+	propscoordinates.set("kanochains4",{offx:411,width:75,offy:530,height:47,decx:0,decy:0});
+	propscoordinates.set("kanochains5",{offx:99,width:75,offy:586,height:47,decx:0,decy:0});
+	propscoordinates.set("kanochains6",{offx:203,width:75,offy:586,height:47,decx:0,decy:0});
+	propscoordinates.set("kanochains7",{offx:307,width:75,offy:587,height:46,decx:0,decy:0});
 	return propscoordinates;
 }
 

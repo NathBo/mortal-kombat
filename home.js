@@ -437,6 +437,40 @@ function main(){
 		}
 	}
 
+	class SonyaChains extends VisualObject{
+		static poslist = [2,3,4,4,3,2,3,4,3,2];
+		static anim_speed = 7;
+		constructor(x,y){
+			super(x,y,1,propspng,"sonyachains1",propscoordinates,10,-1);
+			this.cost_cpt = 0;
+		}
+		afficher(){
+			this.cost_cpt=(this.cost_cpt+1)%110;
+			var n = 1;
+			if(this.cost_cpt>=SonyaChains.poslist.length*SonyaChains.anim_speed){n=1;}
+			else{n=SonyaChains.poslist[Math.floor(this.cost_cpt/SonyaChains.anim_speed)]}
+			this.costume = "sonyachains"+n.toString();
+			this.drawSkincolleLeft(76);
+		}
+	}
+
+	class KanoChains extends VisualObject{
+		static poslist = [2,3,4,4,3,2,3,4,3,2,1,1,1,5,6,7,7,6,7,6,5];
+		static anim_speed = 7;
+		constructor(x,y){
+			super(x,y,1,propspng,"kanochains1",propscoordinates,10,-1);
+			this.cost_cpt = 0;
+		}
+		afficher(){
+			this.cost_cpt=(this.cost_cpt+1)%200;
+			var n = 1;
+			if(this.cost_cpt>=KanoChains.poslist.length*KanoChains.anim_speed){n=1;}
+			else{n=KanoChains.poslist[Math.floor(this.cost_cpt/KanoChains.anim_speed)]}
+			this.costume = "kanochains"+n.toString();
+			this.drawSkincolleLeft(75);
+		}
+	}
+
 
 	class Blood extends VisualObject
 	{
@@ -4351,7 +4385,12 @@ function main(){
 						if(this.falling==0){this.falling = 1;}
 						this.crouching = 0;
 						play_sound_eff(this.charac.voiceactor+"hurted");
-						if(Math.random()<stats.degats/25){play_sound_eff("compliment");}
+						if(Math.random()<stats.degats/25){
+							if(chosenstage!=numberofstages){play_sound_eff("compliment");}
+						}
+						if(chosenstage==numberofstages && stats.degats>4){
+							if(this.other.mov == "huppercut" || this.other.perso=="shao_kahn"){play_sound_eff("crowdcheers");}
+						}
 						if(stats.hiteffect=="fall_bounce"){this.bouncing=true;fixcamera=60;}
 						if(racine(other.mov)=="shadowkick" || racine(other.mov)=="shadowpunch"){other.memoryslot=1;}
 						this.shake_player(stats.hitlag,stats.degats*0.3);
@@ -6108,6 +6147,8 @@ function main(){
 			for(var i=-3;i<5;i++){
 				add_to_objects_set(new CrowdShao(-30+71*i,59));
 			}
+			add_to_objects_set(new SonyaChains(169,73));
+			add_to_objects_set(new KanoChains(-177,72));
 		}
 	}
 
@@ -7155,6 +7196,7 @@ function main(){
 	sounds_eff.set("67",[document.querySelector('#el67wav')]);
 	sounds_eff.set("jumpscare",[document.querySelector('#jumpscarewav')]);
 	sounds_eff.set("whirlwind",[document.querySelector('#whirlwindwav')]);
+	sounds_eff.set("crowdcheers",[document.querySelector('#crowdcheerswav')]);
 
 	var friendshipwav = document.querySelector('#friendshipwav');
 
