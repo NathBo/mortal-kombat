@@ -5595,6 +5595,10 @@ function main(){
 				}
 				else if(this.cooldowns[i]>0){ui_ctx.drawImage(this.charac.icons[i],0,0,50,50*this.cooldowns[i]/this.charac.cds[i],120*0.86+this.n*730*0.86+(60-120*this.n)*i,80,50,50*this.cooldowns[i]/this.charac.cds[i]);}
 			}
+			ui_ctx.fillStyle = "yellow";
+			ui_ctx.font = "15px PixelFont";
+			if(this.n==0){ui_ctx.fillText(this.charac.displayname,85,20);}
+			else{ui_ctx.textAlign="right";ui_ctx.fillText(this.charac.displayname,795,20);ui_ctx.textAlign="left";}
 			ui_ctx.scale(2,2);
 			if(this.n==0){
 				if(roundwonsj1>=1){ui_ctx.drawImage(roundwoniconpng,5*0.86,13);}
@@ -5606,6 +5610,10 @@ function main(){
 			}
 			ui_ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ui_ctx.scale(1,1);
+
+
+
+
 			ui_ctx.fillStyle = "red";
 			ui_ctx.font = "30px PixelFont";
 			var timer_print = Math.max(Math.round(timer/60),0);
@@ -5973,7 +5981,9 @@ function main(){
 			if(fightstartcountdown==129){roundswav[roundwonsj1+roundwonsj2].play();}
 			ui_ctx.fillStyle = "rgb(208, 14, 14)";
 			ui_ctx.font = "35px PixelFont";
-			ui_ctx.fillText("Round "+((roundwonsj1+roundwonsj2+1).toString()),390*0.86,220);
+			ui_ctx.textAlign = "center";
+			ui_ctx.fillText("ROUND "+((roundwonsj1+roundwonsj2+1).toString()),445,220);
+			ui_ctx.textAlign = "left";
 		}
 		else if(fightstartcountdown){
 			if(fightstartcountdown==50){fightwav.play();}
@@ -6027,13 +6037,27 @@ function main(){
 			ctx.scale(1,1);
 			if(fatalitysreen==40){play_sound_eff("fatal2");}
 		}
-		if (isinladder()){
-			ui_ctx.fillStyle = "white";
-			ui_ctx.font = "15px PixelFont";
-			ui_ctx.fillText("Score: "+score.toString(),80,22);
-		}
+		
+		draw_score();
 
 		still_draw = false;
+	}
+
+	function draw_score(){
+		if (isinladder()){
+			
+			if(score<=1000){ui_ctx.fillStyle = "red";}
+			else if(score<=10000){ui_ctx.fillStyle = "orange";}
+			else if(score<=50000){ui_ctx.fillStyle = "yellow";}
+			else if(score<=100000){ui_ctx.fillStyle = "white";}
+			else{ui_ctx.fillStyle = "#880188";}
+			ui_ctx.font = "15px PixelFont";
+			ui_ctx.textAlign = "right";
+			var score_to_draw = score.toString();
+			while (score_to_draw.length<4){score_to_draw = "0"+score_to_draw;}
+			ui_ctx.fillText(score_to_draw,370,20);
+			ui_ctx.textAlign = "left";
+		}
 	}
 
 	function checkforend(){
@@ -6168,7 +6192,7 @@ function main(){
 				click=2;if(youareintutorial){launchtutorial(currentuto);}else{gamepaused=false;chosenmusic.play();}
 			}
 			else if(click==1 && entre(clickx,412/1024,612/1024) && entre(clicky,250/500,310/500)){click=2;reset_game(true);gobacktotitlescreen();}
-			j1.drawLife();j2.drawLife();
+			j1.drawLife();j2.drawLife();draw_score();
 			return;
 		}
 		else{
@@ -7233,65 +7257,65 @@ function main(){
 	characteristics.set("kitana",{png : kitskins,coordinates : kitcoordinates, sex : "f", standnframes : 5, standframespeed : 6, rollspeed : 4, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : kitanaiconpng, namewav : document.querySelector('#kitanawav'),
 	width : 34, height : 97,vitesse : 3.1, run_speed : 6.2,jumpxspeed : 3.6,backmovnerf : 0.85, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2, hurtcontrol : 0.2, grabtype : "poser",
 	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 95, getupfdur : 32, grabfdur : 35, grabdeg : 13, vicposframes : 12, vicposfdur : 50, cds : [80,120,24,240], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,squarepunchiconpng], voiceactor : "clement",
-	default_behav : "zoner", combos : kitana_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Kitana takes control of the outworld and forcibly converts all its peasants to blueberry farming in order to have access to an unlimited supply of blueberries for the rest of her life."});
+	default_behav : "zoner", displayname : "KITANA", combos : kitana_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Kitana takes control of the outworld and forcibly converts all its peasants to blueberry farming in order to have access to an unlimited supply of blueberries for the rest of her life."});
 
 	characteristics.set("mileena",{png : milskins,coordinates : milcoordinates, sex : "f", standnframes : 10, standframespeed : 5, rollspeed : 4, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : mileenaiconpng, namewav : document.querySelector('#mileenawav'),
 	width : 34, height : 97,vitesse : 3, run_speed : 6.,jumpxspeed : 3.3,backmovnerf : 0.9, gravity : 0.42, jumpforce : 8.8,jumpsquat : 3, shorthop : 5.8, friction:0.22, hurtcontrol : 0.2, grabtype : "poser",
 	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.85, airdodgefdur : 13, landinglag : 9,coups : mileena_coups, pv : 92, getupfdur : 32, grabfdur : 35, grabdeg : 12, vicposframes : 10, vicposfdur : 40, cds : [150,150,240,270], icons : [knifeiconpng,balliconpng,fanlifticonpng,teleport_dropiconpng], voiceactor : "female",
-	default_behav : "normal", combos : mileena_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Mileena attends fashion week and finally buys shampoo for her hair, because, and I quote, 'You're a girl, you don't have shampoo, it's like you're a girl, you don't have hair'."});
+	default_behav : "normal", displayname : "MILEENA", combos : mileena_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Mileena attends fashion week and finally buys shampoo for her hair, because, and I quote, 'You're a girl, you don't have shampoo, it's like you're a girl, you don't have hair'."});
 	
 
 	characteristics.set("raiden",{png : raiskins,coordinates : raicoordinates, sex : "m", standnframes : 8, standframespeed : 5, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 3, kicknframe : 5,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 8, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
 	width : 36, height : 107,vitesse : 3, run_speed : 6.2,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.42, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.2, grabtype : "poser",
 	airdrift : 0.14, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : raiden_coups, pv : 98, getupfdur : 30, grabfdur : 35, grabdeg : 12, vicposframes : 6, vicposfdur : 36, cds : [150,180,150,360], icons : [elecgrabiconpng,thundergodiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male",
-	default_behav : "masher", combos : raiden_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Raiden obtains a state monopoly on electricity production and becomes a multi-billionaire."});
+	default_behav : "masher", displayname : "RAIDEN", combos : raiden_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Raiden obtains a state monopoly on electricity production and becomes a multi-billionaire."});
 
 
 	characteristics.set("scorpion",{png : scoskins,coordinates : scocoordinates, sex : "m", standnframes : 6, standframespeed : 5, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : scorpioniconpng, namewav : document.querySelector('#scorpionwav'),
 	width : 40, height : 103,vitesse : 2.75, run_speed : 5.5,jumpxspeed : 3.4,backmovnerf : 0.92, gravity : 0.41, jumpforce : 9,jumpsquat : 4, shorthop : 5.2, friction:0.21, hurtcontrol : 0.2,grabtype : "launch",
 	airdrift : 0.15, airmaxspeed : 1.8, airdodgespeed : 5.6, airdodgefdur : 14, landinglag : 6,coups : scorpion_coups, pv : 100, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 12, cds : [180,100,210,120], icons : [spearthrowiconpng,airgrabiconpng,hellgatesiconpng,legtakedowniconpng], voiceactor : "male",
-	default_behav : "rush", combos : scorpion_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Scorpion becomes a camp counsellor and concentrates on his true passion: marshmallow toasting."});
+	default_behav : "rush", displayname : "SCORPION", combos : scorpion_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Scorpion becomes a camp counsellor and concentrates on his true passion: marshmallow toasting."});
 
 	characteristics.set("subzero",{png : subskins,coordinates : subcoordinates, sex : "m", standnframes : 10, standframespeed : 5, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : subzeroiconpng, namewav : document.querySelector('#subzerowav'),
 	width : 39, height : 103,vitesse : 3, run_speed : 5.9,jumpxspeed : 3.4,backmovnerf : 0.9, gravity : 0.41, jumpforce : 9.1,jumpsquat : 3, shorthop : 6.3, friction:0.17, hurtcontrol : 0.18,grabtype : "launch",
 	airdrift : 0.13, airmaxspeed : 1.8, airdodgespeed : 5.7, airdodgefdur : 15, landinglag : 9, coups : subzero_coups, pv : 100, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 14, cds : [210,150,240,270], icons : [iceballiconpng,slideiconpng,iceflaskiconpng,icebodyiconpng], voiceactor : "male",
-	default_behav : "turtle", combos : subzero_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Subzero becomes best friends with Yeti and builds the best professional snowball fight team with him."});
+	default_behav : "turtle", displayname : "SUB-ZERO", combos : subzero_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Subzero becomes best friends with Yeti and builds the best professional snowball fight team with him."});
 	
 	characteristics.set("reptile",{png : repskins,coordinates : repcoordinates, sex : "m", standnframes : 6, standframespeed : 5, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : reptileiconpng, namewav : document.querySelector('#reptilewav'),
 	width : 39, height : 103,vitesse : 2.9, run_speed : 5.6,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.405, jumpforce : 9.05,jumpsquat : 4, shorthop : 6.0, friction:0.22, hurtcontrol : 0.22,grabtype : "launch",
 	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : reptile_coups, pv : 100, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 14, cds : [210,160,150,300], icons : [iceballiconpng,sliderepiconpng,spiticonpng,bombiconpng], voiceactor : "male",
-	default_behav : "zoner", combos : reptile_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Reptile resurrects the dinosaurs and imposes a reptilian dictatorship!"});
+	default_behav : "zoner", displayname : "REPTILE", combos : reptile_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Reptile resurrects the dinosaurs and imposes a reptilian dictatorship!"});
 	
 	characteristics.set("johnny",{png : johskins,coordinates : johcoordinates, sex : "m", standnframes : 5, standframespeed : 5, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 40, stunnframes : 5, walknframes : 8, icon : johnnyiconpng, namewav : document.querySelector('#johnnywav'),
 	width : 38, height : 103,vitesse : 3.5, run_speed : 7.,jumpxspeed : 3.4,backmovnerf : 0.9, gravity : 0.42, jumpforce : 9.1,jumpsquat : 3, shorthop : 6.4, friction:0.2, hurtcontrol : 0.2,grabtype : "poser",
 	airdrift : 0.11, airmaxspeed : 2., airdodgespeed : 5.9, airdodgefdur : 15, landinglag : 10, coups : johnny_coups, pv : 100, getupfdur : 36, grabfdur : 22, grabdeg : 13, vicposframes : 13, vicposfdur : 52, cds : [180,140,210,300], icons : [ballthrowiconpng,shadowkickiconpng,shadowpunchiconpng,nutpunchiconpng], voiceactor : "male",
-	default_behav : "normal", combos : johnny_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Johnny Cage becomes president of the United States and reduces unemployment to -1000%!"});
+	default_behav : "normal", displayname : "JOHNNY CAGE", combos : johnny_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Johnny Cage becomes president of the United States and reduces unemployment to -1000%!"});
 	
 	characteristics.set("baraka",{png : barskins,coordinates : barcoordinates, sex : "m", standnframes : 6, standframespeed : 6, rollspeed : 5, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 3,grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : barakaiconpng, namewav : document.querySelector('#barakawav'),
 	width : 35, height : 99,vitesse : 3.1, run_speed : 6.3,jumpxspeed : 3.5,backmovnerf : 0.92, gravity : 0.44, jumpforce : 9.2,jumpsquat : 3, shorthop : 6.2, friction:0.23, hurtcontrol : 0.22, grabtype : "launch_free",
 	airdrift : 0.18, airmaxspeed : 2, airdodgespeed : 6., airdodgefdur : 14, landinglag : 7,coups : baraka_coups, pv : 96, getupfdur : 36, grabfdur : 20, grabdeg : 11, vicposframes : 7, vicposfdur : 36, cds : [130,180,150,210], icons : [spiniconpng,diveiconpng,slicethrowiconpng,gripeiconpng], voiceactor : "male",
-	default_behav : "masher", combos : baraka_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Baraka becomes a professional Pizza Slicer!"});
+	default_behav : "masher", displayname : "BARAKA", combos : baraka_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Baraka becomes a professional Pizza Slicer!"});
 
 	characteristics.set("jax",{png : jaxskins,coordinates : jaxcoordinates, sex : "m", standnframes : 5, standframespeed : 6, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 38, grabydist : 38, stunnframes : 5, walknframes : 9, icon : jaxiconpng, namewav : document.querySelector('#jaxwav'),
 	width : 39, height : 104,vitesse : 2.75, run_speed : 5.8,jumpxspeed : 3.2,backmovnerf : 0.92, gravity : 0.42, jumpforce : 9.15,jumpsquat : 4, shorthop : 6.1, friction:0.24, hurtcontrol : 0.22,grabtype : "launch_free",
 	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : jax_coups, pv : 120, getupfdur : 36, grabfdur : 20, grabdeg : 11, vicposframes : 6, vicposfdur : 32, cds : [150,210,150,300], icons : [bouncegrabiconpng,clapdashiconpng,energywaveiconpng,groundpoundiconpng], voiceactor : "male",
-	default_behav : "grabber", combos : jax_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Jax starrs in Rocky V: Return of the Avengers, and becomes famous worlwide!"});
+	default_behav : "grabber", displayname : "JAX", combos : jax_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Jax starrs in Rocky V: Return of the Avengers, and becomes famous worlwide!"});
 
 
 	characteristics.set("shao_kahn",{png : shaoskins,coordinates : shaocoordinates, sex : "m", standnframes : 6, standframespeed : 5, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 5,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 8, icon : raideniconpng, namewav : document.querySelector('#raidenwav'),
 	width : 40, height : 114,vitesse : 3.1, run_speed : 6.2,jumpxspeed : 3.4,backmovnerf : 0.92, gravity : 0.44, jumpforce : 6.5,jumpsquat : 3, shorthop : 6, friction:0.22, hurtcontrol : 0.1,grabtype : "launch",
 	airdrift : 0.1, airmaxspeed : 2, airdodgespeed : 5.8, airdodgefdur : 15, landinglag : 8,coups : shao_coups, pv : 140, getupfdur : 24, grabfdur : 35, grabdeg : 12, vicposframes : 6, vicposfdur : 42, cds : [150,240,150,360], icons : [elecgrabiconpng,chargeiconpng,boltthrowiconpng,teleporticonpng], voiceactor : "male",
-	default_behav : "normal", combos : shao_combos, winmsg : "Bro thought they could modify the code without consequences"});
+	default_behav : "normal", displayname : "SHAO KAHN", combos : shao_combos, winmsg : "Bro thought they could modify the code without consequences"});
 	
 	characteristics.set("liukang",{png : liuskins,coordinates : liucoordinates, sex : "m", standnframes : 6, standframespeed : 5, rollspeed : 5, hkickstartnframe : 2, hkickendnframe : 2, kicknframe : 4,grabxdist : 32, grabydist : 38, stunnframes : 6, walknframes : 9, icon : liukangiconpng, namewav : document.querySelector('#liukangwav'),
 	width : 36, height : 98,vitesse : 3.4, run_speed : 6.6,jumpxspeed : 3.5,backmovnerf : 0.9, gravity : 0.42, jumpforce : 9.2,jumpsquat : 2, shorthop : 6.1, friction:0.21, hurtcontrol : 0.2, grabtype : "launch",
 	airdrift : 0.14, airmaxspeed : 2.1, airdodgespeed : 6, airdodgefdur : 13, landinglag : 8,coups : liukang_coups, pv : 95, getupfdur : 36, grabfdur : 15, grabdeg : 11, vicposframes : 6, vicposfdur : 30, cds : [150,70,90,180], icons : [fireballiconpng,flying_kickiconpng,bicycleiconpng,cycleiconpng], voiceactor : "liu",
-	default_behav : "rush", combos : liukang_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Liu Kang retires to Larzac with a Buddhist monk to raise goats."});
+	default_behav : "rush", displayname : "LIU KANG", combos : liukang_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Liu Kang retires to Larzac with a Buddhist monk to raise goats."});
 	
 	characteristics.set("kunglao",{png : kunglaoskins,coordinates : kuncoordinates, sex : "m", standnframes : 6, standframespeed : 5, rollspeed : 5, hkickstartnframe : 2, hkickendnframe : 2, kicknframe : 4,grabxdist : 34, grabydist : 36, stunnframes : 6, walknframes : 9, icon : kunglaoiconpng, namewav : document.querySelector('#kunglaowav'),
 	width : 41, height : 101,vitesse : 3.1, run_speed : 6.1,jumpxspeed : 3.4,backmovnerf : 0.9, gravity : 0.42, jumpforce : 8.8,jumpsquat : 3, shorthop : 5.8, friction:0.24, hurtcontrol : 0.2, grabtype : "poser",
 	airdrift : 0.1, airmaxspeed : 1.8, airdodgespeed : 6, airdodgefdur : 13, landinglag : 9,coups : kunglao_coups, pv : 100, getupfdur : 28, grabfdur : 30, grabdeg : 12, vicposframes : 6, vicposfdur : 30, cds : [240,150,270,240], icons : [hatthrowiconpng,hatsliceiconpng,teleporthaticonpng,whirlwindiconpng], voiceactor : "male",
-	default_behav : "normal", combos : kunglao_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Kung Lao becomes the best magician EarthRealm has ever seen and is loved by all!"});
+	default_behav : "normal", displayname : "KUNG LAO", combos : kunglao_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Kung Lao becomes the best magician EarthRealm has ever seen and is loved by all!"});
 	
 
 
