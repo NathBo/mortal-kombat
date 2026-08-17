@@ -5601,12 +5601,12 @@ function main(){
 			else{ui_ctx.textAlign="right";ui_ctx.fillText(this.charac.displayname,795,20);ui_ctx.textAlign="left";}
 			ui_ctx.scale(2,2);
 			if(this.n==0){
-				if(roundwonsj1>=1){ui_ctx.drawImage(roundwoniconpng,5*0.86,13);}
-				if(roundwonsj1>=2){ui_ctx.drawImage(roundwoniconpng,24*0.86,13);}
+				if(roundwonsj1>=1){ui_ctx.drawImage(roundwoniconpng,2*0.86,11);}
+				if(roundwonsj1>=2){ui_ctx.drawImage(roundwoniconpng,21*0.86,11);}
 			}
 			else{
-				if(roundwonsj2>=1){ui_ctx.drawImage(roundwoniconpng,492*0.86,13);}
-				if(roundwonsj2>=2){ui_ctx.drawImage(roundwoniconpng,473*0.86,13);}
+				if(roundwonsj2>=1){ui_ctx.drawImage(roundwoniconpng,490*0.86,11);}
+				if(roundwonsj2>=2){ui_ctx.drawImage(roundwoniconpng,471*0.86,11);}
 			}
 			ui_ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ui_ctx.scale(1,1);
@@ -5945,6 +5945,15 @@ function main(){
 		}
 	}
 
+	function get_logo_grade(){
+		var a = false;
+		if(!secondplayerishuman){a = (j2.ai.difficulty>=1);}
+		else{a = (roundwonsj1==0 || roundwonsj2==0);}
+		var b = (j1.pv>=j1.pvmax*0.8 || j2.pv>=j2.pvmax*0.8);
+		return [b,a,fatalitywasdone];
+	}
+
+
 	function drawStage(){
 		if(fatalitywasdone || fatalitysreen){ctx.filter = 'brightness(0.5)';}
 		ctx.scale(2,2);
@@ -6007,6 +6016,27 @@ function main(){
 			j1.afficher(j2);
 			j2.afficher(j1);
 		}
+
+		if(end_of_round_countdown>=1 && end_of_round_countdown<=100 && !fatalitysreen && (j1.pv>0 || j2.pv>0)){
+			ui_ctx.textAlign = "center";
+			ui_ctx.font = "20pxPixelFont";
+			ui_ctx.fillStyle = "yellow";
+			var perso = j1.charac.displayname;
+			if(j2.pv>0){perso = j2.charac.displayname;}
+			ui_ctx.fillText(perso+" WINS",445,140);
+			ui_ctx.textAlign = "left";
+
+			ui_ctx.scale(2,2);
+			var logo_grade = get_logo_grade();
+			for (var i=0;i<3;i++){
+				var im = roundwoniconpng;
+				if(logo_grade[i]){im = roundwonicon2png;}
+				if(end_of_round_countdown<=70-i*10){ui_ctx.drawImage(im,180+25*i,78);}
+			}
+			ui_ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ui_ctx.scale(1,1);
+		}
+
 		if(finishhim && finishhim<=270){
 			var s = "m";
 			if((j1.pv==0 && j1.charac.sex == "f") || (j2.pv==0 && j2.charac.sex == "f")){s = "f";}

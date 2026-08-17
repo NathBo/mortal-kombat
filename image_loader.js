@@ -40,6 +40,7 @@ var shaoskins = [shaopng,shaopng];
 var fanpng=new Image();fanpng.src = 'ressource/characters/fan.png';
 var fatalitypng=new Image();fatalitypng.src = 'ressource/icons/fatality.png';
 var roundwoniconpng=new Image();roundwoniconpng.src = 'ressource/icons/round_won_icon.png';
+var roundwonicon2png=new Image();roundwonicon2png.src = 'ressource/icons/mk_roundwon2.png';
 var fightrediconpng=new Image();fightrediconpng.src = 'ressource/icons/fightred.png';
 var fightyellowiconpng=new Image();fightyellowiconpng.src = 'ressource/icons/fightyellow.png';
 var finishherredpng=new Image();finishherredpng.src = 'ressource/icons/finishherred.png';
