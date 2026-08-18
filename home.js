@@ -555,7 +555,7 @@ function main(){
 		afficher(){
 			if(this.dur==0){this.delete();return;}
 			var a = 0;
-			if(this.dur<=3){a=2;}
+			if(this.dur<=5){a=2;}
 			else if(this.dur <= 21){a=1;}
 			let coords = {offx:a*150,width:150,offy:0,height:150,decx:0,decy:-10};
 			ctx.scale(2*this.orientation,2);
@@ -4269,7 +4269,8 @@ function main(){
 		{
 			if(this.canthurt){return;}
 			if(this.mov=="burst"){
-				if(Math.sqrt((this.x-other.x)**2+(this.y-other.y)**2)<100){
+				var stats = this.charac.coups.get(this.mov);
+				if(Math.sqrt((this.x-other.x)**2+(this.y-other.y)**2)<100 && entre(this.movlag,stats.elag+1,stats.elag+stats.fdur)){
 					other.hurt(this,this.charac.coups.get(this.mov));
 				}
 			}
