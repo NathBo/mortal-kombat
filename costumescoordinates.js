@@ -306,7 +306,7 @@ function getraicoordinates(){
 	raicoordinates.set("walk2",{offx:61,width:40,offy:133,height:111,decx:0,decy:-3});
 	raicoordinates.set("walk3",{offx:107,width:40,offy:133,height:111,decx:0,decy:-2});
 	raicoordinates.set("walk4",{offx:153,width:40,offy:133,height:111,decx:0,decy:-2});
-	raicoordinates.set("walk5",{offx:199,width:42,offy:133,height:111,decx:0,decy:-1});
+	raicoordinates.set("walk5",{offx:199,width:42,offy:133,height:111,decx:-1,decy:-1});
 	raicoordinates.set("walk6",{offx:247,width:40,offy:133,height:111,decx:0,decy:-2});
 	raicoordinates.set("walk7",{offx:294,width:40,offy:133,height:111,decx:0,decy:-3});
 	raicoordinates.set("walk8",{offx:342,width:40,offy:133,height:111,decx:0,decy:-1});

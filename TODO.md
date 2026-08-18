@@ -3,13 +3,14 @@
 - ~~Refactor Projectiles / Objects in general~~
 - ~~Refactor Fatality Setup~~
 - Maybe do a Pause Menu Move List
-- Boost the backgrounds with vfx and moving objects
+- ~~Boost the backgrounds with vfx and moving objects~~
 - Stage Fatality in DeadPool
 - ~~Move up characters in the Stage (so that the screen is less empty)~~
-- Write names of characters and other shit in UI
+- ~~Write names of characters and other shit in UI~~
 - Maybe Visuals (take inspiration from MK2 remix)
 - Decent Parameters Screen
 - Visuals for totems
 - Decent Visuals for end of Arcade
 - Pre-anim for some projectiles (like raiden bolt or liu fire)
+- Resolve Scorpion weird width
 

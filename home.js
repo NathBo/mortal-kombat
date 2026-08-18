@@ -3890,7 +3890,7 @@ function main(){
 						var a = 6;
 						if(this.is_enhanced()){a=9;}
 						if(this.movlag<=stats.elag+stats.fdur){this.x += a*this.orientation;if(this.movlag==2){this.movlag++;}}
-						if(Math.abs(this.x-camerax)>borderx-this.charac.width/2){this.movlag=0;this.mov="";this.tb=7;this.xspeed = -this.orientation;this.y=0.1;}
+						if(Math.abs(this.x-camerax)>borderx-this.charac.width/2+5){this.movlag=0;this.mov="";this.tb=7;this.xspeed = -this.orientation;this.y=0.1;}
 						break;
 					case "shadowkick":
 						var stats = this.charac.coups.get(this.mov);
