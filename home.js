@@ -2978,6 +2978,13 @@ function main(){
 		}
 	}
 
+	function drawCharacterShadow(ctx, skin, coords, x, y) {
+		
+		ctx.drawImage(skin,)
+
+
+	}
+
 
 	class Joueur
 	{
@@ -5517,6 +5524,29 @@ function main(){
 					if(this.movlag>=stats.elag){y = -8*(stats.slag-(this.movlag-stats.elag))}
 					else if(this.movlag>stats.jumpf){y += -8*(this.movlag-stats.jumpf)}
 				}
+				var coords = this.coordinates.get(this.costume);
+				var orientation = this.orientation;
+				if (coords.flip == true){orientation = -orientation;}
+				var x = (this.x+decalagex-camerax+coords.decx*orientation-orientation*this.charac.width/2+shakex+self_shakex)*orientation;
+
+				var ratio_shadow_y = 0.25;
+				ctx.scale(2*orientation,2.*ratio_shadow_y);
+				ctx.filter = "brightness(0)";
+				ctx.translate(x+coords.width, (ground-coords.height*ratio_shadow_y-y/8-(this.y>0)*10+shakey+self_shakey)/ratio_shadow_y+coords.height);
+				ctx.transform(
+					1,
+					0,
+					-0.15*this.orientation,
+					1,
+					0,
+					0
+				);
+				ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,-coords.width,-coords.height,coords.width,coords.height);
+				ctx.filter = "none";
+				ctx.setTransform(1, 0, 0, 1, 0, 0);
+				ctx.scale(1,1);
+				y = ground-y-coords.height-coords.decy+shakey+self_shakey;
+
 				if(this.electrocuted){
 					this.electrocuted--;
 					if(this.electrocuted%4>=2){ctx.filter = 'invert(1) sepia(1) saturate(5) hue-rotate(150deg)';}
@@ -5528,13 +5558,9 @@ function main(){
 				if(this.parrying){
 					ctx.filter = 'brightness(1.5) saturate(1.5)';
 				}
-				var coords = this.coordinates.get(this.costume);
-				var orientation = this.orientation;
-				if (coords.flip == true){orientation = -orientation;}
+				
 				ctx.scale(2*orientation,2);
 				if(last_char(this.mov)=='#' && this.movlag%4<=1)ctx.filter = "sepia(1) saturate(5) hue-rotate(20deg)";
-				var x = (this.x+decalagex-camerax+coords.decx*orientation-orientation*this.charac.width/2+shakex+self_shakex)*orientation;
-				y = ground-y-coords.height-coords.decy+shakey+self_shakey;
 				ctx.drawImage(this.skin,coords.offx,coords.offy,coords.width,coords.height,x,y,coords.width,coords.height);
 				
 				ctx.globalCompositeOperation = "source-over";
