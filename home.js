@@ -7003,9 +7003,11 @@ function main(){
 		if(camerax<-m+10){menudirectionx+=1;}
 		else if(camerax>m-10){menudirectionx=-1;}
 		ui_ctx.scale(2,2);
+		ui_ctx.fillStyle = "black";
+		ui_ctx.fillRect(0,246,445,4);
 		if(stagesbackground[chosenstage] != null){ui_ctx.drawImage(stagesbackground[chosenstage],-90*backgroundscroll[chosenstage]-camerax*backgroundscroll[chosenstage],0);}
-		if(stagesstruct[chosenstage] != null){ui_ctx.drawImage(stagesstruct[chosenstage],-camerax+238-stage_size/2+shakex,shakey);}
-		if(stagesground[chosenstage] != null){ui_ctx.drawImage(stagesground[chosenstage],-camerax+256-stage_size/2+shakex,178+shakey);}
+		if(stagesstruct[chosenstage] != null){ui_ctx.drawImage(stagesstruct[chosenstage],-camerax+238-stage_size/2+shakex,0);}
+		if(stagesground[chosenstage] != null){ui_ctx.drawImage(stagesground[chosenstage],-camerax+256-stage_size/2+shakex,182);}
 		ui_ctx.drawImage(logopng,146*0.86,20);
 		ui_ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ui_ctx.scale(1,1);
