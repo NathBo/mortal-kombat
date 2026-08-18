@@ -4269,6 +4269,7 @@ function main(){
 			this.hurted=0; this.falling=0;
 			this.xspeed*=0.2;this.tb=0;
 			this.begincoup("burst",this.other);
+			this.invincibilite = 10;
 			this.jauge=0;
 		}
 
@@ -6587,7 +6588,9 @@ function main(){
 
 		screenCtx.scale(1.2,1.2);
 
-		screenCtx.filter = "contrast(105%) saturate(110%) brightness(95%)";
+		var filter = "contrast(110%) saturate(120%) brightness(92%)";
+
+		screenCtx.filter = filter;
 		screenCtx.drawImage(canvas, decx, decy, w, h);
 
 
@@ -6600,10 +6603,13 @@ function main(){
 
 
 		screenCtx.globalAlpha = 1;
-		screenCtx.filter = "none";
+		screenCtx.filter = filter;
+		
 		screenCtx.imageSmoothingEnabled = false;
 
 		screenCtx.drawImage(ui_canvas, 0, 0, w, h);
+
+		screenCtx.filter = "none";
 
 		ui_ctx.clearRect(0, 0, ui_canvas.width, ui_canvas.height);
 
