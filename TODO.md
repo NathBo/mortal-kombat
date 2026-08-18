@@ -7,7 +7,7 @@
 - Stage Fatality in DeadPool
 - ~~Move up characters in the Stage (so that the screen is less empty)~~
 - ~~Write names of characters and other shit in UI~~
-- Maybe Visuals (take inspiration from MK2 remix)
+- ~~Maybe Visuals (take inspiration from MK2 remix)~~
 - Decent Parameters Screen
 - Visuals for totems
 - Decent Visuals for end of Arcade
