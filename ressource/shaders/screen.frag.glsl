@@ -53,7 +53,7 @@ const float CHROMATIC_EDGE_POWER = 1.60;
 
 
 /*
- * Blur déjà utilisé par le jeu.
+ * Blur GAME.
  */
 const float GAME_BLUR_MIX = 0.025;
 const float GAME_BLUR_CONTRAST = 1.30;
@@ -65,7 +65,6 @@ const float GAME_BLUR_CONTRAST = 1.30;
 const float PHOSPHOR_THRESHOLD = 0.5;
 const float GAME_PHOSPHOR_STRENGTH = 0.06;
 const float UI_PHOSPHOR_STRENGTH = 0.015;
-
 const float PHOSPHOR_MAX = 0.50;
 
 
@@ -186,188 +185,9 @@ vec4 sampleUi(vec2 uv) {
 }
 
 
-vec4 blurGame(vec2 uv) {
-    vec2 pixel =
-        1.0 /
-        u_gameResolution;
-
-    vec4 color =
-        vec4(0.0);
-
-    color += sampleGame(
-        uv +
-        pixel * vec2(-1.0, -1.0)
-    ) * 0.0625;
-
-    color += sampleGame(
-        uv +
-        pixel * vec2(0.0, -1.0)
-    ) * 0.1250;
-
-    color += sampleGame(
-        uv +
-        pixel * vec2(1.0, -1.0)
-    ) * 0.0625;
-
-    color += sampleGame(
-        uv +
-        pixel * vec2(-1.0, 0.0)
-    ) * 0.1250;
-
-    color += sampleGame(
-        uv
-    ) * 0.2500;
-
-    color += sampleGame(
-        uv +
-        pixel * vec2(1.0, 0.0)
-    ) * 0.1250;
-
-    color += sampleGame(
-        uv +
-        pixel * vec2(-1.0, 1.0)
-    ) * 0.0625;
-
-    color += sampleGame(
-        uv +
-        pixel * vec2(0.0, 1.0)
-    ) * 0.1250;
-
-    color += sampleGame(
-        uv +
-        pixel * vec2(1.0, 1.0)
-    ) * 0.0625;
-
-    return color;
-}
-
-
-vec3 extractPhosphor(
-    vec3 color,
-    float strength
-) {
-    float luminance = getLuminance(
-        color
-    );
-
-    float highlight = smoothstep(
-        PHOSPHOR_THRESHOLD,
-        1.0,
-        luminance
-    );
-
-    vec3 phosphor =
-        color *
-        highlight *
-        strength;
-
-    return min(
-        phosphor,
-        vec3(PHOSPHOR_MAX)
-    );
-}
-
-
-vec3 processGame(vec2 gameUv) {
-    vec4 gameColor = sampleGame(
-        gameUv
-    );
-
-    gameColor.rgb = applyColorCorrection(
-        gameColor.rgb,
-        GAME_CONTRAST,
-        GAME_SATURATION,
-        GAME_BRIGHTNESS
-    );
-
-    vec4 blurred = blurGame(
-        gameUv
-    );
-
-    blurred.rgb = applyColorCorrection(
-        blurred.rgb,
-        GAME_BLUR_CONTRAST,
-        GAME_SATURATION,
-        GAME_BRIGHTNESS
-    );
-
-    gameColor.rgb = mix(
-        gameColor.rgb,
-        blurred.rgb,
-        GAME_BLUR_MIX
-    );
-
-    vec3 phosphor = extractPhosphor(
-        blurred.rgb,
-        GAME_PHOSPHOR_STRENGTH
-    );
-
-    gameColor.rgb += phosphor;
-
-    return gameColor.rgb;
-}
-
-
-vec4 processUi(vec2 uv) {
-    vec4 uiColor = sampleUi(
-        uv
-    );
-
-    if (uiColor.a <= 0.0) {
-        return uiColor;
-    }
-
-    uiColor.rgb = applyColorCorrection(
-        uiColor.rgb,
-        UI_CONTRAST,
-        UI_SATURATION,
-        UI_BRIGHTNESS
-    );
-
-    uiColor.rgb += extractPhosphor(
-        uiColor.rgb,
-        UI_PHOSPHOR_STRENGTH
-    );
-
-    return uiColor;
-}
-
-
-vec3 composeScene(vec2 uv) {
-    vec2 screenPixel =
-        uv *
-        u_resolution;
-
-    vec2 gamePixel =
-        screenPixel /
-        u_scale -
-        u_offset;
-
-    vec2 gameUv =
-        gamePixel /
-        u_gameResolution;
-
-    vec3 gameColor =
-        processGame(
-            gameUv
-        );
-
-    vec4 uiColor =
-        processUi(
-            uv
-        );
-
-    return mix(
-        gameColor,
-        uiColor.rgb,
-        uiColor.a
-    );
-}
-
-
-float getEdgeFactor(vec2 uv) {
+float getEdgeFactor(vec2 screenUv) {
     vec2 centered =
-        uv -
+        screenUv -
         0.5;
 
     centered.x *= (
@@ -392,13 +212,9 @@ float getEdgeFactor(vec2 uv) {
 }
 
 
-vec3 applyChromaticAberration(vec2 uv) {
-    vec2 pixel =
-        1.0 /
-        u_resolution;
-
+vec2 getChromaticDirection(vec2 screenUv) {
     vec2 centered =
-        uv -
+        screenUv -
         0.5;
 
     float centeredLength =
@@ -406,47 +222,348 @@ vec3 applyChromaticAberration(vec2 uv) {
             centered
         );
 
-    vec2 direction =
-        vec2(0.0);
-
-    if (centeredLength > 0.0001) {
-        direction =
-            centered /
-            centeredLength;
+    if (centeredLength <= 0.0001) {
+        return vec2(0.0);
     }
+
+    return (
+        centered /
+        centeredLength
+    );
+}
+
+
+vec2 getScreenChromaticOffset(vec2 screenUv) {
+    vec2 direction =
+        getChromaticDirection(
+            screenUv
+        );
 
     float edgeFactor =
         getEdgeFactor(
-            uv
+            screenUv
         );
 
-    vec2 offset =
+    vec2 screenPixelSize =
+        1.0 /
+        u_resolution;
+
+    return (
         direction *
-        pixel *
+        screenPixelSize *
         CHROMATIC_ABERRATION *
-        edgeFactor;
+        edgeFactor
+    );
+}
 
-    vec3 centerColor =
-        composeScene(
+
+vec2 screenOffsetToGameOffset(
+    vec2 screenUvOffset
+) {
+    vec2 screenPixelOffset =
+        screenUvOffset *
+        u_resolution;
+
+    vec2 gamePixelOffset =
+        screenPixelOffset /
+        u_scale;
+
+    return (
+        gamePixelOffset /
+        u_gameResolution
+    );
+}
+
+
+vec4 sampleGameChromatic(
+    vec2 gameUv,
+    vec2 screenUv
+) {
+    vec2 screenOffset =
+        getScreenChromaticOffset(
+            screenUv
+        );
+
+    vec2 gameOffset =
+        screenOffsetToGameOffset(
+            screenOffset
+        );
+
+    vec4 centerSample =
+        sampleGame(
+            gameUv
+        );
+
+    vec4 redSample =
+        sampleGame(
+            gameUv +
+            gameOffset
+        );
+
+    vec4 blueSample =
+        sampleGame(
+            gameUv -
+            gameOffset
+        );
+
+    return vec4(
+        redSample.r,
+        centerSample.g,
+        blueSample.b,
+        centerSample.a
+    );
+}
+
+
+vec4 sampleUiChromatic(
+    vec2 uv
+) {
+    vec2 offset =
+        getScreenChromaticOffset(
             uv
         );
 
-    vec3 redSample =
-        composeScene(
+    vec4 centerSample =
+        sampleUi(
+            uv
+        );
+
+    vec4 redSample =
+        sampleUi(
             uv +
             offset
         );
 
-    vec3 blueSample =
-        composeScene(
+    vec4 blueSample =
+        sampleUi(
             uv -
             offset
         );
 
-    return vec3(
+    return vec4(
         redSample.r,
-        centerColor.g,
-        blueSample.b
+        centerSample.g,
+        blueSample.b,
+        centerSample.a
+    );
+}
+
+
+vec4 blurGame(vec2 uv) {
+    vec2 pixel =
+        1.0 /
+        u_gameResolution;
+
+    vec4 color =
+        vec4(0.0);
+
+    color += sampleGame(
+        uv +
+        pixel * vec2(-1.0, -1.0)
+    ) * 0.0625;
+
+    color += sampleGame(
+        uv +
+        pixel * vec2(0.0, -1.0)
+    ) * 0.1250;
+
+    color += sampleGame(
+        uv +
+        pixel * vec2(1.0, -1.0)
+    ) * 0.0625;
+
+
+    color += sampleGame(
+        uv +
+        pixel * vec2(-1.0, 0.0)
+    ) * 0.1250;
+
+    color += sampleGame(
+        uv
+    ) * 0.2500;
+
+    color += sampleGame(
+        uv +
+        pixel * vec2(1.0, 0.0)
+    ) * 0.1250;
+
+
+    color += sampleGame(
+        uv +
+        pixel * vec2(-1.0, 1.0)
+    ) * 0.0625;
+
+    color += sampleGame(
+        uv +
+        pixel * vec2(0.0, 1.0)
+    ) * 0.1250;
+
+    color += sampleGame(
+        uv +
+        pixel * vec2(1.0, 1.0)
+    ) * 0.0625;
+
+    return color;
+}
+
+
+vec3 extractPhosphor(
+    vec3 color,
+    float strength
+) {
+    float luminance =
+        getLuminance(
+            color
+        );
+
+    float highlight =
+        smoothstep(
+            PHOSPHOR_THRESHOLD,
+            1.0,
+            luminance
+        );
+
+    vec3 phosphor =
+        color *
+        highlight *
+        strength;
+
+    return min(
+        phosphor,
+        vec3(PHOSPHOR_MAX)
+    );
+}
+
+
+vec3 processGame(
+    vec2 gameUv,
+    vec2 screenUv
+) {
+    /*
+     * L'aberration est faite ici directement sur u_game.
+     *
+     * 3 samples au lieu de recalculer toute la scène
+     * trois fois.
+     */
+    vec4 gameColor =
+        sampleGameChromatic(
+            gameUv,
+            screenUv
+        );
+
+    gameColor.rgb =
+        applyColorCorrection(
+            gameColor.rgb,
+            GAME_CONTRAST,
+            GAME_SATURATION,
+            GAME_BRIGHTNESS
+        );
+
+
+    /*
+     * Le blur n'est calculé qu'une seule fois.
+     */
+    vec4 blurred =
+        blurGame(
+            gameUv
+        );
+
+    blurred.rgb =
+        applyColorCorrection(
+            blurred.rgb,
+            GAME_BLUR_CONTRAST,
+            GAME_SATURATION,
+            GAME_BRIGHTNESS
+        );
+
+
+    /*
+     * Léger adoucissement.
+     */
+    gameColor.rgb =
+        mix(
+            gameColor.rgb,
+            blurred.rgb,
+            GAME_BLUR_MIX
+        );
+
+
+    /*
+     * Phosphore utilisant le blur existant.
+     */
+    vec3 phosphor =
+        extractPhosphor(
+            blurred.rgb,
+            GAME_PHOSPHOR_STRENGTH
+        );
+
+    gameColor.rgb +=
+        phosphor;
+
+    return gameColor.rgb;
+}
+
+
+vec4 processUi(vec2 uv) {
+    /*
+     * 3 samples seulement pour l'aberration UI.
+     */
+    vec4 uiColor =
+        sampleUiChromatic(
+            uv
+        );
+
+    if (uiColor.a <= 0.0) {
+        return uiColor;
+    }
+
+    uiColor.rgb =
+        applyColorCorrection(
+            uiColor.rgb,
+            UI_CONTRAST,
+            UI_SATURATION,
+            UI_BRIGHTNESS
+        );
+
+    uiColor.rgb +=
+        extractPhosphor(
+            uiColor.rgb,
+            UI_PHOSPHOR_STRENGTH
+        );
+
+    return uiColor;
+}
+
+
+vec3 composeScene(vec2 uv) {
+    vec2 screenPixel =
+        uv *
+        u_resolution;
+
+    vec2 gamePixel =
+        screenPixel /
+        u_scale -
+        u_offset;
+
+    vec2 gameUv =
+        gamePixel /
+        u_gameResolution;
+
+    vec3 gameColor =
+        processGame(
+            gameUv,
+            uv
+        );
+
+    vec4 uiColor =
+        processUi(
+            uv
+        );
+
+    return mix(
+        gameColor,
+        uiColor.rgb,
+        uiColor.a
     );
 }
 
@@ -538,12 +655,14 @@ vec3 applyCrtEffects(
         scanline
     );
 
+
     float grain =
         getFilmGrain(
             screenPixel
         );
 
     color += grain;
+
 
     float vignette =
         getVignette(
@@ -561,8 +680,11 @@ vec3 applyCrtEffects(
 
 
 void main() {
+    /*
+     * La scène entière n'est composée qu'une seule fois.
+     */
     vec3 finalColor =
-        applyChromaticAberration(
+        composeScene(
             v_uv
         );
 
@@ -577,14 +699,16 @@ void main() {
             screenPixel
         );
 
-    finalColor = clamp(
-        finalColor,
-        0.0,
-        1.0
-    );
+    finalColor =
+        clamp(
+            finalColor,
+            0.0,
+            1.0
+        );
 
-    gl_FragColor = vec4(
-        finalColor,
-        1.0
-    );
+    gl_FragColor =
+        vec4(
+            finalColor,
+            1.0
+        );
 }
