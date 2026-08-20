@@ -1,11 +1,13 @@
+# launch_game.ps1
+
 $ErrorActionPreference = "Stop"
 
 $Root = [System.IO.Path]::GetFullPath(
     (Split-Path -Parent $MyInvocation.MyCommand.Path)
 )
 
-$PreferredPort = 8000
-$MaximumPortAttempts = 100
+$Port = 8000
+$Url = "http://localhost:$Port/"
 
 
 $MimeTypes = @{
@@ -76,28 +78,6 @@ function Test-PortAvailable {
             }
         }
     }
-}
-
-
-function Find-FreePort {
-    param(
-        [int]$StartPort = 8000,
-        [int]$MaximumAttempts = 100
-    )
-
-    for ($Index = 0; $Index -lt $MaximumAttempts; $Index++) {
-        $Port = $StartPort + $Index
-
-        if ($Port -gt 65535) {
-            break
-        }
-
-        if (Test-PortAvailable -Port $Port) {
-            return $Port
-        }
-    }
-
-    throw "Impossible de trouver un port libre."
 }
 
 
@@ -264,12 +244,17 @@ function Get-SafeFilePath {
         $DecodedPath = "index.html"
     }
 
-    $CandidatePath = [System.IO.Path]::GetFullPath(
-        [System.IO.Path]::Combine(
-            $RootDirectory,
-            $DecodedPath
+    try {
+        $CandidatePath = [System.IO.Path]::GetFullPath(
+            [System.IO.Path]::Combine(
+                $RootDirectory,
+                $DecodedPath
+            )
         )
-    )
+    }
+    catch {
+        return $null
+    }
 
     $RootPrefix = $RootDirectory
 
@@ -406,11 +391,34 @@ function Start-GameBrowser {
 }
 
 
-$Port = Find-FreePort `
-    -StartPort $PreferredPort `
-    -MaximumAttempts $MaximumPortAttempts
+if (-not (Test-PortAvailable -Port $Port)) {
+    Clear-Host
 
-$Url = "http://localhost:$Port/"
+    Write-Host "========================================" -ForegroundColor Red
+    Write-Host "       IMPOSSIBLE DE LANCER LE JEU" -ForegroundColor Red
+    Write-Host "========================================" -ForegroundColor Red
+    Write-Host ""
+
+    Write-Host `
+        "Le port $Port est deja utilise." `
+        -ForegroundColor Yellow
+
+    Write-Host ""
+    Write-Host `
+        "Le jeu utilise toujours http://localhost:$Port afin de conserver les sauvegardes." `
+        -ForegroundColor White
+
+    Write-Host ""
+    Write-Host `
+        "Ferme l'application qui utilise ce port puis relance le jeu." `
+        -ForegroundColor White
+
+    Write-Host ""
+    Read-Host "Appuie sur Entree pour fermer"
+
+    exit 1
+}
+
 
 $Listener = [System.Net.HttpListener]::new()
 $Listener.Prefixes.Add($Url)
@@ -429,16 +437,10 @@ try {
     Write-Host "Dossier : $Root"
     Write-Host "Adresse : $Url"
 
-    if ($Port -ne $PreferredPort) {
-        Write-Host ""
-        Write-Host `
-            "Le port $PreferredPort etait occupe." `
-            -ForegroundColor Yellow
-
-        Write-Host `
-            "Port choisi automatiquement : $Port" `
-            -ForegroundColor Yellow
-    }
+    Write-Host ""
+    Write-Host `
+        "Le port $Port reste fixe pour conserver les sauvegardes." `
+        -ForegroundColor DarkGray
 
     Write-Host ""
     Write-Host `
@@ -452,6 +454,7 @@ try {
     while ($Listener.IsListening) {
         try {
             $Context = $Listener.GetContext()
+
             Handle-Request -Context $Context
         }
         catch {
