@@ -19,71 +19,53 @@ varying vec2 v_uv;
 /*
  * GAME color grading.
  */
-const float GAME_CONTRAST = 1.08;
+const float GAME_CONTRAST = 1.10;
 const float GAME_SATURATION = 1.15;
-const float GAME_BRIGHTNESS = 0.96;
+const float GAME_BRIGHTNESS = 0.92;
 
 
 /*
  * UI color grading.
  */
 const float UI_CONTRAST = 1.05;
-const float UI_SATURATION = 0.95;
-const float UI_BRIGHTNESS = 1.08;
+const float UI_SATURATION = 1.0;
+const float UI_BRIGHTNESS = 0.98;
 
 
 /*
  * CRT.
  */
-const float SCANLINE_STRENGTH = 0.045;
-const float SCANLINE_SIZE = 2.0;
+const float SCANLINE_STRENGTH = 0.025;
+const float SCANLINE_SIZE = 3.0;
 
-const float GRAIN_STRENGTH = 0.012;
+const float GRAIN_STRENGTH = 0.006;
 
-const float VIGNETTE_STRENGTH = 0.22;
+const float VIGNETTE_STRENGTH = 0.12;
 const float VIGNETTE_INNER = 0.25;
 const float VIGNETTE_OUTER = 0.78;
 
 
 /*
- * Courbure CRT.
- */
-const float CRT_CURVATURE = 0.025;
-
-
-/*
  * Aberration chromatique.
  */
-const float CHROMATIC_ABERRATION = 0.55;
+const float CHROMATIC_ABERRATION = 0.20;
 const float CHROMATIC_EDGE_POWER = 1.60;
 
 
 /*
  * Blur déjà utilisé par le jeu.
  */
-const float GAME_BLUR_MIX = 0.08;
+const float GAME_BLUR_MIX = 0.025;
 const float GAME_BLUR_CONTRAST = 1.30;
 
 
 /*
  * Phosphore / bloom.
- *
- * Le bloom GAME réutilise le blur déjà calculé.
- * Il ne nécessite donc aucun texture sample supplémentaire.
  */
-const float PHOSPHOR_THRESHOLD = 0.58;
-const float GAME_PHOSPHOR_STRENGTH = 0.44;
+const float PHOSPHOR_THRESHOLD = 0.5;
+const float GAME_PHOSPHOR_STRENGTH = 0.06;
+const float UI_PHOSPHOR_STRENGTH = 0.015;
 
-/*
- * L'UI ne reçoit pas de blur supplémentaire.
- * On augmente seulement légèrement ses hautes lumières.
- */
-const float UI_PHOSPHOR_STRENGTH = 0.06;
-
-
-/*
- * Évite que les hautes lumières deviennent trop agressives.
- */
 const float PHOSPHOR_MAX = 0.50;
 
 
@@ -180,27 +162,6 @@ bool isOutsideUv(vec2 uv) {
 }
 
 
-vec2 applyCrtCurvature(vec2 uv) {
-    vec2 centered =
-        uv * 2.0 -
-        1.0;
-
-    vec2 offset =
-        centered.yx *
-        centered.yx;
-
-    centered +=
-        centered *
-        offset *
-        CRT_CURVATURE;
-
-    return (
-        centered * 0.5 +
-        0.5
-    );
-}
-
-
 vec4 sampleGame(vec2 uv) {
     if (isOutsideUv(uv)) {
         return vec4(0.0);
@@ -248,7 +209,6 @@ vec4 blurGame(vec2 uv) {
         pixel * vec2(1.0, -1.0)
     ) * 0.0625;
 
-
     color += sampleGame(
         uv +
         pixel * vec2(-1.0, 0.0)
@@ -262,7 +222,6 @@ vec4 blurGame(vec2 uv) {
         uv +
         pixel * vec2(1.0, 0.0)
     ) * 0.1250;
-
 
     color += sampleGame(
         uv +
@@ -321,10 +280,6 @@ vec3 processGame(vec2 gameUv) {
         GAME_BRIGHTNESS
     );
 
-
-    /*
-     * Ce blur était déjà présent.
-     */
     vec4 blurred = blurGame(
         gameUv
     );
@@ -336,21 +291,12 @@ vec3 processGame(vec2 gameUv) {
         GAME_BRIGHTNESS
     );
 
-
-    /*
-     * Blur général très léger.
-     */
     gameColor.rgb = mix(
         gameColor.rgb,
         blurred.rgb,
         GAME_BLUR_MIX
     );
 
-
-    /*
-     * Bloom/phosphore sans aucun sample supplémentaire :
-     * on recycle directement "blurred".
-     */
     vec3 phosphor = extractPhosphor(
         blurred.rgb,
         GAME_PHOSPHOR_STRENGTH
@@ -378,11 +324,6 @@ vec4 processUi(vec2 uv) {
         UI_BRIGHTNESS
     );
 
-
-    /*
-     * Pas de blur UI :
-     * seulement une légère émission des pixels lumineux.
-     */
     uiColor.rgb += extractPhosphor(
         uiColor.rgb,
         UI_PHOSPHOR_STRENGTH
@@ -451,15 +392,13 @@ float getEdgeFactor(vec2 uv) {
 }
 
 
-vec3 applyChromaticAberration(
-    vec2 curvedUv
-) {
+vec3 applyChromaticAberration(vec2 uv) {
     vec2 pixel =
         1.0 /
         u_resolution;
 
     vec2 centered =
-        curvedUv -
+        uv -
         0.5;
 
     float centeredLength =
@@ -478,7 +417,7 @@ vec3 applyChromaticAberration(
 
     float edgeFactor =
         getEdgeFactor(
-            curvedUv
+            uv
         );
 
     vec2 offset =
@@ -487,25 +426,20 @@ vec3 applyChromaticAberration(
         CHROMATIC_ABERRATION *
         edgeFactor;
 
-
-    /*
-     * Centre = vert.
-     * Rouge et bleu légèrement décalés vers les bords.
-     */
     vec3 centerColor =
         composeScene(
-            curvedUv
+            uv
         );
 
     vec3 redSample =
         composeScene(
-            curvedUv +
+            uv +
             offset
         );
 
     vec3 blueSample =
         composeScene(
-            curvedUv -
+            uv -
             offset
         );
 
@@ -520,9 +454,6 @@ vec3 applyChromaticAberration(
 float getScanline(
     vec2 screenPixel
 ) {
-    /*
-     * Scanline douce plutôt qu'un motif totalement binaire.
-     */
     float phase =
         screenPixel.y *
         3.14159265 *
@@ -597,9 +528,6 @@ vec3 applyCrtEffects(
     vec2 uv,
     vec2 screenPixel
 ) {
-    /*
-     * Scanlines.
-     */
     float scanline =
         getScanline(
             screenPixel
@@ -610,10 +538,6 @@ vec3 applyCrtEffects(
         scanline
     );
 
-
-    /*
-     * Grain animé.
-     */
     float grain =
         getFilmGrain(
             screenPixel
@@ -621,10 +545,6 @@ vec3 applyCrtEffects(
 
     color += grain;
 
-
-    /*
-     * Vignette.
-     */
     float vignette =
         getVignette(
             uv
@@ -641,50 +561,15 @@ vec3 applyCrtEffects(
 
 
 void main() {
-    /*
-     * La déformation CRT concerne GAME + UI.
-     */
-    vec2 curvedUv =
-        applyCrtCurvature(
+    vec3 finalColor =
+        applyChromaticAberration(
             v_uv
         );
 
-
-    /*
-     * La courbure crée naturellement des coins hors écran.
-     */
-    if (isOutsideUv(curvedUv)) {
-        gl_FragColor = vec4(
-            0.0,
-            0.0,
-            0.0,
-            1.0
-        );
-
-        return;
-    }
-
-
-    /*
-     * Composition et séparation RGB.
-     */
-    vec3 finalColor =
-        applyChromaticAberration(
-            curvedUv
-        );
-
-
-    /*
-     * Les scanlines restent alignées sur l'écran physique.
-     */
     vec2 screenPixel =
         v_uv *
         u_resolution;
 
-
-    /*
-     * CRT commun au jeu et à l'UI.
-     */
     finalColor =
         applyCrtEffects(
             finalColor,
@@ -692,13 +577,11 @@ void main() {
             screenPixel
         );
 
-
     finalColor = clamp(
         finalColor,
         0.0,
         1.0
     );
-
 
     gl_FragColor = vec4(
         finalColor,
