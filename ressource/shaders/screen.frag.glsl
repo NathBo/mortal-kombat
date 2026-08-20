@@ -17,38 +17,59 @@ varying vec2 v_uv;
 
 
 /*
- * Réglages GAME.
+ * GAME.
  */
-const float GAME_CONTRAST = 1.10;
-const float GAME_SATURATION = 1.20;
+const float GAME_CONTRAST = 1.1;
+const float GAME_SATURATION = 1.15;
 const float GAME_BRIGHTNESS = 0.92;
 
 
 /*
- * Réglages UI.
- *
- * Tu peux les modifier indépendamment du jeu.
+ * UI.
  */
 const float UI_CONTRAST = 1.05;
-const float UI_SATURATION = 1.05;
-const float UI_BRIGHTNESS = 1.00;
+const float UI_SATURATION = 0.95;
+const float UI_BRIGHTNESS = 1.08;
 
 
 /*
- * Réglages CRT communs à GAME + UI.
+ * CRT.
  */
-const float SCANLINE_STRENGTH = 0.05;
-const float SCANLINE_SIZE = 4.0;
+const float SCANLINE_STRENGTH = 0.045;
+const float SCANLINE_SIZE = 3.0;
 
 const float GRAIN_STRENGTH = 0.015;
 
-const float VIGNETTE_STRENGTH = 0.32;
+const float VIGNETTE_STRENGTH = 0.22;
 const float VIGNETTE_INNER = 0.25;
 const float VIGNETTE_OUTER = 0.78;
 
 
 /*
- * Réglages du glow/blur du jeu.
+ * Courbure CRT.
+ *
+ * 0.0 = aucune courbure.
+ * Environ 0.05 - 0.12 donne généralement de bons résultats.
+ */
+const float CRT_CURVATURE = 0.015;
+
+
+/*
+ * Aberration chromatique.
+ *
+ * Décalage RGB exprimé en pixels approximatifs.
+ */
+const float CHROMATIC_ABERRATION = 0.55;
+
+
+/*
+ * L'aberration augmente vers les bords.
+ */
+const float CHROMATIC_EDGE_POWER = 1.60;
+
+
+/*
+ * Glow/blur du jeu.
  */
 const float GAME_BLUR_MIX = 0.10;
 const float GAME_BLUR_CONTRAST = 1.40;
@@ -128,18 +149,46 @@ vec3 applyColorCorrection(
 }
 
 
-vec4 sampleGame(vec2 uv) {
-    if (
+bool isOutsideUv(vec2 uv) {
+    return (
         uv.x < 0.0 ||
         uv.x > 1.0 ||
         uv.y < 0.0 ||
         uv.y > 1.0
-    ) {
+    );
+}
+
+
+vec2 applyCrtCurvature(vec2 uv) {
+    vec2 centered = uv * 2.0 - 1.0;
+
+    vec2 offset = centered.yx * centered.yx;
+
+    centered += centered * offset * CRT_CURVATURE;
+
+    return centered * 0.5 + 0.5;
+}
+
+
+vec4 sampleGame(vec2 uv) {
+    if (isOutsideUv(uv)) {
         return vec4(0.0);
     }
 
     return texture2D(
         u_game,
+        uv
+    );
+}
+
+
+vec4 sampleUi(vec2 uv) {
+    if (isOutsideUv(uv)) {
+        return vec4(0.0);
+    }
+
+    return texture2D(
+        u_ui,
         uv
     );
 }
@@ -162,7 +211,6 @@ vec4 blurGame(vec2 uv) {
         uv + pixel * vec2(1.0, -1.0)
     ) * 0.0625;
 
-
     color += sampleGame(
         uv + pixel * vec2(-1.0, 0.0)
     ) * 0.1250;
@@ -174,7 +222,6 @@ vec4 blurGame(vec2 uv) {
     color += sampleGame(
         uv + pixel * vec2(1.0, 0.0)
     ) * 0.1250;
-
 
     color += sampleGame(
         uv + pixel * vec2(-1.0, 1.0)
@@ -204,10 +251,6 @@ vec3 processGame(vec2 gameUv) {
         GAME_BRIGHTNESS
     );
 
-
-    /*
-     * Léger glow/blur uniquement sur le jeu.
-     */
     vec4 blurred = blurGame(
         gameUv
     );
@@ -228,15 +271,10 @@ vec3 processGame(vec2 gameUv) {
 
 
 vec4 processUi(vec2 uv) {
-    vec4 uiColor = texture2D(
-        u_ui,
+    vec4 uiColor = sampleUi(
         uv
     );
 
-    /*
-     * On évite de modifier inutilement les pixels
-     * complètement transparents de l'UI.
-     */
     if (uiColor.a > 0.0) {
         uiColor.rgb = applyColorCorrection(
             uiColor.rgb,
@@ -247,6 +285,109 @@ vec4 processUi(vec2 uv) {
     }
 
     return uiColor;
+}
+
+
+vec3 composeScene(vec2 curvedUv) {
+    vec2 screenPixel =
+        curvedUv *
+        u_resolution;
+
+    vec2 gamePixel =
+        screenPixel / u_scale -
+        u_offset;
+
+    vec2 gameUv =
+        gamePixel /
+        u_gameResolution;
+
+    vec3 gameColor = processGame(
+        gameUv
+    );
+
+    vec4 uiColor = processUi(
+        curvedUv
+    );
+
+    return mix(
+        gameColor,
+        uiColor.rgb,
+        uiColor.a
+    );
+}
+
+
+float getEdgeFactor(vec2 uv) {
+    vec2 centered = uv - 0.5;
+
+    centered.x *= (
+        u_resolution.x /
+        u_resolution.y
+    );
+
+    float distanceFromCenter = length(
+        centered
+    );
+
+    return pow(
+        clamp(
+            distanceFromCenter * 1.5,
+            0.0,
+            1.0
+        ),
+        CHROMATIC_EDGE_POWER
+    );
+}
+
+
+vec3 applyChromaticAberration(vec2 curvedUv) {
+    vec2 pixel =
+        1.0 /
+        u_resolution;
+
+    vec2 centered =
+        curvedUv -
+        0.5;
+
+    float centeredLength = length(
+        centered
+    );
+
+    vec2 direction = vec2(0.0);
+
+    if (centeredLength > 0.0001) {
+        direction =
+            centered /
+            centeredLength;
+    }
+
+    float edgeFactor = getEdgeFactor(
+        curvedUv
+    );
+
+    vec2 offset =
+        direction *
+        pixel *
+        CHROMATIC_ABERRATION *
+        edgeFactor;
+
+    vec3 centerColor = composeScene(
+        curvedUv
+    );
+
+    vec3 redSample = composeScene(
+        curvedUv + offset
+    );
+
+    vec3 blueSample = composeScene(
+        curvedUv - offset
+    );
+
+    return vec3(
+        redSample.r,
+        centerColor.g,
+        blueSample.b
+    );
 }
 
 
@@ -261,7 +402,10 @@ float getScanline(vec2 screenPixel) {
         scanlinePosition
     );
 
-    return scanline * SCANLINE_STRENGTH;
+    return (
+        scanline *
+        SCANLINE_STRENGTH
+    );
 }
 
 
@@ -277,14 +421,21 @@ float getFilmGrain(vec2 screenPixel) {
         animatedPosition
     );
 
-    grain = grain * 2.0 - 1.0;
+    grain =
+        grain * 2.0 -
+        1.0;
 
-    return grain * GRAIN_STRENGTH;
+    return (
+        grain *
+        GRAIN_STRENGTH
+    );
 }
 
 
 float getVignette(vec2 uv) {
-    vec2 centered = uv - 0.5;
+    vec2 centered =
+        uv -
+        0.5;
 
     centered.x *= (
         u_resolution.x /
@@ -308,110 +459,79 @@ vec3 applyCrtEffects(
     vec2 uv,
     vec2 screenPixel
 ) {
-    /*
-     * Scanlines.
-     */
     float scanline = getScanline(
         screenPixel
     );
 
-    color *= 1.0 - scanline;
+    color *= (
+        1.0 -
+        scanline
+    );
 
-
-    /*
-     * Grain.
-     */
     float grain = getFilmGrain(
         screenPixel
     );
 
     color += grain;
 
-
-    /*
-     * Vignette.
-     */
     float vignette = getVignette(
         uv
     );
 
     color *= (
         1.0 -
-        vignette * VIGNETTE_STRENGTH
+        vignette *
+        VIGNETTE_STRENGTH
     );
-
 
     return color;
 }
 
 
 void main() {
-    vec2 screenPixel =
-        v_uv *
-        u_resolution;
-
-
     /*
-     * Transformation appliquée uniquement au canvas du jeu.
-     *
-     * Équivalent approximatif à :
-     *
-     * screenCtx.scale(1.2, 1.2);
-     * screenCtx.drawImage(canvas, decx, decy, w, h);
+     * Toute la scène, UI comprise, passe par la même
+     * déformation CRT.
      */
-    vec2 gamePixel =
-        screenPixel / u_scale -
-        u_offset;
-
-    vec2 gameUv =
-        gamePixel /
-        u_gameResolution;
-
-
-    /*
-     * GAME :
-     *
-     * contraste / saturation / brightness
-     * +
-     * blur/glow.
-     */
-    vec3 gameColor = processGame(
-        gameUv
-    );
-
-
-    /*
-     * UI :
-     *
-     * contraste / saturation / brightness
-     * indépendants du jeu.
-     *
-     * L'UI n'utilise pas le scale/offset du jeu.
-     */
-    vec4 uiColor = processUi(
+    vec2 curvedUv = applyCrtCurvature(
         v_uv
     );
 
 
     /*
-     * Composition GAME + UI.
+     * Les coins créés par la courbure deviennent noirs.
      */
-    vec3 finalColor = mix(
-        gameColor,
-        uiColor.rgb,
-        uiColor.a
+    if (isOutsideUv(curvedUv)) {
+        gl_FragColor = vec4(
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        );
+
+        return;
+    }
+
+
+    /*
+     * RGB split radial.
+     *
+     * Très faible au centre, plus visible aux bords.
+     */
+    vec3 finalColor = applyChromaticAberration(
+        curvedUv
     );
 
 
     /*
-     * CRT appliqué APRÈS composition.
-     *
-     * Donc GAME et UI subissent les mêmes :
-     *
-     * - scanlines
-     * - grain
-     * - vignette
+     * Les scanlines suivent l'écran physique plutôt que
+     * la texture source.
      */
+    vec2 screenPixel =
+        v_uv *
+        u_resolution;
+
+
     finalColor = applyCrtEffects(
         finalColor,
         v_uv,
@@ -419,9 +539,6 @@ void main() {
     );
 
 
-    /*
-     * Évite les valeurs hors plage après les différents effets.
-     */
     finalColor = clamp(
         finalColor,
         0.0,
