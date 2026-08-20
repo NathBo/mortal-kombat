@@ -36,9 +36,9 @@ const float UI_BRIGHTNESS = 1.08;
  * CRT.
  */
 const float SCANLINE_STRENGTH = 0.045;
-const float SCANLINE_SIZE = 3.0;
+const float SCANLINE_SIZE = 2.0;
 
-const float GRAIN_STRENGTH = 0.015;
+const float GRAIN_STRENGTH = 0.012;
 
 const float VIGNETTE_STRENGTH = 0.22;
 const float VIGNETTE_INNER = 0.25;
@@ -48,7 +48,7 @@ const float VIGNETTE_OUTER = 0.78;
 /*
  * Courbure CRT.
  */
-const float CRT_CURVATURE = 0.045;
+const float CRT_CURVATURE = 0.025;
 
 
 /*
