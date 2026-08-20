@@ -6559,69 +6559,69 @@ function main(){
 
 	
 
-	function presentFrame() {
-		if (screenCanvas.style.width !== canvas.style.width) {
-			screenCanvas.style.width = canvas.style.width;
-		}
+	// function presentFrame() {
+	// 	if (screenCanvas.style.width !== canvas.style.width) {
+	// 		screenCanvas.style.width = canvas.style.width;
+	// 	}
 
-		if (screenCanvas.style.height !== canvas.style.height) {
-			screenCanvas.style.height = canvas.style.height;
-		}
+	// 	if (screenCanvas.style.height !== canvas.style.height) {
+	// 		screenCanvas.style.height = canvas.style.height;
+	// 	}
 
-		if (screenCanvas.style.left !== canvas.style.left) {
-			screenCanvas.style.left = canvas.style.left;
-		}
+	// 	if (screenCanvas.style.left !== canvas.style.left) {
+	// 		screenCanvas.style.left = canvas.style.left;
+	// 	}
 
-		if (screenCanvas.style.top !== canvas.style.top) {
-			screenCanvas.style.top = canvas.style.top;
-		}
+	// 	if (screenCanvas.style.top !== canvas.style.top) {
+	// 		screenCanvas.style.top = canvas.style.top;
+	// 	}
 
-		const w = screenCanvas.width;
-		const h = screenCanvas.height;
+	// 	const w = screenCanvas.width;
+	// 	const h = screenCanvas.height;
 
-		const decx = -70; const decy = -80;
+	// 	const decx = -70; const decy = -80;
 
-		screenCtx.imageSmoothingEnabled = false;
-		screenCtx.clearRect(0, 0, w, h);
+	// 	screenCtx.imageSmoothingEnabled = false;
+	// 	screenCtx.clearRect(0, 0, w, h);
 
-		screenCtx.save();
+	// 	screenCtx.save();
 
-		screenCtx.scale(1.2,1.2);
+	// 	screenCtx.scale(1.2,1.2);
 
-		var filter = "contrast(110%) saturate(120%) brightness(92%)";
+	// 	var filter = "contrast(110%) saturate(120%) brightness(92%)";
 
-		screenCtx.filter = filter;
-		screenCtx.drawImage(canvas, decx, decy, w, h);
-
-
-		screenCtx.globalAlpha = 0.10;
-		screenCtx.filter = "blur(2px) contrast(140%)";
-		screenCtx.drawImage(canvas, decx, decy, w, h);
-
-		screenCtx.setTransform(1, 0, 0, 1, 0, 0);
-		screenCtx.scale(1,1);
+	// 	screenCtx.filter = filter;
+	// 	screenCtx.drawImage(canvas, decx, decy, w, h);
 
 
-		screenCtx.globalAlpha = 1;
-		screenCtx.filter = filter;
+	// 	screenCtx.globalAlpha = 0.10;
+	// 	screenCtx.filter = "blur(2px) contrast(140%)";
+	// 	screenCtx.drawImage(canvas, decx, decy, w, h);
+
+	// 	screenCtx.setTransform(1, 0, 0, 1, 0, 0);
+	// 	screenCtx.scale(1,1);
+
+
+	// 	screenCtx.globalAlpha = 1;
+	// 	screenCtx.filter = filter;
 		
-		screenCtx.imageSmoothingEnabled = false;
+	// 	screenCtx.imageSmoothingEnabled = false;
 
-		screenCtx.drawImage(ui_canvas, 0, 0, w, h);
+	// 	screenCtx.drawImage(ui_canvas, 0, 0, w, h);
 
-		screenCtx.filter = "none";
+	// 	screenCtx.filter = "none";
 
-		ui_ctx.clearRect(0, 0, ui_canvas.width, ui_canvas.height);
+	// 	ui_ctx.clearRect(0, 0, ui_canvas.width, ui_canvas.height);
 
-		drawScanlines(screenCtx, w, h, 0.08);
-		drawFilmGrainFast(screenCtx, w, h, 0.007, 4, 12);
-		drawVignette(screenCtx, w, h, {
-			innerAlpha: 0,
-			outerAlpha: 0.32
-		});
+	// 	drawScanlines(screenCtx, w, h, 0.08);
+	// 	drawFilmGrainFast(screenCtx, w, h, 0.007, 4, 12);
+	// 	drawVignette(screenCtx, w, h, {
+	// 		innerAlpha: 0,
+	// 		outerAlpha: 0.32
+	// 	});
 
-		screenCtx.restore();
-	}
+	// 	screenCtx.restore();
+	// }
 
 	function menupersos(){
 		resizecanvas();
@@ -7168,7 +7168,7 @@ function main(){
 
 
 	var screenCanvas = document.getElementById("canvas");
-	var screenCtx = screenCanvas.getContext("2d");
+	// var screenCtx = screenCanvas.getContext("2d");
 
 	// On garde les dimensions de base du canvas HTML
 	var baseWidth = screenCanvas.width;
@@ -7200,15 +7200,606 @@ function main(){
 	ui_ctx.mozImageSmoothingEnabled = false;
 	ui_ctx.imageSmoothingEnabled = false;
 
-	screenCtx.webkitImageSmoothingEnabled = false;
-	screenCtx.mozImageSmoothingEnabled = false;
-	screenCtx.imageSmoothingEnabled = false;
+	// screenCtx.webkitImageSmoothingEnabled = false;
+	// screenCtx.mozImageSmoothingEnabled = false;
+	// screenCtx.imageSmoothingEnabled = false;
 
 	ctx.font = "40px Arial";
-	screenCtx.font = "40px Arial";
+	// screenCtx.font = "40px Arial";
 
 	const dim_x = 890;
 	const dim_y = 500;
+
+	// renderer.js
+
+const gl = screenCanvas.getContext("webgl", {
+    alpha: false,
+    antialias: false,
+    preserveDrawingBuffer: false
+});
+
+if (!gl) {
+    throw new Error("WebGL n'est pas disponible.");
+}
+
+const vertexShaderSource = `
+attribute vec2 a_position;
+
+varying vec2 v_uv;
+
+void main() {
+    v_uv = a_position * 0.5 + 0.5;
+
+    gl_Position = vec4(
+        a_position.x,
+        -a_position.y,
+        0.0,
+        1.0
+    );
+}
+`;
+
+const fragmentShaderSource = `
+precision mediump float;
+
+uniform sampler2D u_game;
+uniform sampler2D u_ui;
+
+uniform vec2 u_resolution;
+uniform vec2 u_gameResolution;
+
+uniform float u_time;
+
+uniform vec2 u_offset;
+uniform float u_scale;
+
+varying vec2 v_uv;
+
+
+float random(vec2 p) {
+    return fract(
+        sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453
+    );
+}
+
+
+vec3 adjustContrast(vec3 color, float contrast) {
+    return (color - 0.5) * contrast + 0.5;
+}
+
+
+vec3 adjustSaturation(vec3 color, float saturation) {
+    float luminance = dot(
+        color,
+        vec3(0.2126, 0.7152, 0.0722)
+    );
+
+    return mix(
+        vec3(luminance),
+        color,
+        saturation
+    );
+}
+
+
+vec3 adjustBrightness(vec3 color, float brightness) {
+    return color * brightness;
+}
+
+
+vec4 sampleGame(vec2 uv) {
+    if (
+        uv.x < 0.0 ||
+        uv.x > 1.0 ||
+        uv.y < 0.0 ||
+        uv.y > 1.0
+    ) {
+        return vec4(0.0);
+    }
+
+    return texture2D(u_game, uv);
+}
+
+
+vec4 blurGame(vec2 uv) {
+    vec2 pixel = 1.0 / u_gameResolution;
+
+    vec4 color = vec4(0.0);
+
+    color += sampleGame(uv + pixel * vec2(-1.0, -1.0)) * 0.0625;
+    color += sampleGame(uv + pixel * vec2( 0.0, -1.0)) * 0.1250;
+    color += sampleGame(uv + pixel * vec2( 1.0, -1.0)) * 0.0625;
+
+    color += sampleGame(uv + pixel * vec2(-1.0,  0.0)) * 0.1250;
+    color += sampleGame(uv)                              * 0.2500;
+    color += sampleGame(uv + pixel * vec2( 1.0,  0.0)) * 0.1250;
+
+    color += sampleGame(uv + pixel * vec2(-1.0,  1.0)) * 0.0625;
+    color += sampleGame(uv + pixel * vec2( 0.0,  1.0)) * 0.1250;
+    color += sampleGame(uv + pixel * vec2( 1.0,  1.0)) * 0.0625;
+
+    return color;
+}
+
+
+void main() {
+    vec2 screenPixel = v_uv * u_resolution;
+
+    /*
+     * Equivalent approximatif à :
+     *
+     * screenCtx.scale(1.2, 1.2);
+     * screenCtx.drawImage(canvas, decx, decy, w, h);
+     */
+
+    vec2 gamePixel = screenPixel / u_scale - u_offset;
+
+    vec2 gameUv = gamePixel / u_gameResolution;
+
+
+    vec4 gameColor = sampleGame(gameUv);
+
+
+    /*
+     * contrast(110%)
+     * saturate(120%)
+     * brightness(92%)
+     */
+
+    gameColor.rgb = adjustContrast(
+        gameColor.rgb,
+        1.10
+    );
+
+    gameColor.rgb = adjustSaturation(
+        gameColor.rgb,
+        1.20
+    );
+
+    gameColor.rgb = adjustBrightness(
+        gameColor.rgb,
+        0.92
+    );
+
+
+    /*
+     * Ancienne seconde passe :
+     *
+     * globalAlpha = 0.10
+     * blur(2px)
+     * contrast(140%)
+     */
+
+    vec4 blurred = blurGame(gameUv);
+
+    blurred.rgb = adjustContrast(
+        blurred.rgb,
+        1.40
+    );
+
+    gameColor.rgb = mix(
+        gameColor.rgb,
+        blurred.rgb,
+        0.10
+    );
+
+
+    /*
+     * Scanlines.
+     */
+
+    float scanline = mod(
+        floor(screenPixel.y),
+        4.0
+    );
+
+    float scanlineStrength = step(
+        2.0,
+        scanline
+    ) * 0.08;
+
+    gameColor.rgb *= 1.0 - scanlineStrength;
+
+
+    /*
+     * Film grain.
+     */
+
+    float grain = random(
+        screenPixel +
+        vec2(u_time * 173.0, u_time * 91.0)
+    );
+
+    grain = grain * 2.0 - 1.0;
+
+    gameColor.rgb += grain * 0.025;
+
+
+    /*
+     * Vignette.
+     */
+
+    vec2 centered = v_uv - 0.5;
+
+    centered.x *= (
+        u_resolution.x /
+        u_resolution.y
+    );
+
+    float distanceFromCenter = length(centered);
+
+    float vignette = smoothstep(
+        0.25,
+        0.78,
+        distanceFromCenter
+    );
+
+    gameColor.rgb *= 1.0 - vignette * 0.32;
+
+
+    /*
+     * UI dessinée après les effets.
+     */
+
+    vec4 uiColor = texture2D(
+        u_ui,
+        v_uv
+    );
+
+    vec3 finalColor = mix(
+        gameColor.rgb,
+        uiColor.rgb,
+        uiColor.a
+    );
+
+
+    gl_FragColor = vec4(
+        finalColor,
+        1.0
+    );
+}
+`;
+
+
+function createShader(type, source) {
+    const shader = gl.createShader(type);
+
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        const error = gl.getShaderInfoLog(shader);
+
+        gl.deleteShader(shader);
+
+        throw new Error(
+            `Erreur de compilation du shader :\n${error}`
+        );
+    }
+
+    return shader;
+}
+
+
+function createProgram(vertexSource, fragmentSource) {
+    const vertexShader = createShader(
+        gl.VERTEX_SHADER,
+        vertexSource
+    );
+
+    const fragmentShader = createShader(
+        gl.FRAGMENT_SHADER,
+        fragmentSource
+    );
+
+    const program = gl.createProgram();
+
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
+
+    gl.linkProgram(program);
+
+    gl.deleteShader(vertexShader);
+    gl.deleteShader(fragmentShader);
+
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        const error = gl.getProgramInfoLog(program);
+
+        gl.deleteProgram(program);
+
+        throw new Error(
+            `Erreur de linkage WebGL :\n${error}`
+        );
+    }
+
+    return program;
+}
+
+
+function createTexture() {
+    const texture = gl.createTexture();
+
+    gl.bindTexture(
+        gl.TEXTURE_2D,
+        texture
+    );
+
+    gl.texParameteri(
+        gl.TEXTURE_2D,
+        gl.TEXTURE_MIN_FILTER,
+        gl.NEAREST
+    );
+
+    gl.texParameteri(
+        gl.TEXTURE_2D,
+        gl.TEXTURE_MAG_FILTER,
+        gl.NEAREST
+    );
+
+    gl.texParameteri(
+        gl.TEXTURE_2D,
+        gl.TEXTURE_WRAP_S,
+        gl.CLAMP_TO_EDGE
+    );
+
+    gl.texParameteri(
+        gl.TEXTURE_2D,
+        gl.TEXTURE_WRAP_T,
+        gl.CLAMP_TO_EDGE
+    );
+
+    return texture;
+}
+
+
+function uploadCanvasToTexture(texture, sourceCanvas) {
+    gl.bindTexture(
+        gl.TEXTURE_2D,
+        texture
+    );
+
+    gl.pixelStorei(
+        gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,
+        false
+    );
+
+    gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        sourceCanvas
+    );
+}
+
+
+const shaderProgram = createProgram(
+    vertexShaderSource,
+    fragmentShaderSource
+);
+
+
+const positionLocation = gl.getAttribLocation(
+    shaderProgram,
+    "a_position"
+);
+
+const gameTextureLocation = gl.getUniformLocation(
+    shaderProgram,
+    "u_game"
+);
+
+const uiTextureLocation = gl.getUniformLocation(
+    shaderProgram,
+    "u_ui"
+);
+
+const resolutionLocation = gl.getUniformLocation(
+    shaderProgram,
+    "u_resolution"
+);
+
+const gameResolutionLocation = gl.getUniformLocation(
+    shaderProgram,
+    "u_gameResolution"
+);
+
+const timeLocation = gl.getUniformLocation(
+    shaderProgram,
+    "u_time"
+);
+
+const offsetLocation = gl.getUniformLocation(
+    shaderProgram,
+    "u_offset"
+);
+
+const scaleLocation = gl.getUniformLocation(
+    shaderProgram,
+    "u_scale"
+);
+
+
+const positionBuffer = gl.createBuffer();
+
+gl.bindBuffer(
+    gl.ARRAY_BUFFER,
+    positionBuffer
+);
+
+gl.bufferData(
+    gl.ARRAY_BUFFER,
+    new Float32Array([
+        -1.0, -1.0,
+         1.0, -1.0,
+        -1.0,  1.0,
+
+        -1.0,  1.0,
+         1.0, -1.0,
+         1.0,  1.0
+    ]),
+    gl.STATIC_DRAW
+);
+
+
+const gameTexture = createTexture();
+const uiTexture = createTexture();
+
+
+function syncScreenCanvasStyle() {
+    if (screenCanvas.style.width !== canvas.style.width) {
+        screenCanvas.style.width = canvas.style.width;
+    }
+
+    if (screenCanvas.style.height !== canvas.style.height) {
+        screenCanvas.style.height = canvas.style.height;
+    }
+
+    if (screenCanvas.style.left !== canvas.style.left) {
+        screenCanvas.style.left = canvas.style.left;
+    }
+
+    if (screenCanvas.style.top !== canvas.style.top) {
+        screenCanvas.style.top = canvas.style.top;
+    }
+}
+
+
+function prepareShaderProgram() {
+    gl.useProgram(shaderProgram);
+
+    gl.bindBuffer(
+        gl.ARRAY_BUFFER,
+        positionBuffer
+    );
+
+    gl.enableVertexAttribArray(
+        positionLocation
+    );
+
+    gl.vertexAttribPointer(
+        positionLocation,
+        2,
+        gl.FLOAT,
+        false,
+        0,
+        0
+    );
+}
+
+
+function bindGameTexture() {
+    gl.activeTexture(
+        gl.TEXTURE0
+    );
+
+    uploadCanvasToTexture(
+        gameTexture,
+        canvas
+    );
+
+    gl.uniform1i(
+        gameTextureLocation,
+        0
+    );
+}
+
+
+function bindUiTexture() {
+    gl.activeTexture(
+        gl.TEXTURE1
+    );
+
+    uploadCanvasToTexture(
+        uiTexture,
+        ui_canvas
+    );
+
+    gl.uniform1i(
+        uiTextureLocation,
+        1
+    );
+}
+
+
+function setShaderUniforms(timeSeconds) {
+    gl.uniform2f(
+        resolutionLocation,
+        screenCanvas.width,
+        screenCanvas.height
+    );
+
+    gl.uniform2f(
+        gameResolutionLocation,
+        canvas.width,
+        canvas.height
+    );
+
+    gl.uniform1f(
+        timeLocation,
+        timeSeconds
+    );
+
+    gl.uniform2f(
+        offsetLocation,
+        -70.0,
+        -80.0
+    );
+
+    gl.uniform1f(
+        scaleLocation,
+        1.2
+    );
+}
+
+
+function presentFrame(timeMilliseconds = performance.now()) {
+    syncScreenCanvasStyle();
+
+    const width = screenCanvas.width;
+    const height = screenCanvas.height;
+
+    gl.viewport(
+        0,
+        0,
+        width,
+        height
+    );
+
+    gl.clearColor(
+        0,
+        0,
+        0,
+        1
+    );
+
+    gl.clear(
+        gl.COLOR_BUFFER_BIT
+    );
+
+    prepareShaderProgram();
+
+    bindGameTexture();
+    bindUiTexture();
+
+    setShaderUniforms(
+        timeMilliseconds / 1000
+    );
+
+    gl.drawArrays(
+        gl.TRIANGLES,
+        0,
+        6
+    );
+
+    ui_ctx.clearRect(
+        0,
+        0,
+        ui_canvas.width,
+        ui_canvas.height
+    );
+}
 
 	
 	
