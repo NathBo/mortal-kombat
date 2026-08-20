@@ -111,6 +111,7 @@ var kahnbackgroundpng = new Image();kahnbackgroundpng.src = 'ressource/stages/ka
 var stagesstruct = [towerstructurepng, deadpoolpng, null, forestgroundpng, gorostructurepng, kahnstructurepng];
 var stagesground = [towergroundpng, null, wastegroundpng, null, null, null];
 var stagesbackground = [towerbackgroundpng, null, wastebackgroundpng, forestbackgroundpng, gorobackgroundpng, kahnbackgroundpng];
+var stagesfog = [[70,20,30],[10,70,10],[80,0,80],[40,80,0],[20,20,20],[80,30,0]];
 var grounds = [240, 220, 240, 240, 230, 240];
 var stagesizes = [754,690, 750,800, 775, 730];
 var backgroundscroll = [0.2,0,0,0.2, 0.5, 0.4];

@@ -62,11 +62,28 @@ const float GAME_BLUR_CONTRAST = 1.30;
 /*
  * Phosphore / bloom.
  */
-const float PHOSPHOR_THRESHOLD = 0.5;
+const float PHOSPHOR_THRESHOLD = 0.50;
 const float GAME_PHOSPHOR_STRENGTH = 0.06;
 const float UI_PHOSPHOR_STRENGTH = 0.015;
 const float PHOSPHOR_MAX = 0.50;
 
+
+/*
+ * Fog bas / nappes rampantes.
+ */
+const float FOG_STRENGTH = 0.1;
+
+uniform vec3 u_fogColor;
+
+const float FOG_HEIGHT = 0.62;
+const float FOG_SPEED = 0.05;
+
+
+/*
+ * --------------------------------------------------------------------------
+ * Utility
+ * --------------------------------------------------------------------------
+ */
 
 float random(vec2 p) {
     return fract(
@@ -76,6 +93,56 @@ float random(vec2 p) {
                 vec2(12.9898, 78.233)
             )
         ) * 43758.5453
+    );
+}
+
+
+float noise2d(vec2 p) {
+    vec2 cell = floor(p);
+    vec2 local = fract(p);
+
+    local =
+        local *
+        local *
+        (3.0 - 2.0 * local);
+
+    float a = random(
+        cell
+    );
+
+    float b = random(
+        cell +
+        vec2(1.0, 0.0)
+    );
+
+    float c = random(
+        cell +
+        vec2(0.0, 1.0)
+    );
+
+    float d = random(
+        cell +
+        vec2(1.0, 1.0)
+    );
+
+    float bottom =
+        mix(
+            a,
+            b,
+            local.x
+        );
+
+    float top =
+        mix(
+            c,
+            d,
+            local.x
+        );
+
+    return mix(
+        bottom,
+        top,
+        local.y
     );
 }
 
@@ -106,9 +173,10 @@ vec3 adjustSaturation(
     vec3 color,
     float saturation
 ) {
-    float luminance = getLuminance(
-        color
-    );
+    float luminance =
+        getLuminance(
+            color
+        );
 
     return mix(
         vec3(luminance),
@@ -161,6 +229,12 @@ bool isOutsideUv(vec2 uv) {
 }
 
 
+/*
+ * --------------------------------------------------------------------------
+ * Sampling
+ * --------------------------------------------------------------------------
+ */
+
 vec4 sampleGame(vec2 uv) {
     if (isOutsideUv(uv)) {
         return vec4(0.0);
@@ -184,6 +258,12 @@ vec4 sampleUi(vec2 uv) {
     );
 }
 
+
+/*
+ * --------------------------------------------------------------------------
+ * Chromatic aberration
+ * --------------------------------------------------------------------------
+ */
 
 float getEdgeFactor(vec2 screenUv) {
     vec2 centered =
@@ -315,9 +395,7 @@ vec4 sampleGameChromatic(
 }
 
 
-vec4 sampleUiChromatic(
-    vec2 uv
-) {
+vec4 sampleUiChromatic(vec2 uv) {
     vec2 offset =
         getScreenChromaticOffset(
             uv
@@ -349,6 +427,12 @@ vec4 sampleUiChromatic(
 }
 
 
+/*
+ * --------------------------------------------------------------------------
+ * Blur
+ * --------------------------------------------------------------------------
+ */
+
 vec4 blurGame(vec2 uv) {
     vec2 pixel =
         1.0 /
@@ -372,7 +456,6 @@ vec4 blurGame(vec2 uv) {
         pixel * vec2(1.0, -1.0)
     ) * 0.0625;
 
-
     color += sampleGame(
         uv +
         pixel * vec2(-1.0, 0.0)
@@ -386,7 +469,6 @@ vec4 blurGame(vec2 uv) {
         uv +
         pixel * vec2(1.0, 0.0)
     ) * 0.1250;
-
 
     color += sampleGame(
         uv +
@@ -406,6 +488,12 @@ vec4 blurGame(vec2 uv) {
     return color;
 }
 
+
+/*
+ * --------------------------------------------------------------------------
+ * Phosphor
+ * --------------------------------------------------------------------------
+ */
 
 vec3 extractPhosphor(
     vec3 color,
@@ -435,16 +523,16 @@ vec3 extractPhosphor(
 }
 
 
+/*
+ * --------------------------------------------------------------------------
+ * GAME
+ * --------------------------------------------------------------------------
+ */
+
 vec3 processGame(
     vec2 gameUv,
     vec2 screenUv
 ) {
-    /*
-     * L'aberration est faite ici directement sur u_game.
-     *
-     * 3 samples au lieu de recalculer toute la scène
-     * trois fois.
-     */
     vec4 gameColor =
         sampleGameChromatic(
             gameUv,
@@ -459,10 +547,6 @@ vec3 processGame(
             GAME_BRIGHTNESS
         );
 
-
-    /*
-     * Le blur n'est calculé qu'une seule fois.
-     */
     vec4 blurred =
         blurGame(
             gameUv
@@ -476,10 +560,6 @@ vec3 processGame(
             GAME_BRIGHTNESS
         );
 
-
-    /*
-     * Léger adoucissement.
-     */
     gameColor.rgb =
         mix(
             gameColor.rgb,
@@ -487,10 +567,6 @@ vec3 processGame(
             GAME_BLUR_MIX
         );
 
-
-    /*
-     * Phosphore utilisant le blur existant.
-     */
     vec3 phosphor =
         extractPhosphor(
             blurred.rgb,
@@ -504,10 +580,13 @@ vec3 processGame(
 }
 
 
+/*
+ * --------------------------------------------------------------------------
+ * UI
+ * --------------------------------------------------------------------------
+ */
+
 vec4 processUi(vec2 uv) {
-    /*
-     * 3 samples seulement pour l'aberration UI.
-     */
     vec4 uiColor =
         sampleUiChromatic(
             uv
@@ -535,38 +614,170 @@ vec4 processUi(vec2 uv) {
 }
 
 
-vec3 composeScene(vec2 uv) {
-    vec2 screenPixel =
-        uv *
-        u_resolution;
 
-    vec2 gamePixel =
-        screenPixel /
-        u_scale -
-        u_offset;
 
-    vec2 gameUv =
-        gamePixel /
-        u_gameResolution;
+/*
+ * --------------------------------------------------------------------------
+ * Atmospheric fog
+ * --------------------------------------------------------------------------
+ */
 
-    vec3 gameColor =
-        processGame(
-            gameUv,
-            uv
+float fogLayer(
+    vec2 uv,
+    float scale,
+    float speed,
+    float verticalOffset,
+    float seed
+) {
+    float y = 1.0 - uv.y;
+
+    vec2 fogUv =
+        vec2(
+            uv.x * scale,
+            y * scale * 2.2
         );
 
-    vec4 uiColor =
-        processUi(
+    fogUv.x +=
+        u_time *
+        speed;
+
+    fogUv.y +=
+        sin(
+            uv.x * 8.0 +
+            u_time * speed * 4.0 +
+            seed
+        ) * 0.12;
+
+    float noiseValue =
+        noise2d(
+            fogUv +
+            vec2(
+                seed,
+                seed * 0.73
+            )
+        );
+
+    float wave =
+        sin(
+            uv.x * 10.0 +
+            u_time * speed * 2.0 +
+            seed
+        ) * 0.025;
+
+    float fogTop =
+        FOG_HEIGHT +
+        verticalOffset +
+        wave +
+        (noiseValue - 0.5) * 0.12;
+
+    float heightMask =
+        1.0 -
+        smoothstep(
+            fogTop - 0.10,
+            fogTop,
+            y
+        );
+
+    float groundDensity =
+        1.0 -
+        smoothstep(
+            0.0,
+            FOG_HEIGHT + 0.08,
+            y
+        );
+
+    float density =
+        smoothstep(
+            0.32,
+            0.78,
+            noiseValue
+        );
+
+    return (
+        density *
+        heightMask *
+        mix(
+            0.35,
+            1.0,
+            groundDensity
+        )
+    );
+}
+
+
+float getAtmosphericFog(vec2 uv) {
+    float y = 1.0 - uv.y;
+
+    float layerA =
+        fogLayer(
+            uv,
+            3.2,
+            FOG_SPEED,
+            0.00,
+            4.3
+        );
+
+    float layerB =
+        fogLayer(
+            uv,
+            5.1,
+            -FOG_SPEED * 0.55,
+            -0.07,
+            13.7
+        );
+
+    float layerC =
+        fogLayer(
+            uv,
+            2.0,
+            FOG_SPEED * 0.28,
+            0.04,
+            27.1
+        );
+
+    float fog =
+        layerA * 0.50 +
+        layerB * 0.32 +
+        layerC * 0.18;
+
+    float globalHeightMask =
+        1.0 -
+        smoothstep(
+            FOG_HEIGHT * 0.70,
+            FOG_HEIGHT + 0.18,
+            y
+        );
+
+    return (
+        fog *
+        globalHeightMask *
+        FOG_STRENGTH
+    );
+}
+
+
+vec3 applyAtmosphericFog(
+    vec3 color,
+    vec2 uv
+) {
+    float fog =
+        getAtmosphericFog(
             uv
         );
 
     return mix(
-        gameColor,
-        uiColor.rgb,
-        uiColor.a
+        color,
+        u_fogColor,
+        fog
     );
 }
 
+
+/*
+ * --------------------------------------------------------------------------
+ * CRT
+ * --------------------------------------------------------------------------
+ */
 
 float getScanline(
     vec2 screenPixel
@@ -655,14 +866,12 @@ vec3 applyCrtEffects(
         scanline
     );
 
-
     float grain =
         getFilmGrain(
             screenPixel
         );
 
     color += grain;
-
 
     float vignette =
         getVignette(
@@ -679,19 +888,99 @@ vec3 applyCrtEffects(
 }
 
 
+/*
+ * --------------------------------------------------------------------------
+ * Main
+ * --------------------------------------------------------------------------
+ */
+
+ 
+/*
+ * --------------------------------------------------------------------------
+ * Composition
+ * --------------------------------------------------------------------------
+ */
+
+vec3 composeScene(vec2 uv) {
+    vec2 screenPixel =
+        uv *
+        u_resolution;
+
+    vec2 gamePixel =
+        screenPixel /
+        u_scale -
+        u_offset;
+
+    vec2 gameUv =
+        gamePixel /
+        u_gameResolution;
+
+
+    /*
+     * GAME.
+     */
+    vec3 gameColor =
+        processGame(
+            gameUv,
+            uv
+        );
+
+
+    /*
+     * Fog uniquement sur le GAME.
+     *
+     * L'UI n'est pas encore composée à ce stade.
+     */
+    gameColor =
+        applyAtmosphericFog(
+            gameColor,
+            uv
+        );
+
+
+    /*
+     * UI.
+     */
+    vec4 uiColor =
+        processUi(
+            uv
+        );
+
+
+    /*
+     * L'UI passe au-dessus du GAME + fog.
+     */
+    return mix(
+        gameColor,
+        uiColor.rgb,
+        uiColor.a
+    );
+}
+
+
+
 void main() {
     /*
-     * La scène entière n'est composée qu'une seule fois.
+     * composeScene() contient maintenant :
+     *
+     * GAME
+     * → fog
+     * → UI
      */
     vec3 finalColor =
         composeScene(
             v_uv
         );
 
+
     vec2 screenPixel =
         v_uv *
         u_resolution;
 
+
+    /*
+     * CRT commun au GAME et à l'UI.
+     */
     finalColor =
         applyCrtEffects(
             finalColor,
@@ -699,12 +988,14 @@ void main() {
             screenPixel
         );
 
+
     finalColor =
         clamp(
             finalColor,
             0.0,
             1.0
         );
+
 
     gl_FragColor =
         vec4(

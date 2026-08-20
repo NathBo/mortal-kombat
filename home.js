@@ -6189,6 +6189,7 @@ function main(){
 		//chosenstage = 5;
 		ground = grounds[chosenstage];
 		stage_size = stagesizes[chosenstage];
+		setFogColor(stagesfog[chosenstage][0],stagesfog[chosenstage][1],stagesfog[chosenstage][2])
 	}
 
 	function prepare_stage_props(){
@@ -7406,50 +7407,93 @@ function main(){
 
 		return buffer;
 	}
+let fogColorLocation = null;
 
 
-	function initializeLocations() {
-		positionLocation = gl.getAttribLocation(
-			shaderProgram,
-			"a_position"
-		);
+function initializeLocations() {
+    positionLocation = gl.getAttribLocation(
+        shaderProgram,
+        "a_position"
+    );
 
-		gameTextureLocation = gl.getUniformLocation(
-			shaderProgram,
-			"u_game"
-		);
+    gameTextureLocation = gl.getUniformLocation(
+        shaderProgram,
+        "u_game"
+    );
 
-		uiTextureLocation = gl.getUniformLocation(
-			shaderProgram,
-			"u_ui"
-		);
+    uiTextureLocation = gl.getUniformLocation(
+        shaderProgram,
+        "u_ui"
+    );
 
-		resolutionLocation = gl.getUniformLocation(
-			shaderProgram,
-			"u_resolution"
-		);
+    resolutionLocation = gl.getUniformLocation(
+        shaderProgram,
+        "u_resolution"
+    );
 
-		gameResolutionLocation = gl.getUniformLocation(
-			shaderProgram,
-			"u_gameResolution"
-		);
+    gameResolutionLocation = gl.getUniformLocation(
+        shaderProgram,
+        "u_gameResolution"
+    );
 
-		timeLocation = gl.getUniformLocation(
-			shaderProgram,
-			"u_time"
-		);
+    timeLocation = gl.getUniformLocation(
+        shaderProgram,
+        "u_time"
+    );
 
-		offsetLocation = gl.getUniformLocation(
-			shaderProgram,
-			"u_offset"
-		);
+    offsetLocation = gl.getUniformLocation(
+        shaderProgram,
+        "u_offset"
+    );
 
-		scaleLocation = gl.getUniformLocation(
-			shaderProgram,
-			"u_scale"
-		);
-	}
+    scaleLocation = gl.getUniformLocation(
+        shaderProgram,
+        "u_scale"
+    );
 
+    fogColorLocation = gl.getUniformLocation(
+        shaderProgram,
+        "u_fogColor"
+    );
+}
+
+
+function setShaderUniforms(timeSeconds) {
+    gl.uniform2f(
+        resolutionLocation,
+        screenCanvas.width,
+        screenCanvas.height
+    );
+
+    gl.uniform2f(
+        gameResolutionLocation,
+        canvas.width,
+        canvas.height
+    );
+
+    gl.uniform1f(
+        timeLocation,
+        timeSeconds
+    );
+
+    gl.uniform2f(
+        offsetLocation,
+        -70.0,
+        -80.0
+    );
+
+    gl.uniform1f(
+        scaleLocation,
+        1.2
+    );
+
+    gl.uniform3f(
+        fogColorLocation,
+        FogColorSetting[0],
+        FogColorSetting[1],
+        FogColorSetting[2]
+    );
+}
 
 	async function initializeRenderer() {
 		const {
@@ -7549,35 +7593,7 @@ function main(){
 	}
 
 
-	function setShaderUniforms(timeSeconds) {
-		gl.uniform2f(
-			resolutionLocation,
-			screenCanvas.width,
-			screenCanvas.height
-		);
 
-		gl.uniform2f(
-			gameResolutionLocation,
-			canvas.width,
-			canvas.height
-		);
-
-		gl.uniform1f(
-			timeLocation,
-			timeSeconds
-		);
-
-		gl.uniform2f(
-			offsetLocation,
-			-70.0,
-			-80.0
-		);
-
-		gl.uniform1f(
-			scaleLocation,
-			1.2
-		);
-	}
 
 
 	function presentFrame(timeMilliseconds = performance.now()) {
@@ -7646,6 +7662,14 @@ function main(){
 				error
 			);
 		});
+
+	var FogColorSetting = [0.2,0.2,0.2];
+
+	function setFogColor(red, green, blue) {
+		FogColorSetting = [red/255, green/255, blue/255];
+	}
+
+	setFogColor(20, 20, 20);
 
 	
 	
