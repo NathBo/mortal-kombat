@@ -35,10 +35,10 @@ const float UI_BRIGHTNESS = 0.98;
 /*
  * CRT.
  */
-const float SCANLINE_STRENGTH = 0.025;
+const float SCANLINE_STRENGTH = 0.05;
 const float SCANLINE_SIZE = 3.0;
 
-const float GRAIN_STRENGTH = 0.006;
+const float GRAIN_STRENGTH = 0.01;
 
 const float VIGNETTE_STRENGTH = 0.12;
 const float VIGNETTE_INNER = 0.25;
@@ -62,10 +62,10 @@ const float GAME_BLUR_CONTRAST = 1.30;
 /*
  * Phosphore / bloom.
  */
-const float PHOSPHOR_THRESHOLD = 0.5;
-const float GAME_PHOSPHOR_STRENGTH = 0.06;
+const float PHOSPHOR_THRESHOLD = 0.4;
+const float GAME_PHOSPHOR_STRENGTH = 0.1;
 const float UI_PHOSPHOR_STRENGTH = 0.015;
-const float PHOSPHOR_MAX = 0.50;
+const float PHOSPHOR_MAX = 0.20;
 
 
 float random(vec2 p) {

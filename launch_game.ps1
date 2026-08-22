@@ -383,7 +383,7 @@ function Start-GameBrowser {
     catch {
         Write-Host ""
         Write-Host `
-            "Impossible d'ouvrir automatiquement le navigateur." `
+            "Unable to open Browser automatically" `
             -ForegroundColor Yellow
 
         Write-Host "Ouvre manuellement : $Url"
@@ -395,26 +395,26 @@ if (-not (Test-PortAvailable -Port $Port)) {
     Clear-Host
 
     Write-Host "========================================" -ForegroundColor Red
-    Write-Host "       IMPOSSIBLE DE LANCER LE JEU" -ForegroundColor Red
+    Write-Host "       Unable to Launch Game" -ForegroundColor Red
     Write-Host "========================================" -ForegroundColor Red
     Write-Host ""
 
     Write-Host `
-        "Le port $Port est deja utilise." `
+        "Prt $Port is already in used." `
         -ForegroundColor Yellow
 
     Write-Host ""
     Write-Host `
-        "Le jeu utilise toujours http://localhost:$Port afin de conserver les sauvegardes." `
+        "This game only uses http://localhost:$Port in order to keep save date consistent." `
         -ForegroundColor White
 
     Write-Host ""
     Write-Host `
-        "Ferme l'application qui utilise ce port puis relance le jeu." `
+        "Close the app using this port then close the game" `
         -ForegroundColor White
 
     Write-Host ""
-    Read-Host "Appuie sur Entree pour fermer"
+    Read-Host "Push Enter to Close"
 
     exit 1
 }
@@ -434,17 +434,17 @@ try {
     Write-Host "========================================" -ForegroundColor Cyan
     Write-Host ""
 
-    Write-Host "Dossier : $Root"
-    Write-Host "Adresse : $Url"
+    Write-Host "Folder : $Root"
+    Write-Host "Adress : $Url"
 
     Write-Host ""
     Write-Host `
-        "Le port $Port reste fixe pour conserver les sauvegardes." `
+        "Port $Port stays fixed to keep save data." `
         -ForegroundColor DarkGray
 
     Write-Host ""
     Write-Host `
-        "Ferme cette fenetre pour arreter le serveur." `
+        "Close this window to close the server." `
         -ForegroundColor DarkGray
 
     Write-Host ""
