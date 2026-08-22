@@ -33,8 +33,8 @@ function drawGauge(ctx, x, y, width, height, value) {
 
 
 class MiniGame{
-    constructor(ctx,j1,base_score,music){
-        this.ctx = ctx; this.j1=j1;
+    constructor(ctx,ui_ctx,j1,base_score,music){
+        this.ctx = ctx; this.ui_ctx = ui_ctx; this.j1=j1;
         this.base_score = base_score;
         this.addi_score = 0;
         this.show_score_cpt = 0;
@@ -58,9 +58,9 @@ class MiniGame{
 	}
 
     drawScore(){
-        this.ctx.fillStyle = "yellow";
-        this.ctx.font = "25px PixelFont";
-        this.ctx.fillText("Score: "+(this.base_score+this.addi_score).toString(),20,42);
+        this.ui_ctx.fillStyle = "yellow";
+        this.ui_ctx.font = "25px PixelFont";
+        this.ui_ctx.fillText("Score: "+(this.base_score+this.addi_score).toString(),20,42);
         if(this.show_score_cpt){
             this.show_score_cpt--;
             var a = 40*0.86;
@@ -69,10 +69,10 @@ class MiniGame{
                 var dec = -8*(this.show_score_cpt-35);
             }
             if (this.combo_affich_cpt<=5){
-                this.ctx.globalAlpha = this.show_score_cpt*0.2;
+                this.ui_ctx.globalAlpha = this.show_score_cpt*0.2;
             }
-            this.ctx.fillText("+"+this.show_add_score.toString(),a-6+dec,85);
-            this.ctx.globalAlpha = 1.0;
+            this.ui_ctx.fillText("+"+this.show_add_score.toString(),a-6+dec,85);
+            this.ui_ctx.globalAlpha = 1.0;
         }
     }
 
@@ -120,8 +120,8 @@ class MiniGame{
 
 
 class TestYourMight extends MiniGame{
-    constructor(ctx,j1,base_score,music,perso1stats,perso2stats,skins=[0,0]){
-        super(ctx,j1,base_score,music);
+    constructor(ctx,ui_ctx,j1,base_score,music,perso1stats,perso2stats,skins=[0,0]){
+        super(ctx,ui_ctx,j1,base_score,music);
         this.perso1stats = perso1stats;
         this.skin1 = perso1stats.png[skins[0]];this.skin2 = perso2stats.png[skins[1]];
         this.width1 = perso1stats.width; this.width2 = perso2stats.width;
@@ -205,15 +205,15 @@ class TestYourMight extends MiniGame{
         }
 
 
-        drawGauge(this.ctx,20,380,20,100,this.charge/8.);
+        drawGauge(this.ui_ctx,20,380,20,100,this.charge/8.);
         var meters = this.heady;
         if(this.has_reached){meters=this.goalheady;}
         meters = Math.floor(meters/40)*50;
-        this.ctx.fillStyle = "grey";
-        this.ctx.font = "30px PixelFont";
-        this.ctx.textAlign = "right";
-        this.ctx.fillText(meters.toString()+"m",860,45);
-        this.ctx.textAlign = "left";
+        this.ui_ctx.fillStyle = "grey";
+        this.ui_ctx.font = "30px PixelFont";
+        this.ui_ctx.textAlign = "right";
+        this.ui_ctx.fillText(meters.toString()+"m",860,45);
+        this.ui_ctx.textAlign = "left";
 
         if(this.global_cpt==show_score){
             this.addScore(meters*10);
@@ -226,12 +226,12 @@ class TestYourMight extends MiniGame{
         this.drawScore();
 
         if(this.global_cpt<=start_punch-10){
-            if(this.global_cpt%6<3){this.ctx.fillStyle = "white";}
-            else{this.ctx.fillStyle = "red";}
-            this.ctx.font = "30px PixelFont";
-            this.ctx.textAlign = "center";
-            this.ctx.fillText("Test Your\nMight!",445,110);
-            this.ctx.textAlign = "left";
+            if(this.global_cpt%6<3){this.ui_ctx.fillStyle = "white";}
+            else{this.ui_ctx.fillStyle = "red";}
+            this.ui_ctx.font = "30px PixelFont";
+            this.ui_ctx.textAlign = "center";
+            this.ui_ctx.fillText("Test Your\nMight!",445,110);
+            this.ui_ctx.textAlign = "left";
         }
 
         if(this.has_reached || this.global_cpt<=decap+10){this.global_cpt++;}
@@ -241,8 +241,8 @@ class TestYourMight extends MiniGame{
 
 
 class GuessBarrel extends MiniGame{
-    constructor(ctx,j1,base_score,music,perso1stats,skin1,perso2stats,skin2){
-        super(ctx,j1,base_score,music);
+    constructor(ctx,ui_ctx,j1,base_score,music,perso1stats,skin1,perso2stats,skin2){
+        super(ctx,ui_ctx,j1,base_score,music);
         this.perso1stats = perso1stats;
         this.skin1 = perso1stats.png[skin1];
         this.skin2 = perso2stats.png[skin2];

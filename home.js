@@ -6316,12 +6316,12 @@ function main(){
 						if(persoschoisis[1]==persoschoisis[0]){skinschoisis[1]=(skinschoisis[0]+1)%2;}
 						reset_game(true);
 						if(arcadelevel==1 || arcadelevel==7){		//minigames handle
-							var minigame = new TestYourMight(ui_ctx,j1,score,minigame_music,characteristics.get(persos[0]),characteristics.get(persos[1]),skins);
+							var minigame = new TestYourMight(ctx,ui_ctx,j1,score,minigame_music,characteristics.get(persos[0]),characteristics.get(persos[1]),skins);
 							var test_your_might_fun = () => minigame.render();
 							functiontoexecute = test_your_might_fun;
 						}
 						if(arcadelevel == 3 || arcadelevel == 5){
-							var minigame = new GuessBarrel(ui_ctx,j1,score,minigame_music,characteristics.get(persos[0]),skins[0],characteristics.get(persos[1]),skins[1]);
+							var minigame = new GuessBarrel(ctx,ui_ctx,j1,score,minigame_music,characteristics.get(persos[0]),skins[0],characteristics.get(persos[1]),skins[1]);
 							var test_your_sight_fun = () => minigame.render();
 							functiontoexecute = test_your_sight_fun;
 						}
