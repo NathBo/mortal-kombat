@@ -206,7 +206,7 @@ function getmilcoordinates(){
 	milcoordinates.set("falling2",{offx:527,width:74,offy:1181,height:83,decx:0,decy:0});
 	milcoordinates.set("falling3",{offx:610,width:68,offy:1181,height:83,decx:0,decy:0});
 	milcoordinates.set("grounded1",{offx:690,width:69,offy:1222,height:42,decx:0,decy:0});
-	milcoordinates.set("grounded2",{offx:770,width:78,offy:1241,height:23,decx:0,decy:0});
+	milcoordinates.set("grounded2",{offx:770,width:78,offy:1241,height:23,decx:0,decy:-2});
 	milcoordinates.set("getup1",{offx:421,width:63,offy:1342,height:35,decx:0,decy:0});
 	milcoordinates.set("getup2",{offx:494,width:36,offy:1322,height:55,decx:0,decy:0});
 	milcoordinates.set("getup3",{offx:539,width:26,offy:1301,height:76,decx:0,decy:0});

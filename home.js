@@ -6051,7 +6051,7 @@ function main(){
 			ui_ctx.fillStyle = "yellow";
 			var perso = j1.charac.displayname;
 			if(j2.pv>0){perso = j2.charac.displayname;}
-			ui_ctx.fillText(perso+" WINS",445,140);
+			ui_ctx.fillText(perso+" WINS",445,130);
 			ui_ctx.textAlign = "left";
 
 			ui_ctx.scale(2,2);
@@ -6059,7 +6059,7 @@ function main(){
 			for (var i=0;i<3;i++){
 				var im = roundwoniconpng;
 				if(logo_grade[i]){im = roundwonicon2png;}
-				if(end_of_round_countdown<=70-i*10){ui_ctx.drawImage(im,180+25*i,78);}
+				if(end_of_round_countdown<=70-i*10){ui_ctx.drawImage(im,180+25*i,72);}
 			}
 			ui_ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ui_ctx.scale(1,1);
@@ -7758,7 +7758,7 @@ function main(){
 
 	characteristics.set("kitana",{png : kitskins,coordinates : kitcoordinates, sex : "f", standnframes : 5, standframespeed : 6, rollspeed : 4, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : kitanaiconpng, namewav : document.querySelector('#kitanawav'),
 	width : 34, height : 97,vitesse : 3.1, run_speed : 6.2,jumpxspeed : 3.6,backmovnerf : 0.85, gravity : 0.4, jumpforce : 9,jumpsquat : 3, shorthop : 6, friction:0.2, hurtcontrol : 0.2, grabtype : "poser",
-	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 95, getupfdur : 32, grabfdur : 35, grabdeg : 13, vicposframes : 12, vicposfdur : 50, cds : [80,120,24,240], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,squarepunchiconpng], voiceactor : "clement",
+	airdrift : 0.12, airmaxspeed : 2, airdodgespeed : 5.5, airdodgefdur : 15, landinglag : 8,coups : kitana_coups, pv : 95, getupfdur : 32, grabfdur : 35, grabdeg : 13, vicposframes : 12, vicposfdur : 50, cds : [80,120,240,240], icons : [fanthrowiconpng,fanswipeiconpng,fanlifticonpng,squarepunchiconpng], voiceactor : "clement",
 	default_behav : "zoner", displayname : "KITANA", combos : kitana_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Kitana takes control of the outworld and forcibly converts all its peasants to blueberry farming in order to have access to an unlimited supply of blueberries for the rest of her life."});
 
 	characteristics.set("mileena",{png : milskins,coordinates : milcoordinates, sex : "f", standnframes : 10, standframespeed : 5, rollspeed : 4, hkickstartnframe : 2, hkickendnframe : 3, kicknframe : 5,grabxdist : 34, grabydist : 36, stunnframes : 5, walknframes : 8, icon : mileenaiconpng, namewav : document.querySelector('#mileenawav'),
