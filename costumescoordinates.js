@@ -1705,6 +1705,41 @@ function getkuncoordinates(){
     return kuncoordinates;
 }
 
+function getshacoordinates(){
+    var shacoordinates = new Map();
+
+	shacoordinates.set("stand1",{offx:66,width:35,offy:24,height:98,decx:0,decy:0});
+	shacoordinates.set("stand2",{offx:111,width:36,offy:25,height:97,decx:-1,decy:0});
+	shacoordinates.set("stand3",{offx:157,width:36,offy:26,height:96,decx:-1,decy:0});
+	shacoordinates.set("stand4",{offx:204,width:35,offy:25,height:97,decx:0,decy:0});
+	shacoordinates.set("stand5",{offx:249,width:35,offy:23,height:99,decx:0,decy:0});
+	shacoordinates.set("victory1",{offx:872,width:36,offy:135,height:101,decx:0,decy:0});
+	shacoordinates.set("walk1",{offx:15,width:36,offy:138,height:98,decx:-8,decy:-1});
+	shacoordinates.set("walk2",{offx:61,width:28,offy:136,height:100,decx:0,decy:-3});
+	shacoordinates.set("walk3",{offx:99,width:28,offy:138,height:98,decx:0,decy:-1});
+	shacoordinates.set("walk4",{offx:137,width:32,offy:139,height:97,decx:0,decy:0});
+	shacoordinates.set("walk5",{offx:179,width:28,offy:139,height:97,decx:0,decy:0});
+	shacoordinates.set("walk6",{offx:218,width:28,offy:138,height:98,decx:0,decy:-1});
+	shacoordinates.set("walk7",{offx:257,width:30,offy:138,height:98,decx:0,decy:-1});
+	shacoordinates.set("walk8",{offx:297,width:36,offy:139,height:97,decx:0,decy:0});
+	shacoordinates.set("walk9",{offx:343,width:42,offy:139,height:97,decx:0,decy:0});
+
+	shacoordinates.set("crouching1",{offx:492,width:35,offy:50,height:72,decx:0,decy:0});
+	shacoordinates.set("crouching2",{offx:539,width:35,offy:62,height:60,decx:0,decy:0});
+	shacoordinates.set("jump1",{offx:407,width:36,offy:134,height:102,decx:0,decy:0});
+	shacoordinates.set("jump2",{offx:455,width:34,offy:162,height:74,decx:0,decy:0});
+	shacoordinates.set("jump3",{offx:507,width:32,offy:132,height:104,decx:0,decy:0});
+	shacoordinates.set("roll1",{offx:548,width:32,offy:192,height:44,decx:0,decy:0});
+	shacoordinates.set("roll2",{offx:590,width:35,offy:193,height:43,decx:0,decy:0});
+	shacoordinates.set("roll3",{offx:635,width:35,offy:196,height:40,decx:0,decy:0});
+	shacoordinates.set("roll4",{offx:681,width:33,offy:192,height:44,decx:0,decy:0});
+	shacoordinates.set("roll5",{offx:726,width:32,offy:192,height:44,decx:0,decy:0});
+	shacoordinates.set("roll6",{offx:768,width:35,offy:192,height:44,decx:0,decy:0});
+	shacoordinates.set("roll7",{offx:814,width:35,offy:196,height:40,decx:0,decy:0});
+	
+    return shacoordinates;
+}
+
 
 
 

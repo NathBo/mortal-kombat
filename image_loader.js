@@ -34,6 +34,9 @@ var jaxskins = [jaxpng,jax2png];
 var kunglaopng = new Image();kunglaopng.src = 'ressource/characters/kunglao.png';
 var kunglao2png = new Image();kunglao2png.src = 'ressource/characters/kunglao2.png';
 var kunglaoskins = [kunglaopng,kunglao2png];
+var shangpng = new Image();shangpng.src = 'ressource/characters/shang.png';
+var shang2png = new Image();shang2png.src = 'ressource/characters/shang.png';
+var shangskins = [shangpng,shang2png];
 var shaopng = new Image();shaopng.src = 'ressource/characters/shaokahn.png';
 var shaoskins = [shaopng,shaopng];
 
@@ -135,6 +138,7 @@ var johnnyiconpng=new Image();johnnyiconpng.src = 'ressource/icons/johnny.png';
 var barakaiconpng=new Image();barakaiconpng.src = 'ressource/icons/baraka.png';
 var jaxiconpng=new Image();jaxiconpng.src = 'ressource/icons/jax.png';
 var kunglaoiconpng=new Image();kunglaoiconpng.src = 'ressource/icons/kunglao.png';
+var shangiconpng=new Image();shangiconpng.src = 'ressource/icons/shang.png';
 var lockediconpng=new Image();lockediconpng.src = 'ressource/icons/locked.png';
 var boticonpng=new Image();boticonpng.src = 'ressource/icons/bot.png';
 var playericonpng=new Image();playericonpng.src = 'ressource/icons/player.png';
@@ -159,6 +163,7 @@ var shaocoordinates = getshaocoordinates();
 var barcoordinates = getbarcoordinates();
 var jaxcoordinates = getjaxcoordinates();
 var kuncoordinates = getkuncoordinates();
+var shacoordinates = getshacoordinates();
 
 var bloodcoordinates = getbloodcoordinates();
 

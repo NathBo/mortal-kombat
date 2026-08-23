@@ -9,7 +9,7 @@ import re
 # =========================
 # CONFIG
 # =========================
-PREFIX = "props"   # ex: "joh" -> johcoordinates.set(...)
+PREFIX = "sha"   # ex: "joh" -> johcoordinates.set(...)
 # =========================
 
 

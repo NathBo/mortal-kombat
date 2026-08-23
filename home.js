@@ -5533,7 +5533,7 @@ function main(){
 				var ratio_shadow_y = 0.25;
 				ctx.scale(2*orientation,2.*ratio_shadow_y);
 				ctx.filter = "brightness(0)";
-				ctx.translate(x+coords.width, (ground-coords.height*ratio_shadow_y-y/8-(this.y>0)*10+shakey+self_shakey)/ratio_shadow_y+coords.height);
+				ctx.translate(x+coords.width, (ground-coords.height*ratio_shadow_y-3-y/8-(this.y>0)*10+shakey+self_shakey)/ratio_shadow_y+coords.height);
 				ctx.transform(
 					1,
 					0,
@@ -6471,23 +6471,17 @@ function main(){
 					if(perso=="mileena" && !persosunlocked.get("kitana")){a = "kitana";}
 					if(perso=="scorpion" && !persosunlocked.get("subzero")){a = "subzero";}
 					if(perso=="baraka" && !persosunlocked.get("jax")){a = "jax";}
-					if(!secondplayerishuman && j2.perso=="reptile" && !persosunlocked.get("")){a="reptile";}
+					if(!secondplayerishuman && j2.perso=="reptile" && !persosunlocked.get("reptile")){a="reptile";}
 					if(fatalitywasdone && !persosunlocked.get("johnny")){a="johnny";}
-					if(survival_handler.is_active() && survival_handler.level==4){a="kunglao";}
-					if(!(a=="" || persosunlocked.get(a))){
+					if(arcadelevel==8 && !persosunlocked.get("shang")){a="shang";}
+					if(survival_handler.is_active() && survival_handler.level==4 && !persosunlocked.get("kunglao")){a="kunglao";}
+					if(!(a=="")){
 						ui_ctx.fillStyle = "gray";
 						ui_ctx.fillRect(312*0.86,100,400*0.86,300);
 						ui_ctx.fillStyle = "white";
-						ui_ctx.font = "20px serif";
-						var b = "";
-						if(a=="liukang"){b = "Liukang";}
-						if(a=="kitana"){b = "Kitana";}
-						if(a=="subzero"){b = "Subzero";}
-						if(a=="reptile"){b = "Reptile";}
-						if(a=="johnny"){b = "Johnny Cage";}
-						if(a=="jax"){b = "Jax";}
-						if(a=="kunglao"){b = "Kung Lao";}
-						printAtWordWrap(ui_ctx,b+" unlocked!", 332*0.86, 140, 22, 360);
+						ui_ctx.font = "20px PixelFont";
+						var b = characteristics.get(a).displayname;
+						printAtWordWrap(ui_ctx,b+" UNLOCKED!", 332*0.86, 140, 22, 280);
 						ui_ctx.scale(3,3);
 						ui_ctx.drawImage(characteristics.get(a).icon,160*0.86,70);
 						ui_ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -7819,6 +7813,11 @@ function main(){
 	airdrift : 0.1, airmaxspeed : 1.8, airdodgespeed : 6, airdodgefdur : 13, landinglag : 9,coups : kunglao_coups, pv : 100, getupfdur : 28, grabfdur : 30, grabdeg : 12, vicposframes : 6, vicposfdur : 30, cds : [240,150,270,240], icons : [hatthrowiconpng,hatsliceiconpng,teleporthaticonpng,whirlwindiconpng], voiceactor : "male",
 	default_behav : "normal", displayname : "KUNG LAO", combos : kunglao_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Kung Lao becomes the best magician EarthRealm has ever seen and is loved by all!"});
 	
+	characteristics.set("shang",{png : shangskins,coordinates : shacoordinates, sex : "m", standnframes : 5, standframespeed : 5, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : shangiconpng, namewav : document.querySelector('#shangwav'),
+	width : 36, height : 104,vitesse : 2.9, run_speed : 5.6,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.405, jumpforce : 9.05,jumpsquat : 4, shorthop : 6.0, friction:0.22, hurtcontrol : 0.22,grabtype : "launch",
+	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : reptile_coups, pv : 100, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 1, vicposfdur : 16, cds : [210,160,150,300], icons : [iceballiconpng,sliderepiconpng,spiticonpng,bombiconpng], voiceactor : "male",
+	default_behav : "zoner", displayname : "SHANG TSUNG", combos : reptile_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Reptile resurrects the dinosaurs and imposes a reptilian dictatorship!"});
+	
 
 
 
@@ -7844,11 +7843,11 @@ function main(){
 	var finishhim = 0; var fatalitywasdone = false; var fatalitysreen = 0;
 	var persoschoisis = ["kitana","raiden"]; var skinschoisis = [0,0]; var persolocked = [0,0]; var persosovered = [[0,0],[0,3]];
 	var introon = true; var timer = 0; var timer_init = 60*60;
-	var liste_persos = ["baraka","mileena","scorpion","johnny","liukang", "kitana", "subzero","reptile","raiden","jax","kunglao"];
+	var liste_persos = ["baraka","mileena","scorpion","johnny","liukang", "kitana", "subzero","reptile","raiden","jax","kunglao","shang"];
 	var persos_tuto = ["raiden","mileena","scorpion","liukang", "kitana", "subzero"];
 	var ordre_persos = [["raiden","mileena","scorpion","baraka"],
 						["liukang", "kitana", "subzero","jax"],
-						["kunglao","johnny","reptile",""]];7
+						["kunglao","johnny","reptile","shang"]];7
 	var unlocked_default_persos = ["raiden","mileena","scorpion","baraka"];
 	var chartimer = 0; var chartimercycle = 3; var difficultynames = ["Easy","Normal","Hard","Insane","Terminator"];
 	var is_in_charc_screen = true; var lockincountdown = 0; var lockincountdownfdur = 40; var controlafaire = -1; var key = "";
@@ -7969,6 +7968,7 @@ function main(){
 	unlock_clues.set("reptile","Find and defeat Reptile");
 	unlock_clues.set("johnny","Do a fatality");
 	unlock_clues.set("kunglao","Beat round 5 in Survival");
+	unlock_clues.set("shang","Beat Arcade Mode");
 
 	loadStats();
 
