@@ -1714,6 +1714,7 @@ function getshacoordinates(){
 	shacoordinates.set("stand4",{offx:204,width:35,offy:25,height:97,decx:0,decy:0});
 	shacoordinates.set("stand5",{offx:249,width:35,offy:23,height:99,decx:0,decy:0});
 	shacoordinates.set("victory1",{offx:872,width:36,offy:135,height:101,decx:0,decy:0});
+	shacoordinates.set("victory2",{offx:872,width:36,offy:135,height:101,decx:0,decy:0});
 	shacoordinates.set("walk1",{offx:15,width:36,offy:138,height:98,decx:-8,decy:-1});
 	shacoordinates.set("walk2",{offx:61,width:28,offy:136,height:100,decx:0,decy:-3});
 	shacoordinates.set("walk3",{offx:99,width:28,offy:138,height:98,decx:0,decy:-1});
@@ -1829,6 +1830,12 @@ function getshacoordinates(){
 	shacoordinates.set("fireskullproj3",{offx:257,width:57,offy:1350,height:19,decx:0,decy:0});
 	shacoordinates.set("fireskullproj4",{offx:322,width:49,offy:1346,height:23,decx:0,decy:0});
 	shacoordinates.set("fireskullproj5",{offx:380,width:45,offy:1348,height:21,decx:0,decy:0});
+	shacoordinates.set("thundergod1",{offx:420,width:49,offy:1502,height:92,decx:0,decy:0});
+	shacoordinates.set("thundergod2",{offx:478,width:84,offy:1506,height:88,decx:0,decy:0});
+	shacoordinates.set("thundergod3",{offx:571,width:102,offy:1565,height:29,decx:0,decy:50});
+	shacoordinates.set("raidentransfo1",{offx:275,width:35,offy:1496,height:98,decx:0,decy:0});
+	shacoordinates.set("raidentransfo2",{offx:320,width:35,offy:1494,height:100,decx:0,decy:0});
+	shacoordinates.set("raidentransfo3",{offx:365,width:36,offy:1492,height:102,decx:0,decy:0});
 	
     return shacoordinates;
 }
