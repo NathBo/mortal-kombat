@@ -10,47 +10,6 @@ $Port = 8000
 $Url = "http://localhost:$Port/"
 
 
-$MimeTypes = @{
-    ".html"  = "text/html; charset=utf-8"
-    ".htm"   = "text/html; charset=utf-8"
-    ".js"    = "text/javascript; charset=utf-8"
-    ".mjs"   = "text/javascript; charset=utf-8"
-    ".css"   = "text/css; charset=utf-8"
-    ".json"  = "application/json; charset=utf-8"
-    ".glsl"  = "text/plain; charset=utf-8"
-    ".vert"  = "text/plain; charset=utf-8"
-    ".frag"  = "text/plain; charset=utf-8"
-
-    ".png"   = "image/png"
-    ".jpg"   = "image/jpeg"
-    ".jpeg"  = "image/jpeg"
-    ".gif"   = "image/gif"
-    ".webp"  = "image/webp"
-    ".svg"   = "image/svg+xml"
-    ".ico"   = "image/x-icon"
-    ".bmp"   = "image/bmp"
-
-    ".wav"   = "audio/wav"
-    ".mp3"   = "audio/mpeg"
-    ".ogg"   = "audio/ogg"
-    ".m4a"   = "audio/mp4"
-    ".flac"  = "audio/flac"
-
-    ".mp4"   = "video/mp4"
-    ".webm"  = "video/webm"
-
-    ".woff"  = "font/woff"
-    ".woff2" = "font/woff2"
-    ".ttf"   = "font/ttf"
-    ".otf"   = "font/otf"
-
-    ".wasm"  = "application/wasm"
-    ".xml"   = "application/xml"
-    ".txt"   = "text/plain; charset=utf-8"
-    ".map"   = "application/json; charset=utf-8"
-}
-
-
 function Test-PortAvailable {
     param(
         [Parameter(Mandatory = $true)]
@@ -84,355 +43,6 @@ function Test-PortAvailable {
 }
 
 
-function Get-MimeType {
-    param(
-        [Parameter(Mandatory = $true)]
-        [string]$Path
-    )
-
-    $Extension = [System.IO.Path]::GetExtension(
-        $Path
-    ).ToLowerInvariant()
-
-    if ($MimeTypes.ContainsKey($Extension)) {
-        return $MimeTypes[$Extension]
-    }
-
-    return "application/octet-stream"
-}
-
-
-function Get-CacheControl {
-    param(
-        [Parameter(Mandatory = $true)]
-        [string]$Path
-    )
-
-    $Extension = [System.IO.Path]::GetExtension(
-        $Path
-    ).ToLowerInvariant()
-
-    if (
-        $Extension -eq ".html" -or
-        $Extension -eq ".htm" -or
-        $Extension -eq ".js" -or
-        $Extension -eq ".mjs" -or
-        $Extension -eq ".css" -or
-        $Extension -eq ".glsl" -or
-        $Extension -eq ".vert" -or
-        $Extension -eq ".frag"
-    ) {
-        return "no-store"
-    }
-
-    return "public, max-age=86400"
-}
-
-
-function Test-IsExpectedDisconnect {
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Exception]$Exception
-    )
-
-    if (
-        $Exception -is [System.IO.IOException] -or
-        $Exception -is [System.Net.HttpListenerException] -or
-        $Exception -is [System.Net.Sockets.SocketException]
-    ) {
-        return $true
-    }
-
-    if ($null -ne $Exception.InnerException) {
-        return Test-IsExpectedDisconnect `
-            -Exception $Exception.InnerException
-    }
-
-    return $false
-}
-
-
-function Close-ResponseSafely {
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Net.HttpListenerResponse]$Response
-    )
-
-    try {
-        $Response.OutputStream.Close()
-    }
-    catch {
-    }
-
-    try {
-        $Response.Close()
-    }
-    catch {
-    }
-}
-
-
-function Send-Response {
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Net.HttpListenerContext]$Context,
-
-        [Parameter(Mandatory = $true)]
-        [int]$StatusCode,
-
-        [Parameter(Mandatory = $true)]
-        [byte[]]$Content,
-
-        [string]$ContentType = "application/octet-stream",
-
-        [string]$CacheControl = "no-store",
-
-        [bool]$SendBody = $true
-    )
-
-    $Response = $Context.Response
-
-    try {
-        $Response.StatusCode = $StatusCode
-        $Response.ContentType = $ContentType
-        $Response.ContentLength64 = $Content.LongLength
-
-        $Response.Headers["Cache-Control"] = $CacheControl
-
-        if ($SendBody -and $Content.Length -gt 0) {
-            $Response.OutputStream.Write(
-                $Content,
-                0,
-                $Content.Length
-            )
-        }
-    }
-    catch {
-        if (-not (Test-IsExpectedDisconnect -Exception $_.Exception)) {
-            throw
-        }
-    }
-    finally {
-        Close-ResponseSafely -Response $Response
-    }
-}
-
-
-function Send-TextResponse {
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Net.HttpListenerContext]$Context,
-
-        [Parameter(Mandatory = $true)]
-        [int]$StatusCode,
-
-        [Parameter(Mandatory = $true)]
-        [string]$Text,
-
-        [bool]$SendBody = $true
-    )
-
-    $Content = [System.Text.Encoding]::UTF8.GetBytes(
-        $Text
-    )
-
-    Send-Response `
-        -Context $Context `
-        -StatusCode $StatusCode `
-        -Content $Content `
-        -ContentType "text/plain; charset=utf-8" `
-        -CacheControl "no-store" `
-        -SendBody $SendBody
-}
-
-
-function Get-SafeFilePath {
-    param(
-        [Parameter(Mandatory = $true)]
-        [string]$RootDirectory,
-
-        [Parameter(Mandatory = $true)]
-        [string]$RequestPath
-    )
-
-    try {
-        $DecodedPath = [System.Uri]::UnescapeDataString(
-            $RequestPath
-        )
-    }
-    catch {
-        return $null
-    }
-
-    $DecodedPath = $DecodedPath.Replace(
-        "/",
-        [System.IO.Path]::DirectorySeparatorChar
-    )
-
-    $DecodedPath = $DecodedPath.TrimStart(
-        [System.IO.Path]::DirectorySeparatorChar
-    )
-
-    if ([string]::IsNullOrWhiteSpace($DecodedPath)) {
-        $DecodedPath = "index.html"
-    }
-
-    try {
-        $CandidatePath = [System.IO.Path]::GetFullPath(
-            [System.IO.Path]::Combine(
-                $RootDirectory,
-                $DecodedPath
-            )
-        )
-    }
-    catch {
-        return $null
-    }
-
-    $RootPrefix = $RootDirectory
-
-    if (-not $RootPrefix.EndsWith(
-        [System.IO.Path]::DirectorySeparatorChar
-    )) {
-        $RootPrefix +=
-            [System.IO.Path]::DirectorySeparatorChar
-    }
-
-    $IsRoot = $CandidatePath.Equals(
-        $RootDirectory,
-        [System.StringComparison]::OrdinalIgnoreCase
-    )
-
-    $IsInsideRoot = $CandidatePath.StartsWith(
-        $RootPrefix,
-        [System.StringComparison]::OrdinalIgnoreCase
-    )
-
-    if (
-        -not $IsRoot -and
-        -not $IsInsideRoot
-    ) {
-        return $null
-    }
-
-    if ([System.IO.Directory]::Exists($CandidatePath)) {
-        $CandidatePath = Join-Path `
-            $CandidatePath `
-            "index.html"
-    }
-
-    return $CandidatePath
-}
-
-
-function Handle-Request {
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Net.HttpListenerContext]$Context
-    )
-
-    $Request = $Context.Request
-    $SendBody = $Request.HttpMethod -ne "HEAD"
-
-    try {
-        if (
-            $Request.HttpMethod -ne "GET" -and
-            $Request.HttpMethod -ne "HEAD"
-        ) {
-            Send-TextResponse `
-                -Context $Context `
-                -StatusCode 405 `
-                -Text "405 - Method Not Allowed" `
-                -SendBody $SendBody
-
-            return
-        }
-
-        $FilePath = Get-SafeFilePath `
-            -RootDirectory $Root `
-            -RequestPath $Request.Url.AbsolutePath
-
-        if ($null -eq $FilePath) {
-            Send-TextResponse `
-                -Context $Context `
-                -StatusCode 403 `
-                -Text "403 - Forbidden" `
-                -SendBody $SendBody
-
-            return
-        }
-
-        if (-not [System.IO.File]::Exists($FilePath)) {
-            Send-TextResponse `
-                -Context $Context `
-                -StatusCode 404 `
-                -Text "404 - File Not Found" `
-                -SendBody $SendBody
-
-            return
-        }
-
-        $Content = [System.IO.File]::ReadAllBytes(
-            $FilePath
-        )
-
-        $MimeType = Get-MimeType `
-            -Path $FilePath
-
-        $CacheControl = Get-CacheControl `
-            -Path $FilePath
-
-        Send-Response `
-            -Context $Context `
-            -StatusCode 200 `
-            -Content $Content `
-            -ContentType $MimeType `
-            -CacheControl $CacheControl `
-            -SendBody $SendBody
-    }
-    catch {
-        if (Test-IsExpectedDisconnect -Exception $_.Exception) {
-            return
-        }
-
-        Write-Host `
-            "Server error: $($_.Exception.Message)" `
-            -ForegroundColor Red
-
-        try {
-            Send-TextResponse `
-                -Context $Context `
-                -StatusCode 500 `
-                -Text "500 - Internal Server Error" `
-                -SendBody $SendBody
-        }
-        catch {
-        }
-    }
-}
-
-
-function Start-GameBrowser {
-    param(
-        [Parameter(Mandatory = $true)]
-        [string]$Url
-    )
-
-    try {
-        Start-Process $Url
-    }
-    catch {
-        Write-Host ""
-        Write-Host `
-            "Unable to open the browser automatically." `
-            -ForegroundColor Yellow
-
-        Write-Host `
-            "Open this address manually: $Url"
-    }
-}
-
-
 if (-not (Test-PortAvailable -Port $Port)) {
     Clear-Host
 
@@ -448,14 +58,12 @@ if (-not (Test-PortAvailable -Port $Port)) {
     Write-Host ""
 
     Write-Host `
-        "The game always uses $Url to keep browser save data consistent." `
-        -ForegroundColor White
+        "The game always uses $Url to preserve browser save data."
 
     Write-Host ""
 
     Write-Host `
-        "Close the application using port $Port, then launch the game again." `
-        -ForegroundColor White
+        "Close the application using port $Port, then launch the game again."
 
     Write-Host ""
 
@@ -465,12 +73,669 @@ if (-not (Test-PortAvailable -Port $Port)) {
 }
 
 
-$Listener = [System.Net.HttpListener]::new()
-$Listener.Prefixes.Add($Url)
+$ServerSource = @'
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Text;
+using System.Threading;
+
+public sealed class ParallelGameServer
+{
+    private readonly HttpListener listener;
+    private readonly string rootDirectory;
+
+    private readonly Dictionary<string, string> mimeTypes =
+        new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            { ".html",  "text/html; charset=utf-8" },
+            { ".htm",   "text/html; charset=utf-8" },
+            { ".js",    "text/javascript; charset=utf-8" },
+            { ".mjs",   "text/javascript; charset=utf-8" },
+            { ".css",   "text/css; charset=utf-8" },
+            { ".json",  "application/json; charset=utf-8" },
+
+            { ".glsl",  "text/plain; charset=utf-8" },
+            { ".vert",  "text/plain; charset=utf-8" },
+            { ".frag",  "text/plain; charset=utf-8" },
+
+            { ".png",   "image/png" },
+            { ".jpg",   "image/jpeg" },
+            { ".jpeg",  "image/jpeg" },
+            { ".gif",   "image/gif" },
+            { ".webp",  "image/webp" },
+            { ".svg",   "image/svg+xml" },
+            { ".ico",   "image/x-icon" },
+            { ".bmp",   "image/bmp" },
+
+            { ".wav",   "audio/wav" },
+            { ".mp3",   "audio/mpeg" },
+            { ".ogg",   "audio/ogg" },
+            { ".m4a",   "audio/mp4" },
+            { ".flac",  "audio/flac" },
+
+            { ".mp4",   "video/mp4" },
+            { ".webm",  "video/webm" },
+
+            { ".woff",  "font/woff" },
+            { ".woff2", "font/woff2" },
+            { ".ttf",   "font/ttf" },
+            { ".otf",   "font/otf" },
+
+            { ".wasm",  "application/wasm" },
+            { ".xml",   "application/xml" },
+            { ".txt",   "text/plain; charset=utf-8" },
+            { ".map",   "application/json; charset=utf-8" }
+        };
+
+
+    public ParallelGameServer(
+        string rootDirectory,
+        string prefix
+    )
+    {
+        this.rootDirectory =
+            Path.GetFullPath(
+                rootDirectory
+            );
+
+        listener =
+            new HttpListener();
+
+        listener.Prefixes.Add(
+            prefix
+        );
+    }
+
+
+    public bool IsRunning
+    {
+        get
+        {
+            return listener != null &&
+                   listener.IsListening;
+        }
+    }
+
+
+    public void Start()
+    {
+        listener.Start();
+
+        Thread acceptThread =
+            new Thread(
+                new ThreadStart(
+                    AcceptLoop
+                )
+            );
+
+        acceptThread.IsBackground =
+            true;
+
+        acceptThread.Start();
+    }
+
+
+    public void Stop()
+    {
+        try
+        {
+            if (listener.IsListening)
+            {
+                listener.Stop();
+            }
+        }
+        catch
+        {
+        }
+
+        try
+        {
+            listener.Close();
+        }
+        catch
+        {
+        }
+    }
+
+
+    private void AcceptLoop()
+    {
+        while (listener.IsListening)
+        {
+            HttpListenerContext context;
+
+            try
+            {
+                context =
+                    listener.GetContext();
+            }
+            catch
+            {
+                if (!listener.IsListening)
+                {
+                    return;
+                }
+
+                continue;
+            }
+
+
+            ThreadPool.QueueUserWorkItem(
+                new WaitCallback(
+                    HandleRequestWorker
+                ),
+                context
+            );
+        }
+    }
+
+
+    private void HandleRequestWorker(
+        object state
+    )
+    {
+        HttpListenerContext context =
+            state as HttpListenerContext;
+
+        if (context == null)
+        {
+            return;
+        }
+
+        try
+        {
+            HandleRequest(
+                context
+            );
+        }
+        catch
+        {
+            try
+            {
+                context.Response.Close();
+            }
+            catch
+            {
+            }
+        }
+    }
+
+
+    private void HandleRequest(
+        HttpListenerContext context
+    )
+    {
+        HttpListenerRequest request =
+            context.Request;
+
+        bool sendBody =
+            !string.Equals(
+                request.HttpMethod,
+                "HEAD",
+                StringComparison.OrdinalIgnoreCase
+            );
+
+
+        if (
+            !string.Equals(
+                request.HttpMethod,
+                "GET",
+                StringComparison.OrdinalIgnoreCase
+            )
+            &&
+            !string.Equals(
+                request.HttpMethod,
+                "HEAD",
+                StringComparison.OrdinalIgnoreCase
+            )
+        )
+        {
+            SendText(
+                context,
+                405,
+                "405 - Method Not Allowed",
+                sendBody
+            );
+
+            return;
+        }
+
+
+        string filePath =
+            GetSafeFilePath(
+                request.Url.AbsolutePath
+            );
+
+
+        if (filePath == null)
+        {
+            SendText(
+                context,
+                403,
+                "403 - Forbidden",
+                sendBody
+            );
+
+            return;
+        }
+
+
+        if (!File.Exists(filePath))
+        {
+            SendText(
+                context,
+                404,
+                "404 - File Not Found",
+                sendBody
+            );
+
+            return;
+        }
+
+
+        try
+        {
+            SendFile(
+                context,
+                filePath,
+                sendBody
+            );
+        }
+        catch (
+            HttpListenerException
+        )
+        {
+        }
+        catch (
+            IOException
+        )
+        {
+        }
+        catch
+        {
+            try
+            {
+                SendText(
+                    context,
+                    500,
+                    "500 - Internal Server Error",
+                    true
+                );
+            }
+            catch
+            {
+            }
+        }
+    }
+
+
+    private string GetSafeFilePath(
+        string requestPath
+    )
+    {
+        try
+        {
+            string decodedPath =
+                Uri.UnescapeDataString(
+                    requestPath ?? ""
+                );
+
+
+            decodedPath =
+                decodedPath.Replace(
+                    '/',
+                    Path.DirectorySeparatorChar
+                );
+
+
+            decodedPath =
+                decodedPath.TrimStart(
+                    Path.DirectorySeparatorChar
+                );
+
+
+            if (
+                string.IsNullOrWhiteSpace(
+                    decodedPath
+                )
+            )
+            {
+                decodedPath =
+                    "index.html";
+            }
+
+
+            string candidate =
+                Path.GetFullPath(
+                    Path.Combine(
+                        rootDirectory,
+                        decodedPath
+                    )
+                );
+
+
+            string rootPrefix =
+                rootDirectory.TrimEnd(
+                    Path.DirectorySeparatorChar,
+                    Path.AltDirectorySeparatorChar
+                )
+                +
+                Path.DirectorySeparatorChar;
+
+
+            bool isRoot =
+                string.Equals(
+                    candidate,
+                    rootDirectory,
+                    StringComparison.OrdinalIgnoreCase
+                );
+
+
+            bool isInsideRoot =
+                candidate.StartsWith(
+                    rootPrefix,
+                    StringComparison.OrdinalIgnoreCase
+                );
+
+
+            if (
+                !isRoot &&
+                !isInsideRoot
+            )
+            {
+                return null;
+            }
+
+
+            if (
+                Directory.Exists(
+                    candidate
+                )
+            )
+            {
+                candidate =
+                    Path.Combine(
+                        candidate,
+                        "index.html"
+                    );
+            }
+
+
+            return candidate;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+
+    private string GetMimeType(
+        string filePath
+    )
+    {
+        string extension =
+            Path.GetExtension(
+                filePath
+            );
+
+
+        string contentType;
+
+        if (
+            mimeTypes.TryGetValue(
+                extension,
+                out contentType
+            )
+        )
+        {
+            return contentType;
+        }
+
+
+        return "application/octet-stream";
+    }
+
+
+    private string GetCacheControl(
+        string filePath
+    )
+    {
+        string extension =
+            Path.GetExtension(
+                filePath
+            )
+            .ToLowerInvariant();
+
+
+        switch (extension)
+        {
+            case ".html":
+            case ".htm":
+            case ".js":
+            case ".mjs":
+            case ".css":
+            case ".glsl":
+            case ".vert":
+            case ".frag":
+                return "no-store";
+
+            default:
+                return "public, max-age=86400";
+        }
+    }
+
+
+    private void SendFile(
+        HttpListenerContext context,
+        string filePath,
+        bool sendBody
+    )
+    {
+        HttpListenerResponse response =
+            context.Response;
+
+
+        FileInfo fileInfo =
+            new FileInfo(
+                filePath
+            );
+
+
+        response.StatusCode =
+            200;
+
+        response.ContentType =
+            GetMimeType(
+                filePath
+            );
+
+        response.Headers[
+            "Cache-Control"
+        ] =
+            GetCacheControl(
+                filePath
+            );
+
+        response.ContentLength64 =
+            fileInfo.Length;
+
+
+        if (!sendBody)
+        {
+            SafeClose(
+                response
+            );
+
+            return;
+        }
+
+
+        try
+        {
+            using (
+                FileStream stream =
+                    new FileStream(
+                        filePath,
+                        FileMode.Open,
+                        FileAccess.Read,
+                        FileShare.Read,
+                        64 * 1024,
+                        FileOptions.SequentialScan
+                    )
+            )
+            {
+                byte[] buffer =
+                    new byte[
+                        64 * 1024
+                    ];
+
+                int bytesRead;
+
+                while (
+                    (
+                        bytesRead =
+                            stream.Read(
+                                buffer,
+                                0,
+                                buffer.Length
+                            )
+                    ) > 0
+                )
+                {
+                    response.OutputStream.Write(
+                        buffer,
+                        0,
+                        bytesRead
+                    );
+                }
+            }
+        }
+        catch (
+            HttpListenerException
+        )
+        {
+        }
+        catch (
+            IOException
+        )
+        {
+        }
+        finally
+        {
+            SafeClose(
+                response
+            );
+        }
+    }
+
+
+    private void SendText(
+        HttpListenerContext context,
+        int statusCode,
+        string text,
+        bool sendBody
+    )
+    {
+        byte[] content =
+            Encoding.UTF8.GetBytes(
+                text
+            );
+
+
+        HttpListenerResponse response =
+            context.Response;
+
+
+        try
+        {
+            response.StatusCode =
+                statusCode;
+
+            response.ContentType =
+                "text/plain; charset=utf-8";
+
+            response.Headers[
+                "Cache-Control"
+            ] =
+                "no-store";
+
+            response.ContentLength64 =
+                content.Length;
+
+
+            if (
+                sendBody &&
+                content.Length > 0
+            )
+            {
+                response.OutputStream.Write(
+                    content,
+                    0,
+                    content.Length
+                );
+            }
+        }
+        catch (
+            HttpListenerException
+        )
+        {
+        }
+        catch (
+            IOException
+        )
+        {
+        }
+        finally
+        {
+            SafeClose(
+                response
+            );
+        }
+    }
+
+
+    private static void SafeClose(
+        HttpListenerResponse response
+    )
+    {
+        try
+        {
+            response.OutputStream.Close();
+        }
+        catch
+        {
+        }
+
+
+        try
+        {
+            response.Close();
+        }
+        catch
+        {
+        }
+    }
+}
+'@
+
+
+Add-Type `
+    -TypeDefinition $ServerSource `
+    -Language CSharp
+
+
+$Server =
+    [ParallelGameServer]::new(
+        $Root,
+        $Url
+    )
 
 
 try {
-    $Listener.Start()
+    $Server.Start()
 
     Clear-Host
 
@@ -488,7 +753,9 @@ try {
         "Port $Port is fixed to preserve browser save data." `
         -ForegroundColor DarkGray
 
-    Write-Host ""
+    Write-Host `
+        "HTTP requests are processed in parallel." `
+        -ForegroundColor DarkGray
 
     Write-Host `
         "HTML, JS, CSS and GLSL files are not cached." `
@@ -506,46 +773,17 @@ try {
 
     Write-Host ""
 
-    Start-GameBrowser `
-        -Url $Url
+    Start-Process `
+        $Url
 
-    while ($Listener.IsListening) {
-        try {
-            $Context =
-                $Listener.GetContext()
 
-            Handle-Request `
-                -Context $Context
-        }
-        catch {
-            if (-not $Listener.IsListening) {
-                break
-            }
-
-            if (Test-IsExpectedDisconnect -Exception $_.Exception) {
-                continue
-            }
-
-            Write-Host `
-                "Listener error: $($_.Exception.Message)" `
-                -ForegroundColor Red
-        }
+    while ($Server.IsRunning) {
+        Start-Sleep `
+            -Milliseconds 500
     }
 }
 finally {
-    if ($null -ne $Listener) {
-        try {
-            if ($Listener.IsListening) {
-                $Listener.Stop()
-            }
-        }
-        catch {
-        }
-
-        try {
-            $Listener.Close()
-        }
-        catch {
-        }
+    if ($null -ne $Server) {
+        $Server.Stop()
     }
 }
