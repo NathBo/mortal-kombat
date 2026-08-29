@@ -6578,12 +6578,12 @@ function main(){
 		skinschoisis = [0,1];
 		is_in_charc_screen = false;
 		difficulte = tuto.ai;
+		choserandomstage();
 		reset_game(true);
 		j1.pvmax = tuto.pv[0]; j1.pv = tuto.pv[0]; j1.pvaff = tuto.pv[0];
 		j2.pvmax = tuto.pv[1]; j2.pv = tuto.pv[1]; j2.pvaff = tuto.pv[1];
 		j2.ai.wanttojump += tuto.jumper;
 		j1.allowedmoves = tuto.moves[0]; j2.allowedmoves = tuto.moves[1];
-		choserandomstage();
 		functiontoexecute = loop;
 	}
 
