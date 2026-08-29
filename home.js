@@ -7813,10 +7813,10 @@ function main(){
 	airdrift : 0.1, airmaxspeed : 1.8, airdodgespeed : 6, airdodgefdur : 13, landinglag : 9,coups : kunglao_coups, pv : 100, getupfdur : 28, grabfdur : 30, grabdeg : 12, vicposframes : 6, vicposfdur : 30, cds : [240,150,270,240], icons : [hatthrowiconpng,hatsliceiconpng,teleporthaticonpng,whirlwindiconpng], voiceactor : "male",
 	default_behav : "normal", displayname : "KUNG LAO", combos : kunglao_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Kung Lao becomes the best magician EarthRealm has ever seen and is loved by all!"});
 	
-	characteristics.set("shang",{png : shangskins,coordinates : shacoordinates, sex : "m", standnframes : 5, standframespeed : 5, rollspeed : 5, hkickstartnframe : 3, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : shangiconpng, namewav : document.querySelector('#shangwav'),
-	width : 36, height : 104,vitesse : 2.9, run_speed : 5.6,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.405, jumpforce : 9.05,jumpsquat : 4, shorthop : 6.0, friction:0.22, hurtcontrol : 0.22,grabtype : "launch",
-	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : reptile_coups, pv : 100, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 1, vicposfdur : 16, cds : [210,160,150,300], icons : [iceballiconpng,sliderepiconpng,spiticonpng,bombiconpng], voiceactor : "male",
-	default_behav : "zoner", displayname : "SHANG TSUNG", combos : reptile_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Reptile resurrects the dinosaurs and imposes a reptilian dictatorship!"});
+	characteristics.set("shang",{png : shangskins,coordinates : shacoordinates, sex : "m", standnframes : 5, standframespeed : 5, rollspeed : 5, hkickstartnframe : 2, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : shangiconpng, namewav : document.querySelector('#shangwav'),
+	width : 35, height : 100,vitesse : 2.9, run_speed : 5.6,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.405, jumpforce : 9.05,jumpsquat : 4, shorthop : 6.0, friction:0.22, hurtcontrol : 0.22,grabtype : "launch",
+	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : shang_coups, pv : 100, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 1, vicposfdur : 16, cds : [210,160,150,300], icons : [iceballiconpng,sliderepiconpng,spiticonpng,bombiconpng], voiceactor : "male",
+	default_behav : "zoner", displayname : "SHANG TSUNG", combos : shang_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Reptile resurrects the dinosaurs and imposes a reptilian dictatorship!"});
 	
 
 
