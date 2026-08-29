@@ -980,6 +980,21 @@ function main(){
 		}
 	}
 
+	class Fireskull extends Projectile {
+		constructor(x, y, orientation, other, stats, enhanced) {
+			var vitesse = 9;
+
+			super(x,y,orientation,other,stats,shangpng,shacoordinates,60,45,25,"fireskullproj5",false);
+
+			this.vitesse = vitesse;
+		}
+
+		loop() {
+			this.x += this.orientation * this.vitesse;
+			this.check_hit_routine();
+		}
+	}
+
 
 	class IceClone extends Projectile {
 		constructor(x, y, orientation, other, stats) {
@@ -3748,6 +3763,9 @@ function main(){
 					else if(this.perso == "kunglao" && this.forward>=1 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
 						this.begincoup("hatslice",other);
 					}
+					else if(this.perso == "shang" && this.back>=1 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
+						this.begincoup("fireskull",other);
+					}
 					else if(this.forward>=1&&movpriority.get(racine(this.mov))<=0&&this.crouching==0&&this.xspeed*this.orientation<c.vitesse){
 						this.x+=this.charac.vitesse*this.orientation*this.speed_boost;this.xspeed = 0;
 						let d = (this.charac.width+other.charac.width)/3;
@@ -4201,6 +4219,19 @@ function main(){
 						var stats = this.charac.coups.get(this.mov);
 						if(this.is_enhanced() && this.movlag==stats.elag+stats.fdur+stats.slag){this.invincibilite=10;}
 						if(this.movlag==stats.elag+stats.fdur+1){add_to_objects_set(new WhirlWindEffect(this.x,this.y,this));}
+						break;
+					case "fireskull":
+						var stats = this.charac.coups.get(this.mov);
+						this.crouching=0;
+						if(this.movlag==stats.elag || this.movlag==stats.elag-8){
+							add_to_objects_set(new Fireskull(this.x+20*this.orientation,70,this.orientation,other,stats,this.is_enhanced()));
+						}
+						if(this.movlag==stats.elag+2){play_sound_eff("fireskull",0.8);}
+						else if(this.is_enhanced()){
+							if(this.movlag==stats.elag-24 || this.movlag==stats.elag-16){
+								add_to_objects_set(new Fireskull(this.x+20*this.orientation,70,this.orientation,other,stats,this.is_enhanced()));
+							}
+						}
 						break;
 					}
 				this.movlag--;
@@ -5251,6 +5282,7 @@ function main(){
 
 					case "boltthrow" :
 					case "fireball" :
+					case "fireskull" :
 						var stats = this.charac.coups.get(this.mov);
 						if(entre(this.movlag,stats.slag,stats.slag+stats.fdur+stats.elag-10)){this.costume = racine(this.mov)+"2"}
 						else{this.costume = racine(this.mov)+"1";}
@@ -7717,6 +7749,8 @@ function main(){
 	sounds_eff.set("jumpscare",[document.querySelector('#jumpscarewav')]);
 	sounds_eff.set("whirlwind",[document.querySelector('#whirlwindwav')]);
 	sounds_eff.set("crowdcheers",[document.querySelector('#crowdcheerswav')]);
+	sounds_eff.set("fireskull",[document.querySelector('#fireskullwav')]);
+	sounds_eff.set("firehit",[document.querySelector('#firehitwav')]);
 
 	var friendshipwav = document.querySelector('#friendshipwav');
 
@@ -7815,7 +7849,7 @@ function main(){
 	
 	characteristics.set("shang",{png : shangskins,coordinates : shacoordinates, sex : "m", standnframes : 5, standframespeed : 5, rollspeed : 5, hkickstartnframe : 2, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : shangiconpng, namewav : document.querySelector('#shangwav'),
 	width : 35, height : 100,vitesse : 2.9, run_speed : 5.6,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.405, jumpforce : 9.05,jumpsquat : 4, shorthop : 6.0, friction:0.22, hurtcontrol : 0.22,grabtype : "launch",
-	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : shang_coups, pv : 100, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 1, vicposfdur : 16, cds : [210,160,150,300], icons : [iceballiconpng,sliderepiconpng,spiticonpng,bombiconpng], voiceactor : "male",
+	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : shang_coups, pv : 100, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 1, vicposfdur : 16, cds : [140,160,150,300], icons : [iceballiconpng,sliderepiconpng,spiticonpng,bombiconpng], voiceactor : "male",
 	default_behav : "zoner", displayname : "SHANG TSUNG", combos : shang_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Reptile resurrects the dinosaurs and imposes a reptilian dictatorship!"});
 	
 

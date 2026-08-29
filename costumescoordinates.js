@@ -1821,6 +1821,14 @@ function getshacoordinates(){
 	shacoordinates.set("grabbed2",{offx:66,width:46,offy:1201,height:57,decx:0,decy:0});
 	shacoordinates.set("grabbed3",{offx:66,width:46,offy:1201,height:57,decx:0,decy:0});
 	shacoordinates.set("grabbed4",{offx:120,width:44,offy:1182,height:76,decx:0,decy:0});
+
+	shacoordinates.set("fireskull1",{offx:15,width:34,offy:1267,height:102,decx:0,decy:0});
+	shacoordinates.set("fireskull2",{offx:59,width:39,offy:1272,height:97,decx:0,decy:0});
+	shacoordinates.set("fireskullproj1",{offx:157,width:35,offy:1350,height:19,decx:0,decy:0});
+	shacoordinates.set("fireskullproj2",{offx:202,width:46,offy:1349,height:20,decx:0,decy:0});
+	shacoordinates.set("fireskullproj3",{offx:257,width:57,offy:1350,height:19,decx:0,decy:0});
+	shacoordinates.set("fireskullproj4",{offx:322,width:49,offy:1346,height:23,decx:0,decy:0});
+	shacoordinates.set("fireskullproj5",{offx:380,width:45,offy:1348,height:21,decx:0,decy:0});
 	
     return shacoordinates;
 }
