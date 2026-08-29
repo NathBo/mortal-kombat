@@ -1,4 +1,4 @@
-# launch_game.ps1
+# File: launch_game.ps1
 
 $ErrorActionPreference = "Stop"
 
@@ -17,6 +17,9 @@ $MimeTypes = @{
     ".mjs"   = "text/javascript; charset=utf-8"
     ".css"   = "text/css; charset=utf-8"
     ".json"  = "application/json; charset=utf-8"
+    ".glsl"  = "text/plain; charset=utf-8"
+    ".vert"  = "text/plain; charset=utf-8"
+    ".frag"  = "text/plain; charset=utf-8"
 
     ".png"   = "image/png"
     ".jpg"   = "image/jpeg"
@@ -99,6 +102,33 @@ function Get-MimeType {
 }
 
 
+function Get-CacheControl {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path
+    )
+
+    $Extension = [System.IO.Path]::GetExtension(
+        $Path
+    ).ToLowerInvariant()
+
+    if (
+        $Extension -eq ".html" -or
+        $Extension -eq ".htm" -or
+        $Extension -eq ".js" -or
+        $Extension -eq ".mjs" -or
+        $Extension -eq ".css" -or
+        $Extension -eq ".glsl" -or
+        $Extension -eq ".vert" -or
+        $Extension -eq ".frag"
+    ) {
+        return "no-store"
+    }
+
+    return "public, max-age=86400"
+}
+
+
 function Test-IsExpectedDisconnect {
     param(
         [Parameter(Mandatory = $true)]
@@ -155,6 +185,8 @@ function Send-Response {
 
         [string]$ContentType = "application/octet-stream",
 
+        [string]$CacheControl = "no-store",
+
         [bool]$SendBody = $true
     )
 
@@ -165,9 +197,7 @@ function Send-Response {
         $Response.ContentType = $ContentType
         $Response.ContentLength64 = $Content.LongLength
 
-        $Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
-        $Response.Headers["Pragma"] = "no-cache"
-        $Response.Headers["Expires"] = "0"
+        $Response.Headers["Cache-Control"] = $CacheControl
 
         if ($SendBody -and $Content.Length -gt 0) {
             $Response.OutputStream.Write(
@@ -202,13 +232,16 @@ function Send-TextResponse {
         [bool]$SendBody = $true
     )
 
-    $Content = [System.Text.Encoding]::UTF8.GetBytes($Text)
+    $Content = [System.Text.Encoding]::UTF8.GetBytes(
+        $Text
+    )
 
     Send-Response `
         -Context $Context `
         -StatusCode $StatusCode `
         -Content $Content `
         -ContentType "text/plain; charset=utf-8" `
+        -CacheControl "no-store" `
         -SendBody $SendBody
 }
 
@@ -261,7 +294,8 @@ function Get-SafeFilePath {
     if (-not $RootPrefix.EndsWith(
         [System.IO.Path]::DirectorySeparatorChar
     )) {
-        $RootPrefix += [System.IO.Path]::DirectorySeparatorChar
+        $RootPrefix +=
+            [System.IO.Path]::DirectorySeparatorChar
     }
 
     $IsRoot = $CandidatePath.Equals(
@@ -274,7 +308,10 @@ function Get-SafeFilePath {
         [System.StringComparison]::OrdinalIgnoreCase
     )
 
-    if (-not $IsRoot -and -not $IsInsideRoot) {
+    if (
+        -not $IsRoot -and
+        -not $IsInsideRoot
+    ) {
         return $null
     }
 
@@ -342,11 +379,15 @@ function Handle-Request {
         $MimeType = Get-MimeType `
             -Path $FilePath
 
+        $CacheControl = Get-CacheControl `
+            -Path $FilePath
+
         Send-Response `
             -Context $Context `
             -StatusCode 200 `
             -Content $Content `
             -ContentType $MimeType `
+            -CacheControl $CacheControl `
             -SendBody $SendBody
     }
     catch {
@@ -355,7 +396,7 @@ function Handle-Request {
         }
 
         Write-Host `
-            "Erreur serveur : $($_.Exception.Message)" `
+            "Server error: $($_.Exception.Message)" `
             -ForegroundColor Red
 
         try {
@@ -383,10 +424,11 @@ function Start-GameBrowser {
     catch {
         Write-Host ""
         Write-Host `
-            "Unable to open Browser automatically" `
+            "Unable to open the browser automatically." `
             -ForegroundColor Yellow
 
-        Write-Host "Ouvre manuellement : $Url"
+        Write-Host `
+            "Open this address manually: $Url"
     }
 }
 
@@ -395,26 +437,29 @@ if (-not (Test-PortAvailable -Port $Port)) {
     Clear-Host
 
     Write-Host "========================================" -ForegroundColor Red
-    Write-Host "       Unable to Launch Game" -ForegroundColor Red
+    Write-Host "         UNABLE TO START GAME" -ForegroundColor Red
     Write-Host "========================================" -ForegroundColor Red
     Write-Host ""
 
     Write-Host `
-        "Prt $Port is already in used." `
+        "Port $Port is already in use." `
         -ForegroundColor Yellow
 
     Write-Host ""
+
     Write-Host `
-        "This game only uses http://localhost:$Port in order to keep save date consistent." `
+        "The game always uses $Url to keep browser save data consistent." `
         -ForegroundColor White
 
     Write-Host ""
+
     Write-Host `
-        "Close the app using this port then close the game" `
+        "Close the application using port $Port, then launch the game again." `
         -ForegroundColor White
 
     Write-Host ""
-    Read-Host "Push Enter to Close"
+
+    Read-Host "Press Enter to close"
 
     exit 1
 }
@@ -434,28 +479,43 @@ try {
     Write-Host "========================================" -ForegroundColor Cyan
     Write-Host ""
 
-    Write-Host "Folder : $Root"
-    Write-Host "Adress : $Url"
+    Write-Host "Game directory : $Root"
+    Write-Host "Address        : $Url"
 
     Write-Host ""
-    Write-Host `
-        "Port $Port stays fixed to keep save data." `
-        -ForegroundColor DarkGray
 
-    Write-Host ""
     Write-Host `
-        "Close this window to close the server." `
+        "Port $Port is fixed to preserve browser save data." `
         -ForegroundColor DarkGray
 
     Write-Host ""
 
-    Start-GameBrowser -Url $Url
+    Write-Host `
+        "HTML, JS, CSS and GLSL files are not cached." `
+        -ForegroundColor DarkGray
+
+    Write-Host `
+        "Images, audio, fonts and other assets are cached for 24 hours." `
+        -ForegroundColor DarkGray
+
+    Write-Host ""
+
+    Write-Host `
+        "Close this window to stop the server." `
+        -ForegroundColor DarkGray
+
+    Write-Host ""
+
+    Start-GameBrowser `
+        -Url $Url
 
     while ($Listener.IsListening) {
         try {
-            $Context = $Listener.GetContext()
+            $Context =
+                $Listener.GetContext()
 
-            Handle-Request -Context $Context
+            Handle-Request `
+                -Context $Context
         }
         catch {
             if (-not $Listener.IsListening) {
@@ -467,7 +527,7 @@ try {
             }
 
             Write-Host `
-                "Erreur listener : $($_.Exception.Message)" `
+                "Listener error: $($_.Exception.Message)" `
                 -ForegroundColor Red
         }
     }
