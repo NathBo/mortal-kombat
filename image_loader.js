@@ -92,6 +92,7 @@ var groundpoundiconpng=new Image();groundpoundiconpng.src = 'ressource/icons/gro
 var hatthrowiconpng=new Image();hatthrowiconpng.src = 'ressource/icons/hatthrow_icon.png';
 var hatsliceiconpng=new Image();hatsliceiconpng.src = 'ressource/icons/hatslice_icon.png';
 var whirlwindiconpng=new Image();whirlwindiconpng.src = 'ressource/icons/whirlwind_icon.png';
+var fireskulliconpng=new Image();fireskulliconpng.src = 'ressource/icons/fireskull_icon.png';
 var teleporthaticonpng=new Image();teleporthaticonpng.src = 'ressource/icons/teleport_hat_icon.png';
 
 

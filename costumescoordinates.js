@@ -1841,6 +1841,12 @@ function getshacoordinates(){
 	shacoordinates.set("reptiletransfo1",{offx:164,width:35,offy:1384,height:97,decx:0,decy:0});
 	shacoordinates.set("reptiletransfo2",{offx:209,width:35,offy:1383,height:98,decx:0,decy:0});
 	shacoordinates.set("reptiletransfo3",{offx:255,width:37,offy:1382,height:99,decx:0,decy:0});
+	shacoordinates.set("iceball1",{offx:788,width:37,offy:1502,height:97,decx:0,decy:0});
+	shacoordinates.set("iceball2",{offx:835,width:51,offy:1508,height:91,decx:0,decy:0});
+	shacoordinates.set("iceball3",{offx:895,width:52,offy:1514,height:85,decx:0,decy:0});
+	shacoordinates.set("subzerotransfo1",{offx:322,width:35,offy:1384,height:97,decx:0,decy:0});
+	shacoordinates.set("subzerotransfo2",{offx:368,width:35,offy:1384,height:97,decx:0,decy:0});
+	shacoordinates.set("subzerotransfo3",{offx:414,width:36,offy:1383,height:98,decx:0,decy:0});
 	
     return shacoordinates;
 }
