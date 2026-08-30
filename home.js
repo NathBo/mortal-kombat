@@ -3766,6 +3766,9 @@ function main(){
 					else if(this.perso == "shang" && this.back>=1 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
 						this.begincoup("fireskull",other);
 					}
+					else if(this.perso == "shang" && this.bas>=1 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
+						this.begincoup("bomb",other);
+					}
 					else if(this.perso == "shang" && this.forward>=1 && this.special==1 && movpriority.get(racine(this.mov))<70&&end_of_round_countdown==0){
 						this.begincoup("thundergod",other);
 					}
@@ -4122,7 +4125,7 @@ function main(){
 							play_sound_eff("explosion");
 							this.reoriente(other,true);
 						}
-						if(this.movlag==stats.elag-1){add_to_objects_set(new ExploProj(this.x,this.y+60,this.orientation,other,stats,this.skin));}
+						if(this.movlag==stats.elag-1){add_to_objects_set(new ExploProj(this.x,this.y+60,this.orientation,other,stats,reppng));}
 						break;
 					case "spin":
 						var stats = this.charac.coups.get(this.mov);
@@ -5356,7 +5359,8 @@ function main(){
 						break;
 					case "bomb" :
 						var stats = this.charac.coups.get(this.mov);
-						if(entre(this.movlag,stats.elag/2,stats.elag+stats.slag/2)){this.costume = racine(this.mov)+"2";}
+						if(this.perso=="shang" && this.movlag>=stats.elag+stats.slag-3){this.costume="reptiletransfo2";}
+						else if(entre(this.movlag,stats.elag/2,stats.elag+stats.slag/2)){this.costume = racine(this.mov)+"2";}
 						else{this.costume = racine(this.mov)+"1";}
 						break;
 					case "ballthrow":
@@ -7853,7 +7857,7 @@ function main(){
 	
 	characteristics.set("shang",{png : shangskins,coordinates : shacoordinates, sex : "m", standnframes : 5, standframespeed : 5, rollspeed : 5, hkickstartnframe : 2, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : shangiconpng, namewav : document.querySelector('#shangwav'),
 	width : 35, height : 100,vitesse : 2.9, run_speed : 5.6,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.405, jumpforce : 9.05,jumpsquat : 4, shorthop : 6.0, friction:0.22, hurtcontrol : 0.22,grabtype : "launch",
-	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : shang_coups, pv : 100, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 16, cds : [140,270,150,300], icons : [iceballiconpng,thundergodiconpng,spiticonpng,bombiconpng], voiceactor : "male",
+	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : shang_coups, pv : 100, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 16, cds : [140,270,140,360], icons : [iceballiconpng,thundergodiconpng,spiticonpng,bombiconpng], voiceactor : "male",
 	default_behav : "zoner", displayname : "SHANG TSUNG", combos : shang_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Reptile resurrects the dinosaurs and imposes a reptilian dictatorship!"});
 	
 

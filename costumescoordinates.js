@@ -1836,6 +1836,11 @@ function getshacoordinates(){
 	shacoordinates.set("raidentransfo1",{offx:275,width:35,offy:1496,height:98,decx:0,decy:0});
 	shacoordinates.set("raidentransfo2",{offx:320,width:35,offy:1494,height:100,decx:0,decy:0});
 	shacoordinates.set("raidentransfo3",{offx:365,width:36,offy:1492,height:102,decx:0,decy:0});
+	shacoordinates.set("bomb1",{offx:693,width:36,offy:1502,height:97,decx:0,decy:0});
+	shacoordinates.set("bomb2",{offx:739,width:34,offy:1512,height:87,decx:0,decy:0});
+	shacoordinates.set("reptiletransfo1",{offx:164,width:35,offy:1384,height:97,decx:0,decy:0});
+	shacoordinates.set("reptiletransfo2",{offx:209,width:35,offy:1383,height:98,decx:0,decy:0});
+	shacoordinates.set("reptiletransfo3",{offx:255,width:37,offy:1382,height:99,decx:0,decy:0});
 	
     return shacoordinates;
 }
