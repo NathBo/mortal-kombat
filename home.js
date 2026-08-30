@@ -2905,7 +2905,7 @@ function main(){
 				if(me.perso=="mileena"){if(Math.abs(me.x-other.x)>200&&me.y==0){if(this.wantstoenhance()>4){me.enhance=1}this.begincoup("homing_knife");me.enhance=0;}else if(Math.abs(me.x-other.x)>70&&me.y==0 && other.crouching==0){if(this.wantstoenhance()>4){me.enhance=1}this.begincoup("knifethrow");me.enhance=0;}}
 				if(me.perso=="raiden"){if(Math.abs(me.x-other.x)>100&&me.y==0){if(this.wantstoenhance()>4 && this.attacking<5){me.enhance=1;}this.begincoup("boltthrow");me.enhance=0;}}
 				if(me.perso=="scorpion" && this.currisking>=0){if(Math.abs(me.x-other.x)>100&&me.y==0){if(this.wantstoenhance()>6){me.enhance=1;}this.begincoup("spear_throw");me.enhance=0;}}
-				if(me.perso=="subzero"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("iceball");}}
+				if(me.perso=="subzero" || me.perso=="shang"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("iceball");}}
 				if(me.perso=="liukang" && this.currisking<=2){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("fireball");}}
 				if(me.perso=="reptile"){if(Math.abs(me.x-other.x)>100&&me.y==0&&me.ressource<me.max_ressource){this.begincoup("spit");}}
 				if(me.perso=="shao_kahn"){if(Math.abs(me.x-other.x)>100&&me.y==0){this.begincoup("arrow");}}
@@ -2913,9 +2913,10 @@ function main(){
 				if(me.perso=="baraka"){if(Math.abs(me.x-other.x)>100&&me.y==0){if(this.wantstoenhance()>7){me.enhance=1;}this.begincoup("slicethrow");me.enhance=0;}}
 				if(me.perso=="jax"){if(Math.abs(me.x-other.x)>100&&me.y==0){if(this.wantstoenhance()>7){me.enhance=1;}this.begincoup("energywave");me.enhance=0;}}
 				if(me.perso=="kunglao"){if(Math.abs(me.x-other.x)>120&&me.y==0){if(this.wantstoenhance()>4){me.enhance=1}this.begincoup("hatthrow");me.enhance=0;}}
+				if(me.perso=="shang"){if(Math.abs(me.x-other.x)>100&&me.y==0){if(this.wantstoenhance()>3 && other.tb<0){me.enhance=1;}this.begincoup("fireskull");me.enhance=0;}}
 			}
 
-			if(me.perso=="raiden" && this.currisking>=-2 && Math.abs(Math.abs(me.x-other.x-other.xspeed*10)-120)<=40 && me.y==0 && (other.y>0 || this.behavior=="masher") && me.crouching==0 && movpriority.get(racine(me.mov))<70 && other.tb<0 && me.cooldowns[1]==0)
+			if((me.perso=="raiden" || me.perso=="shang") && this.currisking>=-2 && Math.abs(Math.abs(me.x-other.x-other.xspeed*10)-120)<=40 && me.y==0 && (other.y>0 || this.behavior=="masher") && me.crouching==0 && movpriority.get(racine(me.mov))<70 && other.tb<0 && me.cooldowns[1]==0)
 				{this.begincoup("thundergod");}
 
 			else if(me.perso=="shao_kahn" && this.currisking>=-5 && ((Math.abs(Math.abs(me.x-other.x-other.xspeed*10)-120)<=40 && me.y==0 && other.y>0 && me.crouching==0 && movpriority.get(racine(me.mov))<70 && other.tb<=0) || (other.crouching>=4 && Math.abs(me.x-other.x)<=120 && me.y==0)))
@@ -2960,7 +2961,7 @@ function main(){
 			else if(me.perso=="reptile" && entre(Math.abs(me.x-other.x),80,150)&&me.y==0 && other.tb<=0 && me.ressource==me.max_ressource && other.invincibilite<12)
 				{this.begincoup("chargeball");}
 
-			else if(me.perso=="reptile" && me.y==0 && entre(Math.abs(me.x-other.x),60,120) && Math.abs(-stage_size/2*me.orientation-me.x)<=130 && other.y>=40 && me.cooldowns[3]<=5 && movpriority.get(racine(me.mov))<70 && !this.thereisaprojo())
+			else if((me.perso=="reptile" || me.perso=="shang") && me.y==0 && entre(Math.abs(me.x-other.x),60,120) && Math.abs(-stage_size/2*me.orientation-me.x)<=130 && other.y>=40 && me.cooldowns[3]<=5 && movpriority.get(racine(me.mov))<70 && !this.thereisaprojo())
 				{if(this.wantstoenhancedef()>2){me.enhance=1;}this.begincoup("bomb");me.enhance=0;}
 			else if(me.perso=="johnny" && this.currisking>=-2 && Math.abs(Math.abs(me.x-other.x-other.xspeed*10)-120)<=40 && me.y==0 && (other.y>0 || this.behavior=="masher") && me.crouching==0 && movpriority.get(racine(me.mov))<70 && other.tb<0 && me.cooldowns[1]==0)
 				{if(this.wantstoenhance()>5){me.enhance=1;}this.begincoup("shadowkick");me.enhance=0;}
@@ -7860,7 +7861,7 @@ function main(){
 	default_behav : "normal", displayname : "KUNG LAO", combos : kunglao_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! After winning the tournament, Kung Lao becomes the best magician EarthRealm has ever seen and is loved by all!"});
 	
 	characteristics.set("shang",{png : shangskins,coordinates : shacoordinates, sex : "m", standnframes : 5, standframespeed : 5, rollspeed : 5, hkickstartnframe : 2, hkickendnframe : 2, kicknframe : 4, grabxdist : 32, grabydist : 38, stunnframes : 5, walknframes : 9, icon : shangiconpng, namewav : document.querySelector('#shangwav'),
-	width : 35, height : 100,vitesse : 2.9, run_speed : 5.6,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.405, jumpforce : 9.05,jumpsquat : 4, shorthop : 6.0, friction:0.22, hurtcontrol : 0.22,grabtype : "launch",
+	width : 35, height : 100,vitesse : 2.9, run_speed : 5.6,jumpxspeed : 3.4,backmovnerf : 0.95, gravity : 0.405, jumpforce : 9.05,jumpsquat : 4, shorthop : 6.0, friction:0.22, hurtcontrol : 0.22,grabtype : "poser",
 	airdrift : 0.12, airmaxspeed : 1.8, airdodgespeed : 5.65, airdodgefdur : 15, landinglag : 9, coups : shang_coups, pv : 100, getupfdur : 36, grabfdur : 20, grabdeg : 12, vicposframes : 2, vicposfdur : 16, cds : [300,270,140,360], icons : [iceballiconpng,thundergodiconpng,fireskulliconpng,bombiconpng], voiceactor : "male",
 	default_behav : "zoner", displayname : "SHANG TSUNG", combos : shang_combos, winmsg : "You are now the Supreme Mortal Kombat Warrior! Shang Tsung claims all souls and put them to fight in a Virtual Circus for amusement:"});
 	
