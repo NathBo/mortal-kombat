@@ -1861,6 +1861,15 @@ function getshacoordinates(){
 	shacoordinates.set("gorofata10",{offx:694,width:81,offy:483,height:119,decx:a,decy:0});
 	shacoordinates.set("gorofata11",{offx:787,width:71,offy:483,height:119,decx:a,decy:0});
 	shacoordinates.set("charge",{offx:15,width:57,offy:1601,height:98,decx:0,decy:0});
+	shacoordinates.set("earpene1",{offx:15,width:48,offy:1866,height:85,decx:0,decy:0});
+	shacoordinates.set("earpene2",{offx:73,width:40,offy:1854,height:97,decx:0,decy:0});
+	shacoordinates.set("earpene3",{offx:122,width:66,offy:1855,height:96,decx:0,decy:0});
+	shacoordinates.set("earpene4",{offx:195,width:68,offy:1863,height:88,decx:0,decy:0});
+	shacoordinates.set("earpene5",{offx:270,width:61,offy:1881,height:70,decx:0,decy:0});
+	shacoordinates.set("earpene6",{offx:338,width:38,offy:1910,height:41,decx:0,decy:0});
+	shacoordinates.set("earpene7",{offx:383,width:23,offy:1925,height:26,decx:0,decy:0});
+	shacoordinates.set("earpene8",{offx:414,width:19,offy:1929,height:22,decx:0,decy:0});
+	shacoordinates.set("earpene9",{offx:446,width:7,offy:1943,height:8,decx:0,decy:0});
 	
     return shacoordinates;
 }

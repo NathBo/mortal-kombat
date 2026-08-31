@@ -3629,6 +3629,10 @@ function main(){
 						this.begin_fatality(0,180);
 						other.x = this.x + 65*this.orientation;
 					}
+					else if(this.perso == "shang" && this.forward && this.bas==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)<=75 && other.gettingup==0 && other.y<=30){
+						this.begin_fatality(1,120);
+						other.x = this.x + 55*this.orientation;
+					}
 					else if(this.perso == "kunglao" && this.forward+this.back==0 && this.special==1 && finishhim && Math.abs(this.x-other.x)>=150 && other.y<=30 && other.gettingup==0){
 						this.begin_fatality(0,60);
 					}
@@ -4861,7 +4865,7 @@ function main(){
 					if(this.fatality==175){play_sound_eff("fireskull",0.2);}
 					if(this.fatality==b-12){other.become_legs();organexplosion(other.x,65,-this.orientation);}
 					if(this.fatality==a+5){add_to_objects_set(new ExploProj(this.x,this.y+60,this.orientation,other,stats,reppng));play_sound_eff("explosion",0.7);}
-					if(this.fatality==a){play_sound_eff("goroscream");}
+					if(this.fatality==a){play_sound_eff("goroscream");shake_screen(10,6.);}
 					if(this.fatality==10){play_sound_eff("gorowin");}
 				}
 			}
@@ -5013,6 +5017,21 @@ function main(){
 					}
 					if(this.fatality==c+10){friendshipwav.play();}
 					this.costume = "rabbittrick"+n.toString();
+				}
+				else if(this.perso=="shang"){
+					var a = 95; var b = 3;
+					if(this.fatality==1){this.costume="charge";this.hide=false;other.explode();play_sound_eff("spithit",0.3);slow_game(4,1.5);add_to_objects_set(new DropBlood(other.x,65,-this.orientation,"hdropblood",0.,3.));}
+					else{
+						var n = 1;
+						if(this.fatality>=a){n=1;}
+						else if(this.fatality>a-8*b){n=Math.floor((a-this.fatality)/b)+2;this.x+=1.5*this.orientation;this.y+=3;}
+						else{
+							if(this.fatality%20==0){other.shake_player(6,(a-30-this.fatality)*0.1+6.);play_sound_eff(other.charac.voiceactor+"hurted",0.6);}
+						}
+						this.costume = "earpene" + n.toString();
+					}
+					if(this.fatality==a-8*b){this.hide = true;this.x=other.x;this.y=0;}
+					if(this.fatality==a+12){play_sound_eff("earpene");}
 				}
 			}
 			else if(this.decapitated){
@@ -5574,6 +5593,9 @@ function main(){
 			if(this.perso=="shang" && fatalitywasdone && this.fatality==0 && this.pv>0){
 				if(this.fatalitytype==0){
 					this.costume="gorofata11";
+				}
+				else{
+					this.costume="charge";
 				}
 			}
 
@@ -7803,6 +7825,7 @@ function main(){
 	sounds_eff.set("crowdcheers",[document.querySelector('#crowdcheerswav')]);
 	sounds_eff.set("fireskull",[document.querySelector('#fireskullwav')]);
 	sounds_eff.set("firehit",[document.querySelector('#firehitwav')]);
+	sounds_eff.set("earpene",[document.querySelector('#earpenewav')]);
 
 	var friendshipwav = document.querySelector('#friendshipwav');
 
