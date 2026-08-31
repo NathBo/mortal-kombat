@@ -1847,6 +1847,20 @@ function getshacoordinates(){
 	shacoordinates.set("subzerotransfo1",{offx:322,width:35,offy:1384,height:97,decx:0,decy:0});
 	shacoordinates.set("subzerotransfo2",{offx:368,width:35,offy:1384,height:97,decx:0,decy:0});
 	shacoordinates.set("subzerotransfo3",{offx:414,width:36,offy:1383,height:98,decx:0,decy:0});
+
+	var a = -15;
+	shacoordinates.set("gorofata1",{offx:872,width:88,offy:484,height:112,decx:a-10,decy:0});
+	shacoordinates.set("gorofata2",{offx:297,width:86,offy:360,height:116,decx:a,decy:0});
+	shacoordinates.set("gorofata3",{offx:394,width:103,offy:362,height:114,decx:a,decy:0});
+	shacoordinates.set("gorofata4",{offx:509,width:62,offy:358,height:118,decx:a,decy:0});
+	shacoordinates.set("gorofata5",{offx:584,width:71,offy:367,height:109,decx:a,decy:0});
+	shacoordinates.set("gorofata6",{offx:667,width:102,offy:370,height:106,decx:a,decy:0});
+	shacoordinates.set("gorofata7",{offx:781,width:71,offy:367,height:109,decx:a,decy:0});
+	shacoordinates.set("gorofata8",{offx:864,width:62,offy:358,height:118,decx:a,decy:0});
+	shacoordinates.set("gorofata9",{offx:587,width:95,offy:486,height:116,decx:a,decy:0});
+	shacoordinates.set("gorofata10",{offx:694,width:81,offy:483,height:119,decx:a,decy:0});
+	shacoordinates.set("gorofata11",{offx:787,width:71,offy:483,height:119,decx:a,decy:0});
+	shacoordinates.set("charge",{offx:15,width:57,offy:1601,height:98,decx:0,decy:0});
 	
     return shacoordinates;
 }
