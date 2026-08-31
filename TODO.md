@@ -13,4 +13,4 @@
 - Decent Visuals for end of Arcade
 - Pre-anim for some projectiles (like raiden bolt or liu fire)
 - Resolve Scorpion weird width
-
+- Loading Screen

@@ -35,7 +35,7 @@ var kunglaopng = new Image();kunglaopng.src = 'ressource/characters/kunglao.png'
 var kunglao2png = new Image();kunglao2png.src = 'ressource/characters/kunglao2.png';
 var kunglaoskins = [kunglaopng,kunglao2png];
 var shangpng = new Image();shangpng.src = 'ressource/characters/shang.png';
-var shang2png = new Image();shang2png.src = 'ressource/characters/shang.png';
+var shang2png = new Image();shang2png.src = 'ressource/characters/shang2.png';
 var shangskins = [shangpng,shang2png];
 var shaopng = new Image();shaopng.src = 'ressource/characters/shaokahn.png';
 var shaoskins = [shaopng,shaopng];
