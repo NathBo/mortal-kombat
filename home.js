@@ -592,6 +592,7 @@ function main(){
 			super(x,y,orientation,skin,costume,coordinates,dur);
 			this.other = other; this.width = width; this.height = height;
 			this.dangerous = true; this.can_hit_crouch = can_hit_crouch; this.stats = stats;
+			this.vitesse = 0.;
 		}
 
 		can_hit_other(){
@@ -2579,7 +2580,7 @@ function main(){
 						if(this.attacking>=2 || Math.abs(me.x-this.other.x)>=150)this.pressforward(true);
 						return true;
 					}
-					if(Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))<=value.stats.hitboxxe+30+this.me.charac.width/2 && this.me.y==0 && this.me.mov!="jumpsquat"){this.pressbackward();if(value.vitesse>0){this.me.bas=1;}return true;}
+					if(Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))<=value.width+30+this.me.charac.width/2 && this.me.y==0 && this.me.mov!="jumpsquat"){this.pressbackward();if(value.vitesse>0){this.me.bas=1;}return true;}
 					if((this.me.y==0 && (signe(this.me.x-value.x)==signe(value.vitesse)) && Math.abs(this.me.x-(value.x+5*value.vitesse*value.orientation))>=value.stats.hitboxxe+90+this.me.charac.width/2-this.wanttojump*6 && value.y+value.stats.hitboxye<=70) || this.me.mov=="jumpsquat"){this.me.haut=1;this.pressforward(true);return true;}
 				}
 			}
