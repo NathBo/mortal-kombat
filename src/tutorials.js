@@ -363,7 +363,7 @@ var tutoliukang = [
         msg : "Liu Kang's back special is a multi-hit slow dash, it is very vulnerable to projectile though"
     },
     {
-        char : ["liukang","liukang"], ai : -1, pv : [20,18], moves : [["bicycle", "flying_kick", "jump"],["block"]], aimoves : [],
+        char : ["liukang","liukang"], ai : -1, pv : [20,17], moves : [["bicycle", "flying_kick", "jump"],["block"]], aimoves : [],
         jumper : 0,  regenerate : true,
         msg : "You can combo it into an air flying kick"
     },
