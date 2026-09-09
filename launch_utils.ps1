@@ -1,5 +1,3 @@
-# File: launch_game.ps1
-
 $ErrorActionPreference = "Stop"
 
 $Root = [System.IO.Path]::GetFullPath(
